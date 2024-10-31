@@ -45,7 +45,7 @@ type TransactionChargeAuthorizationResponse struct {
 	Plan            types.Plan          `json:"plan"`
 }
 
-func (c *Client) Initialize(req *TransactionChargeAuthorizationRequest) (*types.Response[TransactionChargeAuthorizationResponse], error) {
+func (c *Client) ChargeAuthorization(req *TransactionChargeAuthorizationRequest) (*types.Response[TransactionChargeAuthorizationResponse], error) {
 	return net.Post[TransactionChargeAuthorizationRequest, TransactionChargeAuthorizationResponse](
 		c.client,
 		c.secret,

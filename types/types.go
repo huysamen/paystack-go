@@ -86,13 +86,13 @@ type InvoiceHistory struct {
 }
 
 type Log struct {
-	StartTime int  `json:"start_time"`
-	TimeSpent int  `json:"time_spent"`
-	Attempts  int  `json:"attempts"`
-	Errors    int  `json:"errors"`
-	Success   bool `json:"success"`
-	Mobile    bool `json:"mobile"`
-	Input     any  `json:"input"`
+	StartTime int         `json:"start_time"`
+	TimeSpent int         `json:"time_spent"`
+	Attempts  int         `json:"attempts"`
+	Errors    int         `json:"errors"`
+	Success   bool        `json:"success"`
+	Mobile    bool        `json:"mobile"`
+	Input     interface{} `json:"input"`
 	History   []struct {
 		Type    string `json:"type"`
 		Message string `json:"message"`

@@ -9,6 +9,9 @@ const (
 	transactionInitializePath         = "/initialize"
 	transactionVerifyPath             = "/verify"
 	transactionChargeAutorizationPath = "/charge_authorization"
+	transactionViewTimelinePath       = "/timeline"
+	transactionExportPath             = "/export"
+	transactionPartialDebitPath       = "/partial_debit"
 )
 
 type Client struct {
