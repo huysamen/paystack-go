@@ -43,6 +43,7 @@ import (
 	"time"
 
 	"github.com/huysamen/paystack-go/api/customers"
+	dedicated_virtual_account "github.com/huysamen/paystack-go/api/dedicated-virtual-account"
 	direct_debit "github.com/huysamen/paystack-go/api/direct-debit"
 	"github.com/huysamen/paystack-go/api/miscellaneous"
 	"github.com/huysamen/paystack-go/api/plans"
@@ -59,20 +60,21 @@ import (
 )
 
 type Client struct {
-	Transactions       *transactions.Client
-	Plans              *plans.Client
-	Customers          *customers.Client
-	Subscriptions      *subscriptions.Client
-	Transfers          *transfers.Client
-	TransferRecipients *transfer_recipients.Client
-	Subaccounts        *subaccounts.Client
-	Settlements        *settlements.Client
-	Miscellaneous      *miscellaneous.Client
-	Verification       *verification.Client
-	TransactionSplits  *transaction_splits.Client
-	Terminal           *terminal.Client
-	VirtualTerminal    *virtual_terminal.Client
-	DirectDebit        *direct_debit.Client
+	Transactions            *transactions.Client
+	Plans                   *plans.Client
+	Customers               *customers.Client
+	Subscriptions           *subscriptions.Client
+	Transfers               *transfers.Client
+	TransferRecipients      *transfer_recipients.Client
+	Subaccounts             *subaccounts.Client
+	Settlements             *settlements.Client
+	Miscellaneous           *miscellaneous.Client
+	Verification            *verification.Client
+	TransactionSplits       *transaction_splits.Client
+	Terminal                *terminal.Client
+	VirtualTerminal         *virtual_terminal.Client
+	DirectDebit             *direct_debit.Client
+	DedicatedVirtualAccount *dedicated_virtual_account.Client
 }
 
 // DefaultClient creates a new client with default configuration
@@ -115,20 +117,21 @@ func NewClient(config *Config) *Client {
 	}
 
 	client := &Client{
-		Transactions:       transactions.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
-		Plans:              plans.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
-		Customers:          customers.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
-		Subscriptions:      subscriptions.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
-		Transfers:          transfers.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
-		TransferRecipients: transfer_recipients.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
-		Subaccounts:        subaccounts.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
-		Settlements:        settlements.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
-		Miscellaneous:      miscellaneous.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
-		Verification:       verification.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
-		TransactionSplits:  transaction_splits.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
-		Terminal:           terminal.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
-		VirtualTerminal:    virtual_terminal.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
-		DirectDebit:        direct_debit.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
+		Transactions:            transactions.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
+		Plans:                   plans.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
+		Customers:               customers.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
+		Subscriptions:           subscriptions.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
+		Transfers:               transfers.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
+		TransferRecipients:      transfer_recipients.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
+		Subaccounts:             subaccounts.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
+		Settlements:             settlements.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
+		Miscellaneous:           miscellaneous.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
+		Verification:            verification.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
+		TransactionSplits:       transaction_splits.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
+		Terminal:                terminal.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
+		VirtualTerminal:         virtual_terminal.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
+		DirectDebit:             direct_debit.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
+		DedicatedVirtualAccount: dedicated_virtual_account.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
 	}
 
 	return client

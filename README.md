@@ -17,6 +17,9 @@ A comprehensive Go client library for the [Paystack API](https://paystack.com/do
 - ✅ **Transaction Splits**: Create, list, fetch, update splits, add/remove subaccounts from splits
 - ✅ **Settlements**: List settlements, filter by status/date/subaccount, list settlement transactions
 - ✅ **Terminal**: Send events, check status, list/fetch/update terminals, commission/decommission devices
+- ✅ **Virtual Terminal**: Create virtual terminals, manage settings, assign destinations, handle splits
+- ✅ **Direct Debit**: Manage mandate authorizations for direct debit payments
+- ✅ **Dedicated Virtual Account**: Create and manage dedicated virtual accounts for unique customer payments
 - ✅ **Verification**: Resolve account numbers, validate accounts, resolve card BINs
 - ✅ **Miscellaneous**: List banks/countries/states for address verification and geographic support
 - ✅ **Type Safety**: Strongly typed request/response structures
@@ -230,6 +233,18 @@ func main() {
 - **Unassign Destination**: Remove notification destinations from virtual terminals
 - **Add Split Code**: Associate transaction splits with virtual terminals
 - **Remove Split Code**: Remove split codes from virtual terminals
+
+### Dedicated Virtual Account
+
+- **Create Dedicated Virtual Account**: Create dedicated virtual accounts for existing customers
+- **Assign Dedicated Virtual Account**: Create customer and assign dedicated virtual account in one call
+- **List Dedicated Virtual Accounts**: Get all dedicated virtual accounts with filtering by status, currency, provider
+- **Fetch Dedicated Virtual Account**: Retrieve detailed dedicated virtual account information by ID
+- **Requery Dedicated Account**: Check account status and transaction updates from providers
+- **Deactivate Dedicated Virtual Account**: Deactivate a dedicated virtual account
+- **Split Transaction**: Add transaction splits to dedicated virtual accounts for automatic fund distribution
+- **Remove Split**: Remove splits from dedicated virtual accounts
+- **Fetch Bank Providers**: Get available bank providers for dedicated virtual account creation
 
 ### Verification
 
@@ -1408,6 +1423,66 @@ func main() {
     }
 
     fmt.Printf("Found %d states for address verification\n", len(statesResp.Data))
+}
+```
+
+### Dedicated Virtual Account Management
+
+```go
+// Fetch available bank providers
+providers, err := client.DedicatedVirtualAccount.FetchBankProviders(context.Background())
+if err != nil {
+    log.Fatal(err)
+}
+
+fmt.Printf("Available bank providers: %d\n", len(providers.Data))
+preferredBank := providers.Data[0].ProviderSlug // Use first provider
+
+// Create dedicated virtual account for existing customer
+createReq := &dedicatedvirtualaccount.CreateDedicatedVirtualAccountRequest{
+    Customer:      "CUS_xnxdt6s1zg5f4nx", // existing customer code
+    PreferredBank: preferredBank,
+    FirstName:     "John",
+    LastName:      "Doe",
+    Phone:         "+2348100000000",
+}
+
+account, err := client.DedicatedVirtualAccount.Create(context.Background(), createReq)
+if err != nil {
+    log.Fatal(err)
+}
+
+fmt.Printf("Created account: %s (%s) - %s\n", 
+    account.AccountNumber, account.AccountName, account.Bank.Name)
+
+// List active dedicated virtual accounts
+active := true
+listReq := &dedicatedvirtualaccount.ListDedicatedVirtualAccountsRequest{
+    Active:   &active,
+    Currency: "NGN",
+}
+
+accounts, err := client.DedicatedVirtualAccount.List(context.Background(), listReq)
+if err != nil {
+    log.Fatal(err)
+}
+
+fmt.Printf("Active accounts: %d\n", len(accounts.Data))
+
+// Add split to account for automatic fund distribution
+if len(accounts.Data) > 0 {
+    splitReq := &dedicatedvirtualaccount.SplitDedicatedAccountTransactionRequest{
+        Customer:      accounts.Data[0].Customer.CustomerCode,
+        SplitCode:     "SPL_98WF13Zu8w5", // your split code
+        PreferredBank: preferredBank,
+    }
+
+    splitAccount, err := client.DedicatedVirtualAccount.SplitTransaction(context.Background(), splitReq)
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    fmt.Printf("Split added to account: %s\n", splitAccount.AccountNumber)
 }
 ```
 
