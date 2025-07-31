@@ -65,6 +65,7 @@ examples/*/dedicated-virtual-account
 examples/*/apple-pay
 examples/*/products
 examples/*/payment-pages
+examples/*/payment-requests
 
 # Example binaries - pattern-based names
 examples/*/*-example

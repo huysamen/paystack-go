@@ -160,6 +160,18 @@ func main() {
 - **Check Slug Availability**: Verify if a custom slug is available for use
 - **Add Products**: Associate existing products with payment pages for product showcases
 
+### Payment Requests
+
+- **Create Payment Request**: Create payment requests with line items, taxes, and due dates
+- **List Payment Requests**: List all payment requests with status and customer filtering
+- **Fetch Payment Request**: Get detailed payment request information by ID or code
+- **Verify Payment Request**: Verify payment request status and payment details
+- **Update Payment Request**: Update request details, line items, and due dates
+- **Finalize Payment Request**: Convert draft payment requests to active invoices
+- **Archive Payment Request**: Archive payment requests to hide from lists
+- **Send Notification**: Send email notifications to customers about payment requests
+- **Get Totals**: Retrieve payment request analytics and totals by status and currency
+
 ### Customers
 
 - **Create Customer**: Create a new customer with email and optional details
@@ -1651,6 +1663,103 @@ if err != nil {
 }
 
 fmt.Printf("Updated page: %s - ₦%.2f\n", updatedPage.Name, float64(*updatedPage.Amount)/100)
+```
+
+### Payment Requests Management
+
+```go
+// Create a payment request with line items
+createReq := &payment_requests.CreatePaymentRequestRequest{
+    Customer:    "CUS_customer_code_here",
+    Description: "Invoice for professional services",
+    DueDate:     time.Now().AddDate(0, 0, 14).Format("2006-01-02"), // Due in 14 days
+    Currency:    "NGN",
+    LineItems: []payment_requests.LineItem{
+        {
+            Name:     "Website Development",
+            Amount:   150000, // ₦1,500.00
+            Quantity: 1,
+        },
+        {
+            Name:     "SEO Optimization",
+            Amount:   75000, // ₦750.00
+            Quantity: 1,
+        },
+        {
+            Name:     "Monthly Maintenance",
+            Amount:   25000, // ₦250.00
+            Quantity: 3,
+        },
+    },
+    Tax: []payment_requests.Tax{
+        {
+            Name:   "VAT (7.5%)",
+            Amount: 22500, // ₦225.00
+        },
+    },
+}
+
+paymentRequest, err := client.PaymentRequests.Create(context.Background(), createReq)
+if err != nil {
+    log.Fatal(err)
+}
+
+fmt.Printf("Payment Request Created: %s\n", paymentRequest.RequestCode)
+fmt.Printf("Total Amount: ₦%.2f\n", float64(paymentRequest.Amount)/100)
+
+// List payment requests with filtering
+listReq := &payment_requests.ListPaymentRequestsRequest{
+    PerPage:  10,
+    Page:     1,
+    Status:   "pending",
+    Currency: "NGN",
+}
+
+requestsResp, err := client.PaymentRequests.List(context.Background(), listReq)
+if err != nil {
+    log.Fatal(err)
+}
+
+fmt.Printf("Found %d payment requests\n", len(requestsResp.Data))
+for _, req := range requestsResp.Data {
+    fmt.Printf("  - %s: ₦%.2f (%s)\n", req.Description, float64(req.Amount)/100, req.Status)
+}
+
+// Update payment request with new line items
+updateReq := &payment_requests.UpdatePaymentRequestRequest{
+    Description: "Updated: Invoice for professional services (Rush Order)",
+    DueDate:     time.Now().AddDate(0, 0, 3).Format("2006-01-02"), // Rush - due in 3 days
+    LineItems: []payment_requests.LineItem{
+        {
+            Name:     "Website Development (Express)",
+            Amount:   180000, // ₦1,800.00 (rush fee)
+            Quantity: 1,
+        },
+        {
+            Name:     "SEO Optimization",
+            Amount:   75000,
+            Quantity: 1,
+        },
+    },
+}
+
+updatedRequest, err := client.PaymentRequests.Update(context.Background(), paymentRequest.RequestCode, updateReq)
+if err != nil {
+    log.Fatal(err)
+}
+
+fmt.Printf("Updated Amount: ₦%.2f\n", float64(updatedRequest.Amount)/100)
+
+// Get payment request analytics
+totals, err := client.PaymentRequests.GetTotals(context.Background())
+if err != nil {
+    log.Fatal(err)
+}
+
+fmt.Printf("Payment Request Analytics:\n")
+for _, pending := range totals.Pending {
+    fmt.Printf("  Pending %s: ₦%.2f\n", pending.Currency, float64(pending.Amount)/100)
+}
 ```
 
 ### Apple Pay Domain Management
