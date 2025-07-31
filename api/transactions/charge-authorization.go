@@ -1,6 +1,7 @@
 package transactions
 
 import (
+	"context"
 	"fmt"
 	"time"
 
@@ -45,11 +46,13 @@ type TransactionChargeAuthorizationResponse struct {
 	Plan            types.Plan          `json:"plan"`
 }
 
-func (c *Client) ChargeAuthorization(req *TransactionChargeAuthorizationRequest) (*types.Response[TransactionChargeAuthorizationResponse], error) {
+func (c *Client) ChargeAuthorization(ctx context.Context, req *TransactionChargeAuthorizationRequest) (*types.Response[TransactionChargeAuthorizationResponse], error) {
 	return net.Post[TransactionChargeAuthorizationRequest, TransactionChargeAuthorizationResponse](
+		ctx,
 		c.client,
 		c.secret,
-		fmt.Sprintf("%s%s", transactionBasePath, transactionChargeAutorizationPath),
+		fmt.Sprintf("%s%s", transactionBasePath, transactionChargeAuthorizationPath),
 		req,
+		c.baseURL,
 	)
 }

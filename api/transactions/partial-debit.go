@@ -1,6 +1,7 @@
 package transactions
 
 import (
+	"context"
 	"fmt"
 	"time"
 
@@ -41,11 +42,13 @@ type TransactionPartialDebitResponse struct {
 	RequestedAmount int                 `json:"requested_amount"`
 }
 
-func (c *Client) PartialDebit(req *TransactionPartialDebitRequest) (*types.Response[TransactionPartialDebitResponse], error) {
+func (c *Client) PartialDebit(ctx context.Context, req *TransactionPartialDebitRequest) (*types.Response[TransactionPartialDebitResponse], error) {
 	return net.Post[TransactionPartialDebitRequest, TransactionPartialDebitResponse](
+		ctx,
 		c.client,
 		c.secret,
 		fmt.Sprintf("%s%s", transactionBasePath, transactionPartialDebitPath),
 		req,
+		c.baseURL,
 	)
 }

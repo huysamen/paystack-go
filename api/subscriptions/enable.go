@@ -1,0 +1,49 @@
+package subscriptions
+
+import (
+	"context"
+	"errors"
+
+	"github.com/huysamen/paystack-go/net"
+	"github.com/huysamen/paystack-go/types"
+)
+
+type SubscriptionEnableRequest struct {
+	Code  string `json:"code"`  // Subscription code
+	Token string `json:"token"` // Email token
+}
+
+func (r *SubscriptionEnableRequest) Validate() error {
+	if r.Code == "" {
+		return errors.New("subscription code is required")
+	}
+	if r.Token == "" {
+		return errors.New("email token is required")
+	}
+	return nil
+}
+
+type SubscriptionEnableResponse struct {
+	Message string `json:"message"`
+}
+
+func (c *Client) Enable(ctx context.Context, req *SubscriptionEnableRequest) (*types.Response[SubscriptionEnableResponse], error) {
+	if req == nil {
+		return nil, errors.New("request cannot be nil")
+	}
+
+	if err := req.Validate(); err != nil {
+		return nil, err
+	}
+
+	path := subscriptionBasePath + "/enable"
+
+	return net.Post[SubscriptionEnableRequest, SubscriptionEnableResponse](
+		ctx,
+		c.client,
+		c.secret,
+		path,
+		req,
+		c.baseURL,
+	)
+}

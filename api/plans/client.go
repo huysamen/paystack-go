@@ -9,13 +9,19 @@ const (
 )
 
 type Client struct {
-	client *http.Client
-	secret string
+	client  *http.Client
+	secret  string
+	baseURL string
 }
 
-func NewClient(secret string, client *http.Client) *Client {
+func NewClient(httpClient *http.Client, secret, baseURL string) *Client {
+	if baseURL == "" {
+		baseURL = "https://api.paystack.co"
+	}
+
 	return &Client{
-		secret: secret,
-		client: client,
+		client:  httpClient,
+		secret:  secret,
+		baseURL: baseURL,
 	}
 }

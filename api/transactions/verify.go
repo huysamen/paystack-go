@@ -1,6 +1,7 @@
 package transactions
 
 import (
+	"context"
 	"fmt"
 	"time"
 
@@ -25,26 +26,28 @@ type TransactionVerifyResponse struct {
 	Metadata           types.Metadata      `json:"metadata"`
 	Log                types.Log           `json:"log"`
 	Fees               int                 `json:"fees"`
-	FeesSplit          interface{}         `json:"fees_split"`
+	FeesSplit          any                 `json:"fees_split"`
 	Authorization      types.Authorization `json:"authorization"`
 	Customer           types.Customer      `json:"customer"`
 	Plan               string              `json:"plan"`
 	Split              types.Split         `json:"split"`
-	OrderID            interface{}         `json:"order_id"`
+	OrderID            any                 `json:"order_id"`
 	RequestedAmount    int                 `json:"requested_amount"`
-	PosTransactionData interface{}         `json:"pos_transaction_data"`
-	Source             interface{}         `json:"source"`
-	FeesBreakdown      interface{}         `json:"fees_breakdown"`
-	Connect            interface{}         `json:"connect"`
+	PosTransactionData any                 `json:"pos_transaction_data"`
+	Source             any                 `json:"source"`
+	FeesBreakdown      any                 `json:"fees_breakdown"`
+	Connect            any                 `json:"connect"`
 	TransactionDate    time.Time           `json:"transaction_date"`
 	PlanObject         types.Plan          `json:"plan_object"`
 	Subaccount         types.Subaccount    `json:"subaccount"`
 }
 
-func (c *Client) Verify(reference string) (*types.Response[TransactionVerifyResponse], error) {
+func (c *Client) Verify(ctx context.Context, reference string) (*types.Response[TransactionVerifyResponse], error) {
 	return net.Get[TransactionVerifyResponse](
+		ctx,
 		c.client,
 		c.secret,
 		fmt.Sprintf("%s%s/%s", transactionBasePath, transactionVerifyPath, reference),
+		c.baseURL,
 	)
 }

@@ -57,12 +57,12 @@ type Invoice struct {
 	Plan               Plan          `json:"plan"`
 	Subaccount         Subaccount    `json:"subaccount"`
 	Split              Split         `json:"split"`
-	OrderID            interface{}   `json:"order_id"`
+	OrderID            any           `json:"order_id"`
 	RequestedAmount    int           `json:"requested_amount"`
-	PosTransactionData interface{}   `json:"pos_transaction_data"`
-	Source             interface{}   `json:"source"`
-	FeesBreakdown      interface{}   `json:"fees_breakdown"`
-	Connect            interface{}   `json:"connect"`
+	PosTransactionData any           `json:"pos_transaction_data"`
+	Source             any           `json:"source"`
+	FeesBreakdown      any           `json:"fees_breakdown"`
+	Connect            any           `json:"connect"`
 	Authorization      Authorization `json:"authorization"`
 	Customer           Customer      `json:"customer"`
 }
@@ -86,13 +86,13 @@ type InvoiceHistory struct {
 }
 
 type Log struct {
-	StartTime int         `json:"start_time"`
-	TimeSpent int         `json:"time_spent"`
-	Attempts  int         `json:"attempts"`
-	Errors    int         `json:"errors"`
-	Success   bool        `json:"success"`
-	Mobile    bool        `json:"mobile"`
-	Input     interface{} `json:"input"`
+	StartTime int  `json:"start_time"`
+	TimeSpent int  `json:"time_spent"`
+	Attempts  int  `json:"attempts"`
+	Errors    int  `json:"errors"`
+	Success   bool `json:"success"`
+	Mobile    bool `json:"mobile"`
+	Input     any  `json:"input"`
 	History   []struct {
 		Type    string `json:"type"`
 		Message string `json:"message"`
@@ -247,15 +247,15 @@ type Transaction struct {
 	Metadata           Metadata      `json:"metadata"`
 	Log                Log           `json:"log"`
 	Fees               int           `json:"fees"`
-	FeesSplit          interface{}   `json:"fees_split"`
+	FeesSplit          any           `json:"fees_split"`
 	Customer           Customer      `json:"customer"`
 	Authorization      Authorization `json:"authorization"`
 	Plan               Plan          `json:"plan"`
 	Split              Split         `json:"split"`
 	Subaccount         Subaccount    `json:"subsccount"`
-	OrderID            interface{}   `json:"order_id"`
+	OrderID            any           `json:"order_id"`
 	RequestedAmount    int           `json:"requested_amount"`
 	Source             Source        `json:"source"`
-	Connect            interface{}   `json:"connect"`
-	POSTransactionData interface{}   `json:"pos_transaction_data"`
+	Connect            any           `json:"connect"`
+	POSTransactionData any           `json:"pos_transaction_data"`
 }

@@ -1,6 +1,7 @@
 package transactions
 
 import (
+	"context"
 	"fmt"
 	"net/url"
 	"strconv"
@@ -26,21 +27,43 @@ type TransactionExportRequest struct {
 }
 
 func (r *TransactionExportRequest) toQuery() string {
-	query := ""
+	params := url.Values{}
 
-	queryAppend(query, "perPage", r.PerPage)
-	queryAppend(query, "page", r.Page)
-	queryAppend(query, "from", r.From)
-	queryAppend(query, "to", r.To)
-	queryAppend(query, "customer", r.Customer)
-	queryAppend(query, "status", r.Status)
-	queryAppend(query, "currency", r.Currency.String())
-	queryAppend(query, "amount", r.Amount)
-	queryAppend(query, "settled", r.Settled)
-	queryAppend(query, "settlement", r.Settlement)
-	queryAppend(query, "payment_page", r.PaymentPage)
+	if r.PerPage != nil {
+		params.Add("perPage", strconv.Itoa(*r.PerPage))
+	}
+	if r.Page != nil {
+		params.Add("page", strconv.Itoa(*r.Page))
+	}
+	if r.From != nil {
+		params.Add("from", r.From.Format("2006-01-02T15:04:05.999Z"))
+	}
+	if r.To != nil {
+		params.Add("to", r.To.Format("2006-01-02T15:04:05.999Z"))
+	}
+	if r.Customer != nil {
+		params.Add("customer", strconv.FormatUint(*r.Customer, 10))
+	}
+	if r.Status != nil {
+		params.Add("status", *r.Status)
+	}
+	if r.Currency != nil {
+		params.Add("currency", r.Currency.String())
+	}
+	if r.Amount != nil {
+		params.Add("amount", strconv.Itoa(*r.Amount))
+	}
+	if r.Settled != nil {
+		params.Add("settled", strconv.FormatBool(*r.Settled))
+	}
+	if r.Settlement != nil {
+		params.Add("settlement", strconv.FormatUint(*r.Settlement, 10))
+	}
+	if r.PaymentPage != nil {
+		params.Add("payment_page", strconv.FormatUint(*r.PaymentPage, 10))
+	}
 
-	return query
+	return params.Encode()
 }
 
 type TransactionExportResponse struct {
@@ -48,57 +71,20 @@ type TransactionExportResponse struct {
 	ExpiresAt types.DateTime `json:"expiresAt"`
 }
 
-func (c *Client) Export(req *TransactionExportRequest) (*types.Response[TransactionExportResponse], error) {
-	query := ""
+func (c *Client) Export(ctx context.Context, req *TransactionExportRequest) (*types.Response[TransactionExportResponse], error) {
+	path := fmt.Sprintf("%s%s", transactionBasePath, transactionExportPath)
 
 	if req != nil {
-		query = "?" + req.toQuery()
-
-		if query == "?" {
-			query = ""
+		if query := req.toQuery(); query != "" {
+			path += "?" + query
 		}
 	}
 
 	return net.Get[TransactionExportResponse](
+		ctx,
 		c.client,
 		c.secret,
-		fmt.Sprintf("%s%s%s", transactionBasePath, transactionExportPath, query),
+		path,
+		c.baseURL,
 	)
-}
-
-func queryAppend[T *string | string | *int | *uint64 | *bool | *time.Time](query, name string, value T) string {
-	switch v := any(value).(type) {
-	case *string:
-		if v != nil {
-			return fmt.Sprintf("%s&%s=%s", query, url.QueryEscape(name), url.QueryEscape(*v))
-		}
-	case string:
-		return fmt.Sprintf("%s&%s=%s", query, url.QueryEscape(name), url.QueryEscape(v))
-	case *int:
-		if v != nil {
-			return fmt.Sprintf("%s&%s=%s", query, url.QueryEscape(name), url.QueryEscape(strconv.Itoa(*v)))
-		}
-	case *uint64:
-		if v != nil {
-			return fmt.Sprintf("%s&%s=%s", query, url.QueryEscape(name), url.QueryEscape(strconv.FormatUint(*v, 10)))
-		}
-	case *bool:
-		if v != nil {
-			b := "false"
-
-			if *v {
-				b = "true"
-			}
-
-			return fmt.Sprintf("%s&%s=%s", query, url.QueryEscape(name), url.QueryEscape(b))
-		}
-	case *time.Time:
-		if v != nil {
-			t := *v
-
-			return fmt.Sprintf("%s&%s=%s", query, url.QueryEscape(name), url.QueryEscape(t.Format("2006-01-02T15:04:05.999Z")))
-		}
-	}
-
-	return query
 }

@@ -1,3 +1,3 @@
 module github.com/huysamen/paystack-go
 
-go 1.23.2
+go 1.21
