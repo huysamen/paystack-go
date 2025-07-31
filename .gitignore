@@ -67,6 +67,7 @@ examples/*/products
 examples/*/payment-pages
 examples/*/payment-requests
 examples/*/transfer-control
+examples/*/bulk-charges
 
 # Example binaries - pattern-based names
 examples/*/*-example
@@ -79,6 +80,7 @@ examples/*/apple-pay-example
 examples/*/products-example
 examples/*/payment-pages-example
 examples/*/transfer-control-example
+examples/*/bulk-charges-example
 examples/*/miscellaneous-example
 examples/*/miscellaneous-advanced-example
 examples/*/settlements-example

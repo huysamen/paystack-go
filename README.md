@@ -181,6 +181,15 @@ func main() {
 - **Finalize Disable OTP**: Complete OTP disabling with verification code
 - **Enable OTP**: Re-enable OTP requirement for transfer security
 
+### Bulk Charges
+
+- **Initiate Bulk Charge**: Process multiple charges in a single batch with authorization codes
+- **List Bulk Charge Batches**: Get all bulk charge batches with filtering and pagination
+- **Fetch Bulk Charge Batch**: Retrieve specific batch details including progress status
+- **Fetch Charges in a Batch**: Get detailed charge information within a specific batch
+- **Pause Bulk Charge Batch**: Temporarily halt processing of an active batch
+- **Resume Bulk Charge Batch**: Resume processing of a paused batch
+
 ### Customers
 
 - **Create Customer**: Create a new customer with email and optional details
@@ -1871,6 +1880,103 @@ func main() {
         log.Printf("Resend OTP error: %v", err)
     } else {
         fmt.Printf("OTP Resent: %s\n", resendResp.Message)
+    }
+}
+```
+
+### Bulk Charges for Mass Payment Processing
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "log"
+
+    "github.com/huysamen/paystack-go"
+    "github.com/huysamen/paystack-go/api/bulk-charges"
+)
+
+func main() {
+    client := paystack.DefaultClient("sk_test_your_secret_key_here")
+    ctx := context.Background()
+
+    // Prepare bulk charges (e.g., salary payments)
+    charges := bulkcharges.InitiateBulkChargeRequest{
+        {
+            Authorization: "AUTH_employee_001",
+            Amount:        250000, // ₦2,500.00 salary
+            Reference:     "salary-jan-2024-001",
+        },
+        {
+            Authorization: "AUTH_employee_002", 
+            Amount:        180000, // ₦1,800.00 salary
+            Reference:     "salary-jan-2024-002",
+        },
+        {
+            Authorization: "AUTH_employee_003",
+            Amount:        320000, // ₦3,200.00 salary  
+            Reference:     "salary-jan-2024-003",
+        },
+    }
+
+    // Initiate bulk charge batch
+    batch, err := client.BulkCharges.Initiate(ctx, charges)
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    fmt.Printf("Bulk charge initiated: %s\n", batch.Data.BatchCode)
+    fmt.Printf("Total charges: %d\n", batch.Data.TotalCharges)
+    fmt.Printf("Status: %s\n", batch.Data.Status)
+
+    // Monitor batch progress
+    fetchedBatch, err := client.BulkCharges.Fetch(ctx, batch.Data.BatchCode)
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    fmt.Printf("Pending charges: %d/%d\n", 
+        fetchedBatch.Data.PendingCharges, 
+        fetchedBatch.Data.TotalCharges)
+
+    // Get detailed charge information
+    chargesReq := &bulkcharges.FetchChargesInBatchRequest{
+        PerPage: &[]int{50}[0],
+        Status:  &[]string{"success"}[0], // Filter successful charges
+    }
+
+    chargeDetails, err := client.BulkCharges.FetchChargesInBatch(
+        ctx, batch.Data.BatchCode, chargesReq)
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    fmt.Printf("Successful charges: %d\n", len(chargeDetails.Data))
+    for _, charge := range chargeDetails.Data {
+        fmt.Printf("  - %s: ₦%.2f (%s)\n", 
+            charge.Reference, 
+            float64(charge.Amount)/100,
+            charge.Customer.Email)
+    }
+
+    // Pause batch if needed (for large batches)
+    if fetchedBatch.Data.Status == "active" {
+        pauseResp, err := client.BulkCharges.Pause(ctx, batch.Data.BatchCode)
+        if err != nil {
+            log.Printf("Pause error: %v", err)
+        } else {
+            fmt.Printf("Batch paused: %s\n", pauseResp.Message)
+        }
+
+        // Resume when ready
+        resumeResp, err := client.BulkCharges.Resume(ctx, batch.Data.BatchCode)
+        if err != nil {
+            log.Printf("Resume error: %v", err)
+        } else {
+            fmt.Printf("Batch resumed: %s\n", resumeResp.Message)
+        }
     }
 }
 ```
