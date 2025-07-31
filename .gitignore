@@ -62,6 +62,8 @@ examples/*/transaction-splits
 examples/*/terminal
 examples/*/virtual-terminal
 examples/*/virtual-terminal-example
+examples/*/direct-debit
+examples/*/direct-debit-example
 
 # Generic pattern for any executable in examples directories
 examples/*/[!.]?*

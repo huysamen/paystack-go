@@ -43,6 +43,7 @@ import (
 	"time"
 
 	"github.com/huysamen/paystack-go/api/customers"
+	direct_debit "github.com/huysamen/paystack-go/api/direct-debit"
 	"github.com/huysamen/paystack-go/api/miscellaneous"
 	"github.com/huysamen/paystack-go/api/plans"
 	"github.com/huysamen/paystack-go/api/settlements"
@@ -71,6 +72,7 @@ type Client struct {
 	TransactionSplits  *transaction_splits.Client
 	Terminal           *terminal.Client
 	VirtualTerminal    *virtual_terminal.Client
+	DirectDebit        *direct_debit.Client
 }
 
 // DefaultClient creates a new client with default configuration
@@ -126,6 +128,7 @@ func NewClient(config *Config) *Client {
 		TransactionSplits:  transaction_splits.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
 		Terminal:           terminal.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
 		VirtualTerminal:    virtual_terminal.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
+		DirectDebit:        direct_debit.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
 	}
 
 	return client

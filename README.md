@@ -154,6 +154,11 @@ func main() {
 - **Fetch Mandate Authorizations**: Get all direct debit mandates for a customer
 - **Deactivate Authorization**: Deactivate payment authorization codes
 
+### Direct Debit
+
+- **List Mandate Authorizations**: Get all direct debit mandate authorizations with status filtering
+- **Trigger Activation Charge**: Trigger activation charges on pending mandates for multiple customers
+
 ### Subscriptions
 
 - **Create Subscription**: Create recurring payment subscriptions for customers
@@ -1220,6 +1225,74 @@ func main() {
     }
 
     fmt.Printf("Terminal deactivated: %s\n", deactivateResult.Message)
+}
+```
+
+### Direct Debit
+
+The direct debit API allows you to manage authorization on your customer's bank accounts.
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "log"
+    
+    "github.com/huysamen/paystack-go"
+    "github.com/huysamen/paystack-go/api/direct-debit"
+)
+
+func main() {
+    client := paystack.DefaultClient("sk_test_your_secret_key_here")
+    ctx := context.Background()
+
+    // List active mandate authorizations
+    listReq := &directdebit.ListMandateAuthorizationsRequest{
+        Status:  directdebit.MandateAuthorizationStatusActive,
+        PerPage: 10,
+    }
+
+    mandates, err := client.DirectDebit.ListMandateAuthorizations(ctx, listReq)
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    fmt.Printf("Found %d active mandate authorizations\n", len(mandates.Data))
+    for _, mandate := range mandates.Data {
+        fmt.Printf("- %s: %s (%s)\n", 
+            mandate.Customer.Email, mandate.BankName, mandate.Status)
+    }
+
+    // List pending mandates
+    pendingReq := &directdebit.ListMandateAuthorizationsRequest{
+        Status: directdebit.MandateAuthorizationStatusPending,
+    }
+
+    pendingMandates, err := client.DirectDebit.ListMandateAuthorizations(ctx, pendingReq)
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    // Trigger activation charges for pending mandates
+    if len(pendingMandates.Data) > 0 {
+        var customerIDs []int
+        for _, mandate := range pendingMandates.Data {
+            customerIDs = append(customerIDs, mandate.Customer.ID)
+        }
+
+        activationReq := &directdebit.TriggerActivationChargeRequest{
+            CustomerIDs: customerIDs,
+        }
+
+        activationResp, err := client.DirectDebit.TriggerActivationCharge(ctx, activationReq)
+        if err != nil {
+            log.Printf("Activation error: %v\n", err)
+        } else {
+            fmt.Printf("Activation triggered: %s\n", activationResp.Message)
+        }
+    }
 }
 ```
 
