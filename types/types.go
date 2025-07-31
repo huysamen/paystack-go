@@ -162,7 +162,24 @@ type Source struct {
 }
 
 type Split struct {
-	// todo
+	ID               uint64    `json:"id"`
+	Name             string    `json:"name"`
+	Type             string    `json:"type"`
+	Currency         Currency  `json:"currency"`
+	Integration      uint64    `json:"integration"`
+	Domain           string    `json:"domain"`
+	SplitCode        string    `json:"split_code"`
+	Active           bool      `json:"active"`
+	BearerType       string    `json:"bearer_type"`
+	BearerSubaccount *string   `json:"bearer_subaccount"`
+	CreatedAt        time.Time `json:"createdAt"`
+	UpdatedAt        time.Time `json:"updatedAt"`
+	IsDynamic        bool      `json:"is_dynamic"`
+	Subaccounts      []struct {
+		Subaccount string `json:"subaccount"`
+		Share      int    `json:"share"`
+	} `json:"subaccounts"`
+	TotalSubaccounts int `json:"total_subaccounts"`
 }
 
 type Subscriber struct {

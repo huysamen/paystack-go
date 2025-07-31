@@ -14,6 +14,7 @@ A comprehensive Go client library for the [Paystack API](https://paystack.com/do
 - ✅ **Transfers**: Initiate, finalize, bulk transfers, list, fetch, verify transfer status
 - ✅ **Transfer Recipients**: Create, bulk create, list, fetch, update, delete recipient accounts
 - ✅ **Subaccounts**: Create, list, fetch, update subaccounts for revenue splitting
+- ✅ **Transaction Splits**: Create, list, fetch, update splits, add/remove subaccounts from splits
 - ✅ **Settlements**: List settlements, filter by status/date/subaccount, list settlement transactions
 - ✅ **Verification**: Resolve account numbers, validate accounts, resolve card BINs
 - ✅ **Miscellaneous**: List banks/countries/states for address verification and geographic support
@@ -186,6 +187,15 @@ func main() {
 - **List Subaccounts**: Get all subaccounts with date filtering and pagination
 - **Fetch Subaccount**: Retrieve detailed subaccount information by ID or code
 - **Update Subaccount**: Modify subaccount details, commission rates, and settlement schedules
+
+### Transaction Splits
+
+- **Create Split**: Create transaction splits for automatic revenue distribution
+- **List Splits**: Get all splits with filtering by name, active status, and date range
+- **Fetch Split**: Retrieve detailed split information by ID or split code
+- **Update Split**: Modify split name, active status, and bearer type settings
+- **Add Subaccount**: Add or update subaccount shares within a split
+- **Remove Subaccount**: Remove subaccounts from existing splits
 
 ### Settlements
 
@@ -785,6 +795,115 @@ if err != nil {
 }
 
 fmt.Printf("Subaccount deactivated\n")
+```
+
+### Transaction Splits
+
+The transaction splits API enables merchants to split settlement for a transaction across their payout account and one or more subaccounts.
+
+```go
+package main
+
+import (
+    "fmt"
+    "log"
+    
+    "github.com/huysamen/paystack-go"
+    transaction_splits "github.com/huysamen/paystack-go/api/transaction-splits"
+    "github.com/huysamen/paystack-go/types"
+)
+
+func main() {
+    client := paystack.DefaultClient("sk_test_your_secret_key_here")
+
+    // Create a transaction split
+    createReq := &transaction_splits.TransactionSplitCreateRequest{
+        Name:     "Revenue Split",
+        Type:     transaction_splits.TransactionSplitTypePercentage,
+        Currency: types.CurrencyNGN,
+        Subaccounts: []transaction_splits.TransactionSplitSubaccount{
+            {
+                Subaccount: "ACCT_xxxxxxxxxx",
+                Share:      70, // 70% to this subaccount
+            },
+            {
+                Subaccount: "ACCT_yyyyyyyyyy", 
+                Share:      30, // 30% to this subaccount
+            },
+        },
+        BearerType: &[]transaction_splits.TransactionSplitBearerType{
+            transaction_splits.TransactionSplitBearerTypeAllProportional,
+        }[0],
+    }
+
+    createResp, err := client.TransactionSplits.Create(createReq)
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    fmt.Printf("Split created: %s\n", createResp.Data.SplitCode)
+
+    // List transaction splits
+    listReq := &transaction_splits.TransactionSplitListRequest{
+        Active:  &[]bool{true}[0],
+        PerPage: &[]int{20}[0],
+    }
+
+    listResp, err := client.TransactionSplits.List(listReq)
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    fmt.Printf("Found %d splits\n", len(listResp.Data))
+
+    // Fetch a specific split
+    fetchResp, err := client.TransactionSplits.Fetch(createResp.Data.SplitCode)
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    fmt.Printf("Split: %s (%s)\n", fetchResp.Data.Name, fetchResp.Data.Type)
+
+    // Update split
+    updateReq := &transaction_splits.TransactionSplitUpdateRequest{
+        Name: &[]string{"Updated Revenue Split"}[0],
+        BearerType: &[]transaction_splits.TransactionSplitBearerType{
+            transaction_splits.TransactionSplitBearerTypeAccount,
+        }[0],
+    }
+
+    updateResp, err := client.TransactionSplits.Update(createResp.Data.SplitCode, updateReq)
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    fmt.Printf("Split updated: %s\n", updateResp.Data.Name)
+
+    // Add subaccount to split
+    addReq := &transaction_splits.TransactionSplitSubaccountAddRequest{
+        Subaccount: "ACCT_zzzzzzzzzz",
+        Share:      15,
+    }
+
+    addResp, err := client.TransactionSplits.AddSubaccount(createResp.Data.SplitCode, addReq)
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    fmt.Printf("Subaccount added. Total subaccounts: %d\n", addResp.Data.TotalSubaccounts)
+
+    // Remove subaccount from split
+    removeReq := &transaction_splits.TransactionSplitSubaccountRemoveRequest{
+        Subaccount: "ACCT_zzzzzzzzzz",
+    }
+
+    _, err = client.TransactionSplits.RemoveSubaccount(createResp.Data.SplitCode, removeReq)
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    fmt.Printf("Subaccount removed from split\n")
+}
 ```
 
 ### Settlements
