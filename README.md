@@ -22,6 +22,7 @@ A comprehensive Go client library for the [Paystack API](https://paystack.com/do
 - ✅ **Direct Debit**: Manage mandate authorizations for direct debit payments
 - ✅ **Dedicated Virtual Account**: Create and manage dedicated virtual accounts for unique customer payments
 - ✅ **Apple Pay**: Register and manage domains for Apple Pay integration
+- ✅ **Charges**: Create charges for multiple payment channels (card, bank, USSD, mobile money, QR, transfer) with submission workflows
 - ✅ **Integration**: Manage payment session timeout settings and integration configuration
 - ✅ **Verification**: Resolve account numbers, validate accounts, resolve card BINs
 - ✅ **Miscellaneous**: List banks/countries/states for address verification and geographic support
@@ -190,6 +191,16 @@ func main() {
 - **Fetch Charges in a Batch**: Get detailed charge information within a specific batch
 - **Pause Bulk Charge Batch**: Temporarily halt processing of an active batch
 - **Resume Bulk Charge Batch**: Resume processing of a paused batch
+
+### Charges
+
+- **Create Charge**: Create charges for various payment channels (card, bank, USSD, mobile money, QR codes, bank transfer)
+- **Submit PIN**: Submit PIN for card charges requiring PIN verification
+- **Submit OTP**: Submit OTP for charges requiring phone number verification
+- **Submit Phone**: Submit phone number for charges requiring phone verification
+- **Submit Birthday**: Submit date of birth for charges requiring birthday verification
+- **Submit Address**: Submit billing address for charges requiring address verification
+- **Check Pending Charge**: Check the status of pending charges (bank, USSD, QR, mobile money)
 
 ### Integration
 
@@ -1823,6 +1834,103 @@ if err != nil {
 }
 
 fmt.Printf("Domain unregistered: %s\n", unregisterResp.Message)
+```
+
+### Charges for Multiple Payment Channels
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "log"
+    "time"
+
+    "github.com/huysamen/paystack-go"
+    "github.com/huysamen/paystack-go/api/charges"
+)
+
+func main() {
+    client := paystack.DefaultClient("sk_test_your_secret_key_here")
+    ctx := context.Background()
+
+    // Create a bank account charge
+    chargeReq := &charges.CreateChargeRequest{
+        Email:     "customer@example.com",
+        Amount:    "25000", // ₦250.00
+        Reference: stringPtr("bank-charge-" + generateReference()),
+        Bank: &charges.BankDetails{
+            Code:          "044", // Access Bank
+            AccountNumber: "0123456789",
+        },
+        Metadata: map[string]interface{}{
+            "channel":    "bank",
+            "product_id": "PROD_001",
+        },
+    }
+
+    charge, err := client.Charges.Create(ctx, chargeReq)
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    fmt.Printf("Charge created: %s\n", charge.Data.Reference)
+    fmt.Printf("Status: %s\n", charge.Data.Status)
+    fmt.Printf("Amount: ₦%.2f\n", float64(charge.Data.Amount)/100)
+
+    // Handle different charge statuses
+    switch charge.Data.Status {
+    case "success":
+        fmt.Println("✅ Charge successful")
+    case "pending":
+        fmt.Println("⏳ Charge pending - checking status...")
+        
+        // Check pending status (wait at least 10 seconds in production)
+        pendingCharge, err := client.Charges.CheckPending(ctx, charge.Data.Reference)
+        if err != nil {
+            log.Printf("Error checking status: %v", err)
+        } else {
+            fmt.Printf("Updated status: %s\n", pendingCharge.Data.Status)
+        }
+    case "send_pin":
+        fmt.Println("🔑 PIN required")
+        
+        // Submit PIN
+        pinResp, err := client.Charges.SubmitPIN(ctx, &charges.SubmitPINRequest{
+            PIN:       "1234",
+            Reference: charge.Data.Reference,
+        })
+        if err != nil {
+            log.Printf("PIN submission error: %v", err)
+        } else {
+            fmt.Printf("PIN submitted, new status: %s\n", pinResp.Data.Status)
+        }
+    case "send_otp":
+        fmt.Println("📱 OTP required")
+        
+        // Submit OTP
+        otpResp, err := client.Charges.SubmitOTP(ctx, &charges.SubmitOTPRequest{
+            OTP:       "123456",
+            Reference: charge.Data.Reference,
+        })
+        if err != nil {
+            log.Printf("OTP submission error: %v", err)
+        } else {
+            fmt.Printf("OTP submitted, new status: %s\n", otpResp.Data.Status)
+        }
+    default:
+        fmt.Printf("❌ Charge failed: %s\n", charge.Data.Status)
+    }
+}
+
+func stringPtr(s string) *string {
+    return &s
+}
+
+func generateReference() string {
+    return fmt.Sprintf("%d", time.Now().UnixNano()%1000000000)
+}
 ```
 
 ### Transfer Control and Balance Management

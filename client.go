@@ -44,6 +44,7 @@ import (
 
 	applepay "github.com/huysamen/paystack-go/api/apple-pay"
 	bulk_charges "github.com/huysamen/paystack-go/api/bulk-charges"
+	"github.com/huysamen/paystack-go/api/charges"
 	"github.com/huysamen/paystack-go/api/customers"
 	dedicated_virtual_account "github.com/huysamen/paystack-go/api/dedicated-virtual-account"
 	direct_debit "github.com/huysamen/paystack-go/api/direct-debit"
@@ -78,6 +79,7 @@ type Client struct {
 	TransferControl         *transfer_control.Client
 	TransferRecipients      *transfer_recipients.Client
 	BulkCharges             *bulk_charges.Client
+	Charges                 *charges.Client
 	Subaccounts             *subaccounts.Client
 	Settlements             *settlements.Client
 	Miscellaneous           *miscellaneous.Client
@@ -142,6 +144,7 @@ func NewClient(config *Config) *Client {
 		TransferControl:         transfer_control.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
 		TransferRecipients:      transfer_recipients.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
 		BulkCharges:             bulk_charges.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
+		Charges:                 charges.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
 		Subaccounts:             subaccounts.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
 		Settlements:             settlements.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
 		Miscellaneous:           miscellaneous.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
