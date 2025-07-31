@@ -44,12 +44,11 @@ coverage.html
 !/utils/
 !/webhook/
 
-# Example binaries - specific patterns
+# Example binaries - specific patterns by directory name
 examples/*/main
 examples/*/app
 examples/*/server
 examples/*/client
-examples/*/*-example
 examples/*/customers
 examples/*/settlements
 examples/*/miscellaneous
@@ -61,15 +60,28 @@ examples/*/transfer-recipients
 examples/*/transaction-splits
 examples/*/terminal
 examples/*/virtual-terminal
-examples/*/virtual-terminal-example
 examples/*/direct-debit
-examples/*/direct-debit-example
 examples/*/dedicated-virtual-account
-examples/*/dedicated-virtual-account-example
 examples/*/apple-pay
-examples/*/apple-pay-example
 examples/*/products
+examples/*/payment-pages
+
+# Example binaries - pattern-based names
+examples/*/*-example
+examples/*/*-advanced
+examples/*/*-advanced-example
+examples/*/virtual-terminal-example
+examples/*/direct-debit-example
+examples/*/dedicated-virtual-account-example
+examples/*/apple-pay-example
 examples/*/products-example
+examples/*/payment-pages-example
+examples/*/miscellaneous-example
+examples/*/miscellaneous-advanced-example
+examples/*/settlements-example
+examples/*/products-advanced-example
+examples/*/transfers-advanced
+examples/*/webhook-parsing
 
 # Generic pattern for any executable in examples directories
 examples/*/[!.]?*

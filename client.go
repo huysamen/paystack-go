@@ -47,6 +47,7 @@ import (
 	dedicated_virtual_account "github.com/huysamen/paystack-go/api/dedicated-virtual-account"
 	direct_debit "github.com/huysamen/paystack-go/api/direct-debit"
 	"github.com/huysamen/paystack-go/api/miscellaneous"
+	payment_pages "github.com/huysamen/paystack-go/api/payment-pages"
 	"github.com/huysamen/paystack-go/api/plans"
 	"github.com/huysamen/paystack-go/api/products"
 	"github.com/huysamen/paystack-go/api/settlements"
@@ -65,6 +66,7 @@ type Client struct {
 	Transactions            *transactions.Client
 	Plans                   *plans.Client
 	Products                *products.Client
+	PaymentPages            *payment_pages.Client
 	Customers               *customers.Client
 	Subscriptions           *subscriptions.Client
 	Transfers               *transfers.Client
@@ -124,6 +126,7 @@ func NewClient(config *Config) *Client {
 		Transactions:            transactions.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
 		Plans:                   plans.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
 		Products:                products.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
+		PaymentPages:            payment_pages.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
 		Customers:               customers.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
 		Subscriptions:           subscriptions.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
 		Transfers:               transfers.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),

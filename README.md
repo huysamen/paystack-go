@@ -151,6 +151,15 @@ func main() {
 - **Fetch Product**: Get detailed product information by ID or product code
 - **Update Product**: Update product details, pricing, and inventory levels
 
+### Payment Pages
+
+- **Create Payment Page**: Create secure payment pages for one-time payments, subscriptions, or products
+- **List Payment Pages**: List all payment pages with pagination and date filtering
+- **Fetch Payment Page**: Get detailed payment page information by ID or slug
+- **Update Payment Page**: Update page details, pricing, and activation status
+- **Check Slug Availability**: Verify if a custom slug is available for use
+- **Add Products**: Associate existing products with payment pages for product showcases
+
 ### Customers
 
 - **Create Customer**: Create a new customer with email and optional details
@@ -1551,6 +1560,97 @@ if err != nil {
 }
 
 fmt.Printf("Updated price: ₦%.2f\n", float64(updatedProduct.Price)/100)
+```
+
+### Payment Pages Management
+
+```go
+// Create a payment page for course enrollment
+fixedAmount := true
+collectPhone := false
+createReq := &payment_pages.CreatePaymentPageRequest{
+    Name:         "Premium Course Access",
+    Description:  "One-time payment for premium course access with lifetime updates",
+    Amount:       func() *int { amount := 25000; return &amount }(), // ₦250.00
+    Currency:     "NGN",
+    Type:         "payment",
+    FixedAmount:  &fixedAmount,
+    CollectPhone: &collectPhone,
+    CustomFields: []payment_pages.CustomField{
+        {
+            DisplayName:  "Full Name",
+            VariableName: "student_name",
+            Required:     true,
+        },
+        {
+            DisplayName:  "Phone Number",
+            VariableName: "phone_number",
+            Required:     true,
+        },
+    },
+    Metadata: &types.Metadata{
+        "course_id":   "premium-001",
+        "instructor":  "John Doe",
+        "duration":    "6 months",
+    },
+    RedirectURL:    "https://myapp.com/course-access",
+    SuccessMessage: "Welcome! You now have access to the premium course.",
+}
+
+page, err := client.PaymentPages.Create(context.Background(), createReq)
+if err != nil {
+    log.Fatal(err)
+}
+
+fmt.Printf("Payment page created: %s\n", page.Name)
+fmt.Printf("Payment URL: https://paystack.com/pay/%s\n", page.Slug)
+
+// Check if a custom slug is available
+slug := "premium-course-2024"
+slugResp, err := client.PaymentPages.CheckSlugAvailability(context.Background(), slug)
+if err != nil {
+    log.Fatal(err)
+}
+
+if slugResp.Status {
+    fmt.Printf("Slug '%s' is available\n", slug)
+} else {
+    fmt.Printf("Slug '%s' is not available\n", slug)
+}
+
+// List all payment pages with pagination
+listReq := &payment_pages.ListPaymentPagesRequest{
+    PerPage: 10,
+    Page:    1,
+}
+
+pagesResp, err := client.PaymentPages.List(context.Background(), listReq)
+if err != nil {
+    log.Fatal(err)
+}
+
+fmt.Printf("Found %d payment pages:\n", len(pagesResp.Data))
+for _, p := range pagesResp.Data {
+    amountStr := "Variable amount"
+    if p.Amount != nil {
+        amountStr = fmt.Sprintf("₦%.2f", float64(*p.Amount)/100)
+    }
+    fmt.Printf("  - %s: %s (Active: %t)\n", p.Name, amountStr, p.Active)
+}
+
+// Update payment page with early bird pricing
+updateReq := &payment_pages.UpdatePaymentPageRequest{
+    Name:        "Premium Course Access - Early Bird Special",
+    Description: "🐦 Early Bird: Save 20%! Premium course access with lifetime updates",
+    Amount:      func() *int { amount := 20000; return &amount }(), // ₦200.00 (discounted)
+}
+
+updatedPage, err := client.PaymentPages.Update(context.Background(), page.Slug, updateReq)
+if err != nil {
+    log.Fatal(err)
+}
+
+fmt.Printf("Updated page: %s - ₦%.2f\n", updatedPage.Name, float64(*updatedPage.Amount)/100)
 ```
 
 ### Apple Pay Domain Management
