@@ -16,6 +16,7 @@ A comprehensive Go client library for the [Paystack API](https://paystack.com/do
 - ✅ **Subaccounts**: Create, list, fetch, update subaccounts for revenue splitting
 - ✅ **Transaction Splits**: Create, list, fetch, update splits, add/remove subaccounts from splits
 - ✅ **Settlements**: List settlements, filter by status/date/subaccount, list settlement transactions
+- ✅ **Terminal**: Send events, check status, list/fetch/update terminals, commission/decommission devices
 - ✅ **Verification**: Resolve account numbers, validate accounts, resolve card BINs
 - ✅ **Miscellaneous**: List banks/countries/states for address verification and geographic support
 - ✅ **Type Safety**: Strongly typed request/response structures
@@ -201,6 +202,17 @@ func main() {
 
 - **List Settlements**: Get all settlements with status, date, and subaccount filtering
 - **List Settlement Transactions**: Retrieve transactions within a specific settlement
+
+### Terminal
+
+- **Send Event**: Send invoice or transaction events to terminal devices
+- **Fetch Event Status**: Check delivery status of events sent to terminals
+- **Fetch Terminal Status**: Check online and availability status of terminals
+- **List Terminals**: Get all terminals available on your integration
+- **Fetch Terminal**: Retrieve detailed terminal information by ID
+- **Update Terminal**: Modify terminal name and address details
+- **Commission Device**: Activate debug devices by linking to your integration
+- **Decommission Device**: Unlink debug devices from your integration
 
 ### Verification
 
@@ -975,6 +987,106 @@ func main() {
         }
 
         fmt.Printf("Found %d transactions in settlement %s\n", len(txResp.Data), settlementID)
+    }
+}
+```
+
+### Terminal
+
+The terminal API allows you to build delightful in-person payment experiences with Paystack terminal devices.
+
+```go
+package main
+
+import (
+    "fmt"
+    "log"
+    
+    "github.com/huysamen/paystack-go"
+    "github.com/huysamen/paystack-go/api/terminal"
+)
+
+func main() {
+    client := paystack.DefaultClient("sk_test_your_secret_key_here")
+
+    // List terminals
+    listReq := &terminal.TerminalListRequest{
+        PerPage: &[]int{10}[0],
+    }
+
+    listResp, err := client.Terminal.List(listReq)
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    fmt.Printf("Found %d terminals\n", len(listResp.Data))
+
+    if len(listResp.Data) > 0 {
+        terminalID := listResp.Data[0].TerminalID
+
+        // Fetch terminal details
+        fetchResp, err := client.Terminal.Fetch(terminalID)
+        if err != nil {
+            log.Fatal(err)
+        }
+
+        fmt.Printf("Terminal: %s (Status: %s)\n", fetchResp.Data.Name, fetchResp.Data.Status)
+
+        // Check terminal status
+        statusResp, err := client.Terminal.FetchTerminalStatus(terminalID)
+        if err != nil {
+            log.Fatal(err)
+        }
+
+        fmt.Printf("Online: %v, Available: %v\n", statusResp.Data.Online, statusResp.Data.Available)
+
+        // Send invoice event to terminal
+        eventReq := &terminal.TerminalSendEventRequest{
+            Type:   terminal.TerminalEventTypeInvoice,
+            Action: terminal.TerminalEventActionProcess,
+            Data: terminal.TerminalEventData{
+                "id":        123456,
+                "reference": 4634337895939,
+            },
+        }
+
+        eventResp, err := client.Terminal.SendEvent(terminalID, eventReq)
+        if err != nil {
+            log.Fatal(err)
+        }
+
+        fmt.Printf("Event sent: %s\n", eventResp.Data.ID)
+
+        // Check event delivery status
+        eventStatusResp, err := client.Terminal.FetchEventStatus(terminalID, eventResp.Data.ID)
+        if err != nil {
+            log.Fatal(err)
+        }
+
+        fmt.Printf("Event delivered: %v\n", eventStatusResp.Data.Delivered)
+
+        // Update terminal
+        updateReq := &terminal.TerminalUpdateRequest{
+            Name:    &[]string{"Updated Terminal Name"}[0],
+            Address: &[]string{"New Address"}[0],
+        }
+
+        _, err = client.Terminal.Update(terminalID, updateReq)
+        if err != nil {
+            log.Fatal(err)
+        }
+
+        fmt.Printf("Terminal updated\n")
+    }
+
+    // Commission a device
+    commissionReq := &terminal.TerminalCommissionRequest{
+        SerialNumber: "1111150412230003899",
+    }
+
+    _, err = client.Terminal.CommissionDevice(commissionReq)
+    if err != nil {
+        log.Printf("Commission error (expected): %v\n", err)
     }
 }
 ```

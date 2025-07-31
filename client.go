@@ -48,6 +48,7 @@ import (
 	"github.com/huysamen/paystack-go/api/settlements"
 	"github.com/huysamen/paystack-go/api/subaccounts"
 	"github.com/huysamen/paystack-go/api/subscriptions"
+	"github.com/huysamen/paystack-go/api/terminal"
 	transaction_splits "github.com/huysamen/paystack-go/api/transaction-splits"
 	"github.com/huysamen/paystack-go/api/transactions"
 	transfer_recipients "github.com/huysamen/paystack-go/api/transfer-recipients"
@@ -67,6 +68,7 @@ type Client struct {
 	Miscellaneous      *miscellaneous.Client
 	Verification       *verification.Client
 	TransactionSplits  *transaction_splits.Client
+	Terminal           *terminal.Client
 }
 
 // DefaultClient creates a new client with default configuration
@@ -120,6 +122,7 @@ func NewClient(config *Config) *Client {
 		Miscellaneous:      miscellaneous.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
 		Verification:       verification.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
 		TransactionSplits:  transaction_splits.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
+		Terminal:           terminal.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
 	}
 
 	return client
