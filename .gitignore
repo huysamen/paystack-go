@@ -66,6 +66,8 @@ examples/*/direct-debit
 examples/*/direct-debit-example
 examples/*/dedicated-virtual-account
 examples/*/dedicated-virtual-account-example
+examples/*/apple-pay
+examples/*/apple-pay-example
 
 # Generic pattern for any executable in examples directories
 examples/*/[!.]?*

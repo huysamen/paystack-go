@@ -20,6 +20,7 @@ A comprehensive Go client library for the [Paystack API](https://paystack.com/do
 - ✅ **Virtual Terminal**: Create virtual terminals, manage settings, assign destinations, handle splits
 - ✅ **Direct Debit**: Manage mandate authorizations for direct debit payments
 - ✅ **Dedicated Virtual Account**: Create and manage dedicated virtual accounts for unique customer payments
+- ✅ **Apple Pay**: Register and manage domains for Apple Pay integration
 - ✅ **Verification**: Resolve account numbers, validate accounts, resolve card BINs
 - ✅ **Miscellaneous**: List banks/countries/states for address verification and geographic support
 - ✅ **Type Safety**: Strongly typed request/response structures
@@ -245,6 +246,12 @@ func main() {
 - **Split Transaction**: Add transaction splits to dedicated virtual accounts for automatic fund distribution
 - **Remove Split**: Remove splits from dedicated virtual accounts
 - **Fetch Bank Providers**: Get available bank providers for dedicated virtual account creation
+
+### Apple Pay
+
+- **Register Domain**: Register top-level domains or subdomains for Apple Pay integration
+- **List Domains**: Get all registered Apple Pay domains with optional cursor pagination
+- **Unregister Domain**: Remove previously registered domains from Apple Pay integration
 
 ### Verification
 
@@ -1484,6 +1491,45 @@ if len(accounts.Data) > 0 {
 
     fmt.Printf("Split added to account: %s\n", splitAccount.AccountNumber)
 }
+```
+
+### Apple Pay Domain Management
+
+```go
+// Register domain for Apple Pay integration
+registerReq := &applepay.RegisterDomainRequest{
+    DomainName: "checkout.mystore.com",
+}
+
+registerResp, err := client.ApplePay.RegisterDomain(context.Background(), registerReq)
+if err != nil {
+    log.Fatal(err)
+}
+
+fmt.Printf("Domain registered: %s\n", registerResp.Message)
+
+// List all registered domains
+domainsResp, err := client.ApplePay.ListDomains(context.Background(), &applepay.ListDomainsRequest{})
+if err != nil {
+    log.Fatal(err)
+}
+
+fmt.Printf("Registered domains: %d\n", len(domainsResp.Data.DomainNames))
+for _, domain := range domainsResp.Data.DomainNames {
+    fmt.Printf("  - %s\n", domain)
+}
+
+// Unregister domain when no longer needed
+unregisterReq := &applepay.UnregisterDomainRequest{
+    DomainName: "old-checkout.mystore.com",
+}
+
+unregisterResp, err := client.ApplePay.UnregisterDomain(context.Background(), unregisterReq)
+if err != nil {
+    log.Fatal(err)
+}
+
+fmt.Printf("Domain unregistered: %s\n", unregisterResp.Message)
 ```
 
 ## Contributing

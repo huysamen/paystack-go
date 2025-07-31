@@ -42,6 +42,7 @@ import (
 	"net/http"
 	"time"
 
+	applepay "github.com/huysamen/paystack-go/api/apple-pay"
 	"github.com/huysamen/paystack-go/api/customers"
 	dedicated_virtual_account "github.com/huysamen/paystack-go/api/dedicated-virtual-account"
 	direct_debit "github.com/huysamen/paystack-go/api/direct-debit"
@@ -75,6 +76,7 @@ type Client struct {
 	VirtualTerminal         *virtual_terminal.Client
 	DirectDebit             *direct_debit.Client
 	DedicatedVirtualAccount *dedicated_virtual_account.Client
+	ApplePay                *applepay.Client
 }
 
 // DefaultClient creates a new client with default configuration
@@ -132,6 +134,7 @@ func NewClient(config *Config) *Client {
 		VirtualTerminal:         virtual_terminal.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
 		DirectDebit:             direct_debit.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
 		DedicatedVirtualAccount: dedicated_virtual_account.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
+		ApplePay:                applepay.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
 	}
 
 	return client
