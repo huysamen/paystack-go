@@ -113,3 +113,53 @@ func (e *Event) AsInvoiceCreate() (*InvoiceCreateEvent, error) {
 func (e *Event) AsRefundProcessed() (*RefundProcessedEvent, error) {
 	return ParseEventData[RefundProcessedEvent](e)
 }
+
+// AsChargeDispute parses the event data as ChargeDisputeEvent
+func (e *Event) AsChargeDispute() (*ChargeDisputeEvent, error) {
+	return ParseEventData[ChargeDisputeEvent](e)
+}
+
+// AsDedicatedAccount parses the event data as DedicatedAccountEvent
+func (e *Event) AsDedicatedAccount() (*DedicatedAccountEvent, error) {
+	return ParseEventData[DedicatedAccountEvent](e)
+}
+
+// AsInvoicePaymentFailed parses the event data as InvoicePaymentFailedEvent
+func (e *Event) AsInvoicePaymentFailed() (*InvoicePaymentFailedEvent, error) {
+	return ParseEventData[InvoicePaymentFailedEvent](e)
+}
+
+// AsInvoiceUpdate parses the event data as InvoiceUpdateEvent
+func (e *Event) AsInvoiceUpdate() (*InvoiceUpdateEvent, error) {
+	return ParseEventData[InvoiceUpdateEvent](e)
+}
+
+// AsPaymentRequest parses the event data as PaymentRequestEvent
+func (e *Event) AsPaymentRequest() (*PaymentRequestEvent, error) {
+	return ParseEventData[PaymentRequestEvent](e)
+}
+
+// AsRefundFailed parses the event data as RefundFailedEvent
+func (e *Event) AsRefundFailed() (*RefundFailedEvent, error) {
+	return ParseEventData[RefundFailedEvent](e)
+}
+
+// AsRefundPending parses the event data as RefundPendingEvent
+func (e *Event) AsRefundPending() (*RefundPendingEvent, error) {
+	return ParseEventData[RefundPendingEvent](e)
+}
+
+// AsSubscriptionDisable parses the event data as SubscriptionDisableEvent
+func (e *Event) AsSubscriptionDisable() (*SubscriptionDisableEvent, error) {
+	return ParseEventData[SubscriptionDisableEvent](e)
+}
+
+// AsSubscriptionNotRenew parses the event data as SubscriptionNotRenewEvent
+func (e *Event) AsSubscriptionNotRenew() (*SubscriptionNotRenewEvent, error) {
+	return ParseEventData[SubscriptionNotRenewEvent](e)
+}
+
+// AsSubscriptionExpiringCards parses the event data as SubscriptionExpiringCardsEvent
+func (e *Event) AsSubscriptionExpiringCards() (*SubscriptionExpiringCardsEvent, error) {
+	return ParseEventData[SubscriptionExpiringCardsEvent](e)
+}

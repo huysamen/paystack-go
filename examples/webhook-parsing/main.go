@@ -87,7 +87,7 @@ func main() {
 	} else {
 		fmt.Printf("❌ Customer Identification Failed:\n")
 		fmt.Printf("   Customer: %s (%s)\n", customerFailedEvent.Email, customerFailedEvent.CustomerCode)
-		fmt.Printf("   Reason: %s\n", customerFailedEvent.Reason)
+		fmt.Printf("   Type: %s\n", customerFailedEvent.Identification.Type)
 		fmt.Printf("   BVN: %s\n", customerFailedEvent.Identification.BVN)
 		fmt.Printf("   Account: %s\n", customerFailedEvent.Identification.AccountNumber)
 		fmt.Println()

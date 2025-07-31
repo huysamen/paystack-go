@@ -77,4 +77,7 @@ bin/
 # env file
 .env
 
+# Webhook event examples
+events.json
+
 client_test.go
