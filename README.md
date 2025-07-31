@@ -172,6 +172,15 @@ func main() {
 - **Send Notification**: Send email notifications to customers about payment requests
 - **Get Totals**: Retrieve payment request analytics and totals by status and currency
 
+### Transfer Control
+
+- **Check Balance**: Fetch available balance on your integration by currency
+- **Fetch Balance Ledger**: Get detailed ledger of all pay-ins and pay-outs with reasons
+- **Resend OTP**: Generate and resend OTP for transfer verification
+- **Disable OTP**: Initiate process to disable OTP requirement for transfers
+- **Finalize Disable OTP**: Complete OTP disabling with verification code
+- **Enable OTP**: Re-enable OTP requirement for transfer security
+
 ### Customers
 
 - **Create Customer**: Create a new customer with email and optional details
@@ -1799,6 +1808,71 @@ if err != nil {
 }
 
 fmt.Printf("Domain unregistered: %s\n", unregisterResp.Message)
+```
+
+### Transfer Control and Balance Management
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "log"
+
+    "github.com/huysamen/paystack-go"
+    "github.com/huysamen/paystack-go/api/transfer-control"
+)
+
+func main() {
+    client := paystack.DefaultClient("sk_test_your_secret_key_here")
+    ctx := context.Background()
+
+    // Check current balance across all currencies
+    balance, err := client.TransferControl.CheckBalance(ctx)
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    fmt.Println("Account Balances:")
+    for _, bal := range balance.Data {
+        majorAmount := float64(bal.Balance) / 100
+        fmt.Printf("  %s: %.2f\n", bal.Currency, majorAmount)
+    }
+
+    // Fetch balance ledger for transaction history
+    ledger, err := client.TransferControl.FetchBalanceLedger(ctx)
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    fmt.Printf("Balance Ledger Entries: %d\n", len(ledger.Data))
+    if len(ledger.Data) > 0 {
+        latest := ledger.Data[0]
+        fmt.Printf("Latest transaction: %s (₦%.2f change)\n", 
+            latest.Reason, float64(latest.Difference)/100)
+    }
+
+    // Enable OTP requirement for transfers
+    enableResp, err := client.TransferControl.EnableOTP(ctx)
+    if err != nil {
+        log.Fatal(err)
+    }
+    fmt.Printf("OTP Status: %s\n", enableResp.Message)
+
+    // Resend OTP for specific transfer (requires existing transfer code)
+    resendReq := &transfercontrol.ResendOTPRequest{
+        TransferCode: "TRF_your_transfer_code",
+        Reason:       "resend_otp",
+    }
+
+    resendResp, err := client.TransferControl.ResendOTP(ctx, resendReq)
+    if err != nil {
+        log.Printf("Resend OTP error: %v", err)
+    } else {
+        fmt.Printf("OTP Resent: %s\n", resendResp.Message)
+    }
+}
 ```
 
 ## Contributing

@@ -57,6 +57,7 @@ import (
 	"github.com/huysamen/paystack-go/api/terminal"
 	transaction_splits "github.com/huysamen/paystack-go/api/transaction-splits"
 	"github.com/huysamen/paystack-go/api/transactions"
+	transfer_control "github.com/huysamen/paystack-go/api/transfer-control"
 	transfer_recipients "github.com/huysamen/paystack-go/api/transfer-recipients"
 	"github.com/huysamen/paystack-go/api/transfers"
 	"github.com/huysamen/paystack-go/api/verification"
@@ -72,6 +73,7 @@ type Client struct {
 	Customers               *customers.Client
 	Subscriptions           *subscriptions.Client
 	Transfers               *transfers.Client
+	TransferControl         *transfer_control.Client
 	TransferRecipients      *transfer_recipients.Client
 	Subaccounts             *subaccounts.Client
 	Settlements             *settlements.Client
@@ -133,6 +135,7 @@ func NewClient(config *Config) *Client {
 		Customers:               customers.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
 		Subscriptions:           subscriptions.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
 		Transfers:               transfers.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
+		TransferControl:         transfer_control.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
 		TransferRecipients:      transfer_recipients.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
 		Subaccounts:             subaccounts.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
 		Settlements:             settlements.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
