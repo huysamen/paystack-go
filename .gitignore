@@ -68,6 +68,8 @@ examples/*/dedicated-virtual-account
 examples/*/dedicated-virtual-account-example
 examples/*/apple-pay
 examples/*/apple-pay-example
+examples/*/products
+examples/*/products-example
 
 # Generic pattern for any executable in examples directories
 examples/*/[!.]?*

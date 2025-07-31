@@ -9,6 +9,7 @@ A comprehensive Go client library for the [Paystack API](https://paystack.com/do
 
 - ✅ **Transactions**: Initialize, verify, charge authorization, list (with advanced filtering), fetch, export, partial debit, view timeline, totals
 - ✅ **Plans**: Create, list, fetch, update plans by ID or code
+- ✅ **Products**: Create, list, fetch, update products with inventory management and metadata support
 - ✅ **Customers**: Create, list, fetch, update, validate identity, whitelist/blacklist, authorization management, direct debit
 - ✅ **Subscriptions**: Create, list, fetch, enable, disable, generate update links, send management emails
 - ✅ **Transfers**: Initiate, finalize, bulk transfers, list, fetch, verify transfer status
@@ -142,6 +143,13 @@ func main() {
 - **List Plans**: List all plans with filtering options
 - **Fetch Plan**: Fetch plan by ID or plan code
 - **Update Plan**: Update an existing plan
+
+### Products
+
+- **Create Product**: Create products with inventory management, pricing, and metadata
+- **List Products**: List all products with pagination and date filtering
+- **Fetch Product**: Get detailed product information by ID or product code
+- **Update Product**: Update product details, pricing, and inventory levels
 
 ### Customers
 
@@ -1491,6 +1499,58 @@ if len(accounts.Data) > 0 {
 
     fmt.Printf("Split added to account: %s\n", splitAccount.AccountNumber)
 }
+```
+
+### Products Management
+
+```go
+// Create a physical product with inventory
+unlimited := false
+quantity := 100
+createReq := &products.CreateProductRequest{
+    Name:        "Wireless Headphones",
+    Description: "High-quality wireless headphones with noise cancellation",
+    Price:       25000, // ₦250.00 in kobo
+    Currency:    "NGN",
+    Unlimited:   &unlimited,
+    Quantity:    &quantity,
+}
+
+product, err := client.Products.Create(context.Background(), createReq)
+if err != nil {
+    log.Fatal(err)
+}
+
+fmt.Printf("Product created: %s (Code: %s)\n", product.Name, product.ProductCode)
+
+// List all products with pagination
+perPage := 10
+listReq := &products.ListProductsRequest{
+    PerPage: &perPage,
+}
+
+productsResp, err := client.Products.List(context.Background(), listReq)
+if err != nil {
+    log.Fatal(err)
+}
+
+fmt.Printf("Found %d products\n", len(productsResp.Data))
+for _, prod := range productsResp.Data {
+    fmt.Printf("  - %s: ₦%.2f\n", prod.Name, float64(prod.Price)/100)
+}
+
+// Update product pricing and details
+newPrice := 30000 // ₦300.00
+updateReq := &products.UpdateProductRequest{
+    Price: &newPrice,
+}
+
+updatedProduct, err := client.Products.Update(context.Background(), product.ProductCode, updateReq)
+if err != nil {
+    log.Fatal(err)
+}
+
+fmt.Printf("Updated price: ₦%.2f\n", float64(updatedProduct.Price)/100)
 ```
 
 ### Apple Pay Domain Management
