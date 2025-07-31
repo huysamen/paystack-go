@@ -26,6 +26,25 @@ coverage.html
 /server  
 /client
 /paystack-go
+
+# Any binary in root directory (but preserve source files)
+/*
+!*.go
+!*.md
+!*.json
+!*.mod
+!*.sum
+!*.txt
+!LICENSE
+!.gitignore
+!/api/
+!/examples/
+!/net/
+!/types/
+!/utils/
+!/webhook/
+
+# Example binaries - specific patterns
 examples/*/main
 examples/*/app
 examples/*/server
@@ -39,6 +58,19 @@ examples/*/subscriptions
 examples/*/transfers
 examples/*/subaccounts
 examples/*/transfer-recipients
+examples/*/transaction-splits
+examples/*/terminal
+examples/*/virtual-terminal
+examples/*/virtual-terminal-example
+
+# Generic pattern for any executable in examples directories
+examples/*/[!.]?*
+!examples/*/*.go
+!examples/*/*.mod
+!examples/*/*.sum
+!examples/*/*.md
+!examples/*/*.json
+!examples/*/*.txt
 
 # IDE and editor files
 .vscode/

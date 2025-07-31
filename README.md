@@ -214,6 +214,18 @@ func main() {
 - **Commission Device**: Activate debug devices by linking to your integration
 - **Decommission Device**: Unlink debug devices from your integration
 
+### Virtual Terminal
+
+- **Create Virtual Terminal**: Create virtual terminals for in-person payments without POS devices
+- **List Virtual Terminals**: Get all virtual terminals with status and search filtering
+- **Fetch Virtual Terminal**: Retrieve detailed virtual terminal information by code
+- **Update Virtual Terminal**: Modify virtual terminal name and settings
+- **Deactivate Virtual Terminal**: Deactivate a virtual terminal
+- **Assign Destination**: Add WhatsApp notification destinations to virtual terminals
+- **Unassign Destination**: Remove notification destinations from virtual terminals
+- **Add Split Code**: Associate transaction splits with virtual terminals
+- **Remove Split Code**: Remove split codes from virtual terminals
+
 ### Verification
 
 - **Resolve Account**: Get account details by account number and bank code
@@ -1088,6 +1100,126 @@ func main() {
     if err != nil {
         log.Printf("Commission error (expected): %v\n", err)
     }
+}
+```
+
+### Virtual Terminal
+
+The virtual terminal API allows you to accept in-person payments without a POS device using WhatsApp notifications.
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "log"
+    
+    "github.com/huysamen/paystack-go"
+    "github.com/huysamen/paystack-go/api/virtual-terminal"
+    "github.com/huysamen/paystack-go/types"
+)
+
+func main() {
+    client := paystack.DefaultClient("sk_test_your_secret_key_here")
+    ctx := context.Background()
+
+    // Create virtual terminal
+    createReq := &virtualterminal.CreateVirtualTerminalRequest{
+        Name: "Sales Point #1",
+        Destinations: []virtualterminal.VirtualTerminalDestination{
+            {
+                Target: "+2347012345678",
+                Name:   "Sales Rep",
+            },
+        },
+        Currency: "NGN",
+        CustomFields: []virtualterminal.CustomField{
+            {
+                DisplayName:  "Customer ID",
+                VariableName: "customer_id",
+            },
+        },
+        Metadata: &types.Metadata{
+            "department": "sales",
+            "location":   "lagos",
+        },
+    }
+
+    terminal, err := client.VirtualTerminal.Create(ctx, createReq)
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    fmt.Printf("Created virtual terminal: %s (Code: %s)\n", terminal.Name, terminal.Code)
+
+    // List virtual terminals
+    listReq := &virtualterminal.ListVirtualTerminalsRequest{
+        Status:  "active",
+        PerPage: 10,
+    }
+
+    terminals, err := client.VirtualTerminal.List(ctx, listReq)
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    fmt.Printf("Found %d virtual terminals\n", len(terminals.Data))
+
+    // Fetch virtual terminal
+    fetchedTerminal, err := client.VirtualTerminal.Fetch(ctx, terminal.Code)
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    fmt.Printf("Terminal details: %s (Active: %t)\n", fetchedTerminal.Name, fetchedTerminal.Active)
+
+    // Update virtual terminal
+    updateReq := &virtualterminal.UpdateVirtualTerminalRequest{
+        Name: "Updated Sales Point #1",
+    }
+
+    updatedTerminal, err := client.VirtualTerminal.Update(ctx, terminal.Code, updateReq)
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    fmt.Printf("Updated terminal: %s\n", updatedTerminal.Name)
+
+    // Assign additional destination
+    assignReq := &virtualterminal.AssignDestinationRequest{
+        Destinations: []virtualterminal.VirtualTerminalDestination{
+            {
+                Target: "+2348012345678",
+                Name:   "Manager",
+            },
+        },
+    }
+
+    destinations, err := client.VirtualTerminal.AssignDestination(ctx, terminal.Code, assignReq)
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    fmt.Printf("Assigned %d destinations\n", len(*destinations))
+
+    // Add split code (optional)
+    addSplitReq := &virtualterminal.AddSplitCodeRequest{
+        SplitCode: "SPL_98WF13Zu8w5", // Replace with actual split code
+    }
+
+    _, err = client.VirtualTerminal.AddSplitCode(ctx, terminal.Code, addSplitReq)
+    if err != nil {
+        log.Printf("Split code error (expected): %v\n", err)
+    }
+
+    // Deactivate virtual terminal
+    deactivateResult, err := client.VirtualTerminal.Deactivate(ctx, terminal.Code)
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    fmt.Printf("Terminal deactivated: %s\n", deactivateResult.Message)
 }
 ```
 
