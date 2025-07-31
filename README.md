@@ -22,6 +22,7 @@ A comprehensive Go client library for the [Paystack API](https://paystack.com/do
 - ✅ **Direct Debit**: Manage mandate authorizations for direct debit payments
 - ✅ **Dedicated Virtual Account**: Create and manage dedicated virtual accounts for unique customer payments
 - ✅ **Apple Pay**: Register and manage domains for Apple Pay integration
+- ✅ **Integration**: Manage payment session timeout settings and integration configuration
 - ✅ **Verification**: Resolve account numbers, validate accounts, resolve card BINs
 - ✅ **Miscellaneous**: List banks/countries/states for address verification and geographic support
 - ✅ **Type Safety**: Strongly typed request/response structures
@@ -189,6 +190,11 @@ func main() {
 - **Fetch Charges in a Batch**: Get detailed charge information within a specific batch
 - **Pause Bulk Charge Batch**: Temporarily halt processing of an active batch
 - **Resume Bulk Charge Batch**: Resume processing of a paused batch
+
+### Integration
+
+- **Fetch Timeout**: Retrieve the current payment session timeout setting on your integration
+- **Update Timeout**: Configure payment session timeout duration (0 to disable timeouts)
 
 ### Customers
 
@@ -1881,6 +1887,73 @@ func main() {
     } else {
         fmt.Printf("OTP Resent: %s\n", resendResp.Message)
     }
+}
+```
+
+### Integration Management
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "log"
+
+    "github.com/huysamen/paystack-go"
+    "github.com/huysamen/paystack-go/api/integration"
+)
+
+func main() {
+    client := paystack.DefaultClient("sk_test_your_secret_key_here")
+    ctx := context.Background()
+
+    // Fetch current payment session timeout
+    timeout, err := client.Integration.FetchTimeout(ctx)
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    fmt.Printf("Current payment session timeout: %d seconds\n", timeout.Data.PaymentSessionTimeout)
+
+    // Configure timeout for different checkout scenarios
+    scenarios := []struct {
+        name    string
+        timeout int
+        useCase string
+    }{
+        {"quick-checkout", 15, "Simple payment forms"},
+        {"standard-checkout", 30, "Regular transactions"},
+        {"complex-checkout", 60, "Multi-step forms"},
+        {"unlimited", 0, "Disable session timeout"},
+    }
+
+    for _, scenario := range scenarios {
+        fmt.Printf("\nConfiguring %s (%s)...\n", scenario.name, scenario.useCase)
+        
+        updateReq := &integration.UpdateTimeoutRequest{
+            Timeout: scenario.timeout,
+        }
+
+        updatedTimeout, err := client.Integration.UpdateTimeout(ctx, updateReq)
+        if err != nil {
+            log.Printf("Failed to update timeout: %v", err)
+            continue
+        }
+
+        timeoutText := fmt.Sprintf("%d seconds", updatedTimeout.Data.PaymentSessionTimeout)
+        if updatedTimeout.Data.PaymentSessionTimeout == 0 {
+            timeoutText = "unlimited"
+        }
+        fmt.Printf("✅ Updated to: %s\n", timeoutText)
+    }
+
+    // Best practices
+    fmt.Println("\nBest Practices:")
+    fmt.Println("• 15-30s: Ideal for simple forms")
+    fmt.Println("• 30-60s: Good for multi-field forms")
+    fmt.Println("• 60s+: For complex checkout flows")
+    fmt.Println("• 0 (unlimited): Use with caution")
 }
 ```
 

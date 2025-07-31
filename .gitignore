@@ -45,6 +45,7 @@ coverage.html
 !/webhook/
 
 # Example binaries - specific patterns by directory name
+examples/examples
 examples/*/main
 examples/*/app
 examples/*/server
@@ -68,6 +69,7 @@ examples/*/payment-pages
 examples/*/payment-requests
 examples/*/transfer-control
 examples/*/bulk-charges
+examples/*/integration
 
 # Example binaries - pattern-based names
 examples/*/*-example
@@ -81,6 +83,7 @@ examples/*/products-example
 examples/*/payment-pages-example
 examples/*/transfer-control-example
 examples/*/bulk-charges-example
+examples/*/integration-example
 examples/*/miscellaneous-example
 examples/*/miscellaneous-advanced-example
 examples/*/settlements-example
