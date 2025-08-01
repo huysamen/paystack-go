@@ -132,7 +132,7 @@ type UnassignDestinationResponse struct {
 type AddSplitCodeResponse struct {
 	Status  bool   `json:"status"`
 	Message string `json:"message"`
-	Data    any    `json:"data"` // Using interface{} as the split response structure can vary
+	Data    any    `json:"data"` // Using any as the split response structure can vary
 }
 
 // RemoveSplitCodeResponse represents the response from removing a split code

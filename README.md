@@ -634,7 +634,7 @@ createReq := &customers.CustomerCreateRequest{
     FirstName: &[]string{"John"}[0],
     LastName:  &[]string{"Doe"}[0],
     Phone:     &[]string{"+2348123456789"}[0],
-    Metadata: map[string]interface{}{
+    Metadata: map[string]any{
         "user_id": "12345",
         "tier":    "premium",
     },
@@ -659,7 +659,7 @@ fmt.Printf("Authorizations: %d\n", len(fetchResp.Data.Authorizations))
 // Update customer
 updateReq := &customers.CustomerUpdateRequest{
     FirstName: &[]string{"Jane"}[0],
-    Metadata: map[string]interface{}{
+    Metadata: map[string]any{
         "user_id": "12345",
         "tier":    "enterprise",
         "updated": true,
@@ -845,7 +845,7 @@ recipientReq := &transfer_recipients.TransferRecipientCreateRequest{
     BankCode:      "058", // GTBank
     Currency:      &[]string{"NGN"}[0],
     Description:   &[]string{"Employee salary account"}[0],
-    Metadata: map[string]interface{}{
+    Metadata: map[string]any{
         "employee_id": "EMP001",
         "department":  "Engineering",
     },
@@ -869,7 +869,7 @@ bulkReq := &transfer_recipients.BulkCreateTransferRecipientRequest{
             AccountNumber: "9876543210",
             BankCode:      "044", // Access Bank
             Currency:      &[]string{"NGN"}[0],
-            Metadata: map[string]interface{}{
+            Metadata: map[string]any{
                 "employee_id": "EMP002",
                 "department":  "Marketing",
             },
@@ -880,7 +880,7 @@ bulkReq := &transfer_recipients.BulkCreateTransferRecipientRequest{
             AccountNumber: "1122334455",
             BankCode:      "033", // UBA
             Currency:      &[]string{"NGN"}[0],
-            Metadata: map[string]interface{}{
+            Metadata: map[string]any{
                 "employee_id": "EMP003",
                 "department":  "Finance",
             },
@@ -950,7 +950,7 @@ subaccountReq := &subaccounts.SubaccountCreateRequest{
     PrimaryContactName:  &[]string{"John Doe"}[0],
     PrimaryContactEmail: &[]string{"john@vendorstore.com"}[0],
     PrimaryContactPhone: &[]string{"+2348123456789"}[0],
-    Metadata: map[string]interface{}{
+    Metadata: map[string]any{
         "vendor_id": "VND001",
         "category":  "electronics",
         "tier":      "premium",
@@ -999,7 +999,7 @@ updateReq := &subaccounts.SubaccountUpdateRequest{
     SettlementSchedule: &[]subaccounts.SettlementSchedule{
         subaccounts.SettlementScheduleWeekly,
     }[0],
-    Metadata: map[string]interface{}{
+    Metadata: map[string]any{
         "tier":        "platinum",
         "updated_at":  time.Now().Format(time.RFC3339),
     },
@@ -1981,7 +1981,7 @@ func main() {
             Code:          "044", // Access Bank
             AccountNumber: "0123456789",
         },
-        Metadata: map[string]interface{}{
+        Metadata: map[string]any{
             "channel":    "bank",
             "product_id": "PROD_001",
         },
