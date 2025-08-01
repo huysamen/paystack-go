@@ -55,6 +55,7 @@ import (
 	payment_requests "github.com/huysamen/paystack-go/api/payment-requests"
 	"github.com/huysamen/paystack-go/api/plans"
 	"github.com/huysamen/paystack-go/api/products"
+	"github.com/huysamen/paystack-go/api/refunds"
 	"github.com/huysamen/paystack-go/api/settlements"
 	"github.com/huysamen/paystack-go/api/subaccounts"
 	"github.com/huysamen/paystack-go/api/subscriptions"
@@ -82,6 +83,7 @@ type Client struct {
 	BulkCharges             *bulk_charges.Client
 	Charges                 *charges.Client
 	Disputes                *disputes.Client
+	Refunds                 *refunds.Client
 	Subaccounts             *subaccounts.Client
 	Settlements             *settlements.Client
 	Miscellaneous           *miscellaneous.Client
@@ -148,6 +150,7 @@ func NewClient(config *Config) *Client {
 		BulkCharges:             bulk_charges.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
 		Charges:                 charges.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
 		Disputes:                disputes.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
+		Refunds:                 refunds.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
 		Subaccounts:             subaccounts.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
 		Settlements:             settlements.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
 		Miscellaneous:           miscellaneous.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),

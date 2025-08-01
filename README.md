@@ -24,6 +24,7 @@ A comprehensive Go client library for the [Paystack API](https://paystack.com/do
 - ✅ **Apple Pay**: Register and manage domains for Apple Pay integration
 - ✅ **Charges**: Create charges for multiple payment channels (card, bank, USSD, mobile money, QR, transfer) with submission workflows
 - ✅ **Disputes**: Manage transaction disputes with evidence handling, resolution workflows, and comprehensive documentation
+- ✅ **Refunds**: Process transaction refunds with full or partial amounts, customer communication, and comprehensive tracking
 - ✅ **Integration**: Manage payment session timeout settings and integration configuration
 - ✅ **Verification**: Resolve account numbers, validate accounts, resolve card BINs
 - ✅ **Miscellaneous**: List banks/countries/states for address verification and geographic support
@@ -213,6 +214,12 @@ func main() {
 - **Get Upload URL**: Generate signed URLs for uploading dispute evidence documents and attachments
 - **Resolve Dispute**: Resolve disputes with merchant acceptance or decline decisions and supporting documentation
 - **Export Disputes**: Export dispute data to CSV format with date range and status filtering
+
+### Refunds
+
+- **Create Refund**: Initiate full or partial refunds on successful transactions with optional customer and merchant notes
+- **List Refunds**: Retrieve all refunds with filtering by transaction, currency, date range, and pagination support
+- **Fetch Refund**: Get detailed information about a specific refund including status, amounts, and processing timeline
 
 ### Integration
 
@@ -2067,6 +2074,133 @@ func main() {
     }
 
     fmt.Printf("Disputes exported to: %s\n", exportResult.Data.Path)
+}
+```
+
+### Transaction Refund Processing
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "log"
+    "time"
+
+    "github.com/huysamen/paystack-go"
+    "github.com/huysamen/paystack-go/api/refunds"
+)
+
+func main() {
+    client := paystack.DefaultClient("sk_test_your_secret_key_here")
+    ctx := context.Background()
+
+    // Create a full refund with customer communication
+    fullRefundReq := &refunds.RefundCreateRequest{
+        Transaction:  "T685312322670591", // Replace with actual transaction reference
+        CustomerNote: &[]string{"Your refund has been processed due to product unavailability. You should see the amount back in your account within 3-5 business days."}[0],
+        MerchantNote: &[]string{"Product out of stock - approved for full refund by customer service team"}[0],
+    }
+
+    refund, err := client.Refunds.Create(ctx, fullRefundReq)
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    fmt.Printf("Refund initiated: ₦%.2f for transaction %d\n", 
+        float64(refund.Data.Amount)/100, 
+        refund.Data.Transaction.ID)
+
+    // Create a partial refund (e.g., shipping cost)
+    partialRefundReq := &refunds.RefundCreateRequest{
+        Transaction:  "T123456789012345", // Replace with actual transaction reference
+        Amount:       &[]int{1500}[0],    // ₦15.00 shipping refund
+        Currency:     &[]string{"NGN"}[0],
+        CustomerNote: &[]string{"Shipping fee refund - your item was delayed beyond our delivery promise"}[0],
+        MerchantNote: &[]string{"Goodwill gesture for delivery delay"}[0],
+    }
+
+    partialRefund, err := client.Refunds.Create(ctx, partialRefundReq)
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    fmt.Printf("Partial refund created: ₦%.2f\n", float64(partialRefund.Data.Amount)/100)
+
+    // List refunds with filtering
+    thirtyDaysAgo := time.Now().AddDate(0, 0, -30)
+    listReq := &refunds.RefundListRequest{
+        From:     &thirtyDaysAgo,
+        To:       &[]time.Time{time.Now()}[0],
+        Currency: &[]string{"NGN"}[0],
+        PerPage:  &[]int{50}[0],
+    }
+
+    refundsList, err := client.Refunds.List(ctx, listReq)
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    fmt.Printf("Found %d refunds in last 30 days\n", len(refundsList.Data))
+
+    // Calculate analytics
+    totalRefunded := 0
+    processedCount := 0
+    pendingCount := 0
+    channelStats := make(map[refunds.RefundChannel]int)
+
+    for _, r := range refundsList.Data {
+        totalRefunded += r.Amount
+        channelStats[r.Channel]++
+        
+        switch r.Status {
+        case refunds.RefundStatusProcessed:
+            processedCount++
+        case refunds.RefundStatusPending:
+            pendingCount++
+        }
+    }
+
+    fmt.Printf("\nRefund Analytics:\n")
+    fmt.Printf("Total Amount: ₦%.2f\n", float64(totalRefunded)/100)
+    fmt.Printf("Processed: %d, Pending: %d\n", processedCount, pendingCount)
+
+    fmt.Printf("\nBy Payment Channel:\n")
+    for channel, count := range channelStats {
+        fmt.Printf("- %s: %d refunds\n", channel.String(), count)
+    }
+
+    // Fetch detailed refund information
+    if len(refundsList.Data) > 0 {
+        refundID := fmt.Sprintf("%d", refundsList.Data[0].ID)
+        
+        detailedRefund, err := client.Refunds.Fetch(ctx, refundID)
+        if err != nil {
+            log.Fatal(err)
+        }
+
+        fmt.Printf("\nRefund Details (ID: %d):\n", detailedRefund.Data.ID)
+        fmt.Printf("Status: %s\n", detailedRefund.Data.Status)
+        fmt.Printf("Amount: ₦%.2f\n", float64(detailedRefund.Data.Amount)/100)
+        fmt.Printf("Deducted: ₦%.2f\n", float64(detailedRefund.Data.DeductedAmount)/100)
+        fmt.Printf("Channel: %s\n", detailedRefund.Data.Channel)
+        fmt.Printf("Fully Deducted: %t\n", detailedRefund.Data.FullyDeducted)
+        
+        if detailedRefund.Data.RefundedAt != nil {
+            fmt.Printf("Processed At: %s\n", detailedRefund.Data.RefundedAt.Time.Format("2006-01-02 15:04:05"))
+        }
+        
+        if detailedRefund.Data.ExpectedAt != nil {
+            fmt.Printf("Expected At: %s\n", detailedRefund.Data.ExpectedAt.Time.Format("2006-01-02 15:04:05"))
+        }
+
+        // Calculate processing time if available
+        if detailedRefund.Data.CreatedAt != nil && detailedRefund.Data.RefundedAt != nil {
+            processingTime := detailedRefund.Data.RefundedAt.Time.Sub(detailedRefund.Data.CreatedAt.Time)
+            fmt.Printf("Processing Time: %v\n", processingTime.Round(time.Minute))
+        }
+    }
 }
 ```
 
