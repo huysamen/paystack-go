@@ -31,7 +31,7 @@ A comprehensive Go client library for the [Paystack API](https://paystack.com/do
 - ✅ **Type Safety**: Strongly typed request/response structures
 - ✅ **Error Handling**: Clean, intuitive error handling with API errors as Response objects
 - ✅ **Configuration**: Support for different environments and custom HTTP clients
-- ✅ **Builder Pattern**: Fluent, chainable API for complex requests (Transactions module) - no more `&[]int{50}[0]` syntax!
+- ✅ **Builder Pattern**: Fluent, chainable API for complex requests (Transactions, Bulk Charges, Apple Pay, Charges, Customers, Dedicated Virtual Account modules) - no more `&[]int{50}[0]` syntax!
 
 ## Installation
 
@@ -1713,16 +1713,15 @@ if err != nil {
 fmt.Printf("Available bank providers: %d\n", len(providers.Data))
 preferredBank := providers.Data[0].ProviderSlug // Use first provider
 
-// Create dedicated virtual account for existing customer
-createReq := &dedicatedvirtualaccount.CreateDedicatedVirtualAccountRequest{
-    Customer:      "CUS_xnxdt6s1zg5f4nx", // existing customer code
-    PreferredBank: preferredBank,
-    FirstName:     "John",
-    LastName:      "Doe",
-    Phone:         "+2348100000000",
-}
+// Create dedicated virtual account for existing customer using builder pattern
+createBuilder := dedicatedvirtualaccount.NewCreateDedicatedVirtualAccountBuilder().
+    Customer("CUS_xnxdt6s1zg5f4nx"). // existing customer code
+    PreferredBank(preferredBank).
+    FirstName("John").
+    LastName("Doe").
+    Phone("+2348100000000")
 
-account, err := client.DedicatedVirtualAccount.Create(context.Background(), createReq)
+account, err := client.DedicatedVirtualAccount.Create(context.Background(), createBuilder)
 if err != nil {
     log.Fatal(err)
 }
@@ -1730,29 +1729,26 @@ if err != nil {
 fmt.Printf("Created account: %s (%s) - %s\n", 
     account.AccountNumber, account.AccountName, account.Bank.Name)
 
-// List active dedicated virtual accounts
-active := true
-listReq := &dedicatedvirtualaccount.ListDedicatedVirtualAccountsRequest{
-    Active:   &active,
-    Currency: "NGN",
-}
+// List active dedicated virtual accounts using builder pattern
+listBuilder := dedicatedvirtualaccount.NewListDedicatedVirtualAccountsBuilder().
+    Active(true).
+    Currency("NGN")
 
-accounts, err := client.DedicatedVirtualAccount.List(context.Background(), listReq)
+accounts, err := client.DedicatedVirtualAccount.List(context.Background(), listBuilder)
 if err != nil {
     log.Fatal(err)
 }
 
 fmt.Printf("Active accounts: %d\n", len(accounts.Data))
 
-// Add split to account for automatic fund distribution
+// Add split to account for automatic fund distribution using builder pattern
 if len(accounts.Data) > 0 {
-    splitReq := &dedicatedvirtualaccount.SplitDedicatedAccountTransactionRequest{
-        Customer:      accounts.Data[0].Customer.CustomerCode,
-        SplitCode:     "SPL_98WF13Zu8w5", // your split code
-        PreferredBank: preferredBank,
-    }
+    splitBuilder := dedicatedvirtualaccount.NewSplitDedicatedAccountTransactionBuilder().
+        Customer(accounts.Data[0].Customer.CustomerCode).
+        SplitCode("SPL_98WF13Zu8w5"). // your split code
+        PreferredBank(preferredBank)
 
-    splitAccount, err := client.DedicatedVirtualAccount.SplitTransaction(context.Background(), splitReq)
+    splitAccount, err := client.DedicatedVirtualAccount.SplitTransaction(context.Background(), splitBuilder)
     if err != nil {
         log.Fatal(err)
     }
