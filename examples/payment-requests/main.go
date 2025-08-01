@@ -22,54 +22,50 @@ func main() {
 	client := paystack.DefaultClient(secretKey)
 	ctx := context.Background()
 
-	// Example 1: Create a simple payment request
+	// Example 1: Create a simple payment request using builder pattern
 	fmt.Println("=== Creating Simple Payment Request ===")
-	amount := 50000 // ₦500.00 in kobo
-	createReq := &payment_requests.CreatePaymentRequestRequest{
-		Customer:    "CUS_customer_code_here", // Replace with actual customer code
-		Amount:      &amount,
-		Description: "Payment for premium service subscription",
-		DueDate:     time.Now().AddDate(0, 0, 7).Format("2006-01-02"), // Due in 7 days
-		Currency:    "NGN",
-	}
 
-	paymentRequest, err := client.PaymentRequests.Create(ctx, createReq)
+	paymentRequest, err := client.PaymentRequests.Create(ctx,
+		payment_requests.NewCreatePaymentRequestRequest().
+			Customer("demo@example.com").
+			Amount(50000). // ₦500.00 in kobo
+			Description("Payment for premium service subscription").
+			DueDate(time.Now().AddDate(0, 0, 7).Format("2006-01-02")). // Due in 7 days
+			Currency("NGN").
+			SendNotification(true),
+	)
 	if err != nil {
-		log.Printf("Failed to create simple payment request (expected if customer doesn't exist): %v", err)
+		log.Printf("Failed to create simple payment request: %v", err)
 
-		// Create with line items instead (doesn't require existing customer for demo)
+		// Try creating with line items instead
 		fmt.Println("\n=== Creating Payment Request with Line Items ===")
-		createReq2 := &payment_requests.CreatePaymentRequestRequest{
-			Customer:    "demo@example.com", // Can be email for demo
-			Description: "Invoice for professional services",
-			DueDate:     time.Now().AddDate(0, 0, 14).Format("2006-01-02"), // Due in 14 days
-			Currency:    "NGN",
-			LineItems: []payment_requests.LineItem{
-				{
+		paymentRequest, err = client.PaymentRequests.Create(ctx,
+			payment_requests.NewCreatePaymentRequestRequest().
+				Customer("demo@example.com").
+				Description("Invoice for professional services").
+				DueDate(time.Now().AddDate(0, 0, 14).Format("2006-01-02")). // Due in 14 days
+				Currency("NGN").
+				AddLineItem(payment_requests.LineItem{
 					Name:     "Website Development",
 					Amount:   150000, // ₦1,500.00
 					Quantity: 1,
-				},
-				{
+				}).
+				AddLineItem(payment_requests.LineItem{
 					Name:     "SEO Optimization",
 					Amount:   75000, // ₦750.00
 					Quantity: 1,
-				},
-				{
+				}).
+				AddLineItem(payment_requests.LineItem{
 					Name:     "Monthly Maintenance",
 					Amount:   25000, // ₦250.00
 					Quantity: 3,
-				},
-			},
-			Tax: []payment_requests.Tax{
-				{
+				}).
+				AddTax(payment_requests.Tax{
 					Name:   "VAT (7.5%)",
 					Amount: 22500, // ₦225.00
-				},
-			},
-		}
-
-		paymentRequest, err = client.PaymentRequests.Create(ctx, createReq2)
+				}).
+				SendNotification(true),
+		)
 		if err != nil {
 			log.Fatalf("Failed to create payment request with line items: %v", err)
 		}
@@ -98,10 +94,6 @@ func main() {
 	for i, item := range fetchedRequest.LineItems {
 		fmt.Printf("    %d. %s: ₦%.2f x %d\n", i+1, item.Name, float64(item.Amount)/100, item.Quantity)
 	}
-	fmt.Printf("  Tax Items: %d\n", len(fetchedRequest.Tax))
-	for i, tax := range fetchedRequest.Tax {
-		fmt.Printf("    %d. %s: ₦%.2f\n", i+1, tax.Name, float64(tax.Amount)/100)
-	}
 
 	// Example 3: Verify payment request
 	fmt.Println("\n=== Verifying Payment Request ===")
@@ -118,37 +110,32 @@ func main() {
 		fmt.Printf("  Invoice Number: %d\n", *verifiedRequest.InvoiceNumber)
 	}
 
-	// Example 4: Update payment request
+	// Example 4: Update payment request using builder pattern
 	fmt.Println("\n=== Updating Payment Request ===")
-	updateReq := &payment_requests.UpdatePaymentRequestRequest{
-		Description: "Updated: Invoice for professional services (Rush Order)",
-		DueDate:     time.Now().AddDate(0, 0, 3).Format("2006-01-02"), // Due in 3 days (urgent)
-		LineItems: []payment_requests.LineItem{
-			{
+	updatedRequest, err := client.PaymentRequests.Update(ctx, requestCode,
+		payment_requests.NewUpdatePaymentRequestRequest().
+			Description("Updated: Invoice for professional services (Rush Order)").
+			DueDate(time.Now().AddDate(0, 0, 3).Format("2006-01-02")). // Due in 3 days (urgent)
+			AddLineItem(payment_requests.LineItem{
 				Name:     "Website Development (Express)",
 				Amount:   180000, // ₦1,800.00 (rush fee)
 				Quantity: 1,
-			},
-			{
+			}).
+			AddLineItem(payment_requests.LineItem{
 				Name:     "SEO Optimization",
 				Amount:   75000, // ₦750.00
 				Quantity: 1,
-			},
-			{
+			}).
+			AddLineItem(payment_requests.LineItem{
 				Name:     "Monthly Maintenance",
 				Amount:   25000, // ₦250.00
 				Quantity: 3,
-			},
-		},
-		Tax: []payment_requests.Tax{
-			{
+			}).
+			AddTax(payment_requests.Tax{
 				Name:   "VAT (7.5%)",
 				Amount: 24750, // ₦247.50 (updated based on new total)
-			},
-		},
-	}
-
-	updatedRequest, err := client.PaymentRequests.Update(ctx, requestCode, updateReq)
+			}),
+	)
 	if err != nil {
 		log.Fatalf("Failed to update payment request: %v", err)
 	}
@@ -158,15 +145,14 @@ func main() {
 	fmt.Printf("  New Amount: ₦%.2f\n", float64(updatedRequest.Amount)/100)
 	fmt.Printf("  New Due Date: %s\n", updatedRequest.DueDate)
 
-	// Example 5: List payment requests
+	// Example 5: List payment requests using builder pattern
 	fmt.Println("\n=== Listing Payment Requests ===")
-	listReq := &payment_requests.ListPaymentRequestsRequest{
-		PerPage: 5,
-		Page:    1,
-		Status:  "pending", // Only show pending requests
-	}
-
-	requestsResp, err := client.PaymentRequests.List(ctx, listReq)
+	requestsResp, err := client.PaymentRequests.List(ctx,
+		payment_requests.NewListPaymentRequestsRequest().
+			PerPage(5).
+			Page(1).
+			Status("pending"), // Only show pending requests
+	)
 	if err != nil {
 		log.Fatalf("Failed to list payment requests: %v", err)
 	}
@@ -211,21 +197,37 @@ func main() {
 		fmt.Printf("Notification Status: %s\n", notifyResp.Message)
 	}
 
-	// Example 8: Finalize payment request (if it's a draft)
+	// Example 8: Finalize payment request using builder pattern (if it's a draft)
 	fmt.Println("\n=== Finalizing Payment Request (Demo) ===")
-	sendNotification := true
-	finalizeReq := &payment_requests.FinalizePaymentRequestRequest{
-		SendNotification: &sendNotification,
-	}
-
-	finalizedRequest, err := client.PaymentRequests.Finalize(ctx, requestCode, finalizeReq)
+	finalizedRequest, err := client.PaymentRequests.Finalize(ctx, requestCode,
+		payment_requests.NewFinalizePaymentRequestRequest().
+			SendNotification(true),
+	)
 	if err != nil {
 		log.Printf("Failed to finalize (expected if not a draft): %v", err)
 	} else {
 		fmt.Printf("Finalized Request: %s\n", finalizedRequest.Status)
 	}
 
-	// Example 9: Archive payment request (careful - this hides it from lists)
+	// Example 9: Advanced listing with date filters
+	fmt.Println("\n=== Advanced Listing with Filters ===")
+	advancedList, err := client.PaymentRequests.List(ctx,
+		payment_requests.NewListPaymentRequestsRequest().
+			PerPage(10).
+			Currency("NGN").
+			DateRange(
+				time.Now().AddDate(0, 0, -30).Format("2006-01-02"), // Last 30 days
+				time.Now().Format("2006-01-02"),
+			).
+			IncludeArchive("false"),
+	)
+	if err != nil {
+		log.Printf("Failed to list with advanced filters: %v", err)
+	} else {
+		fmt.Printf("Found %d requests in the last 30 days\n", len(advancedList.Data))
+	}
+
+	// Example 10: Archive payment request (careful - this hides it from lists)
 	fmt.Println("\n=== Archive Payment Request (Demo) ===")
 	fmt.Printf("Note: Archiving will hide the payment request from future list operations\n")
 	fmt.Printf("Skipping archive operation to keep example request visible\n")
@@ -249,4 +251,12 @@ func main() {
 	fmt.Println("\n=== Full Payment Request Data (JSON) ===")
 	requestJSON, _ := json.MarshalIndent(updatedRequest, "", "  ")
 	fmt.Println(string(requestJSON))
+
+	fmt.Println("\n=== Builder Pattern Showcase ===")
+	fmt.Println("The payment requests API now uses fluent builder patterns for all operations:")
+	fmt.Println("• NewCreatePaymentRequestRequest() - Create payment requests with method chaining")
+	fmt.Println("• NewUpdatePaymentRequestRequest() - Update existing requests")
+	fmt.Println("• NewListPaymentRequestsRequest() - List with advanced filtering")
+	fmt.Println("• NewFinalizePaymentRequestRequest() - Finalize draft requests")
+	fmt.Println("• All builders support fluent method chaining for intuitive API usage")
 }

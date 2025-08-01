@@ -2008,38 +2008,34 @@ func main() {
 ### Payment Requests Management
 
 ```go
-// Create a payment request with line items
-createReq := &payment_requests.CreatePaymentRequestRequest{
-    Customer:    "CUS_customer_code_here",
-    Description: "Invoice for professional services",
-    DueDate:     time.Now().AddDate(0, 0, 14).Format("2006-01-02"), // Due in 14 days
-    Currency:    "NGN",
-    LineItems: []payment_requests.LineItem{
-        {
+// Create a payment request with fluent builder pattern
+paymentRequest, err := client.PaymentRequests.Create(context.Background(),
+    payment_requests.NewCreatePaymentRequestRequest().
+        Customer("demo@example.com").
+        Description("Invoice for professional services").
+        DueDate(time.Now().AddDate(0, 0, 14).Format("2006-01-02")). // Due in 14 days
+        Currency("NGN").
+        AddLineItem(payment_requests.LineItem{
             Name:     "Website Development",
             Amount:   150000, // ₦1,500.00
             Quantity: 1,
-        },
-        {
+        }).
+        AddLineItem(payment_requests.LineItem{
             Name:     "SEO Optimization",
             Amount:   75000, // ₦750.00
             Quantity: 1,
-        },
-        {
+        }).
+        AddLineItem(payment_requests.LineItem{
             Name:     "Monthly Maintenance",
             Amount:   25000, // ₦250.00
             Quantity: 3,
-        },
-    },
-    Tax: []payment_requests.Tax{
-        {
+        }).
+        AddTax(payment_requests.Tax{
             Name:   "VAT (7.5%)",
             Amount: 22500, // ₦225.00
-        },
-    },
-}
-
-paymentRequest, err := client.PaymentRequests.Create(context.Background(), createReq)
+        }).
+        SendNotification(true),
+)
 if err != nil {
     log.Fatal(err)
 }
@@ -2047,15 +2043,18 @@ if err != nil {
 fmt.Printf("Payment Request Created: %s\n", paymentRequest.RequestCode)
 fmt.Printf("Total Amount: ₦%.2f\n", float64(paymentRequest.Amount)/100)
 
-// List payment requests with filtering
-listReq := &payment_requests.ListPaymentRequestsRequest{
-    PerPage:  10,
-    Page:     1,
-    Status:   "pending",
-    Currency: "NGN",
-}
-
-requestsResp, err := client.PaymentRequests.List(context.Background(), listReq)
+// List payment requests with fluent filtering
+requestsResp, err := client.PaymentRequests.List(context.Background(),
+    payment_requests.NewListPaymentRequestsRequest().
+        PerPage(10).
+        Page(1).
+        Status("pending").
+        Currency("NGN").
+        DateRange(
+            time.Now().AddDate(0, 0, -30).Format("2006-01-02"), // Last 30 days
+            time.Now().Format("2006-01-02"),
+        ),
+)
 if err != nil {
     log.Fatal(err)
 }
@@ -2065,30 +2064,39 @@ for _, req := range requestsResp.Data {
     fmt.Printf("  - %s: ₦%.2f (%s)\n", req.Description, float64(req.Amount)/100, req.Status)
 }
 
-// Update payment request with new line items
-updateReq := &payment_requests.UpdatePaymentRequestRequest{
-    Description: "Updated: Invoice for professional services (Rush Order)",
-    DueDate:     time.Now().AddDate(0, 0, 3).Format("2006-01-02"), // Rush - due in 3 days
-    LineItems: []payment_requests.LineItem{
-        {
+// Update payment request with builder pattern
+updatedRequest, err := client.PaymentRequests.Update(context.Background(), paymentRequest.RequestCode,
+    payment_requests.NewUpdatePaymentRequestRequest().
+        Description("Updated: Invoice for professional services (Rush Order)").
+        DueDate(time.Now().AddDate(0, 0, 3).Format("2006-01-02")). // Rush - due in 3 days
+        AddLineItem(payment_requests.LineItem{
             Name:     "Website Development (Express)",
             Amount:   180000, // ₦1,800.00 (rush fee)
             Quantity: 1,
-        },
-        {
+        }).
+        AddLineItem(payment_requests.LineItem{
             Name:     "SEO Optimization",
             Amount:   75000,
             Quantity: 1,
-        },
-    },
-}
-
-updatedRequest, err := client.PaymentRequests.Update(context.Background(), paymentRequest.RequestCode, updateReq)
+        }).
+        SendNotification(true),
+)
 if err != nil {
     log.Fatal(err)
 }
 
 fmt.Printf("Updated Amount: ₦%.2f\n", float64(updatedRequest.Amount)/100)
+
+// Finalize draft payment request
+finalizedRequest, err := client.PaymentRequests.Finalize(context.Background(), paymentRequest.RequestCode,
+    payment_requests.NewFinalizePaymentRequestRequest().
+        SendNotification(true),
+)
+if err != nil {
+    log.Printf("Finalize failed (expected if not draft): %v", err)
+} else {
+    fmt.Printf("Finalized: %s\n", finalizedRequest.Status)
+}
 
 // Get payment request analytics
 totals, err := client.PaymentRequests.GetTotals(context.Background())
@@ -2099,6 +2107,9 @@ if err != nil {
 fmt.Printf("Payment Request Analytics:\n")
 for _, pending := range totals.Pending {
     fmt.Printf("  Pending %s: ₦%.2f\n", pending.Currency, float64(pending.Amount)/100)
+}
+for _, successful := range totals.Successful {
+    fmt.Printf("  Successful %s: ₦%.2f\n", successful.Currency, float64(successful.Amount)/100)
 }
 ```
 
