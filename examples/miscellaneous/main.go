@@ -13,12 +13,10 @@ func main() {
 	// Create a client with your secret key
 	client := paystack.DefaultClient("sk_test_your_secret_key_here")
 
-	// Example 1: List all banks
+	// Example 1: List all banks using builder pattern
 	fmt.Println("=== Listing All Banks ===")
-	perPage := 20
-	banksReq := &miscellaneous.BankListRequest{
-		PerPage: &perPage,
-	}
+	banksReq := miscellaneous.NewBankListRequest().
+		PerPage(20)
 
 	banksResp, err := client.Miscellaneous.ListBanks(context.Background(), banksReq)
 	if err != nil {
@@ -34,13 +32,11 @@ func main() {
 		}
 	}
 
-	// Example 2: List banks by country
+	// Example 2: List banks by country using builder pattern
 	fmt.Println("\n=== Listing Nigerian Banks ===")
-	country := "nigeria"
-	nigerianBanksReq := &miscellaneous.BankListRequest{
-		Country: &country,
-		PerPage: &perPage,
-	}
+	nigerianBanksReq := miscellaneous.NewBankListRequest().
+		Country("nigeria").
+		PerPage(20)
 
 	nigerianBanksResp, err := client.Miscellaneous.ListBanks(context.Background(), nigerianBanksReq)
 	if err != nil {
@@ -71,11 +67,9 @@ func main() {
 		}
 	}
 
-	// Example 4: List states for address verification
+	// Example 4: List states for address verification using builder pattern
 	fmt.Println("\n=== Listing States (US) ===")
-	statesReq := &miscellaneous.StateListRequest{
-		Country: "US",
-	}
+	statesReq := miscellaneous.NewStateListRequest("US")
 
 	statesResp, err := client.Miscellaneous.ListStates(context.Background(), statesReq)
 	if err != nil {
@@ -90,14 +84,12 @@ func main() {
 		}
 	}
 
-	// Example 5: Filter banks for verification
+	// Example 5: Filter banks for verification using builder pattern
 	fmt.Println("\n=== Listing Banks Supporting Verification ===")
-	enabledForVerification := true
-	verificationBanksReq := &miscellaneous.BankListRequest{
-		Country:                &country,
-		EnabledForVerification: &enabledForVerification,
-		PerPage:                &perPage,
-	}
+	verificationBanksReq := miscellaneous.NewBankListRequest().
+		Country("nigeria").
+		EnabledForVerification(true).
+		PerPage(20)
 
 	verificationBanksResp, err := client.Miscellaneous.ListBanks(context.Background(), verificationBanksReq)
 	if err != nil {
@@ -112,14 +104,12 @@ func main() {
 		}
 	}
 
-	// Example 6: Filter banks for direct payment
+	// Example 6: Filter banks for direct payment using builder pattern
 	fmt.Println("\n=== Listing Banks Supporting Direct Payment ===")
-	payWithBank := true
-	directPayBanksReq := &miscellaneous.BankListRequest{
-		Country:     &country,
-		PayWithBank: &payWithBank,
-		PerPage:     &perPage,
-	}
+	directPayBanksReq := miscellaneous.NewBankListRequest().
+		Country("nigeria").
+		PayWithBank(true).
+		PerPage(20)
 
 	directPayBanksResp, err := client.Miscellaneous.ListBanks(context.Background(), directPayBanksReq)
 	if err != nil {

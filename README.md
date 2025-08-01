@@ -1645,14 +1645,16 @@ func main() {
 
 ### Miscellaneous
 
-The miscellaneous API provides supporting functionality like bank listings and geographic information.
+The miscellaneous API provides supporting functionality like bank listings and geographic information using builder patterns for flexible filtering.
 
 ```go
 package main
 
 import (
+    "context"
     "fmt"
     "log"
+    "strings"
     
     "github.com/huysamen/paystack-go"
     "github.com/huysamen/paystack-go/api/miscellaneous"
@@ -1660,41 +1662,95 @@ import (
 
 func main() {
     client := paystack.DefaultClient("sk_test_your_secret_key_here")
+    ctx := context.Background()
 
-    // List banks for a specific country
-    country := "nigeria"
-    perPage := 50
-    banksReq := &miscellaneous.BankListRequest{
-        Country: &country,
-        PerPage: &perPage,
-    }
+    // List banks for a specific country with filtering using builder pattern
+    banksReq := miscellaneous.NewBankListRequest().
+        Country("nigeria").
+        EnabledForVerification(true).
+        PayWithBank(true).
+        PerPage(50)
 
-    banksResp, err := client.Miscellaneous.ListBanks(banksReq)
+    banksResp, err := client.Miscellaneous.ListBanks(ctx, banksReq)
     if err != nil {
         log.Fatal(err)
     }
 
-    fmt.Printf("Found %d banks in %s\n", len(banksResp.Data), country)
+    fmt.Printf("Found %d Nigerian banks with verification and direct payment support\n", len(banksResp.Data))
+    for _, bank := range banksResp.Data[:3] { // Show first 3
+        fmt.Printf("- %s (%s): Direct Pay: %t\n", 
+            bank.Name, bank.Code, bank.PayWithBank)
+    }
+
+    // Advanced bank filtering - transfer capabilities
+    transferBanksReq := miscellaneous.NewBankListRequest().
+        Country("nigeria").
+        PayWithBankTransfer(true).
+        Currency("NGN").
+        Gateway("emandate") // Specific gateway
+
+    transferResp, err := client.Miscellaneous.ListBanks(ctx, transferBanksReq)
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    fmt.Printf("\nFound %d banks supporting bank transfers\n", len(transferResp.Data))
 
     // List supported countries
-    countriesResp, err := client.Miscellaneous.ListCountries()
+    countriesResp, err := client.Miscellaneous.ListCountries(ctx)
     if err != nil {
         log.Fatal(err)
     }
 
-    fmt.Printf("Paystack supports %d countries\n", len(countriesResp.Data))
-
-    // List states for address verification
-    statesReq := &miscellaneous.StateListRequest{
-        Country: "US",
+    fmt.Printf("Paystack supports %d countries:\n", len(countriesResp.Data))
+    for _, country := range countriesResp.Data[:5] { // Show first 5
+        fmt.Printf("- %s (%s): %s\n", 
+            country.Name, country.ISOCode, country.DefaultCurrencyCode)
     }
 
-    statesResp, err := client.Miscellaneous.ListStates(statesReq)
+    // List states for address verification using builder pattern
+    statesReq := miscellaneous.NewStateListRequest("US")
+
+    statesResp, err := client.Miscellaneous.ListStates(ctx, statesReq)
     if err != nil {
         log.Fatal(err)
     }
 
-    fmt.Printf("Found %d states for address verification\n", len(statesResp.Data))
+    fmt.Printf("\nFound %d US states for address verification:\n", len(statesResp.Data))
+    for _, state := range statesResp.Data[:5] { // Show first 5
+        fmt.Printf("- %s (%s)\n", state.Name, state.Abbreviation)
+    }
+
+    // Multi-country bank analysis
+    countries := []string{"nigeria", "ghana", "kenya", "south africa"}
+    
+    for _, country := range countries {
+        countryBanks := miscellaneous.NewBankListRequest().
+            Country(country).
+            PerPage(100)
+
+        resp, err := client.Miscellaneous.ListBanks(ctx, countryBanks)
+        if err != nil {
+            log.Printf("Error fetching %s banks: %v", country, err)
+            continue
+        }
+
+        // Analyze capabilities
+        directPay := 0
+        transfer := 0
+        verification := 0
+
+        for _, bank := range resp.Data {
+            if bank.PayWithBank {
+                directPay++
+            }
+            // Additional analysis would check other fields
+        }
+
+        fmt.Printf("\n%s Banking Landscape:\n", strings.Title(country))
+        fmt.Printf("  Total Banks: %d\n", len(resp.Data))
+        fmt.Printf("  Direct Payment: %d\n", directPay)
+    }
 }
 ```
 

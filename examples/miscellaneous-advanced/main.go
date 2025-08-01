@@ -46,10 +46,8 @@ func analyzeBanksByCountry(client *paystack.Client) {
 	for _, country := range countries {
 		fmt.Printf("\n📍 Analyzing banks in %s...\n", strings.Title(country))
 
-		banksReq := &miscellaneous.BankListRequest{
-			Country: &country,
-			PerPage: &[]int{100}[0], // Get more banks
-		}
+		banksReq := miscellaneous.NewBankListRequest().
+			Country(country)
 
 		banksResp, err := client.Miscellaneous.ListBanks(context.Background(), banksReq)
 		if err != nil {
@@ -100,36 +98,33 @@ func discoverPaymentMethods(client *paystack.Client) {
 	// Discover different types of payment-capable banks
 	paymentTypes := []struct {
 		name   string
-		filter func() *miscellaneous.BankListRequest
+		filter func() *miscellaneous.BankListRequestBuilder
 	}{
 		{
 			name: "Direct Payment Banks",
-			filter: func() *miscellaneous.BankListRequest {
-				return &miscellaneous.BankListRequest{
-					Country:     &country,
-					PayWithBank: &[]bool{true}[0],
-					PerPage:     &[]int{50}[0],
-				}
+			filter: func() *miscellaneous.BankListRequestBuilder {
+				return miscellaneous.NewBankListRequest().
+					Country(country).
+					PayWithBank(true).
+					PerPage(50)
 			},
 		},
 		{
 			name: "Bank Transfer Capable",
-			filter: func() *miscellaneous.BankListRequest {
-				return &miscellaneous.BankListRequest{
-					Country:             &country,
-					PayWithBankTransfer: &[]bool{true}[0],
-					PerPage:             &[]int{50}[0],
-				}
+			filter: func() *miscellaneous.BankListRequestBuilder {
+				return miscellaneous.NewBankListRequest().
+					Country(country).
+					PayWithBankTransfer(true).
+					PerPage(50)
 			},
 		},
 		{
 			name: "Verification Enabled Banks",
-			filter: func() *miscellaneous.BankListRequest {
-				return &miscellaneous.BankListRequest{
-					Country:                &country,
-					EnabledForVerification: &[]bool{true}[0],
-					PerPage:                &[]int{50}[0],
-				}
+			filter: func() *miscellaneous.BankListRequestBuilder {
+				return miscellaneous.NewBankListRequest().
+					Country(country).
+					EnabledForVerification(true).
+					PerPage(50)
 			},
 		},
 	}
@@ -197,10 +192,9 @@ func setupMultiCountrySupport(client *paystack.Client) {
 
 		// Get banks for this country if available
 		countrySlug := strings.ToLower(country.Name)
-		banksReq := &miscellaneous.BankListRequest{
-			Country: &countrySlug,
-			PerPage: &[]int{20}[0],
-		}
+		banksReq := miscellaneous.NewBankListRequest().
+			Country(countrySlug).
+			PerPage(20)
 
 		banksResp, err := client.Miscellaneous.ListBanks(context.Background(), banksReq)
 		if err != nil {
@@ -253,9 +247,7 @@ func buildGeographicInformation(client *paystack.Client) {
 	for _, countryCode := range testCountries {
 		fmt.Printf("\n📍 Fetching states for %s...\n", countryCode)
 
-		statesReq := &miscellaneous.StateListRequest{
-			Country: countryCode,
-		}
+		statesReq := miscellaneous.NewStateListRequest(countryCode)
 
 		statesResp, err := client.Miscellaneous.ListStates(context.Background(), statesReq)
 		if err != nil {

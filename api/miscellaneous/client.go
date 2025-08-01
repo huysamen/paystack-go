@@ -1,6 +1,7 @@
 package miscellaneous
 
 import (
+	"errors"
 	"net/http"
 )
 
@@ -9,6 +10,9 @@ const (
 	countryBasePath = "/country"
 	statesBasePath  = "/address_verification/states"
 )
+
+// ErrBuilderRequired is returned when a builder is required but not provided
+var ErrBuilderRequired = errors.New("builder cannot be nil")
 
 type Client struct {
 	client  *http.Client
