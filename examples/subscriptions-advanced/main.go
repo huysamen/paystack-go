@@ -40,33 +40,29 @@ func main() {
 		customerResp.Data.CustomerCode,
 		customerResp.Data.Email)
 
-	// 2. Create a subscription plan
+	// 2. Create a subscription plan using builder pattern
 	fmt.Println("\n2. Creating subscription plan...")
-	planReq := &plans.PlanCreateRequest{
-		Name:         "Premium Monthly Subscription",
-		Amount:       5000000, // ₦50,000 in kobo
-		Interval:     types.IntervalMonthly,
-		Currency:     types.CurrencyNGN,
-		Description:  "Premium monthly subscription with all features",
-		SendInvoices: boolPtr(true),
-		SendSMS:      boolPtr(true),
-	}
-
-	planResp, err := client.Plans.Create(context.Background(), planReq)
+	planResp, err := client.Plans.Create(context.Background(),
+		plans.NewCreatePlanRequest("Premium Monthly Subscription", 5000000, types.IntervalMonthly). // ₦50,000 in kobo
+														Description("Premium monthly subscription with all features").
+														Currency(types.CurrencyNGN).
+														SendInvoices(true).
+														SendSMS(true),
+	)
 	if err != nil {
 		log.Fatalf("Failed to create plan: %v", err)
 	}
 
 	fmt.Printf("Plan created: %s (₦%.2f %s)\n",
-		planResp.Data.PlanCode,
-		float64(planResp.Data.Amount)/100,
-		planResp.Data.Interval)
+		planResp.PlanCode,
+		float64(planResp.Amount)/100,
+		planResp.Interval)
 
 	// 3. Create subscription
 	fmt.Println("\n3. Creating subscription...")
 	subscriptionReq := &subscriptions.SubscriptionCreateRequest{
 		Customer:  customerResp.Data.CustomerCode,
-		Plan:      planResp.Data.PlanCode,
+		Plan:      planResp.PlanCode,
 		StartDate: timePtr(time.Now().AddDate(0, 0, 7)), // Start in 1 week
 	}
 
@@ -179,7 +175,7 @@ func main() {
 	fmt.Println("\n=== Subscription Workflow Complete ===")
 	fmt.Printf("Customer %s is now subscribed to %s\n",
 		customerResp.Data.Email,
-		planResp.Data.Name)
+		planResp.Name)
 	fmt.Printf("Subscription Code: %s\n", subscriptionResp.Data.SubscriptionCode)
 	fmt.Printf("Management Link sent to customer's email\n")
 

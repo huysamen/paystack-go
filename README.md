@@ -8,7 +8,7 @@ A comprehensive Go client library for the [Paystack API](https://paystack.com/do
 ## Features
 
 - ✅ **Transactions**: Initialize, verify, charge authorization, list (with advanced filtering), fetch, export, partial debit, view timeline, totals
-- ✅ **Plans**: Create, list, fetch, update plans by ID or code
+- ✅ **Plans**: Create, list, fetch, update plans by ID or code with builder pattern support
 - ✅ **Products**: Create, list, fetch, update products with inventory management and metadata support
 - ✅ **Customers**: Create, list, fetch, update, validate identity, whitelist/blacklist, authorization management, direct debit
 - ✅ **Subscriptions**: Create, list, fetch, enable, disable, generate update links, send management emails
@@ -31,7 +31,7 @@ A comprehensive Go client library for the [Paystack API](https://paystack.com/do
 - ✅ **Type Safety**: Strongly typed request/response structures
 - ✅ **Error Handling**: Clean, intuitive error handling with API errors as Response objects
 - ✅ **Configuration**: Support for different environments and custom HTTP clients
-- ✅ **Builder Pattern**: Fluent, chainable API for complex requests (Transactions, Bulk Charges, Apple Pay, Charges, Customers, Dedicated Virtual Account, Direct Debit, Disputes modules) - no more `&[]int{50}[0]` syntax!
+- ✅ **Builder Pattern**: Fluent, chainable API for complex requests (Transactions, Bulk Charges, Apple Pay, Charges, Customers, Dedicated Virtual Account, Direct Debit, Disputes, Plans modules) - no more `&[]int{50}[0]` syntax!
 
 ## Installation
 
@@ -644,50 +644,57 @@ for _, currency := range resp.Data.TotalVolumeByCurrency {
 ### Create and Manage Plans
 
 ```go
-// Create a new plan
-createReq := &plans.PlanCreateRequest{
-    Name:     "Premium Monthly",
-    Amount:   2500000, // 25,000.00 NGN in kobo
-    Interval: types.IntervalMonthly,
-    Currency: types.CurrencyNGN,
-    Description: "Premium monthly subscription",
-}
-
-createResp, err := client.Plans.Create(createReq)
+// Create a new plan with builder pattern
+plan, err := client.Plans.Create(ctx,
+    plans.NewCreatePlanRequest("Premium Monthly", 2500000, types.IntervalMonthly). // 25,000.00 NGN in kobo
+        Description("Premium monthly subscription with all features").
+        Currency(types.CurrencyNGN).
+        SendInvoices(true).
+        SendSMS(true),
+)
 if err != nil {
     log.Fatal(err)
 }
 
-fmt.Printf("Plan created: %s\n", createResp.Data.PlanCode)
+fmt.Printf("Plan created: %s (₦%.2f %s)\n", plan.PlanCode, float64(plan.Amount)/100, plan.Interval)
 
-// List plans with filtering
-listReq := &plans.PlanListRequest{
-    PerPage:  &[]int{20}[0],
-    Status:   &[]string{"active"}[0],
-    Interval: &types.IntervalMonthly,
-}
-
-listResp, err := client.Plans.List(listReq)
+// List plans with filtering using builder pattern
+plansResp, err := client.Plans.List(ctx,
+    plans.NewListPlansRequest().
+        PerPage(20).
+        Status("active").
+        Interval(types.IntervalMonthly).
+        Amount(2500000), // Filter by exact amount
+)
 if err != nil {
     log.Fatal(err)
 }
 
-fmt.Printf("Found %d plans\n", len(listResp.Data))
+fmt.Printf("Found %d active monthly plans\n", len(plansResp.Data))
 
-// Update a plan
-updateReq := &plans.PlanUpdateRequest{
-    Name:     "Premium Monthly (Updated)",
-    Amount:   3000000, // 30,000.00 NGN in kobo
-    Interval: types.IntervalMonthly,
-    Description: "Updated premium monthly subscription",
-}
-
-updateResp, err := client.Plans.Update(createResp.Data.PlanCode, updateReq)
+// Update a plan with builder pattern
+updatedPlan, err := client.Plans.Update(ctx, plan.PlanCode,
+    plans.NewUpdatePlanRequest("Premium Monthly (Updated)", 3000000, types.IntervalMonthly). // 30,000.00 NGN in kobo
+        Description("Updated premium monthly subscription with enhanced features").
+        UpdateExistingSubscriptions(true), // Apply changes to existing subscriptions
+)
 if err != nil {
     log.Fatal(err)
 }
 
-fmt.Printf("Plan updated: %s\n", updateResp.Data.Message)
+fmt.Printf("Plan updated: %s (₦%.2f)\n", updatedPlan.Name, float64(updatedPlan.Amount)/100)
+
+// Fetch plan details
+planDetails, err := client.Plans.Fetch(ctx, plan.PlanCode)
+if err != nil {
+    log.Fatal(err)
+}
+
+fmt.Printf("Plan: %s - %s (₦%.2f %s)\n", 
+    planDetails.Name, 
+    planDetails.Description, 
+    float64(planDetails.Amount)/100, 
+    planDetails.Interval)
 ```
 ```
 

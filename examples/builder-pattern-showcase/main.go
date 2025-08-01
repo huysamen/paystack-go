@@ -55,7 +55,7 @@ func main() {
 
 	// 3. Plans - Filter by status and amount
 	fmt.Println("\n🔹 Plans:")
-	planBuilder := plans.NewPlanListRequest().
+	planBuilder := plans.NewListPlansRequest().
 		Status("active").
 		Interval(types.IntervalMonthly).
 		Amount(50000) // ₦500.00

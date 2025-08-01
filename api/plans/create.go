@@ -2,13 +2,13 @@ package plans
 
 import (
 	"context"
-	"errors"
 
 	"github.com/huysamen/paystack-go/net"
 	"github.com/huysamen/paystack-go/types"
 )
 
-type PlanCreateRequest struct {
+// CreatePlanRequest represents the request to create a plan
+type CreatePlanRequest struct {
 	// Required fields
 	Name     string         `json:"name"`
 	Amount   int            `json:"amount"`
@@ -22,21 +22,81 @@ type PlanCreateRequest struct {
 	InvoiceLimit *int           `json:"invoice_limit,omitempty"`
 }
 
-type PlanCreateResponse struct {
-	types.Plan
+// CreatePlanRequestBuilder provides a fluent interface for building CreatePlanRequest
+type CreatePlanRequestBuilder struct {
+	req *CreatePlanRequest
 }
 
-func (c *Client) Create(ctx context.Context, req *PlanCreateRequest) (*types.Response[PlanCreateResponse], error) {
-	if req == nil {
-		return nil, errors.New("request cannot be nil")
+// NewCreatePlanRequest creates a new builder for CreatePlanRequest
+func NewCreatePlanRequest(name string, amount int, interval types.Interval) *CreatePlanRequestBuilder {
+	return &CreatePlanRequestBuilder{
+		req: &CreatePlanRequest{
+			Name:     name,
+			Amount:   amount,
+			Interval: interval,
+		},
+	}
+}
+
+// Description sets the plan description
+func (b *CreatePlanRequestBuilder) Description(description string) *CreatePlanRequestBuilder {
+	b.req.Description = description
+	return b
+}
+
+// SendInvoices sets whether to send invoices to subscribers
+func (b *CreatePlanRequestBuilder) SendInvoices(sendInvoices bool) *CreatePlanRequestBuilder {
+	b.req.SendInvoices = &sendInvoices
+	return b
+}
+
+// SendSMS sets whether to send SMS to subscribers
+func (b *CreatePlanRequestBuilder) SendSMS(sendSMS bool) *CreatePlanRequestBuilder {
+	b.req.SendSMS = &sendSMS
+	return b
+}
+
+// Currency sets the plan currency
+func (b *CreatePlanRequestBuilder) Currency(currency types.Currency) *CreatePlanRequestBuilder {
+	b.req.Currency = currency
+	return b
+}
+
+// InvoiceLimit sets the maximum number of invoices for the plan
+func (b *CreatePlanRequestBuilder) InvoiceLimit(limit int) *CreatePlanRequestBuilder {
+	b.req.InvoiceLimit = &limit
+	return b
+}
+
+// Build returns the constructed CreatePlanRequest
+func (b *CreatePlanRequestBuilder) Build() *CreatePlanRequest {
+	return b.req
+}
+
+// CreatePlanResponse represents the response from creating a plan
+type CreatePlanResponse struct {
+	Status  bool       `json:"status"`
+	Message string     `json:"message"`
+	Data    types.Plan `json:"data"`
+}
+
+// Create creates a new subscription plan
+func (c *Client) Create(ctx context.Context, builder *CreatePlanRequestBuilder) (*types.Plan, error) {
+	if builder == nil {
+		return nil, ErrBuilderRequired
 	}
 
-	return net.Post[PlanCreateRequest, PlanCreateResponse](
+	resp, err := net.Post[CreatePlanRequest, types.Plan](
 		ctx,
 		c.client,
 		c.secret,
 		planBasePath,
-		req,
+		builder.Build(),
 		c.baseURL,
 	)
+	if err != nil {
+		return nil, err
+	}
+
+	return &resp.Data, nil
 }

@@ -6,67 +6,68 @@ import (
 	"strconv"
 
 	"github.com/huysamen/paystack-go/net"
-	"github.com/huysamen/paystack-go/options"
 	"github.com/huysamen/paystack-go/types"
 )
 
-type PlanListRequest struct {
+// ListPlansRequest represents the request to list plans
+type ListPlansRequest struct {
 	// Optional
-	PerPage  *int
-	Page     *int
-	Status   *string
-	Interval *types.Interval
-	Amount   *int
+	PerPage  *int            `json:"perPage,omitempty"`
+	Page     *int            `json:"page,omitempty"`
+	Status   *string         `json:"status,omitempty"`
+	Interval *types.Interval `json:"interval,omitempty"`
+	Amount   *int            `json:"amount,omitempty"`
 }
 
-// PlanListRequestBuilder provides a fluent interface for building PlanListRequest
-type PlanListRequestBuilder struct {
-	req *PlanListRequest
+// ListPlansRequestBuilder provides a fluent interface for building ListPlansRequest
+type ListPlansRequestBuilder struct {
+	req *ListPlansRequest
 }
 
-// NewPlanListRequest creates a new builder for PlanListRequest
-func NewPlanListRequest() *PlanListRequestBuilder {
-	return &PlanListRequestBuilder{
-		req: &PlanListRequest{},
+// NewListPlansRequest creates a new builder for ListPlansRequest
+func NewListPlansRequest() *ListPlansRequestBuilder {
+	return &ListPlansRequestBuilder{
+		req: &ListPlansRequest{},
 	}
 }
 
 // PerPage sets the number of records per page
-func (b *PlanListRequestBuilder) PerPage(perPage int) *PlanListRequestBuilder {
-	b.req.PerPage = options.Int(perPage)
+func (b *ListPlansRequestBuilder) PerPage(perPage int) *ListPlansRequestBuilder {
+	b.req.PerPage = &perPage
 	return b
 }
 
 // Page sets the page number
-func (b *PlanListRequestBuilder) Page(page int) *PlanListRequestBuilder {
-	b.req.Page = options.Int(page)
+func (b *ListPlansRequestBuilder) Page(page int) *ListPlansRequestBuilder {
+	b.req.Page = &page
 	return b
 }
 
 // Status filters by plan status
-func (b *PlanListRequestBuilder) Status(status string) *PlanListRequestBuilder {
-	b.req.Status = options.String(status)
+func (b *ListPlansRequestBuilder) Status(status string) *ListPlansRequestBuilder {
+	b.req.Status = &status
 	return b
 }
 
 // Interval filters by plan interval
-func (b *PlanListRequestBuilder) Interval(interval types.Interval) *PlanListRequestBuilder {
+func (b *ListPlansRequestBuilder) Interval(interval types.Interval) *ListPlansRequestBuilder {
 	b.req.Interval = &interval
 	return b
 }
 
 // Amount filters by plan amount
-func (b *PlanListRequestBuilder) Amount(amount int) *PlanListRequestBuilder {
-	b.req.Amount = options.Int(amount)
+func (b *ListPlansRequestBuilder) Amount(amount int) *ListPlansRequestBuilder {
+	b.req.Amount = &amount
 	return b
 }
 
-// Build returns the constructed PlanListRequest
-func (b *PlanListRequestBuilder) Build() *PlanListRequest {
+// Build returns the constructed ListPlansRequest
+func (b *ListPlansRequestBuilder) Build() *ListPlansRequest {
 	return b.req
 }
 
-func (r *PlanListRequest) toQuery() string {
+// toQuery converts the request to URL query parameters
+func (r *ListPlansRequest) toQuery() string {
 	params := url.Values{}
 
 	if r.PerPage != nil {
@@ -88,11 +89,21 @@ func (r *PlanListRequest) toQuery() string {
 	return params.Encode()
 }
 
-type PlanListResponse []types.Plan
+// ListPlansResponse represents the response from listing plans
+type ListPlansResponse struct {
+	Status  bool         `json:"status"`
+	Message string       `json:"message"`
+	Data    []types.Plan `json:"data"`
+	Meta    *types.Meta  `json:"meta,omitempty"`
+}
 
 // List lists plans using a builder (fluent interface)
-func (c *Client) List(ctx context.Context, builder *PlanListRequestBuilder) (*types.Response[PlanListResponse], error) {
-	req := builder.Build()
+func (c *Client) List(ctx context.Context, builder *ListPlansRequestBuilder) (*types.Response[[]types.Plan], error) {
+	var req *ListPlansRequest
+	if builder != nil {
+		req = builder.Build()
+	}
+
 	path := planBasePath
 
 	if req != nil {
@@ -101,7 +112,7 @@ func (c *Client) List(ctx context.Context, builder *PlanListRequestBuilder) (*ty
 		}
 	}
 
-	return net.Get[PlanListResponse](
+	return net.Get[[]types.Plan](
 		ctx,
 		c.client,
 		c.secret,
