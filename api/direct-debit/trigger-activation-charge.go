@@ -7,12 +7,53 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
+// TriggerActivationChargeRequest represents the request to trigger activation charge
+type TriggerActivationChargeRequest struct {
+	CustomerIDs []uint64 `json:"customer_ids"`
+}
+
+// TriggerActivationChargeResponse represents the response from triggering activation charge
+type TriggerActivationChargeResponse struct {
+	Status  bool   `json:"status"`
+	Message string `json:"message"`
+}
+
+// TriggerActivationChargeBuilder builds requests for triggering activation charges
+type TriggerActivationChargeBuilder struct {
+	request *TriggerActivationChargeRequest
+}
+
+// NewTriggerActivationChargeBuilder creates a new builder for triggering activation charges
+func NewTriggerActivationChargeBuilder() *TriggerActivationChargeBuilder {
+	return &TriggerActivationChargeBuilder{
+		request: &TriggerActivationChargeRequest{},
+	}
+}
+
+// CustomerIDs sets the customer IDs for the request
+func (b *TriggerActivationChargeBuilder) CustomerIDs(customerIDs []uint64) *TriggerActivationChargeBuilder {
+	b.request.CustomerIDs = customerIDs
+	return b
+}
+
+// CustomerID adds a customer ID to the request
+func (b *TriggerActivationChargeBuilder) CustomerID(customerID uint64) *TriggerActivationChargeBuilder {
+	b.request.CustomerIDs = append(b.request.CustomerIDs, customerID)
+	return b
+}
+
+// Build returns the built request
+func (b *TriggerActivationChargeBuilder) Build() *TriggerActivationChargeRequest {
+	return b.request
+}
+
 // TriggerActivationCharge triggers an activation charge on pending mandates
-func (c *Client) TriggerActivationCharge(ctx context.Context, req *TriggerActivationChargeRequest) (*types.Response[any], error) {
-	if err := validateTriggerActivationChargeRequest(req); err != nil {
-		return nil, err
+func (c *Client) TriggerActivationCharge(ctx context.Context, builder *TriggerActivationChargeBuilder) (*types.Response[any], error) {
+	if builder == nil {
+		return nil, ErrBuilderRequired
 	}
 
+	req := builder.Build()
 	endpoint := directDebitBasePath + "/activation-charge"
 	resp, err := net.Put[TriggerActivationChargeRequest, any](
 		ctx, c.client, c.secret, endpoint, req, c.baseURL,

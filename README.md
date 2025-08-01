@@ -19,7 +19,7 @@ A comprehensive Go client library for the [Paystack API](https://paystack.com/do
 - ✅ **Settlements**: List settlements, filter by status/date/subaccount, list settlement transactions
 - ✅ **Terminal**: Send events, check status, list/fetch/update terminals, commission/decommission devices
 - ✅ **Virtual Terminal**: Create virtual terminals, manage settings, assign destinations, handle splits
-- ✅ **Direct Debit**: Manage mandate authorizations for direct debit payments
+- ✅ **Direct Debit**: Manage mandate authorizations for direct debit payments with builder pattern support
 - ✅ **Dedicated Virtual Account**: Create and manage dedicated virtual accounts for unique customer payments
 - ✅ **Apple Pay**: Register and manage domains for Apple Pay integration
 - ✅ **Charges**: Create charges for multiple payment channels (card, bank, USSD, mobile money, QR, transfer) with submission workflows
@@ -31,7 +31,7 @@ A comprehensive Go client library for the [Paystack API](https://paystack.com/do
 - ✅ **Type Safety**: Strongly typed request/response structures
 - ✅ **Error Handling**: Clean, intuitive error handling with API errors as Response objects
 - ✅ **Configuration**: Support for different environments and custom HTTP clients
-- ✅ **Builder Pattern**: Fluent, chainable API for complex requests (Transactions, Bulk Charges, Apple Pay, Charges, Customers, Dedicated Virtual Account modules) - no more `&[]int{50}[0]` syntax!
+- ✅ **Builder Pattern**: Fluent, chainable API for complex requests (Transactions, Bulk Charges, Apple Pay, Charges, Customers, Dedicated Virtual Account, Direct Debit modules) - no more `&[]int{50}[0]` syntax!
 
 ## Installation
 
@@ -1538,13 +1538,12 @@ func main() {
     client := paystack.DefaultClient("sk_test_your_secret_key_here")
     ctx := context.Background()
 
-    // List active mandate authorizations
-    listReq := &directdebit.ListMandateAuthorizationsRequest{
-        Status:  directdebit.MandateAuthorizationStatusActive,
-        PerPage: 10,
-    }
+    // List active mandate authorizations using builder pattern
+    listBuilder := directdebit.NewListMandateAuthorizationsBuilder().
+        Status(directdebit.MandateAuthorizationStatusActive).
+        PerPage(10)
 
-    mandates, err := client.DirectDebit.ListMandateAuthorizations(ctx, listReq)
+    mandates, err := client.DirectDebit.ListMandateAuthorizations(ctx, listBuilder)
     if err != nil {
         log.Fatal(err)
     }
@@ -1556,27 +1555,25 @@ func main() {
     }
 
     // List pending mandates
-    pendingReq := &directdebit.ListMandateAuthorizationsRequest{
-        Status: directdebit.MandateAuthorizationStatusPending,
-    }
+    pendingBuilder := directdebit.NewListMandateAuthorizationsBuilder().
+        Status(directdebit.MandateAuthorizationStatusPending)
 
-    pendingMandates, err := client.DirectDebit.ListMandateAuthorizations(ctx, pendingReq)
+    pendingMandates, err := client.DirectDebit.ListMandateAuthorizations(ctx, pendingBuilder)
     if err != nil {
         log.Fatal(err)
     }
 
     // Trigger activation charges for pending mandates
     if len(pendingMandates.Data) > 0 {
-        var customerIDs []int
+        var customerIDs []uint64
         for _, mandate := range pendingMandates.Data {
             customerIDs = append(customerIDs, mandate.Customer.ID)
         }
 
-        activationReq := &directdebit.TriggerActivationChargeRequest{
-            CustomerIDs: customerIDs,
-        }
+        activationBuilder := directdebit.NewTriggerActivationChargeBuilder().
+            CustomerIDs(customerIDs)
 
-        activationResp, err := client.DirectDebit.TriggerActivationCharge(ctx, activationReq)
+        activationResp, err := client.DirectDebit.TriggerActivationCharge(ctx, activationBuilder)
         if err != nil {
             log.Printf("Activation error: %v\n", err)
         } else {

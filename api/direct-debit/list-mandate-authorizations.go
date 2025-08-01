@@ -9,11 +9,62 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
+// ListMandateAuthorizationsRequest represents the request to list mandate authorizations
+type ListMandateAuthorizationsRequest struct {
+	Cursor  string                     `json:"cursor,omitempty"`
+	Status  MandateAuthorizationStatus `json:"status,omitempty"`
+	PerPage int                        `json:"per_page,omitempty"`
+}
+
+// ListMandateAuthorizationsResponse represents the response from listing mandate authorizations
+type ListMandateAuthorizationsResponse struct {
+	Status  bool                   `json:"status"`
+	Message string                 `json:"message"`
+	Data    []MandateAuthorization `json:"data"`
+	Meta    *types.Meta            `json:"meta,omitempty"`
+}
+
+// ListMandateAuthorizationsBuilder builds requests for listing mandate authorizations
+type ListMandateAuthorizationsBuilder struct {
+	request *ListMandateAuthorizationsRequest
+}
+
+// NewListMandateAuthorizationsBuilder creates a new builder for listing mandate authorizations
+func NewListMandateAuthorizationsBuilder() *ListMandateAuthorizationsBuilder {
+	return &ListMandateAuthorizationsBuilder{
+		request: &ListMandateAuthorizationsRequest{},
+	}
+}
+
+// Cursor sets the cursor for pagination
+func (b *ListMandateAuthorizationsBuilder) Cursor(cursor string) *ListMandateAuthorizationsBuilder {
+	b.request.Cursor = cursor
+	return b
+}
+
+// Status sets the status filter for mandate authorizations
+func (b *ListMandateAuthorizationsBuilder) Status(status MandateAuthorizationStatus) *ListMandateAuthorizationsBuilder {
+	b.request.Status = status
+	return b
+}
+
+// PerPage sets the number of items per page
+func (b *ListMandateAuthorizationsBuilder) PerPage(perPage int) *ListMandateAuthorizationsBuilder {
+	b.request.PerPage = perPage
+	return b
+}
+
+// Build returns the built request
+func (b *ListMandateAuthorizationsBuilder) Build() *ListMandateAuthorizationsRequest {
+	return b.request
+}
+
 // ListMandateAuthorizations retrieves a list of direct debit mandate authorizations
-func (c *Client) ListMandateAuthorizations(ctx context.Context, req *ListMandateAuthorizationsRequest) (*types.Response[[]MandateAuthorization], error) {
+func (c *Client) ListMandateAuthorizations(ctx context.Context, builder *ListMandateAuthorizationsBuilder) (*types.Response[[]MandateAuthorization], error) {
 	endpoint := directDebitBasePath + "/mandate-authorizations"
 
-	if req != nil {
+	if builder != nil {
+		req := builder.Build()
 		params := url.Values{}
 		if req.Cursor != "" {
 			params.Set("cursor", req.Cursor)

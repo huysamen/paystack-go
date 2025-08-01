@@ -19,12 +19,11 @@ func main() {
 
 	// Example 1: List Mandate Authorizations
 	fmt.Println("1. Listing mandate authorizations...")
-	listReq := &directdebit.ListMandateAuthorizationsRequest{
-		Status:  directdebit.MandateAuthorizationStatusActive,
-		PerPage: 10,
-	}
+	listBuilder := directdebit.NewListMandateAuthorizationsBuilder().
+		Status(directdebit.MandateAuthorizationStatusActive).
+		PerPage(10)
 
-	mandates, err := client.DirectDebit.ListMandateAuthorizations(ctx, listReq)
+	mandates, err := client.DirectDebit.ListMandateAuthorizations(ctx, listBuilder)
 	if err != nil {
 		log.Printf("Error listing mandate authorizations: %v", err)
 		return
@@ -48,12 +47,11 @@ func main() {
 
 	// Example 3: List pending mandate authorizations
 	fmt.Println("\n3. Listing pending mandate authorizations...")
-	pendingReq := &directdebit.ListMandateAuthorizationsRequest{
-		Status:  directdebit.MandateAuthorizationStatusPending,
-		PerPage: 5,
-	}
+	pendingBuilder := directdebit.NewListMandateAuthorizationsBuilder().
+		Status(directdebit.MandateAuthorizationStatusPending).
+		PerPage(5)
 
-	pendingMandates, err := client.DirectDebit.ListMandateAuthorizations(ctx, pendingReq)
+	pendingMandates, err := client.DirectDebit.ListMandateAuthorizations(ctx, pendingBuilder)
 	if err != nil {
 		log.Printf("Error listing pending mandate authorizations: %v", err)
 		return
@@ -65,7 +63,7 @@ func main() {
 		fmt.Println("\n4. Triggering activation charge for pending mandates...")
 
 		// Collect customer IDs from pending mandates
-		var customerIDs []int
+		var customerIDs []uint64
 		for _, mandate := range pendingMandates.Data {
 			customerIDs = append(customerIDs, mandate.Customer.ID)
 			// Limit to first 3 customers for example
@@ -74,11 +72,10 @@ func main() {
 			}
 		}
 
-		activationReq := &directdebit.TriggerActivationChargeRequest{
-			CustomerIDs: customerIDs,
-		}
+		activationBuilder := directdebit.NewTriggerActivationChargeBuilder().
+			CustomerIDs(customerIDs)
 
-		activationResp, err := client.DirectDebit.TriggerActivationCharge(ctx, activationReq)
+		activationResp, err := client.DirectDebit.TriggerActivationCharge(ctx, activationBuilder)
 		if err != nil {
 			log.Printf("Error triggering activation charge: %v", err)
 			// This might fail in test mode, continue with example
@@ -91,12 +88,11 @@ func main() {
 
 	// Example 5: List revoked mandate authorizations
 	fmt.Println("\n5. Listing revoked mandate authorizations...")
-	revokedReq := &directdebit.ListMandateAuthorizationsRequest{
-		Status:  directdebit.MandateAuthorizationStatusRevoked,
-		PerPage: 10,
-	}
+	revokedBuilder := directdebit.NewListMandateAuthorizationsBuilder().
+		Status(directdebit.MandateAuthorizationStatusRevoked).
+		PerPage(10)
 
-	revokedMandates, err := client.DirectDebit.ListMandateAuthorizations(ctx, revokedReq)
+	revokedMandates, err := client.DirectDebit.ListMandateAuthorizations(ctx, revokedBuilder)
 	if err != nil {
 		log.Printf("Error listing revoked mandate authorizations: %v", err)
 		return
@@ -106,12 +102,11 @@ func main() {
 	// Example 6: Demonstrate pagination with cursor
 	if allMandates.Meta.Next != "" {
 		fmt.Println("\n6. Demonstrating pagination with cursor...")
-		paginationReq := &directdebit.ListMandateAuthorizationsRequest{
-			Cursor:  allMandates.Meta.Next,
-			PerPage: 5,
-		}
+		paginationBuilder := directdebit.NewListMandateAuthorizationsBuilder().
+			Cursor(allMandates.Meta.Next).
+			PerPage(5)
 
-		nextPage, err := client.DirectDebit.ListMandateAuthorizations(ctx, paginationReq)
+		nextPage, err := client.DirectDebit.ListMandateAuthorizations(ctx, paginationBuilder)
 		if err != nil {
 			log.Printf("Error fetching next page: %v", err)
 		} else {
