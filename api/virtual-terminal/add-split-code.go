@@ -8,7 +8,7 @@ import (
 )
 
 // AddSplitCode adds a split code to a virtual terminal
-func (c *Client) AddSplitCode(ctx context.Context, code string, req *AddSplitCodeRequest) (*interface{}, error) {
+func (c *Client) AddSplitCode(ctx context.Context, code string, req *AddSplitCodeRequest) (*any, error) {
 	if err := validateCode(code); err != nil {
 		return nil, err
 	}
@@ -17,7 +17,7 @@ func (c *Client) AddSplitCode(ctx context.Context, code string, req *AddSplitCod
 	}
 
 	endpoint := fmt.Sprintf("%s/%s/split_code", virtualTerminalBasePath, code)
-	resp, err := net.Put[AddSplitCodeRequest, interface{}](
+	resp, err := net.Put[AddSplitCodeRequest, any](
 		ctx, c.client, c.secret, endpoint, req, c.baseURL,
 	)
 	if err != nil {

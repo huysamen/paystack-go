@@ -27,14 +27,14 @@ type BulkChargeBatch struct {
 
 // Customer represents customer information in bulk charge
 type Customer struct {
-	ID           int         `json:"id"`
-	FirstName    string      `json:"first_name"`
-	LastName     string      `json:"last_name"`
-	Email        string      `json:"email"`
-	CustomerCode string      `json:"customer_code"`
-	Phone        string      `json:"phone"`
-	Metadata     interface{} `json:"metadata"`
-	RiskAction   string      `json:"risk_action"`
+	ID           int    `json:"id"`
+	FirstName    string `json:"first_name"`
+	LastName     string `json:"last_name"`
+	Email        string `json:"email"`
+	CustomerCode string `json:"customer_code"`
+	Phone        string `json:"phone"`
+	Metadata     any    `json:"metadata"`
+	RiskAction   string `json:"risk_action"`
 }
 
 // Authorization represents authorization information for bulk charge
@@ -59,7 +59,7 @@ type BulkChargeCharge struct {
 	BulkCharge    int           `json:"bulkcharge"`
 	Customer      Customer      `json:"customer"`
 	Authorization Authorization `json:"authorization"`
-	Transaction   interface{}   `json:"transaction"`
+	Transaction   any           `json:"transaction"`
 	Domain        string        `json:"domain"`
 	Amount        int64         `json:"amount"`
 	Currency      string        `json:"currency"`

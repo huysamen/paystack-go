@@ -30,7 +30,7 @@ func main() {
 			AccountNumber: "0000000000",
 		},
 		Reference: stringPtr("charge-" + generateReference()),
-		Metadata: map[string]interface{}{
+		Metadata: map[string]any{
 			"payment_type":  "bank_charge",
 			"customer_note": "Direct bank charge example",
 		},

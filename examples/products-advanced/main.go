@@ -107,7 +107,7 @@ func manageEcommerceInventory(ctx context.Context, client *paystack.Client) erro
 				"material":        "genuine leather",
 				"color":           "brown",
 				"rfid_protection": true,
-				"dimensions": map[string]interface{}{
+				"dimensions": map[string]any{
 					"length_cm": 11,
 					"width_cm":  9,
 					"height_cm": 2,

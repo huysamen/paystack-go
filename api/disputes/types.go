@@ -66,29 +66,29 @@ func (dc DisputeCategory) String() string {
 
 // Transaction represents transaction information in a dispute
 type Transaction struct {
-	ID              int                    `json:"id"`
-	Domain          string                 `json:"domain"`
-	Status          string                 `json:"status"`
-	Reference       string                 `json:"reference"`
-	Amount          int                    `json:"amount"`
-	Message         *string                `json:"message"`
-	GatewayResponse string                 `json:"gateway_response"`
-	PaidAt          *types.DateTime        `json:"paid_at"`
-	CreatedAt       types.DateTime         `json:"created_at"`
-	Channel         string                 `json:"channel"`
-	Currency        string                 `json:"currency"`
-	IPAddress       *string                `json:"ip_address"`
-	Metadata        map[string]interface{} `json:"metadata"`
-	Log             *TransactionLog        `json:"log"`
-	Fees            *int                   `json:"fees"`
-	FeesSplit       interface{}            `json:"fees_split"`
-	Authorization   *Authorization         `json:"authorization"`
-	Customer        *Customer              `json:"customer"`
-	Plan            interface{}            `json:"plan"`
-	Subaccount      interface{}            `json:"subaccount"`
-	Split           interface{}            `json:"split"`
-	OrderID         *string                `json:"order_id"`
-	PaidBy          *string                `json:"paid_by"`
+	ID              int             `json:"id"`
+	Domain          string          `json:"domain"`
+	Status          string          `json:"status"`
+	Reference       string          `json:"reference"`
+	Amount          int             `json:"amount"`
+	Message         *string         `json:"message"`
+	GatewayResponse string          `json:"gateway_response"`
+	PaidAt          *types.DateTime `json:"paid_at"`
+	CreatedAt       types.DateTime  `json:"created_at"`
+	Channel         string          `json:"channel"`
+	Currency        string          `json:"currency"`
+	IPAddress       *string         `json:"ip_address"`
+	Metadata        map[string]any  `json:"metadata"`
+	Log             *TransactionLog `json:"log"`
+	Fees            *int            `json:"fees"`
+	FeesSplit       any             `json:"fees_split"`
+	Authorization   *Authorization  `json:"authorization"`
+	Customer        *Customer       `json:"customer"`
+	Plan            any             `json:"plan"`
+	Subaccount      any             `json:"subaccount"`
+	Split           any             `json:"split"`
+	OrderID         *string         `json:"order_id"`
+	PaidBy          *string         `json:"paid_by"`
 }
 
 // TransactionLog represents transaction log information
@@ -126,15 +126,15 @@ type Authorization struct {
 
 // Customer represents customer information
 type Customer struct {
-	ID            int                    `json:"id"`
-	FirstName     *string                `json:"first_name"`
-	LastName      *string                `json:"last_name"`
-	Email         string                 `json:"email"`
-	CustomerCode  string                 `json:"customer_code"`
-	Phone         *string                `json:"phone"`
-	Metadata      map[string]interface{} `json:"metadata"`
-	RiskAction    string                 `json:"risk_action"`
-	International bool                   `json:"international"`
+	ID            int            `json:"id"`
+	FirstName     *string        `json:"first_name"`
+	LastName      *string        `json:"last_name"`
+	Email         string         `json:"email"`
+	CustomerCode  string         `json:"customer_code"`
+	Phone         *string        `json:"phone"`
+	Metadata      map[string]any `json:"metadata"`
+	RiskAction    string         `json:"risk_action"`
+	International bool           `json:"international"`
 }
 
 // Dispute represents a dispute

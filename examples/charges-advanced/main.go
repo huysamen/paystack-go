@@ -41,7 +41,7 @@ func main() {
 						Code:          "044", // Access Bank
 						AccountNumber: "0123456789",
 					},
-					Metadata: map[string]interface{}{
+					Metadata: map[string]any{
 						"channel":    "bank",
 						"customer":   "premium",
 						"product_id": "PROD_001",
@@ -59,7 +59,7 @@ func main() {
 					Reference:         stringPtr("auth-charge-" + generateReference()),
 					AuthorizationCode: stringPtr("AUTH_example_code"),
 					PIN:               stringPtr("1234"), // For non-reusable auth codes
-					Metadata: map[string]interface{}{
+					Metadata: map[string]any{
 						"channel":      "card",
 						"subscription": "monthly",
 						"auto_charge":  true,
@@ -78,7 +78,7 @@ func main() {
 					USSD: &charges.USSDDetails{
 						Type: "737", // GTBank USSD
 					},
-					Metadata: map[string]interface{}{
+					Metadata: map[string]any{
 						"channel": "ussd",
 						"service": "mobile_recharge",
 					},
@@ -97,7 +97,7 @@ func main() {
 						Phone:    "+233244000000",
 						Provider: "mtn",
 					},
-					Metadata: map[string]interface{}{
+					Metadata: map[string]any{
 						"channel": "mobile_money",
 						"country": "ghana",
 					},
@@ -115,7 +115,7 @@ func main() {
 					QR: &charges.QRDetails{
 						Provider: "visa",
 					},
-					Metadata: map[string]interface{}{
+					Metadata: map[string]any{
 						"channel":  "qr",
 						"location": "pos_terminal",
 					},
@@ -134,7 +134,7 @@ func main() {
 					BankTransfer: &charges.BankTransferDetails{
 						AccountExpiresAt: &expiresAt,
 					},
-					Metadata: map[string]interface{}{
+					Metadata: map[string]any{
 						"channel":    "bank_transfer",
 						"expires_in": "24_hours",
 					},
@@ -200,7 +200,7 @@ func main() {
 			AccountNumber: "1234567890",
 		},
 		TransactionCharge: intPtr(5000), // Override split with ₦50 to main account
-		Metadata: map[string]interface{}{
+		Metadata: map[string]any{
 			"merchant_share": 10.0, // 10% to main account
 			"vendor_share":   90.0, // 90% to subaccount
 			"split_type":     "percentage",

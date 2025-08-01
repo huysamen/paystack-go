@@ -425,35 +425,35 @@ func main() {
 	fmt.Println("💾 Business Intelligence Export")
 	fmt.Println("==============================")
 
-	config := map[string]interface{}{
+	config := map[string]any{
 		"created_at": time.Now().Format(time.RFC3339),
-		"invoices": map[string]interface{}{
-			"freelancer": map[string]interface{}{
+		"invoices": map[string]any{
+			"freelancer": map[string]any{
 				"code":     freelancerInvoice.RequestCode,
 				"amount":   updatedFreelancerInvoice.Amount,
 				"currency": updatedFreelancerInvoice.Currency,
 				"type":     "professional_services",
 			},
-			"saas": map[string]interface{}{
+			"saas": map[string]any{
 				"code":     saasInvoice.RequestCode,
 				"amount":   saasInvoice.Amount,
 				"currency": saasInvoice.Currency,
 				"type":     "subscription",
 			},
-			"event": map[string]interface{}{
+			"event": map[string]any{
 				"code":     eventInvoice.RequestCode,
 				"amount":   eventInvoice.Amount,
 				"currency": eventInvoice.Currency,
 				"type":     "event_booking",
 			},
-			"wholesale": map[string]interface{}{
+			"wholesale": map[string]any{
 				"code":     wholesaleInvoice.RequestCode,
 				"amount":   wholesaleInvoice.Amount,
 				"currency": wholesaleInvoice.Currency,
 				"type":     "bulk_order",
 			},
 		},
-		"analytics": map[string]interface{}{
+		"analytics": map[string]any{
 			"total_requests":      len(createdInvoices),
 			"estimated_value_ngn": totalValue,
 			"status_distribution": statusCount,

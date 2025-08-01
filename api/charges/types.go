@@ -8,23 +8,23 @@ import (
 
 // CreateChargeRequest represents the request to create a charge
 type CreateChargeRequest struct {
-	Email             string                 `json:"email"`
-	Amount            string                 `json:"amount"`
-	SplitCode         *string                `json:"split_code,omitempty"`
-	Subaccount        *string                `json:"subaccount,omitempty"`
-	TransactionCharge *int                   `json:"transaction_charge,omitempty"`
-	Bearer            *string                `json:"bearer,omitempty"`
-	Bank              *BankDetails           `json:"bank,omitempty"`
-	BankTransfer      *BankTransferDetails   `json:"bank_transfer,omitempty"`
-	USSD              *USSDDetails           `json:"ussd,omitempty"`
-	MobileMoney       *MobileMoneyDetails    `json:"mobile_money,omitempty"`
-	QR                *QRDetails             `json:"qr,omitempty"`
-	AuthorizationCode *string                `json:"authorization_code,omitempty"`
-	PIN               *string                `json:"pin,omitempty"`
-	Metadata          map[string]interface{} `json:"metadata,omitempty"`
-	Reference         *string                `json:"reference,omitempty"`
-	DeviceID          *string                `json:"device_id,omitempty"`
-	Birthday          *string                `json:"birthday,omitempty"`
+	Email             string               `json:"email"`
+	Amount            string               `json:"amount"`
+	SplitCode         *string              `json:"split_code,omitempty"`
+	Subaccount        *string              `json:"subaccount,omitempty"`
+	TransactionCharge *int                 `json:"transaction_charge,omitempty"`
+	Bearer            *string              `json:"bearer,omitempty"`
+	Bank              *BankDetails         `json:"bank,omitempty"`
+	BankTransfer      *BankTransferDetails `json:"bank_transfer,omitempty"`
+	USSD              *USSDDetails         `json:"ussd,omitempty"`
+	MobileMoney       *MobileMoneyDetails  `json:"mobile_money,omitempty"`
+	QR                *QRDetails           `json:"qr,omitempty"`
+	AuthorizationCode *string              `json:"authorization_code,omitempty"`
+	PIN               *string              `json:"pin,omitempty"`
+	Metadata          map[string]any       `json:"metadata,omitempty"`
+	Reference         *string              `json:"reference,omitempty"`
+	DeviceID          *string              `json:"device_id,omitempty"`
+	Birthday          *string              `json:"birthday,omitempty"`
 }
 
 // BankDetails represents bank account details for charging
@@ -110,26 +110,26 @@ type CheckPendingChargeResponse = types.Response[ChargeData]
 
 // ChargeData represents the charge data in API responses
 type ChargeData struct {
-	ID              int                    `json:"id"`
-	Domain          string                 `json:"domain"`
-	Status          string                 `json:"status"`
-	Reference       string                 `json:"reference"`
-	Amount          int                    `json:"amount"`
-	Message         string                 `json:"message"`
-	GatewayResponse string                 `json:"gateway_response"`
-	PaidAt          *types.DateTime        `json:"paid_at"`
-	CreatedAt       *types.DateTime        `json:"created_at"`
-	Channel         string                 `json:"channel"`
-	Currency        string                 `json:"currency"`
-	IPAddress       string                 `json:"ip_address"`
-	Metadata        map[string]interface{} `json:"metadata"`
-	Log             interface{}            `json:"log"`
-	Fees            int                    `json:"fees"`
-	RequestedAmount int                    `json:"requested_amount"`
-	TransactionDate *types.DateTime        `json:"transaction_date"`
-	Plan            interface{}            `json:"plan"`
-	Authorization   *Authorization         `json:"authorization"`
-	Customer        *Customer              `json:"customer"`
+	ID              int             `json:"id"`
+	Domain          string          `json:"domain"`
+	Status          string          `json:"status"`
+	Reference       string          `json:"reference"`
+	Amount          int             `json:"amount"`
+	Message         string          `json:"message"`
+	GatewayResponse string          `json:"gateway_response"`
+	PaidAt          *types.DateTime `json:"paid_at"`
+	CreatedAt       *types.DateTime `json:"created_at"`
+	Channel         string          `json:"channel"`
+	Currency        string          `json:"currency"`
+	IPAddress       string          `json:"ip_address"`
+	Metadata        map[string]any  `json:"metadata"`
+	Log             any             `json:"log"`
+	Fees            int             `json:"fees"`
+	RequestedAmount int             `json:"requested_amount"`
+	TransactionDate *types.DateTime `json:"transaction_date"`
+	Plan            any             `json:"plan"`
+	Authorization   *Authorization  `json:"authorization"`
+	Customer        *Customer       `json:"customer"`
 }
 
 // Authorization represents authorization details in charge response
@@ -151,13 +151,13 @@ type Authorization struct {
 
 // Customer represents customer details in charge response
 type Customer struct {
-	ID                       int                    `json:"id"`
-	FirstName                string                 `json:"first_name"`
-	LastName                 string                 `json:"last_name"`
-	Email                    string                 `json:"email"`
-	CustomerCode             string                 `json:"customer_code"`
-	Phone                    string                 `json:"phone"`
-	Metadata                 map[string]interface{} `json:"metadata"`
-	RiskAction               string                 `json:"risk_action"`
-	InternationalFormatPhone string                 `json:"international_format_phone"`
+	ID                       int            `json:"id"`
+	FirstName                string         `json:"first_name"`
+	LastName                 string         `json:"last_name"`
+	Email                    string         `json:"email"`
+	CustomerCode             string         `json:"customer_code"`
+	Phone                    string         `json:"phone"`
+	Metadata                 map[string]any `json:"metadata"`
+	RiskAction               string         `json:"risk_action"`
+	InternationalFormatPhone string         `json:"international_format_phone"`
 }

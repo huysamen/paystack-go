@@ -39,7 +39,7 @@ func TestPaystackError_Error(t *testing.T) {
 				Status:     false,
 				Code:       "invalid_Key",
 				Type:       "validation_error",
-				Meta: map[string]interface{}{
+				Meta: map[string]any{
 					"nextStep": "Ensure that you provide the correct authorization key for the request",
 				},
 			},
@@ -185,7 +185,7 @@ func TestPaystackError_GetNextStep(t *testing.T) {
 		{
 			name: "meta with nextStep",
 			err: &PaystackError{
-				Meta: map[string]interface{}{
+				Meta: map[string]any{
 					"nextStep": "Check your API key",
 				},
 			},
@@ -194,7 +194,7 @@ func TestPaystackError_GetNextStep(t *testing.T) {
 		{
 			name: "meta without nextStep",
 			err: &PaystackError{
-				Meta: map[string]interface{}{
+				Meta: map[string]any{
 					"otherField": "value",
 				},
 			},

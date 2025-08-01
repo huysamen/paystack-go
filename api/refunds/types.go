@@ -69,33 +69,33 @@ type RefundTransaction struct {
 	Currency        string               `json:"currency"`
 	Authorization   *RefundAuthorization `json:"authorization"`
 	Customer        *RefundCustomer      `json:"customer"`
-	Plan            interface{}          `json:"plan"`
-	Split           interface{}          `json:"split"`
-	OrderID         interface{}          `json:"order_id"`
+	Plan            any                  `json:"plan"`
+	Split           any                  `json:"split"`
+	OrderID         any                  `json:"order_id"`
 	CreatedAt       *types.DateTime      `json:"created_at"`
 	RequestedAmount int                  `json:"requested_amount"`
-	Source          interface{}          `json:"source"`
-	SourceDetails   interface{}          `json:"source_details"`
+	Source          any                  `json:"source"`
+	SourceDetails   any                  `json:"source_details"`
 }
 
 // RefundAuthorization represents authorization details in a refund
 type RefundAuthorization struct {
-	ExpMonth    interface{} `json:"exp_month"`
-	ExpYear     interface{} `json:"exp_year"`
-	AccountName interface{} `json:"account_name"`
+	ExpMonth    any `json:"exp_month"`
+	ExpYear     any `json:"exp_year"`
+	AccountName any `json:"account_name"`
 }
 
 // RefundCustomer represents customer details in a refund
 type RefundCustomer struct {
-	ID                       int         `json:"id"`
-	FirstName                *string     `json:"first_name"`
-	LastName                 *string     `json:"last_name"`
-	Email                    string      `json:"email"`
-	CustomerCode             string      `json:"customer_code"`
-	Phone                    *string     `json:"phone"`
-	Metadata                 interface{} `json:"metadata"`
-	RiskAction               string      `json:"risk_action"`
-	InternationalFormatPhone interface{} `json:"international_format_phone"`
+	ID                       int     `json:"id"`
+	FirstName                *string `json:"first_name"`
+	LastName                 *string `json:"last_name"`
+	Email                    string  `json:"email"`
+	CustomerCode             string  `json:"customer_code"`
+	Phone                    *string `json:"phone"`
+	Metadata                 any     `json:"metadata"`
+	RiskAction               string  `json:"risk_action"`
+	InternationalFormatPhone any     `json:"international_format_phone"`
 }
 
 // Refund represents a refund object

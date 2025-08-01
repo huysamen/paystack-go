@@ -31,17 +31,17 @@ type Customer struct {
 
 // Transaction represents a transaction related to a payment request
 type Transaction struct {
-	ID            int                    `json:"id"`
-	Reference     string                 `json:"reference"`
-	Amount        int                    `json:"amount"`
-	Currency      string                 `json:"currency"`
-	Status        string                 `json:"status"`
-	Gateway       string                 `json:"gateway"`
-	Channel       string                 `json:"channel"`
-	PaidAt        string                 `json:"paid_at,omitempty"`
-	CreatedAt     string                 `json:"created_at"`
-	Authorization map[string]interface{} `json:"authorization,omitempty"`
-	Customer      *Customer              `json:"customer,omitempty"`
+	ID            int            `json:"id"`
+	Reference     string         `json:"reference"`
+	Amount        int            `json:"amount"`
+	Currency      string         `json:"currency"`
+	Status        string         `json:"status"`
+	Gateway       string         `json:"gateway"`
+	Channel       string         `json:"channel"`
+	PaidAt        string         `json:"paid_at,omitempty"`
+	CreatedAt     string         `json:"created_at"`
+	Authorization map[string]any `json:"authorization,omitempty"`
+	Customer      *Customer      `json:"customer,omitempty"`
 }
 
 // PaymentRequest represents a payment request
@@ -62,7 +62,7 @@ type PaymentRequest struct {
 	Paid             bool            `json:"paid"`
 	PaidAt           *string         `json:"paid_at,omitempty"`
 	Metadata         *types.Metadata `json:"metadata,omitempty"`
-	Notifications    []interface{}   `json:"notifications,omitempty"`
+	Notifications    []any           `json:"notifications,omitempty"`
 	OfflineReference *string         `json:"offline_reference,omitempty"`
 	Customer         *Customer       `json:"customer,omitempty"`
 	CreatedAt        string          `json:"created_at"`

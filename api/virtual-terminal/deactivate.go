@@ -9,13 +9,13 @@ import (
 )
 
 // Deactivate deactivates a virtual terminal
-func (c *Client) Deactivate(ctx context.Context, code string) (*types.Response[interface{}], error) {
+func (c *Client) Deactivate(ctx context.Context, code string) (*types.Response[any], error) {
 	if err := validateCode(code); err != nil {
 		return nil, err
 	}
 
 	endpoint := fmt.Sprintf("%s/%s/deactivate", virtualTerminalBasePath, code)
-	resp, err := net.Put[interface{}, interface{}](
+	resp, err := net.Put[any, any](
 		ctx, c.client, c.secret, endpoint, nil, c.baseURL,
 	)
 	if err != nil {

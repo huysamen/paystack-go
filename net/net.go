@@ -39,13 +39,13 @@ const (
 
 // PaystackError represents an error response from the Paystack API
 type PaystackError struct {
-	StatusCode int                    `json:"-"`
-	Message    string                 `json:"message"`
-	Status     bool                   `json:"status"`
-	Code       string                 `json:"code,omitempty"`
-	Type       string                 `json:"type,omitempty"`
-	Meta       map[string]interface{} `json:"meta,omitempty"`
-	Cause      error                  `json:"-"` // Underlying cause of the error
+	StatusCode int            `json:"-"`
+	Message    string         `json:"message"`
+	Status     bool           `json:"status"`
+	Code       string         `json:"code,omitempty"`
+	Type       string         `json:"type,omitempty"`
+	Meta       map[string]any `json:"meta,omitempty"`
+	Cause      error          `json:"-"` // Underlying cause of the error
 }
 
 func (e *PaystackError) Error() string {
@@ -175,7 +175,7 @@ func getHTTPErrorMessage(statusCode int, body []byte) string {
 	// Try to extract a meaningful message from the response body
 	if len(body) > 0 {
 		// Try to parse as JSON and extract message
-		var response map[string]interface{}
+		var response map[string]any
 		if err := json.Unmarshal(body, &response); err == nil {
 			if msg, ok := response["message"].(string); ok && msg != "" {
 				return msg

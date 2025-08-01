@@ -56,7 +56,7 @@ type Terminal struct {
 // Terminal Event
 
 // TerminalEventData represents the data payload for terminal events
-type TerminalEventData map[string]interface{}
+type TerminalEventData map[string]any
 
 // TerminalSendEventRequest represents the request to send an event to terminal
 type TerminalSendEventRequest struct {

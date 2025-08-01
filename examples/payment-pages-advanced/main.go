@@ -347,25 +347,25 @@ func main() {
 	fmt.Println("💾 Configuration Export")
 	fmt.Println("======================")
 
-	config := map[string]interface{}{
+	config := map[string]any{
 		"created_at": time.Now().Format(time.RFC3339),
-		"pages": map[string]interface{}{
-			"product_showcase": map[string]interface{}{
+		"pages": map[string]any{
+			"product_showcase": map[string]any{
 				"slug":    productPage.Slug,
 				"type":    "product",
 				"purpose": "Multi-product e-commerce",
 			},
-			"subscription_service": map[string]interface{}{
+			"subscription_service": map[string]any{
 				"slug":    subscriptionPage.Slug,
 				"type":    "payment",
 				"purpose": "SaaS subscription",
 			},
-			"donation_campaign": map[string]interface{}{
+			"donation_campaign": map[string]any{
 				"slug":    donationPage.Slug,
 				"type":    "payment",
 				"purpose": "Charitable donations",
 			},
-			"event_ticketing": map[string]interface{}{
+			"event_ticketing": map[string]any{
 				"slug":    eventPage.Slug,
 				"type":    "payment",
 				"purpose": "Event ticket sales",

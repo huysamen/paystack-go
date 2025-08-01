@@ -47,7 +47,7 @@ type DedicatedVirtualAccount struct {
 	Customer      *Customer       `json:"customer,omitempty"`
 	CreatedAt     string          `json:"created_at,omitempty"`
 	UpdatedAt     string          `json:"updated_at,omitempty"`
-	SplitConfig   interface{}     `json:"split_config,omitempty"`
+	SplitConfig   any             `json:"split_config,omitempty"`
 }
 
 // CreateDedicatedVirtualAccountRequest represents the request to create a dedicated virtual account

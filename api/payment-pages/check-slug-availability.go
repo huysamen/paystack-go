@@ -8,12 +8,12 @@ import (
 )
 
 // CheckSlugAvailability checks the availability of a slug for a payment page
-func (c *Client) CheckSlugAvailability(ctx context.Context, slug string) (*types.Response[interface{}], error) {
+func (c *Client) CheckSlugAvailability(ctx context.Context, slug string) (*types.Response[any], error) {
 	if err := ValidateSlug(slug); err != nil {
 		return nil, err
 	}
 
-	return net.Get[interface{}](
+	return net.Get[any](
 		ctx, c.client, c.secret, paymentPagesBasePath+"/check_slug_availability/"+slug, c.baseURL,
 	)
 }

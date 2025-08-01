@@ -58,7 +58,7 @@ func (c *Client) RemoveSplit(ctx context.Context, req *RemoveSplitFromDedicatedA
 
 	// Check for HTTP errors
 	if resp.StatusCode >= 400 {
-		var paystackErr map[string]interface{}
+		var paystackErr map[string]any
 		if err := json.Unmarshal(body, &paystackErr); err == nil {
 			if msg, ok := paystackErr["message"].(string); ok {
 				return nil, fmt.Errorf("paystack api error (status %d): %s", resp.StatusCode, msg)

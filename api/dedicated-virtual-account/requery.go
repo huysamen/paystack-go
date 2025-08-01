@@ -9,7 +9,7 @@ import (
 )
 
 // Requery requerying dedicated virtual account for new transactions
-func (c *Client) Requery(ctx context.Context, req *RequeryDedicatedAccountRequest) (*types.Response[interface{}], error) {
+func (c *Client) Requery(ctx context.Context, req *RequeryDedicatedAccountRequest) (*types.Response[any], error) {
 	if err := validateRequeryRequest(req); err != nil {
 		return nil, err
 	}
@@ -22,7 +22,7 @@ func (c *Client) Requery(ctx context.Context, req *RequeryDedicatedAccountReques
 	}
 
 	endpoint := dedicatedVirtualAccountBasePath + "/requery?" + params.Encode()
-	resp, err := net.Get[interface{}](
+	resp, err := net.Get[any](
 		ctx, c.client, c.secret, endpoint, c.baseURL,
 	)
 	if err != nil {

@@ -8,13 +8,13 @@ import (
 )
 
 // Assign creates a customer, validates the customer, and assigns a dedicated virtual account
-func (c *Client) Assign(ctx context.Context, req *AssignDedicatedVirtualAccountRequest) (*types.Response[interface{}], error) {
+func (c *Client) Assign(ctx context.Context, req *AssignDedicatedVirtualAccountRequest) (*types.Response[any], error) {
 	if err := validateAssignRequest(req); err != nil {
 		return nil, err
 	}
 
 	endpoint := dedicatedVirtualAccountBasePath + "/assign"
-	resp, err := net.Post[AssignDedicatedVirtualAccountRequest, interface{}](
+	resp, err := net.Post[AssignDedicatedVirtualAccountRequest, any](
 		ctx, c.client, c.secret, endpoint, req, c.baseURL,
 	)
 	if err != nil {

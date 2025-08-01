@@ -152,7 +152,7 @@ func main() {
 		"warranty":  "2 years",
 		"color":     "black",
 		"weight_kg": 0.3,
-		"dimensions": map[string]interface{}{
+		"dimensions": map[string]any{
 			"length": 20,
 			"width":  15,
 			"height": 8,
