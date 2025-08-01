@@ -25,3 +25,11 @@ func (c *Client) ListDomains(ctx context.Context, req *ListDomainsRequest) (*Lis
 
 	return &resp.Data, nil
 }
+
+// ListDomainsWithBuilder lists all registered domains using the builder pattern
+func (c *Client) ListDomainsWithBuilder(ctx context.Context, builder *ListDomainsRequestBuilder) (*ListDomainsResponse, error) {
+	if builder == nil {
+		return c.ListDomains(ctx, nil)
+	}
+	return c.ListDomains(ctx, builder.Build())
+}

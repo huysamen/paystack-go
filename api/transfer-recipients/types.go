@@ -62,6 +62,52 @@ type TransferRecipientCreateRequest struct {
 	Metadata          map[string]any `json:"metadata,omitempty"`           // Optional: additional data
 }
 
+// TransferRecipientCreateRequestBuilder provides a fluent interface for building TransferRecipientCreateRequest
+type TransferRecipientCreateRequestBuilder struct {
+	req *TransferRecipientCreateRequest
+}
+
+// NewTransferRecipientCreateRequest creates a new builder for TransferRecipientCreateRequest
+func NewTransferRecipientCreateRequest(recipientType RecipientType, name, accountNumber, bankCode string) *TransferRecipientCreateRequestBuilder {
+	return &TransferRecipientCreateRequestBuilder{
+		req: &TransferRecipientCreateRequest{
+			Type:          recipientType,
+			Name:          name,
+			AccountNumber: accountNumber,
+			BankCode:      bankCode,
+		},
+	}
+}
+
+// Description sets the recipient description
+func (b *TransferRecipientCreateRequestBuilder) Description(description string) *TransferRecipientCreateRequestBuilder {
+	b.req.Description = &description
+	return b
+}
+
+// Currency sets the currency
+func (b *TransferRecipientCreateRequestBuilder) Currency(currency string) *TransferRecipientCreateRequestBuilder {
+	b.req.Currency = &currency
+	return b
+}
+
+// AuthorizationCode sets the authorization code
+func (b *TransferRecipientCreateRequestBuilder) AuthorizationCode(authCode string) *TransferRecipientCreateRequestBuilder {
+	b.req.AuthorizationCode = &authCode
+	return b
+}
+
+// Metadata sets the recipient metadata
+func (b *TransferRecipientCreateRequestBuilder) Metadata(metadata map[string]any) *TransferRecipientCreateRequestBuilder {
+	b.req.Metadata = metadata
+	return b
+}
+
+// Build returns the constructed TransferRecipientCreateRequest
+func (b *TransferRecipientCreateRequestBuilder) Build() *TransferRecipientCreateRequest {
+	return b.req
+}
+
 // TransferRecipientCreateResponse represents the response from creating a transfer recipient
 type TransferRecipientCreateResponse struct {
 	Status  bool              `json:"status"`
@@ -117,6 +163,54 @@ type TransferRecipientListRequest struct {
 	To      *time.Time `json:"to,omitempty"`      // Optional: end date filter
 }
 
+// TransferRecipientListRequestBuilder provides a fluent interface for building TransferRecipientListRequest
+type TransferRecipientListRequestBuilder struct {
+	req *TransferRecipientListRequest
+}
+
+// NewTransferRecipientListRequest creates a new builder for TransferRecipientListRequest
+func NewTransferRecipientListRequest() *TransferRecipientListRequestBuilder {
+	return &TransferRecipientListRequestBuilder{
+		req: &TransferRecipientListRequest{},
+	}
+}
+
+// PerPage sets the number of recipients per page
+func (b *TransferRecipientListRequestBuilder) PerPage(perPage int) *TransferRecipientListRequestBuilder {
+	b.req.PerPage = &perPage
+	return b
+}
+
+// Page sets the page number
+func (b *TransferRecipientListRequestBuilder) Page(page int) *TransferRecipientListRequestBuilder {
+	b.req.Page = &page
+	return b
+}
+
+// From sets the start date filter
+func (b *TransferRecipientListRequestBuilder) From(from time.Time) *TransferRecipientListRequestBuilder {
+	b.req.From = &from
+	return b
+}
+
+// To sets the end date filter
+func (b *TransferRecipientListRequestBuilder) To(to time.Time) *TransferRecipientListRequestBuilder {
+	b.req.To = &to
+	return b
+}
+
+// DateRange sets both from and to dates for convenience
+func (b *TransferRecipientListRequestBuilder) DateRange(from, to time.Time) *TransferRecipientListRequestBuilder {
+	b.req.From = &from
+	b.req.To = &to
+	return b
+}
+
+// Build returns the constructed TransferRecipientListRequest
+func (b *TransferRecipientListRequestBuilder) Build() *TransferRecipientListRequest {
+	return b.req
+}
+
 // TransferRecipientListResponse represents the response from listing transfer recipients
 type TransferRecipientListResponse struct {
 	Status  bool                `json:"status"`
@@ -140,6 +234,31 @@ type TransferRecipientFetchResponse struct {
 type TransferRecipientUpdateRequest struct {
 	Name  string  `json:"name"`            // Required: recipient name
 	Email *string `json:"email,omitempty"` // Optional: email address
+}
+
+// TransferRecipientUpdateRequestBuilder provides a fluent interface for building TransferRecipientUpdateRequest
+type TransferRecipientUpdateRequestBuilder struct {
+	req *TransferRecipientUpdateRequest
+}
+
+// NewTransferRecipientUpdateRequest creates a new builder for TransferRecipientUpdateRequest
+func NewTransferRecipientUpdateRequest(name string) *TransferRecipientUpdateRequestBuilder {
+	return &TransferRecipientUpdateRequestBuilder{
+		req: &TransferRecipientUpdateRequest{
+			Name: name,
+		},
+	}
+}
+
+// Email sets the recipient email
+func (b *TransferRecipientUpdateRequestBuilder) Email(email string) *TransferRecipientUpdateRequestBuilder {
+	b.req.Email = &email
+	return b
+}
+
+// Build returns the constructed TransferRecipientUpdateRequest
+func (b *TransferRecipientUpdateRequestBuilder) Build() *TransferRecipientUpdateRequest {
+	return b.req
 }
 
 // TransferRecipientUpdateResponse represents the response from updating a transfer recipient

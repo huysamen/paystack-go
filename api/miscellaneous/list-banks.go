@@ -62,3 +62,11 @@ func (c *Client) ListBanks(ctx context.Context, req *BankListRequest) (*BankList
 	}
 	return &resp.Data, nil
 }
+
+// ListBanksWithBuilder retrieves a list of banks using the builder pattern
+func (c *Client) ListBanksWithBuilder(ctx context.Context, builder *BankListRequestBuilder) (*BankListResponse, error) {
+	if builder == nil {
+		return c.ListBanks(ctx, nil)
+	}
+	return c.ListBanks(ctx, builder.Build())
+}

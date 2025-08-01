@@ -72,6 +72,95 @@ type BankListRequest struct {
 	IncludeNIPSortCode     *bool   `json:"include_nip_sort_code,omitempty"`    // Optional: include NIP institution codes
 }
 
+// BankListRequestBuilder provides a fluent interface for building BankListRequest
+type BankListRequestBuilder struct {
+	req *BankListRequest
+}
+
+// NewBankListRequest creates a new builder for BankListRequest
+func NewBankListRequest() *BankListRequestBuilder {
+	return &BankListRequestBuilder{
+		req: &BankListRequest{},
+	}
+}
+
+// Country sets the country filter
+func (b *BankListRequestBuilder) Country(country string) *BankListRequestBuilder {
+	b.req.Country = &country
+	return b
+}
+
+// UseCursor enables cursor-based pagination
+func (b *BankListRequestBuilder) UseCursor(useCursor bool) *BankListRequestBuilder {
+	b.req.UseCursor = &useCursor
+	return b
+}
+
+// PerPage sets the number of records per page
+func (b *BankListRequestBuilder) PerPage(perPage int) *BankListRequestBuilder {
+	b.req.PerPage = &perPage
+	return b
+}
+
+// PayWithBankTransfer filters for transfer payment banks
+func (b *BankListRequestBuilder) PayWithBankTransfer(payWithBankTransfer bool) *BankListRequestBuilder {
+	b.req.PayWithBankTransfer = &payWithBankTransfer
+	return b
+}
+
+// PayWithBank filters for direct payment banks
+func (b *BankListRequestBuilder) PayWithBank(payWithBank bool) *BankListRequestBuilder {
+	b.req.PayWithBank = &payWithBank
+	return b
+}
+
+// EnabledForVerification filters for verification-supported banks
+func (b *BankListRequestBuilder) EnabledForVerification(enabled bool) *BankListRequestBuilder {
+	b.req.EnabledForVerification = &enabled
+	return b
+}
+
+// Next sets the cursor for next page
+func (b *BankListRequestBuilder) Next(next string) *BankListRequestBuilder {
+	b.req.Next = &next
+	return b
+}
+
+// Previous sets the cursor for previous page
+func (b *BankListRequestBuilder) Previous(previous string) *BankListRequestBuilder {
+	b.req.Previous = &previous
+	return b
+}
+
+// Gateway sets the gateway type filter
+func (b *BankListRequestBuilder) Gateway(gateway string) *BankListRequestBuilder {
+	b.req.Gateway = &gateway
+	return b
+}
+
+// Type sets the financial channel type
+func (b *BankListRequestBuilder) Type(channelType string) *BankListRequestBuilder {
+	b.req.Type = &channelType
+	return b
+}
+
+// Currency sets the currency filter
+func (b *BankListRequestBuilder) Currency(currency string) *BankListRequestBuilder {
+	b.req.Currency = &currency
+	return b
+}
+
+// IncludeNIPSortCode includes NIP institution codes
+func (b *BankListRequestBuilder) IncludeNIPSortCode(include bool) *BankListRequestBuilder {
+	b.req.IncludeNIPSortCode = &include
+	return b
+}
+
+// Build returns the constructed BankListRequest
+func (b *BankListRequestBuilder) Build() *BankListRequest {
+	return b.req
+}
+
 // BankListResponse represents the response from listing banks
 type BankListResponse struct {
 	Status  bool        `json:"status"`
