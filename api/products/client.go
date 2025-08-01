@@ -1,10 +1,14 @@
 package products
 
 import (
+	"errors"
 	"net/http"
 )
 
 const productsBasePath = "/product"
+
+// ErrBuilderRequired is returned when a builder is required but not provided
+var ErrBuilderRequired = errors.New("builder is required")
 
 // Client is the Products API client
 type Client struct {

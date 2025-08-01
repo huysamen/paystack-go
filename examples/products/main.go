@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"os"
 
 	"github.com/huysamen/paystack-go"
 	"github.com/huysamen/paystack-go/api/products"
@@ -11,27 +12,34 @@ import (
 )
 
 func main() {
-	// Initialize client with test secret key
-	client := paystack.DefaultClient("sk_test_your_secret_key")
+	secretKey := os.Getenv("PAYSTACK_SECRET_KEY")
+	if secretKey == "" {
+		log.Fatal("PAYSTACK_SECRET_KEY environment variable is required")
+	}
+
+	client := paystack.DefaultClient(secretKey)
 	ctx := context.Background()
 
 	fmt.Println("=== Paystack Products API Examples ===")
 	fmt.Println()
 
-	// Example 1: Create a physical product with limited stock
+	// Example 1: Create a physical product with limited stock using builder pattern
 	fmt.Println("1. Creating a physical product with limited stock...")
-	unlimited := false
-	quantity := 100
-	createReq := &products.CreateProductRequest{
-		Name:        "Wireless Headphones",
-		Description: "High-quality wireless headphones with noise cancellation",
-		Price:       25000, // ₦250.00
-		Currency:    "NGN",
-		Unlimited:   &unlimited,
-		Quantity:    &quantity,
-	}
-
-	product, err := client.Products.Create(ctx, createReq)
+	product, err := client.Products.Create(ctx,
+		products.NewCreateProductRequest(
+			"Wireless Headphones",
+			"High-quality wireless headphones with noise cancellation",
+			2500000, // ₦25,000.00 in kobo
+			"NGN",
+		).
+			Unlimited(false).
+			Quantity(100).
+			Metadata(&types.Metadata{
+				"category": "electronics",
+				"brand":    "TechSound",
+				"model":    "WH-1000X",
+			}),
+	)
 	if err != nil {
 		log.Printf("Error creating product: %v", err)
 		return
@@ -40,18 +48,23 @@ func main() {
 	fmt.Printf("  Price: ₦%.2f, Stock: %d, In Stock: %t\n",
 		float64(product.Price)/100, *product.Quantity, product.InStock)
 
-	// Example 2: Create a digital product with unlimited stock
+	// Example 2: Create a digital product with unlimited stock using builder pattern
 	fmt.Println("\n2. Creating a digital product with unlimited stock...")
-	unlimitedTrue := true
-	digitalCreateReq := &products.CreateProductRequest{
-		Name:        "E-book: Go Programming Guide",
-		Description: "Comprehensive guide to Go programming for beginners",
-		Price:       5000, // ₦50.00
-		Currency:    "NGN",
-		Unlimited:   &unlimitedTrue,
-	}
-
-	digitalProduct, err := client.Products.Create(ctx, digitalCreateReq)
+	digitalProduct, err := client.Products.Create(ctx,
+		products.NewCreateProductRequest(
+			"E-book: Go Programming Guide",
+			"Comprehensive guide to Go programming for beginners",
+			500000, // ₦5,000.00 in kobo
+			"NGN",
+		).
+			Unlimited(true).
+			Metadata(&types.Metadata{
+				"type":   "ebook",
+				"format": "PDF",
+				"pages":  "250",
+				"level":  "beginner",
+			}),
+	)
 	if err != nil {
 		log.Printf("Error creating digital product: %v", err)
 	} else {
@@ -61,11 +74,13 @@ func main() {
 			float64(digitalProduct.Price)/100, digitalProduct.Unlimited)
 	}
 
-	// Example 3: List all products
+	// Example 3: List all products using builder pattern
 	fmt.Println("\n3. Listing all products...")
-	listReq := &products.ListProductsRequest{}
-
-	productsResp, err := client.Products.List(ctx, listReq)
+	productsResp, err := client.Products.List(ctx,
+		products.NewListProductsRequest().
+			PerPage(10).
+			Page(1),
+	)
 	if err != nil {
 		log.Printf("Error listing products: %v", err)
 		return
@@ -81,116 +96,116 @@ func main() {
 			i+1, prod.Name, float64(prod.Price)/100, stockInfo)
 	}
 
-	// Example 4: List products with pagination
-	fmt.Println("\n4. Listing products with pagination...")
-	perPage := 5
-	page := 1
-	paginatedListReq := &products.ListProductsRequest{
-		PerPage: &perPage,
-		Page:    &page,
-	}
-
-	paginatedResp, err := client.Products.List(ctx, paginatedListReq)
+	// Example 4: Paginated listing
+	fmt.Println("\n4. Paginated product listing...")
+	paginatedResp, err := client.Products.List(ctx,
+		products.NewListProductsRequest().
+			PerPage(5).
+			Page(2),
+	)
 	if err != nil {
-		log.Printf("Error listing products with pagination: %v", err)
+		log.Printf("Error with paginated listing: %v", err)
 	} else {
-		fmt.Printf("Page %d: %d products (max %d per page)\n",
-			page, len(paginatedResp.Data), perPage)
-		if paginatedResp.Meta != nil {
-			fmt.Printf("Meta: %+v\n", paginatedResp.Meta)
-		}
+		fmt.Printf("Page 2 - Found %d products\n", len(paginatedResp.Data))
 	}
 
-	// Example 5: Fetch product details
-	if product != nil && product.ProductCode != "" {
-		fmt.Println("\n5. Fetching product details...")
-		fetchedProduct, err := client.Products.Fetch(ctx, product.ProductCode)
+	// Example 5: Fetch specific product
+	if len(productsResp.Data) > 0 {
+		fmt.Println("\n5. Fetching specific product details...")
+		firstProduct := productsResp.Data[0]
+
+		fetchedProduct, err := client.Products.Fetch(ctx, firstProduct.ProductCode)
 		if err != nil {
 			log.Printf("Error fetching product: %v", err)
 		} else {
-			fmt.Printf("✓ Product details: %s\n", fetchedProduct.Name)
+			fmt.Printf("✓ Fetched product: %s\n", fetchedProduct.Name)
 			fmt.Printf("  Description: %s\n", fetchedProduct.Description)
-			fmt.Printf("  Price: ₦%.2f %s\n",
-				float64(fetchedProduct.Price)/100, fetchedProduct.Currency)
-			fmt.Printf("  Active: %t, In Stock: %t\n",
-				fetchedProduct.Active, fetchedProduct.InStock)
-			if fetchedProduct.Quantity != nil {
-				fmt.Printf("  Quantity: %d", *fetchedProduct.Quantity)
-				if fetchedProduct.QuantitySold != nil {
-					fmt.Printf(" (Sold: %d)", *fetchedProduct.QuantitySold)
-				}
-				fmt.Println()
+			fmt.Printf("  Price: ₦%.2f\n", float64(fetchedProduct.Price)/100)
+			if fetchedProduct.Metadata != nil {
+				fmt.Printf("  Metadata: %+v\n", *fetchedProduct.Metadata)
 			}
 		}
-	}
 
-	// Example 6: Update product
-	if product != nil && product.ProductCode != "" {
+		// Example 6: Update product using builder pattern
 		fmt.Println("\n6. Updating product...")
-		newPrice := 30000 // ₦300.00
-		newDesc := "Premium wireless headphones with advanced noise cancellation and 30-hour battery life"
-		updateReq := &products.UpdateProductRequest{
-			Price:       &newPrice,
-			Description: &newDesc,
-		}
-
-		updatedProduct, err := client.Products.Update(ctx, product.ProductCode, updateReq)
+		updatedProduct, err := client.Products.Update(ctx, firstProduct.ProductCode,
+			products.NewUpdateProductRequest().
+				Name(firstProduct.Name+" (Updated)").
+				Description("Updated description with enhanced features").
+				Price(firstProduct.Price+500000). // Increase price by ₦5,000
+				Metadata(&types.Metadata{
+					"updated":    "true",
+					"version":    "2.0",
+					"updated_by": "system",
+				}),
+		)
 		if err != nil {
 			log.Printf("Error updating product: %v", err)
 		} else {
 			fmt.Printf("✓ Product updated: %s\n", updatedProduct.Name)
 			fmt.Printf("  New price: ₦%.2f\n", float64(updatedProduct.Price)/100)
-			fmt.Printf("  Updated description: %s\n", updatedProduct.Description)
 		}
 	}
 
-	// Example 7: Create product with metadata
-	fmt.Println("\n7. Creating product with metadata...")
-	metadata := types.Metadata{
-		"category":  "electronics",
-		"brand":     "TechCorp",
-		"warranty":  "2 years",
-		"color":     "black",
-		"weight_kg": 0.3,
-		"dimensions": map[string]any{
-			"length": 20,
-			"width":  15,
-			"height": 8,
-		},
-	}
-
-	metadataCreateReq := &products.CreateProductRequest{
-		Name:        "Bluetooth Speaker",
-		Description: "Portable bluetooth speaker with deep bass",
-		Price:       15000, // ₦150.00
-		Currency:    "NGN",
-		Unlimited:   &unlimited,
-		Quantity:    &[]int{50}[0],
-		Metadata:    &metadata,
-	}
-
-	metadataProduct, err := client.Products.Create(ctx, metadataCreateReq)
+	// Example 7: Create product with comprehensive metadata
+	fmt.Println("\n7. Creating product with comprehensive metadata...")
+	metadataProduct, err := client.Products.Create(ctx,
+		products.NewCreateProductRequest(
+			"Premium Software License",
+			"Professional software license with 1-year support",
+			5000000, // ₦50,000.00 in kobo
+			"NGN",
+		).
+			Unlimited(true).
+			Metadata(&types.Metadata{
+				"type":         "software",
+				"license_type": "professional",
+				"support":      "1_year",
+				"features":     "advanced_analytics,priority_support,custom_integrations",
+				"valid_until":  "2025-12-31",
+			}),
+	)
 	if err != nil {
-		log.Printf("Error creating product with metadata: %v", err)
+		log.Printf("Error creating metadata product: %v", err)
 	} else {
-		fmt.Printf("✓ Product with metadata created: %s\n", metadataProduct.Name)
+		fmt.Printf("✓ Metadata product created: %s\n", metadataProduct.Name)
+		fmt.Printf("  Product Code: %s\n", metadataProduct.ProductCode)
 		if metadataProduct.Metadata != nil {
-			fmt.Printf("  Metadata: %+v\n", *metadataProduct.Metadata)
+			fmt.Printf("  Rich metadata included\n")
 		}
 	}
 
-	// Example 8: Error handling with invalid data
-	fmt.Println("\n8. Testing error handling...")
-	invalidReq := &products.CreateProductRequest{
-		Name: "", // Empty name should cause validation error
-	}
-
-	_, err = client.Products.Create(ctx, invalidReq)
+	// Example 8: Create a course/service product
+	fmt.Println("\n8. Creating course/service product...")
+	courseProduct, err := client.Products.Create(ctx,
+		products.NewCreateProductRequest(
+			"Advanced React Development Course",
+			"Complete course on advanced React patterns and best practices",
+			12000000, // ₦120,000.00 in kobo
+			"NGN",
+		).
+			Unlimited(true).
+			Metadata(&types.Metadata{
+				"type":       "course",
+				"duration":   "30_hours",
+				"difficulty": "advanced",
+				"includes":   "video_lessons,code_samples,certificate",
+				"instructor": "Jane Smith",
+			}),
+	)
 	if err != nil {
-		fmt.Printf("✓ Validation error caught: %v\n", err)
+		log.Printf("Error creating course product: %v", err)
 	} else {
-		fmt.Println("Unexpected: No error occurred with invalid data")
+		fmt.Printf("✓ Course product created: %s\n", courseProduct.Name)
+		fmt.Printf("  Price: ₦%.2f\n", float64(courseProduct.Price)/100)
 	}
 
-	fmt.Println("\n=== Products API Examples Completed ===")
+	fmt.Println("\n=== Examples completed successfully! ===")
+	fmt.Println("✓ Created physical products with inventory")
+	fmt.Println("✓ Created digital products with unlimited stock")
+	fmt.Println("✓ Listed products with pagination")
+	fmt.Println("✓ Fetched individual product details")
+	fmt.Println("✓ Updated product information")
+	fmt.Println("✓ Used comprehensive metadata")
+	fmt.Println("✓ Demonstrated builder pattern usage")
 }

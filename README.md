@@ -9,7 +9,7 @@ A comprehensive Go client library for the [Paystack API](https://paystack.com/do
 
 - ✅ **Transactions**: Initialize, verify, charge authorization, list (with advanced filtering), fetch, export, partial debit, view timeline, totals
 - ✅ **Plans**: Create, list, fetch, update plans by ID or code with builder pattern support
-- ✅ **Products**: Create, list, fetch, update products with inventory management and metadata support
+- ✅ **Products**: Create, list, fetch, update products with inventory management and metadata support with builder pattern
 - ✅ **Customers**: Create, list, fetch, update, validate identity, whitelist/blacklist, authorization management, direct debit
 - ✅ **Subscriptions**: Create, list, fetch, enable, disable, generate update links, send management emails
 - ✅ **Transfers**: Initiate, finalize, bulk transfers, list, fetch, verify transfer status
@@ -31,7 +31,7 @@ A comprehensive Go client library for the [Paystack API](https://paystack.com/do
 - ✅ **Type Safety**: Strongly typed request/response structures
 - ✅ **Error Handling**: Clean, intuitive error handling with API errors as Response objects
 - ✅ **Configuration**: Support for different environments and custom HTTP clients
-- ✅ **Builder Pattern**: Fluent, chainable API for complex requests (Transactions, Bulk Charges, Apple Pay, Charges, Customers, Dedicated Virtual Account, Direct Debit, Disputes, Plans modules) - no more `&[]int{50}[0]` syntax!
+- ✅ **Builder Pattern**: Fluent, chainable API for complex requests (Transactions, Bulk Charges, Apple Pay, Charges, Customers, Dedicated Virtual Account, Direct Debit, Disputes, Plans, Products modules) - no more `&[]int{50}[0]` syntax!
 
 ## Installation
 
@@ -156,10 +156,10 @@ func main() {
 
 ### Products
 
-- **Create Product**: Create products with inventory management, pricing, and metadata
-- **List Products**: List all products with pagination and date filtering
+- **Create Product**: Create products with inventory management, pricing, and metadata using builder pattern
+- **List Products**: List all products with pagination and date filtering with builder pattern
 - **Fetch Product**: Get detailed product information by ID or product code
-- **Update Product**: Update product details, pricing, and inventory levels
+- **Update Product**: Update product details, pricing, and inventory levels using builder pattern
 
 ### Payment Pages
 
@@ -1820,34 +1820,56 @@ if len(accounts.Data) > 0 {
 ### Products Management
 
 ```go
-// Create a physical product with inventory
-unlimited := false
-quantity := 100
-createReq := &products.CreateProductRequest{
-    Name:        "Wireless Headphones",
-    Description: "High-quality wireless headphones with noise cancellation",
-    Price:       25000, // ₦250.00 in kobo
-    Currency:    "NGN",
-    Unlimited:   &unlimited,
-    Quantity:    &quantity,
-}
-
-product, err := client.Products.Create(context.Background(), createReq)
+// Create a physical product with inventory using builder pattern
+product, err := client.Products.Create(ctx,
+    products.NewCreateProductRequest(
+        "Wireless Headphones",
+        "High-quality wireless headphones with noise cancellation",
+        2500000, // ₦25,000.00 in kobo
+        "NGN",
+    ).
+        Unlimited(false).
+        Quantity(100).
+        Metadata(&types.Metadata{
+            "category": "electronics",
+            "brand":    "TechSound",
+            "warranty": "2 years",
+        }),
+)
 if err != nil {
     log.Fatal(err)
 }
 
 fmt.Printf("Product created: %s (Code: %s)\n", product.Name, product.ProductCode)
 
-// List all products with pagination
-perPage := 10
-listReq := &products.ListProductsRequest{
-    PerPage: &perPage,
-}
-
-productsResp, err := client.Products.List(context.Background(), listReq)
+// Create a digital product with unlimited quantity
+digitalProduct, err := client.Products.Create(ctx,
+    products.NewCreateProductRequest(
+        "E-book: Go Programming Guide",
+        "Comprehensive guide to Go programming",
+        500000, // ₦5,000.00 in kobo
+        "NGN",
+    ).
+        Unlimited(true).
+        Metadata(&types.Metadata{
+            "type":   "ebook",
+            "format": "PDF",
+            "pages":  "350",
+        }),
+)
 if err != nil {
     log.Fatal(err)
+}
+
+// List all products with pagination using builder pattern
+productsResp, err := client.Products.List(ctx,
+    products.NewListProductsRequest().
+        PerPage(10).
+        Page(1),
+)
+if err != nil {
+    log.Fatal(err)
+}
 }
 
 fmt.Printf("Found %d products\n", len(productsResp.Data))
@@ -1855,18 +1877,34 @@ for _, prod := range productsResp.Data {
     fmt.Printf("  - %s: ₦%.2f\n", prod.Name, float64(prod.Price)/100)
 }
 
-// Update product pricing and details
-newPrice := 30000 // ₦300.00
-updateReq := &products.UpdateProductRequest{
-    Price: &newPrice,
-}
-
-updatedProduct, err := client.Products.Update(context.Background(), product.ProductCode, updateReq)
+// Update product pricing and details using builder pattern
+updatedProduct, err := client.Products.Update(ctx, product.ProductCode,
+    products.NewUpdateProductRequest().
+        Price(3000000). // ₦30,000.00 in kobo
+        Description("Updated: High-quality wireless headphones with enhanced features").
+        Metadata(&types.Metadata{
+            "category": "electronics",
+            "brand":    "TechSound", 
+            "warranty": "3 years", // Extended warranty
+            "updated":  "true",
+        }),
+)
 if err != nil {
     log.Fatal(err)
 }
 
 fmt.Printf("Updated price: ₦%.2f\n", float64(updatedProduct.Price)/100)
+
+// Fetch specific product details
+productDetails, err := client.Products.Fetch(ctx, product.ProductCode)
+if err != nil {
+    log.Fatal(err)
+}
+
+fmt.Printf("Product: %s - %s (₦%.2f)\n", 
+    productDetails.Name, 
+    productDetails.Description, 
+    float64(productDetails.Price)/100)
 ```
 
 ### Payment Pages Management
