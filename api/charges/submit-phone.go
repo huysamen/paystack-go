@@ -2,41 +2,55 @@ package charges
 
 import (
 	"context"
-	"fmt"
-	"regexp"
 
 	"github.com/huysamen/paystack-go/net"
 )
 
+// SubmitPhoneRequest represents the request to submit phone number for a charge
+type SubmitPhoneRequest struct {
+	Phone     string `json:"phone"`
+	Reference string `json:"reference"`
+}
+
+// SubmitPhoneRequestBuilder provides a fluent interface for building SubmitPhoneRequest
+type SubmitPhoneRequestBuilder struct {
+	req *SubmitPhoneRequest
+}
+
+// NewSubmitPhoneRequest creates a new builder for SubmitPhoneRequest
+func NewSubmitPhoneRequest(phone, reference string) *SubmitPhoneRequestBuilder {
+	return &SubmitPhoneRequestBuilder{
+		req: &SubmitPhoneRequest{
+			Phone:     phone,
+			Reference: reference,
+		},
+	}
+}
+
+// Build returns the constructed SubmitPhoneRequest
+func (b *SubmitPhoneRequestBuilder) Build() *SubmitPhoneRequest {
+	return b.req
+}
+
+// SubmitPhoneResponse represents the response from submitting phone
+type SubmitPhoneResponse struct {
+	Status  bool       `json:"status"`
+	Message string     `json:"message"`
+	Data    ChargeData `json:"data"`
+}
+
 // SubmitPhone submits phone number when requested
-func (c *Client) SubmitPhone(ctx context.Context, req *SubmitPhoneRequest) (*SubmitPhoneResponse, error) {
-	if req == nil {
-		return nil, fmt.Errorf("submit phone request cannot be nil")
+func (c *Client) SubmitPhone(ctx context.Context, builder *SubmitPhoneRequestBuilder) (*SubmitPhoneResponse, error) {
+	if builder == nil {
+		return nil, ErrBuilderRequired
 	}
 
-	if err := validateSubmitPhoneRequest(req); err != nil {
+	req := builder.Build()
+	url := c.baseURL + chargesBasePath + "/submit_phone"
+	resp, err := net.Post[SubmitPhoneRequest, SubmitPhoneResponse](ctx, c.client, c.secret, url, req)
+	if err != nil {
 		return nil, err
 	}
 
-	url := c.baseURL + chargesBasePath + "/submit_phone"
-	return net.Post[SubmitPhoneRequest, ChargeData](ctx, c.client, c.secret, url, req)
-}
-
-// validateSubmitPhoneRequest validates the submit phone request
-func validateSubmitPhoneRequest(req *SubmitPhoneRequest) error {
-	if req.Phone == "" {
-		return fmt.Errorf("phone number is required")
-	}
-
-	if req.Reference == "" {
-		return fmt.Errorf("reference is required")
-	}
-
-	// Validate phone number format (basic validation for Nigerian numbers)
-	phoneRegex := regexp.MustCompile(`^(\+234|0)[789][01]\d{8}$`)
-	if !phoneRegex.MatchString(req.Phone) {
-		return fmt.Errorf("invalid phone number format. Expected Nigerian format like +2348012345678 or 08012345678")
-	}
-
-	return nil
+	return &resp.Data, nil
 }

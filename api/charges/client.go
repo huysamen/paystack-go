@@ -1,10 +1,16 @@
 package charges
 
 import (
+	"errors"
 	"net/http"
 )
 
 const chargesBasePath = "/charge"
+
+var (
+	// ErrBuilderRequired is returned when a required builder is nil
+	ErrBuilderRequired = errors.New("builder cannot be nil")
+)
 
 // Client is the Charges API client
 type Client struct {

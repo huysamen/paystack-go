@@ -2,46 +2,55 @@ package charges
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/huysamen/paystack-go/net"
 )
 
+// SubmitOTPRequest represents the request to submit OTP for a charge
+type SubmitOTPRequest struct {
+	OTP       string `json:"otp"`
+	Reference string `json:"reference"`
+}
+
+// SubmitOTPRequestBuilder provides a fluent interface for building SubmitOTPRequest
+type SubmitOTPRequestBuilder struct {
+	req *SubmitOTPRequest
+}
+
+// NewSubmitOTPRequest creates a new builder for SubmitOTPRequest
+func NewSubmitOTPRequest(otp, reference string) *SubmitOTPRequestBuilder {
+	return &SubmitOTPRequestBuilder{
+		req: &SubmitOTPRequest{
+			OTP:       otp,
+			Reference: reference,
+		},
+	}
+}
+
+// Build returns the constructed SubmitOTPRequest
+func (b *SubmitOTPRequestBuilder) Build() *SubmitOTPRequest {
+	return b.req
+}
+
+// SubmitOTPResponse represents the response from submitting OTP
+type SubmitOTPResponse struct {
+	Status  bool       `json:"status"`
+	Message string     `json:"message"`
+	Data    ChargeData `json:"data"`
+}
+
 // SubmitOTP submits OTP to complete a charge
-func (c *Client) SubmitOTP(ctx context.Context, req *SubmitOTPRequest) (*SubmitOTPResponse, error) {
-	if req == nil {
-		return nil, fmt.Errorf("submit OTP request cannot be nil")
+func (c *Client) SubmitOTP(ctx context.Context, builder *SubmitOTPRequestBuilder) (*SubmitOTPResponse, error) {
+	if builder == nil {
+		return nil, ErrBuilderRequired
 	}
 
-	if err := validateSubmitOTPRequest(req); err != nil {
+	req := builder.Build()
+	url := c.baseURL + chargesBasePath + "/submit_otp"
+	resp, err := net.Post[SubmitOTPRequest, SubmitOTPResponse](ctx, c.client, c.secret, url, req)
+	if err != nil {
 		return nil, err
 	}
 
-	url := c.baseURL + chargesBasePath + "/submit_otp"
-	return net.Post[SubmitOTPRequest, ChargeData](ctx, c.client, c.secret, url, req)
-}
-
-// validateSubmitOTPRequest validates the submit OTP request
-func validateSubmitOTPRequest(req *SubmitOTPRequest) error {
-	if req.OTP == "" {
-		return fmt.Errorf("OTP is required")
-	}
-
-	if req.Reference == "" {
-		return fmt.Errorf("reference is required")
-	}
-
-	// Validate OTP format (typically 4-6 digits)
-	if len(req.OTP) < 4 || len(req.OTP) > 6 {
-		return fmt.Errorf("OTP must be between 4 and 6 digits")
-	}
-
-	// Check if OTP contains only digits
-	for _, char := range req.OTP {
-		if char < '0' || char > '9' {
-			return fmt.Errorf("OTP must contain only digits")
-		}
-	}
-
-	return nil
+	return &resp.Data, nil
 }

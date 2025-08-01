@@ -2,46 +2,55 @@ package charges
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/huysamen/paystack-go/net"
 )
 
+// SubmitPINRequest represents the request to submit PIN for a charge
+type SubmitPINRequest struct {
+	PIN       string `json:"pin"`
+	Reference string `json:"reference"`
+}
+
+// SubmitPINRequestBuilder provides a fluent interface for building SubmitPINRequest
+type SubmitPINRequestBuilder struct {
+	req *SubmitPINRequest
+}
+
+// NewSubmitPINRequest creates a new builder for SubmitPINRequest
+func NewSubmitPINRequest(pin, reference string) *SubmitPINRequestBuilder {
+	return &SubmitPINRequestBuilder{
+		req: &SubmitPINRequest{
+			PIN:       pin,
+			Reference: reference,
+		},
+	}
+}
+
+// Build returns the constructed SubmitPINRequest
+func (b *SubmitPINRequestBuilder) Build() *SubmitPINRequest {
+	return b.req
+}
+
+// SubmitPINResponse represents the response from submitting PIN
+type SubmitPINResponse struct {
+	Status  bool       `json:"status"`
+	Message string     `json:"message"`
+	Data    ChargeData `json:"data"`
+}
+
 // SubmitPIN submits PIN to continue a charge
-func (c *Client) SubmitPIN(ctx context.Context, req *SubmitPINRequest) (*SubmitPINResponse, error) {
-	if req == nil {
-		return nil, fmt.Errorf("submit PIN request cannot be nil")
+func (c *Client) SubmitPIN(ctx context.Context, builder *SubmitPINRequestBuilder) (*SubmitPINResponse, error) {
+	if builder == nil {
+		return nil, ErrBuilderRequired
 	}
 
-	if err := validateSubmitPINRequest(req); err != nil {
+	req := builder.Build()
+	url := c.baseURL + chargesBasePath + "/submit_pin"
+	resp, err := net.Post[SubmitPINRequest, SubmitPINResponse](ctx, c.client, c.secret, url, req)
+	if err != nil {
 		return nil, err
 	}
 
-	url := c.baseURL + chargesBasePath + "/submit_pin"
-	return net.Post[SubmitPINRequest, ChargeData](ctx, c.client, c.secret, url, req)
-}
-
-// validateSubmitPINRequest validates the submit PIN request
-func validateSubmitPINRequest(req *SubmitPINRequest) error {
-	if req.PIN == "" {
-		return fmt.Errorf("PIN is required")
-	}
-
-	if req.Reference == "" {
-		return fmt.Errorf("reference is required")
-	}
-
-	// Validate PIN format (should be 4 digits)
-	if len(req.PIN) != 4 {
-		return fmt.Errorf("PIN must be exactly 4 digits")
-	}
-
-	// Check if PIN contains only digits
-	for _, char := range req.PIN {
-		if char < '0' || char > '9' {
-			return fmt.Errorf("PIN must contain only digits")
-		}
-	}
-
-	return nil
+	return &resp.Data, nil
 }

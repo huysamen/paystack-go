@@ -2052,7 +2052,6 @@ import (
     "context"
     "fmt"
     "log"
-    "time"
 
     "github.com/huysamen/paystack-go"
     "github.com/huysamen/paystack-go/api/charges"
@@ -2062,22 +2061,19 @@ func main() {
     client := paystack.DefaultClient("sk_test_your_secret_key_here")
     ctx := context.Background()
 
-    // Create a bank account charge
-    chargeReq := &charges.CreateChargeRequest{
-        Email:     "customer@example.com",
-        Amount:    "25000", // ₦250.00
-        Reference: stringPtr("bank-charge-" + generateReference()),
-        Bank: &charges.BankDetails{
+    // Create a bank account charge using builder pattern
+    chargeBuilder := charges.NewCreateChargeRequest("customer@example.com", "25000"). // ₦250.00
+        Reference("bank-charge-" + generateReference()).
+        Bank(&charges.BankDetails{
             Code:          "044", // Access Bank
             AccountNumber: "0123456789",
-        },
-        Metadata: map[string]any{
+        }).
+        Metadata(map[string]any{
             "channel":    "bank",
             "product_id": "PROD_001",
-        },
-    }
+        })
 
-    charge, err := client.Charges.Create(ctx, chargeReq)
+    charge, err := client.Charges.Create(ctx, chargeBuilder)
     if err != nil {
         log.Fatal(err)
     }
@@ -2098,6 +2094,102 @@ func main() {
         if err != nil {
             log.Printf("Error checking status: %v", err)
         } else {
+            fmt.Printf("Updated status: %s\n", pendingCharge.Data.Status)
+        }
+    case "send_pin":
+        fmt.Println("🔐 PIN required - submitting PIN...")
+        
+        // Submit PIN using builder
+        pinBuilder := charges.NewSubmitPINRequest("1234", charge.Data.Reference)
+        pinCharge, err := client.Charges.SubmitPIN(ctx, pinBuilder)
+        if err != nil {
+            log.Printf("PIN submission error: %v", err)
+        } else {
+            fmt.Printf("PIN submitted - new status: %s\n", pinCharge.Data.Status)
+        }
+    case "send_otp":
+        fmt.Println("📱 OTP required - submitting OTP...")
+        
+        // Submit OTP using builder
+        otpBuilder := charges.NewSubmitOTPRequest("123456", charge.Data.Reference)
+        otpCharge, err := client.Charges.SubmitOTP(ctx, otpBuilder)
+        if err != nil {
+            log.Printf("OTP submission error: %v", err)
+        } else {
+            fmt.Printf("OTP submitted - new status: %s\n", otpCharge.Data.Status)
+        }
+    case "send_phone":
+        fmt.Println("📞 Phone required - submitting phone...")
+        
+        // Submit phone using builder
+        phoneBuilder := charges.NewSubmitPhoneRequest("08012345678", charge.Data.Reference)
+        phoneCharge, err := client.Charges.SubmitPhone(ctx, phoneBuilder)
+        if err != nil {
+            log.Printf("Phone submission error: %v", err)
+        } else {
+            fmt.Printf("Phone submitted - new status: %s\n", phoneCharge.Data.Status)
+        }
+    case "send_birthday":
+        fmt.Println("🎂 Birthday required - submitting birthday...")
+        
+        // Submit birthday using builder
+        birthdayBuilder := charges.NewSubmitBirthdayRequest("1990-12-25", charge.Data.Reference)
+        birthdayCharge, err := client.Charges.SubmitBirthday(ctx, birthdayBuilder)
+        if err != nil {
+            log.Printf("Birthday submission error: %v", err)
+        } else {
+            fmt.Printf("Birthday submitted - new status: %s\n", birthdayCharge.Data.Status)
+        }
+    case "send_address":
+        fmt.Println("🏠 Address required - submitting address...")
+        
+        // Submit address using builder
+        addressBuilder := charges.NewSubmitAddressRequest(
+            "123 Main Street",
+            charge.Data.Reference,
+            "Lagos",
+            "Lagos",
+            "100001",
+        )
+        addressCharge, err := client.Charges.SubmitAddress(ctx, addressBuilder)
+        if err != nil {
+            log.Printf("Address submission error: %v", err)
+        } else {
+            fmt.Printf("Address submitted - new status: %s\n", addressCharge.Data.Status)
+        }
+    case "failed":
+        fmt.Printf("❌ Charge failed: %s\n", charge.Data.Message)
+    default:
+        fmt.Printf("Unknown status: %s\n", charge.Data.Status)
+    }
+
+    // Example: Card charge with authorization code (saved card)
+    cardBuilder := charges.NewCreateChargeRequest("customer@example.com", "15000"). // ₦150.00
+        Reference("card-charge-" + generateReference()).
+        AuthorizationCode("AUTH_example_12345")
+
+    cardCharge, err := client.Charges.Create(ctx, cardBuilder)
+    if err != nil {
+        log.Printf("Card charge error: %v", err)
+    } else {
+        fmt.Printf("Card charge: %s - %s\n", cardCharge.Data.Reference, cardCharge.Data.Status)
+    }
+
+    // Example: USSD charge
+    ussdBuilder := charges.NewCreateChargeRequest("customer@example.com", "10000"). // ₦100.00
+        Reference("ussd-charge-" + generateReference()).
+        USSD(&charges.USSDDetails{
+            Type: "737", // GTBank USSD code
+        })
+
+    ussdCharge, err := client.Charges.Create(ctx, ussdBuilder)
+    if err != nil {
+        log.Printf("USSD charge error: %v", err)
+    } else {
+        fmt.Printf("USSD charge: %s - %s\n", ussdCharge.Data.Reference, ussdCharge.Data.Status)
+    }
+}
+```
             fmt.Printf("Updated status: %s\n", pendingCharge.Data.Status)
         }
     case "send_pin":

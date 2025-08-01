@@ -1,16 +1,13 @@
-// go:build example
-//go:build example
-// +build example
 
 package main
 
 import (
-	"context"
-	"fmt"
-	"log"
+"context"
+"fmt"
+"log"
 
-	"github.com/huysamen/paystack-go"
-	"github.com/huysamen/paystack-go/api/charges"
+"github.com/huysamen/paystack-go"
+"github.com/huysamen/paystack-go/api/charges"
 )
 
 func main() {
@@ -20,23 +17,20 @@ func main() {
 
 	fmt.Println("=== Charges API Example ===\n")
 
-	// 1. Create a charge with bank details
+	// 1. Create a charge with bank details using builder pattern
 	fmt.Println("1. Creating charge with bank details...")
-	createReq := &charges.CreateChargeRequest{
-		Email:  "customer@example.com",
-		Amount: "50000", // ₦500.00 in kobo
-		Bank: &charges.BankDetails{
+	createBuilder := charges.NewCreateChargeRequest("customer@example.com", "50000"). // ₦500.00 in kobo
+		Bank(&charges.BankDetails{
 			Code:          "057", // Zenith Bank
 			AccountNumber: "0000000000",
-		},
-		Reference: stringPtr("charge-" + generateReference()),
-		Metadata: map[string]any{
-			"payment_type":  "bank_charge",
-			"customer_note": "Direct bank charge example",
-		},
-	}
+		}).
+		Reference("charge-" + generateReference()).
+		Metadata(map[string]any{
+"payment_type":  "bank_charge",
+"customer_note": "Direct bank charge example",
+})
 
-	charge, err := client.Charges.Create(ctx, createReq)
+	charge, err := client.Charges.Create(ctx, createBuilder)
 	if err != nil {
 		log.Printf("Failed to create charge: %v", err)
 		return
@@ -64,13 +58,10 @@ func main() {
 	case "send_pin":
 		fmt.Println("   🔐 PIN required - submitting PIN...")
 
-		// Example PIN submission (in real scenario, get PIN from user)
-		pinReq := &charges.SubmitPINRequest{
-			PIN:       "1234",
-			Reference: charge.Data.Reference,
-		}
+		// Example PIN submission using builder (in real scenario, get PIN from user)
+		pinBuilder := charges.NewSubmitPINRequest("1234", charge.Data.Reference)
 
-		pinCharge, err := client.Charges.SubmitPIN(ctx, pinReq)
+		pinCharge, err := client.Charges.SubmitPIN(ctx, pinBuilder)
 		if err != nil {
 			log.Printf("   Failed to submit PIN: %v", err)
 		} else {
@@ -80,13 +71,10 @@ func main() {
 	case "send_otp":
 		fmt.Println("   📱 OTP required - submitting OTP...")
 
-		// Example OTP submission (in real scenario, get OTP from user)
-		otpReq := &charges.SubmitOTPRequest{
-			OTP:       "123456",
-			Reference: charge.Data.Reference,
-		}
+		// Example OTP submission using builder (in real scenario, get OTP from user)
+		otpBuilder := charges.NewSubmitOTPRequest("123456", charge.Data.Reference)
 
-		otpCharge, err := client.Charges.SubmitOTP(ctx, otpReq)
+		otpCharge, err := client.Charges.SubmitOTP(ctx, otpBuilder)
 		if err != nil {
 			log.Printf("   Failed to submit OTP: %v", err)
 		} else {
@@ -96,12 +84,9 @@ func main() {
 	case "send_phone":
 		fmt.Println("   📞 Phone number required - submitting phone...")
 
-		phoneReq := &charges.SubmitPhoneRequest{
-			Phone:     "08012345678",
-			Reference: charge.Data.Reference,
-		}
+		phoneBuilder := charges.NewSubmitPhoneRequest("08012345678", charge.Data.Reference)
 
-		phoneCharge, err := client.Charges.SubmitPhone(ctx, phoneReq)
+		phoneCharge, err := client.Charges.SubmitPhone(ctx, phoneBuilder)
 		if err != nil {
 			log.Printf("   Failed to submit phone: %v", err)
 		} else {
@@ -111,12 +96,9 @@ func main() {
 	case "send_birthday":
 		fmt.Println("   🎂 Birthday required - submitting birthday...")
 
-		birthdayReq := &charges.SubmitBirthdayRequest{
-			Birthday:  "1990-01-01",
-			Reference: charge.Data.Reference,
-		}
+		birthdayBuilder := charges.NewSubmitBirthdayRequest("1990-12-25", charge.Data.Reference)
 
-		birthdayCharge, err := client.Charges.SubmitBirthday(ctx, birthdayReq)
+		birthdayCharge, err := client.Charges.SubmitBirthday(ctx, birthdayBuilder)
 		if err != nil {
 			log.Printf("   Failed to submit birthday: %v", err)
 		} else {
@@ -126,15 +108,15 @@ func main() {
 	case "send_address":
 		fmt.Println("   🏠 Address required - submitting address...")
 
-		addressReq := &charges.SubmitAddressRequest{
-			Address:   "123 Main Street",
-			Reference: charge.Data.Reference,
-			City:      "Lagos",
-			State:     "Lagos",
-			ZipCode:   "100001",
-		}
+		addressBuilder := charges.NewSubmitAddressRequest(
+"123 Main Street, Apartment 4B",
+charge.Data.Reference,
+"Lagos",
+"Lagos",
+"100001",
+)
 
-		addressCharge, err := client.Charges.SubmitAddress(ctx, addressReq)
+		addressCharge, err := client.Charges.SubmitAddress(ctx, addressBuilder)
 		if err != nil {
 			log.Printf("   Failed to submit address: %v", err)
 		} else {
@@ -143,8 +125,8 @@ func main() {
 
 	case "success":
 		fmt.Println("   ✅ Charge successful!")
-		if charge.Data.PaidAt != nil {
-			fmt.Printf("   Paid at: %s\n", charge.Data.PaidAt.Time.Format("2006-01-02 15:04:05"))
+		if charge.Data.Authorization != nil {
+			fmt.Printf("   Authorization: %s\n", charge.Data.Authorization.AuthorizationCode)
 		}
 
 	case "failed":
@@ -159,10 +141,6 @@ func main() {
 }
 
 // Helper functions
-func stringPtr(s string) *string {
-	return &s
-}
-
 func generateReference() string {
 	// Simple reference generator for example
 	return fmt.Sprintf("%d", 1000000000+int(1000000000*0.5))
