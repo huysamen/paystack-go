@@ -56,7 +56,8 @@ func manageDomainWorkflow(ctx context.Context, client *paystack.Client) error {
 	fmt.Println("1. Domain Management Workflow...")
 
 	// Check current registered domains
-	currentDomains, err := client.ApplePay.ListDomains(ctx, &applepay.ListDomainsRequest{})
+	listBuilder := applepay.NewListDomainsRequest()
+	currentDomains, err := client.ApplePay.ListDomains(ctx, listBuilder)
 	if err != nil {
 		return fmt.Errorf("failed to list current domains: %w", err)
 	}
@@ -74,11 +75,9 @@ func manageDomainWorkflow(ctx context.Context, client *paystack.Client) error {
 	}
 
 	if !domainExists {
-		registerReq := &applepay.RegisterDomainRequest{
-			DomainName: newDomain,
-		}
+		registerBuilder := applepay.NewRegisterDomainRequest(newDomain)
 
-		registerResp, err := client.ApplePay.RegisterDomain(ctx, registerReq)
+		registerResp, err := client.ApplePay.RegisterDomain(ctx, registerBuilder)
 		if err != nil {
 			return fmt.Errorf("failed to register domain %s: %w", newDomain, err)
 		}
@@ -105,11 +104,9 @@ func bulkDomainOperations(ctx context.Context, client *paystack.Client) error {
 	failCount := 0
 
 	for _, domain := range domains {
-		registerReq := &applepay.RegisterDomainRequest{
-			DomainName: domain,
-		}
+		registerBuilder := applepay.NewRegisterDomainRequest(domain)
 
-		registerResp, err := client.ApplePay.RegisterDomain(ctx, registerReq)
+		registerResp, err := client.ApplePay.RegisterDomain(ctx, registerBuilder)
 		if err != nil {
 			log.Printf("Failed to register %s: %v", domain, err)
 			failCount++
@@ -122,7 +119,8 @@ func bulkDomainOperations(ctx context.Context, client *paystack.Client) error {
 	fmt.Printf("Bulk registration results: %d successful, %d failed\n", successCount, failCount)
 
 	// List all domains to verify
-	allDomains, err := client.ApplePay.ListDomains(ctx, &applepay.ListDomainsRequest{})
+	listBuilder := applepay.NewListDomainsRequest()
+	allDomains, err := client.ApplePay.ListDomains(ctx, listBuilder)
 	if err != nil {
 		return fmt.Errorf("failed to list domains after bulk registration: %w", err)
 	}
@@ -150,11 +148,9 @@ func validateDomainOperations(ctx context.Context, client *paystack.Client) erro
 	for _, testCase := range testCases {
 		fmt.Printf("Testing %s: %s\n", testCase.description, testCase.domain)
 
-		registerReq := &applepay.RegisterDomainRequest{
-			DomainName: testCase.domain,
-		}
+		registerBuilder := applepay.NewRegisterDomainRequest(testCase.domain)
 
-		_, err := client.ApplePay.RegisterDomain(ctx, registerReq)
+		_, err := client.ApplePay.RegisterDomain(ctx, registerBuilder)
 		if testCase.expectError && err != nil {
 			fmt.Printf("  ✓ Expected error occurred: %v\n", err)
 		} else if !testCase.expectError && err != nil {
@@ -180,7 +176,8 @@ func productionDomainSetup(ctx context.Context, client *paystack.Client) error {
 	}
 
 	// Get current domains
-	currentDomains, err := client.ApplePay.ListDomains(ctx, &applepay.ListDomainsRequest{})
+	listBuilder := applepay.NewListDomainsRequest()
+	currentDomains, err := client.ApplePay.ListDomains(ctx, listBuilder)
 	if err != nil {
 		return fmt.Errorf("failed to list current domains: %w", err)
 	}
@@ -197,11 +194,9 @@ func productionDomainSetup(ctx context.Context, client *paystack.Client) error {
 			continue
 		}
 
-		registerReq := &applepay.RegisterDomainRequest{
-			DomainName: domain,
-		}
+		registerBuilder := applepay.NewRegisterDomainRequest(domain)
 
-		registerResp, err := client.ApplePay.RegisterDomain(ctx, registerReq)
+		registerResp, err := client.ApplePay.RegisterDomain(ctx, registerBuilder)
 		if err != nil {
 			log.Printf("Failed to register production domain %s: %v", domain, err)
 		} else {
@@ -210,7 +205,8 @@ func productionDomainSetup(ctx context.Context, client *paystack.Client) error {
 	}
 
 	// Final verification
-	finalDomains, err := client.ApplePay.ListDomains(ctx, &applepay.ListDomainsRequest{})
+	finalListBuilder := applepay.NewListDomainsRequest()
+	finalDomains, err := client.ApplePay.ListDomains(ctx, finalListBuilder)
 	if err != nil {
 		return fmt.Errorf("failed to verify final domain list: %w", err)
 	}

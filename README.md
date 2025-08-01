@@ -2032,19 +2032,20 @@ for _, pending := range totals.Pending {
 
 ```go
 // Register domain for Apple Pay integration
-registerReq := &applepay.RegisterDomainRequest{
-    DomainName: "checkout.mystore.com",
-}
+registerBuilder := applepay.NewRegisterDomainRequest("checkout.mystore.com")
 
-registerResp, err := client.ApplePay.RegisterDomain(context.Background(), registerReq)
+registerResp, err := client.ApplePay.RegisterDomain(context.Background(), registerBuilder)
 if err != nil {
     log.Fatal(err)
 }
 
 fmt.Printf("Domain registered: %s\n", registerResp.Message)
 
-// List all registered domains
-domainsResp, err := client.ApplePay.ListDomains(context.Background(), &applepay.ListDomainsRequest{})
+// List all registered domains with fluent interface
+listBuilder := applepay.NewListDomainsRequest().
+    UseCursor(true)
+
+domainsResp, err := client.ApplePay.ListDomains(context.Background(), listBuilder)
 if err != nil {
     log.Fatal(err)
 }
@@ -2055,16 +2056,18 @@ for _, domain := range domainsResp.Data.DomainNames {
 }
 
 // Unregister domain when no longer needed
-unregisterReq := &applepay.UnregisterDomainRequest{
-    DomainName: "old-checkout.mystore.com",
-}
+unregisterBuilder := applepay.NewUnregisterDomainRequest("old-checkout.mystore.com")
 
-unregisterResp, err := client.ApplePay.UnregisterDomain(context.Background(), unregisterReq)
+unregisterResp, err := client.ApplePay.UnregisterDomain(context.Background(), unregisterBuilder)
 if err != nil {
     log.Fatal(err)
 }
 
-fmt.Printf("Domain unregistered: %s\n", unregisterResp.Message)
+if unregisterResp.Data.Status {
+    fmt.Printf("Domain unregistered: %s\n", unregisterResp.Data.Message)
+} else {
+    fmt.Printf("Failed to unregister domain: %s\n", unregisterResp.Data.Message)
+}
 ```
 
 ### Charges for Multiple Payment Channels

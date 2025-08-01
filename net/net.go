@@ -116,6 +116,26 @@ func Delete[O any](ctx context.Context, client *http.Client, secret, path string
 	return rsp, nil
 }
 
+// DeleteWithBody makes a DELETE request with a request body
+func DeleteWithBody[I any, O any](ctx context.Context, client *http.Client, secret, path string, payload *I, baseURL ...string) (*types.Response[O], error) {
+	url := getBaseURL(baseURL...)
+	body, err := doReq(ctx, client, http.MethodDelete, secret, url+path, payload)
+	if err != nil {
+		return nil, err
+	}
+
+	rsp := new(types.Response[O])
+
+	if len(body) > 0 {
+		err = json.Unmarshal(body, rsp)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return rsp, nil
+}
+
 func putOrPost[I any, O any](ctx context.Context, client *http.Client, method, secret, fullURL string, payload *I) (*types.Response[O], error) {
 	body, err := doReq(ctx, client, method, secret, fullURL, payload)
 	if err != nil {
