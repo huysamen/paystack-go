@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/huysamen/paystack-go/net"
+	"github.com/huysamen/paystack-go/options"
 	"github.com/huysamen/paystack-go/types"
 )
 
@@ -24,6 +25,96 @@ type TransactionExportRequest struct {
 	Settled     *bool
 	Settlement  *uint64
 	PaymentPage *uint64
+}
+
+// TransactionExportRequestBuilder provides a fluent interface for building TransactionExportRequest
+type TransactionExportRequestBuilder struct {
+	req *TransactionExportRequest
+}
+
+// NewTransactionExportRequest creates a new builder for TransactionExportRequest
+func NewTransactionExportRequest() *TransactionExportRequestBuilder {
+	return &TransactionExportRequestBuilder{
+		req: &TransactionExportRequest{},
+	}
+}
+
+// PerPage sets the number of records per page
+func (b *TransactionExportRequestBuilder) PerPage(perPage int) *TransactionExportRequestBuilder {
+	b.req.PerPage = options.Int(perPage)
+	return b
+}
+
+// Page sets the page number
+func (b *TransactionExportRequestBuilder) Page(page int) *TransactionExportRequestBuilder {
+	b.req.Page = options.Int(page)
+	return b
+}
+
+// DateRange sets both start and end date filters
+func (b *TransactionExportRequestBuilder) DateRange(from, to time.Time) *TransactionExportRequestBuilder {
+	b.req.From = options.Time(from)
+	b.req.To = options.Time(to)
+	return b
+}
+
+// From sets the start date filter
+func (b *TransactionExportRequestBuilder) From(from time.Time) *TransactionExportRequestBuilder {
+	b.req.From = options.Time(from)
+	return b
+}
+
+// To sets the end date filter
+func (b *TransactionExportRequestBuilder) To(to time.Time) *TransactionExportRequestBuilder {
+	b.req.To = options.Time(to)
+	return b
+}
+
+// Customer filters by customer ID
+func (b *TransactionExportRequestBuilder) Customer(customer uint64) *TransactionExportRequestBuilder {
+	b.req.Customer = options.Uint64(customer)
+	return b
+}
+
+// Status filters by transaction status
+func (b *TransactionExportRequestBuilder) Status(status string) *TransactionExportRequestBuilder {
+	b.req.Status = options.String(status)
+	return b
+}
+
+// Currency filters by currency
+func (b *TransactionExportRequestBuilder) Currency(currency types.Currency) *TransactionExportRequestBuilder {
+	b.req.Currency = &currency
+	return b
+}
+
+// Amount filters by transaction amount
+func (b *TransactionExportRequestBuilder) Amount(amount int) *TransactionExportRequestBuilder {
+	b.req.Amount = options.Int(amount)
+	return b
+}
+
+// Settled filters by settlement status
+func (b *TransactionExportRequestBuilder) Settled(settled bool) *TransactionExportRequestBuilder {
+	b.req.Settled = options.Bool(settled)
+	return b
+}
+
+// Settlement filters by settlement ID
+func (b *TransactionExportRequestBuilder) Settlement(settlement uint64) *TransactionExportRequestBuilder {
+	b.req.Settlement = options.Uint64(settlement)
+	return b
+}
+
+// PaymentPage filters by payment page ID
+func (b *TransactionExportRequestBuilder) PaymentPage(paymentPage uint64) *TransactionExportRequestBuilder {
+	b.req.PaymentPage = options.Uint64(paymentPage)
+	return b
+}
+
+// Build returns the constructed TransactionExportRequest
+func (b *TransactionExportRequestBuilder) Build() *TransactionExportRequest {
+	return b.req
 }
 
 func (r *TransactionExportRequest) toQuery() string {
@@ -71,7 +162,9 @@ type TransactionExportResponse struct {
 	ExpiresAt types.DateTime `json:"expiresAt"`
 }
 
-func (c *Client) Export(ctx context.Context, req *TransactionExportRequest) (*types.Response[TransactionExportResponse], error) {
+// Export exports transactions using a builder (fluent interface)
+func (c *Client) Export(ctx context.Context, builder *TransactionExportRequestBuilder) (*types.Response[TransactionExportResponse], error) {
+	req := builder.Build()
 	path := fmt.Sprintf("%s%s", transactionBasePath, transactionExportPath)
 
 	if req != nil {

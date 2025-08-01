@@ -6,6 +6,7 @@ import (
 	"net/url"
 
 	"github.com/huysamen/paystack-go/net"
+	"github.com/huysamen/paystack-go/options"
 	"github.com/huysamen/paystack-go/types"
 )
 
@@ -15,6 +16,47 @@ type SubscriptionListRequest struct {
 	Page     *int
 	Customer *int // Customer ID
 	Plan     *int // Plan ID
+}
+
+// SubscriptionListRequestBuilder provides a fluent interface for building SubscriptionListRequest
+type SubscriptionListRequestBuilder struct {
+	req *SubscriptionListRequest
+}
+
+// NewSubscriptionListRequest creates a new builder for SubscriptionListRequest
+func NewSubscriptionListRequest() *SubscriptionListRequestBuilder {
+	return &SubscriptionListRequestBuilder{
+		req: &SubscriptionListRequest{},
+	}
+}
+
+// PerPage sets the number of records per page
+func (b *SubscriptionListRequestBuilder) PerPage(perPage int) *SubscriptionListRequestBuilder {
+	b.req.PerPage = options.Int(perPage)
+	return b
+}
+
+// Page sets the page number
+func (b *SubscriptionListRequestBuilder) Page(page int) *SubscriptionListRequestBuilder {
+	b.req.Page = options.Int(page)
+	return b
+}
+
+// Customer filters by customer ID
+func (b *SubscriptionListRequestBuilder) Customer(customer int) *SubscriptionListRequestBuilder {
+	b.req.Customer = options.Int(customer)
+	return b
+}
+
+// Plan filters by plan ID
+func (b *SubscriptionListRequestBuilder) Plan(plan int) *SubscriptionListRequestBuilder {
+	b.req.Plan = options.Int(plan)
+	return b
+}
+
+// Build returns the constructed SubscriptionListRequest
+func (b *SubscriptionListRequestBuilder) Build() *SubscriptionListRequest {
+	return b.req
 }
 
 func (r *SubscriptionListRequest) toQuery() string {
@@ -41,7 +83,9 @@ type SubscriptionListResponse struct {
 	Meta types.Meta     `json:"meta"`
 }
 
-func (c *Client) List(ctx context.Context, req *SubscriptionListRequest) (*types.Response[SubscriptionListResponse], error) {
+// List lists subscriptions using a builder (fluent interface)
+func (c *Client) List(ctx context.Context, builder *SubscriptionListRequestBuilder) (*types.Response[SubscriptionListResponse], error) {
+	req := builder.Build()
 	path := subscriptionBasePath
 
 	if req != nil {

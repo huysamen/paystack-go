@@ -37,12 +37,11 @@ func main() {
 
 	// List customers
 	fmt.Println("\nListing customers...")
-	listReq := &customers.CustomerListRequest{
-		PerPage: intPtr(10),
-		Page:    intPtr(1),
-	}
+	builder := customers.NewCustomerListRequest().
+		PerPage(10).
+		Page(1)
 
-	listResp, err := client.Customers.List(context.Background(), listReq)
+	listResp, err := client.Customers.List(context.Background(), builder)
 	if err != nil {
 		log.Fatalf("Failed to list customers: %v", err)
 	}

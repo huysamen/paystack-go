@@ -8,8 +8,9 @@ import (
 	"github.com/huysamen/paystack-go/net"
 )
 
-// List retrieves all bulk charge batches created by the integration
-func (c *Client) List(ctx context.Context, req *ListBulkChargeBatchesRequest) (*ListBulkChargeBatchesResponse, error) {
+// List retrieves all bulk charge batches created by the integration using a builder
+func (c *Client) List(ctx context.Context, builder *ListBulkChargeBatchesRequestBuilder) (*ListBulkChargeBatchesResponse, error) {
+	req := builder.Build()
 	params := url.Values{}
 
 	if req != nil {

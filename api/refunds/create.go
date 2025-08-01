@@ -7,11 +7,9 @@ import (
 	"github.com/huysamen/paystack-go/net"
 )
 
-// Create initiates a refund on a transaction
-func (c *Client) Create(ctx context.Context, req *RefundCreateRequest) (*RefundCreateResponse, error) {
-	if req == nil {
-		return nil, fmt.Errorf("refund create request is required")
-	}
+// Create initiates a refund on a transaction using a builder
+func (c *Client) Create(ctx context.Context, builder *RefundCreateRequestBuilder) (*RefundCreateResponse, error) {
+	req := builder.Build()
 
 	if err := validateRefundCreateRequest(req); err != nil {
 		return nil, err

@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/huysamen/paystack-go/net"
+	"github.com/huysamen/paystack-go/options"
 	"github.com/huysamen/paystack-go/types"
 )
 
@@ -16,6 +17,54 @@ type TransactionTotalsRequest struct {
 	Page    *int
 	From    *time.Time
 	To      *time.Time
+}
+
+// TransactionTotalsRequestBuilder provides a fluent interface for building TransactionTotalsRequest
+type TransactionTotalsRequestBuilder struct {
+	req *TransactionTotalsRequest
+}
+
+// NewTransactionTotalsRequest creates a new builder for TransactionTotalsRequest
+func NewTransactionTotalsRequest() *TransactionTotalsRequestBuilder {
+	return &TransactionTotalsRequestBuilder{
+		req: &TransactionTotalsRequest{},
+	}
+}
+
+// PerPage sets the number of records per page
+func (b *TransactionTotalsRequestBuilder) PerPage(perPage int) *TransactionTotalsRequestBuilder {
+	b.req.PerPage = options.Int(perPage)
+	return b
+}
+
+// Page sets the page number
+func (b *TransactionTotalsRequestBuilder) Page(page int) *TransactionTotalsRequestBuilder {
+	b.req.Page = options.Int(page)
+	return b
+}
+
+// DateRange sets both start and end date filters
+func (b *TransactionTotalsRequestBuilder) DateRange(from, to time.Time) *TransactionTotalsRequestBuilder {
+	b.req.From = options.Time(from)
+	b.req.To = options.Time(to)
+	return b
+}
+
+// From sets the start date filter
+func (b *TransactionTotalsRequestBuilder) From(from time.Time) *TransactionTotalsRequestBuilder {
+	b.req.From = options.Time(from)
+	return b
+}
+
+// To sets the end date filter
+func (b *TransactionTotalsRequestBuilder) To(to time.Time) *TransactionTotalsRequestBuilder {
+	b.req.To = options.Time(to)
+	return b
+}
+
+// Build returns the constructed TransactionTotalsRequest
+func (b *TransactionTotalsRequestBuilder) Build() *TransactionTotalsRequest {
+	return b.req
 }
 
 func (r *TransactionTotalsRequest) toQuery() string {
@@ -53,7 +102,9 @@ type TransactionTotalsResponse struct {
 	UnsettledTransactionVolumeByCurrency []CurrencyTotal `json:"unsettled_transaction_volume_by_currency"`
 }
 
-func (c *Client) Totals(ctx context.Context, req *TransactionTotalsRequest) (*types.Response[TransactionTotalsResponse], error) {
+// Totals gets transaction totals using a builder (fluent interface)
+func (c *Client) Totals(ctx context.Context, builder *TransactionTotalsRequestBuilder) (*types.Response[TransactionTotalsResponse], error) {
+	req := builder.Build()
 	path := fmt.Sprintf("%s/totals", transactionBasePath)
 
 	if req != nil {

@@ -24,9 +24,9 @@ func ValidateChargeStatus(status string) error {
 	return nil // allow any status for flexibility
 }
 
-// FetchChargesInBatch retrieves the charges associated with a specified batch code
-func (c *Client) FetchChargesInBatch(ctx context.Context, idOrCode string, req *FetchChargesInBatchRequest) (*FetchChargesInBatchResponse, error) {
-
+// FetchChargesInBatch retrieves the charges associated with a specified batch code using a builder
+func (c *Client) FetchChargesInBatch(ctx context.Context, idOrCode string, builder *FetchChargesInBatchRequestBuilder) (*FetchChargesInBatchResponse, error) {
+	req := builder.Build()
 	params := url.Values{}
 
 	if req != nil {

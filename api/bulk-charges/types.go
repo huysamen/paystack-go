@@ -82,6 +82,54 @@ type ListBulkChargeBatchesRequest struct {
 	To      *string `json:"to,omitempty"`
 }
 
+// ListBulkChargeBatchesRequestBuilder provides a fluent interface for building ListBulkChargeBatchesRequest
+type ListBulkChargeBatchesRequestBuilder struct {
+	req *ListBulkChargeBatchesRequest
+}
+
+// NewListBulkChargeBatchesRequest creates a new builder for ListBulkChargeBatchesRequest
+func NewListBulkChargeBatchesRequest() *ListBulkChargeBatchesRequestBuilder {
+	return &ListBulkChargeBatchesRequestBuilder{
+		req: &ListBulkChargeBatchesRequest{},
+	}
+}
+
+// PerPage sets the number of records per page
+func (b *ListBulkChargeBatchesRequestBuilder) PerPage(perPage int) *ListBulkChargeBatchesRequestBuilder {
+	b.req.PerPage = &perPage
+	return b
+}
+
+// Page sets the page number
+func (b *ListBulkChargeBatchesRequestBuilder) Page(page int) *ListBulkChargeBatchesRequestBuilder {
+	b.req.Page = &page
+	return b
+}
+
+// From sets the start date filter
+func (b *ListBulkChargeBatchesRequestBuilder) From(from string) *ListBulkChargeBatchesRequestBuilder {
+	b.req.From = &from
+	return b
+}
+
+// To sets the end date filter
+func (b *ListBulkChargeBatchesRequestBuilder) To(to string) *ListBulkChargeBatchesRequestBuilder {
+	b.req.To = &to
+	return b
+}
+
+// DateRange sets both start and end date filters
+func (b *ListBulkChargeBatchesRequestBuilder) DateRange(from, to string) *ListBulkChargeBatchesRequestBuilder {
+	b.req.From = &from
+	b.req.To = &to
+	return b
+}
+
+// Build returns the constructed ListBulkChargeBatchesRequest
+func (b *ListBulkChargeBatchesRequestBuilder) Build() *ListBulkChargeBatchesRequest {
+	return b.req
+}
+
 // FetchChargesInBatchRequest represents the request to fetch charges in a batch
 type FetchChargesInBatchRequest struct {
 	Status  *string `json:"status,omitempty"`
@@ -89,6 +137,60 @@ type FetchChargesInBatchRequest struct {
 	Page    *int    `json:"page,omitempty"`
 	From    *string `json:"from,omitempty"`
 	To      *string `json:"to,omitempty"`
+}
+
+// FetchChargesInBatchRequestBuilder provides a fluent interface for building FetchChargesInBatchRequest
+type FetchChargesInBatchRequestBuilder struct {
+	req *FetchChargesInBatchRequest
+}
+
+// NewFetchChargesInBatchRequest creates a new builder for FetchChargesInBatchRequest
+func NewFetchChargesInBatchRequest() *FetchChargesInBatchRequestBuilder {
+	return &FetchChargesInBatchRequestBuilder{
+		req: &FetchChargesInBatchRequest{},
+	}
+}
+
+// Status filters by charge status
+func (b *FetchChargesInBatchRequestBuilder) Status(status string) *FetchChargesInBatchRequestBuilder {
+	b.req.Status = &status
+	return b
+}
+
+// PerPage sets the number of records per page
+func (b *FetchChargesInBatchRequestBuilder) PerPage(perPage int) *FetchChargesInBatchRequestBuilder {
+	b.req.PerPage = &perPage
+	return b
+}
+
+// Page sets the page number
+func (b *FetchChargesInBatchRequestBuilder) Page(page int) *FetchChargesInBatchRequestBuilder {
+	b.req.Page = &page
+	return b
+}
+
+// From sets the start date filter
+func (b *FetchChargesInBatchRequestBuilder) From(from string) *FetchChargesInBatchRequestBuilder {
+	b.req.From = &from
+	return b
+}
+
+// To sets the end date filter
+func (b *FetchChargesInBatchRequestBuilder) To(to string) *FetchChargesInBatchRequestBuilder {
+	b.req.To = &to
+	return b
+}
+
+// DateRange sets both start and end date filters
+func (b *FetchChargesInBatchRequestBuilder) DateRange(from, to string) *FetchChargesInBatchRequestBuilder {
+	b.req.From = &from
+	b.req.To = &to
+	return b
+}
+
+// Build returns the constructed FetchChargesInBatchRequest
+func (b *FetchChargesInBatchRequestBuilder) Build() *FetchChargesInBatchRequest {
+	return b.req
 }
 
 // InitiateBulkChargeResponse represents the response from initiating a bulk charge

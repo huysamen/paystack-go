@@ -7,11 +7,9 @@ import (
 	"github.com/huysamen/paystack-go/net"
 )
 
-// List retrieves all refunds available on your integration
-func (c *Client) List(ctx context.Context, req *RefundListRequest) (*RefundListResponse, error) {
-	if req == nil {
-		req = &RefundListRequest{}
-	}
+// List retrieves all refunds available on your integration using a builder
+func (c *Client) List(ctx context.Context, builder *RefundListRequestBuilder) (*RefundListResponse, error) {
+	req := builder.Build()
 
 	if err := validateRefundListRequest(req); err != nil {
 		return nil, err

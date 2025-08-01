@@ -9,11 +9,9 @@ import (
 	"github.com/huysamen/paystack-go/net"
 )
 
-// List retrieves products available on your integration
-func (c *Client) List(ctx context.Context, req *ListProductsRequest) (*ListProductsResponse, error) {
-	if req == nil {
-		req = &ListProductsRequest{}
-	}
+// List retrieves products available on your integration using a builder
+func (c *Client) List(ctx context.Context, builder *ListProductsRequestBuilder) (*ListProductsResponse, error) {
+	req := builder.Build()
 
 	// Build query parameters
 	params := url.Values{}

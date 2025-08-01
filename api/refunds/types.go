@@ -48,6 +48,49 @@ type RefundCreateRequest struct {
 	MerchantNote *string `json:"merchant_note,omitempty"`
 }
 
+// RefundCreateRequestBuilder provides a fluent interface for building RefundCreateRequest
+type RefundCreateRequestBuilder struct {
+	req *RefundCreateRequest
+}
+
+// NewRefundCreateRequest creates a new builder for RefundCreateRequest
+func NewRefundCreateRequest(transaction string) *RefundCreateRequestBuilder {
+	return &RefundCreateRequestBuilder{
+		req: &RefundCreateRequest{
+			Transaction: transaction,
+		},
+	}
+}
+
+// Amount sets the refund amount (optional - defaults to full transaction amount)
+func (b *RefundCreateRequestBuilder) Amount(amount int) *RefundCreateRequestBuilder {
+	b.req.Amount = &amount
+	return b
+}
+
+// Currency sets the currency for the refund
+func (b *RefundCreateRequestBuilder) Currency(currency string) *RefundCreateRequestBuilder {
+	b.req.Currency = &currency
+	return b
+}
+
+// CustomerNote sets a note for the customer
+func (b *RefundCreateRequestBuilder) CustomerNote(note string) *RefundCreateRequestBuilder {
+	b.req.CustomerNote = &note
+	return b
+}
+
+// MerchantNote sets a note for the merchant
+func (b *RefundCreateRequestBuilder) MerchantNote(note string) *RefundCreateRequestBuilder {
+	b.req.MerchantNote = &note
+	return b
+}
+
+// Build returns the constructed RefundCreateRequest
+func (b *RefundCreateRequestBuilder) Build() *RefundCreateRequest {
+	return b.req
+}
+
 // RefundListRequest represents the request payload for listing refunds
 type RefundListRequest struct {
 	Transaction *string    `json:"transaction,omitempty"`
@@ -56,6 +99,66 @@ type RefundListRequest struct {
 	To          *time.Time `json:"to,omitempty"`
 	PerPage     *int       `json:"perPage,omitempty"`
 	Page        *int       `json:"page,omitempty"`
+}
+
+// RefundListRequestBuilder provides a fluent interface for building RefundListRequest
+type RefundListRequestBuilder struct {
+	req *RefundListRequest
+}
+
+// NewRefundListRequest creates a new builder for RefundListRequest
+func NewRefundListRequest() *RefundListRequestBuilder {
+	return &RefundListRequestBuilder{
+		req: &RefundListRequest{},
+	}
+}
+
+// Transaction filters by transaction reference
+func (b *RefundListRequestBuilder) Transaction(transaction string) *RefundListRequestBuilder {
+	b.req.Transaction = &transaction
+	return b
+}
+
+// Currency filters by currency
+func (b *RefundListRequestBuilder) Currency(currency string) *RefundListRequestBuilder {
+	b.req.Currency = &currency
+	return b
+}
+
+// DateRange sets both start and end date filters
+func (b *RefundListRequestBuilder) DateRange(from, to time.Time) *RefundListRequestBuilder {
+	b.req.From = &from
+	b.req.To = &to
+	return b
+}
+
+// From sets the start date filter
+func (b *RefundListRequestBuilder) From(from time.Time) *RefundListRequestBuilder {
+	b.req.From = &from
+	return b
+}
+
+// To sets the end date filter
+func (b *RefundListRequestBuilder) To(to time.Time) *RefundListRequestBuilder {
+	b.req.To = &to
+	return b
+}
+
+// PerPage sets the number of records per page
+func (b *RefundListRequestBuilder) PerPage(perPage int) *RefundListRequestBuilder {
+	b.req.PerPage = &perPage
+	return b
+}
+
+// Page sets the page number
+func (b *RefundListRequestBuilder) Page(page int) *RefundListRequestBuilder {
+	b.req.Page = &page
+	return b
+}
+
+// Build returns the constructed RefundListRequest
+func (b *RefundListRequestBuilder) Build() *RefundListRequest {
+	return b.req
 }
 
 // RefundTransaction represents transaction details in a refund

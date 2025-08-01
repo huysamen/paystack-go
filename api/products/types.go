@@ -63,6 +63,54 @@ type ListProductsRequest struct {
 	To      *string `json:"to,omitempty"`
 }
 
+// ListProductsRequestBuilder provides a fluent interface for building ListProductsRequest
+type ListProductsRequestBuilder struct {
+	req *ListProductsRequest
+}
+
+// NewListProductsRequest creates a new builder for ListProductsRequest
+func NewListProductsRequest() *ListProductsRequestBuilder {
+	return &ListProductsRequestBuilder{
+		req: &ListProductsRequest{},
+	}
+}
+
+// PerPage sets the number of records per page
+func (b *ListProductsRequestBuilder) PerPage(perPage int) *ListProductsRequestBuilder {
+	b.req.PerPage = &perPage
+	return b
+}
+
+// Page sets the page number
+func (b *ListProductsRequestBuilder) Page(page int) *ListProductsRequestBuilder {
+	b.req.Page = &page
+	return b
+}
+
+// From sets the start date filter
+func (b *ListProductsRequestBuilder) From(from string) *ListProductsRequestBuilder {
+	b.req.From = &from
+	return b
+}
+
+// To sets the end date filter
+func (b *ListProductsRequestBuilder) To(to string) *ListProductsRequestBuilder {
+	b.req.To = &to
+	return b
+}
+
+// DateRange sets both start and end date filters
+func (b *ListProductsRequestBuilder) DateRange(from, to string) *ListProductsRequestBuilder {
+	b.req.From = &from
+	b.req.To = &to
+	return b
+}
+
+// Build returns the constructed ListProductsRequest
+func (b *ListProductsRequestBuilder) Build() *ListProductsRequest {
+	return b.req
+}
+
 // CreateProductResponse represents the response from creating a product
 type CreateProductResponse struct {
 	Status  bool    `json:"status"`

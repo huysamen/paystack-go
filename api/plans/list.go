@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	"github.com/huysamen/paystack-go/net"
+	"github.com/huysamen/paystack-go/options"
 	"github.com/huysamen/paystack-go/types"
 )
 
@@ -16,6 +17,53 @@ type PlanListRequest struct {
 	Status   *string
 	Interval *types.Interval
 	Amount   *int
+}
+
+// PlanListRequestBuilder provides a fluent interface for building PlanListRequest
+type PlanListRequestBuilder struct {
+	req *PlanListRequest
+}
+
+// NewPlanListRequest creates a new builder for PlanListRequest
+func NewPlanListRequest() *PlanListRequestBuilder {
+	return &PlanListRequestBuilder{
+		req: &PlanListRequest{},
+	}
+}
+
+// PerPage sets the number of records per page
+func (b *PlanListRequestBuilder) PerPage(perPage int) *PlanListRequestBuilder {
+	b.req.PerPage = options.Int(perPage)
+	return b
+}
+
+// Page sets the page number
+func (b *PlanListRequestBuilder) Page(page int) *PlanListRequestBuilder {
+	b.req.Page = options.Int(page)
+	return b
+}
+
+// Status filters by plan status
+func (b *PlanListRequestBuilder) Status(status string) *PlanListRequestBuilder {
+	b.req.Status = options.String(status)
+	return b
+}
+
+// Interval filters by plan interval
+func (b *PlanListRequestBuilder) Interval(interval types.Interval) *PlanListRequestBuilder {
+	b.req.Interval = &interval
+	return b
+}
+
+// Amount filters by plan amount
+func (b *PlanListRequestBuilder) Amount(amount int) *PlanListRequestBuilder {
+	b.req.Amount = options.Int(amount)
+	return b
+}
+
+// Build returns the constructed PlanListRequest
+func (b *PlanListRequestBuilder) Build() *PlanListRequest {
+	return b.req
 }
 
 func (r *PlanListRequest) toQuery() string {
@@ -42,7 +90,9 @@ func (r *PlanListRequest) toQuery() string {
 
 type PlanListResponse []types.Plan
 
-func (c *Client) List(ctx context.Context, req *PlanListRequest) (*types.Response[PlanListResponse], error) {
+// List lists plans using a builder (fluent interface)
+func (c *Client) List(ctx context.Context, builder *PlanListRequestBuilder) (*types.Response[PlanListResponse], error) {
+	req := builder.Build()
 	path := planBasePath
 
 	if req != nil {
