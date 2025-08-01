@@ -29,7 +29,7 @@ A comprehensive Go client library for the [Paystack API](https://paystack.com/do
 - ✅ **Verification**: Resolve account numbers, validate accounts, resolve card BINs
 - ✅ **Miscellaneous**: List banks/countries/states for address verification and geographic support
 - ✅ **Type Safety**: Strongly typed request/response structures
-- ✅ **Error Handling**: Comprehensive error handling with Paystack-specific error types
+- ✅ **Error Handling**: Clean, intuitive error handling with API errors as Response objects
 - ✅ **Configuration**: Support for different environments and custom HTTP clients
 - ✅ **Validation**: Request validation for required fields
 
@@ -69,7 +69,13 @@ func main() {
 
     resp, err := client.Transactions.Initialize(context.Background(), req)
     if err != nil {
+        // Handle system errors (network, server issues)
         log.Fatal(err)
+    }
+
+    if resp.IsError() {
+        // Handle API errors
+        log.Fatalf("API Error: %s", resp.GetErrorMessage())
     }
 
     fmt.Printf("Authorization URL: %s\n", resp.Data.AuthorizationURL)
@@ -350,117 +356,194 @@ func main() {
 
 ## Error Handling
 
-The library provides comprehensive error handling with detailed Paystack-specific error types:
+The library uses a clean, intuitive approach to error handling that distinguishes between **system errors** and **API errors**:
+
+### System vs API Errors
+
+- **System errors** (network failures, parsing errors, server 5xx errors) are returned as Go `error` types
+- **API errors** (authentication, validation, not found, etc.) are returned as `Response` objects with `status: false`
 
 ```go
 resp, err := client.Transactions.Initialize(context.Background(), req)
 if err != nil {
-    if paystackErr, ok := err.(*net.PaystackError); ok {
-        fmt.Printf("Paystack API Error: %s (Status: %d)\n", paystackErr.Message, paystackErr.StatusCode)
-        
-        // Check error type
-        if paystackErr.IsAuthenticationError() {
-            fmt.Println("Authentication failed - check your API key")
-        } else if paystackErr.IsValidationError() {
-            fmt.Println("Validation error - check your request parameters")
-            if nextStep := paystackErr.GetNextStep(); nextStep != "" {
-                fmt.Printf("Next step: %s\n", nextStep)
-            }
-        } else if paystackErr.IsRateLimitError() {
-            fmt.Println("Rate limited - please retry after some time")
-        } else if paystackErr.IsServerError() {
-            fmt.Println("Server error - please report to Paystack support")
-        }
-        
-        // Access detailed error information
-        fmt.Printf("Error Code: %s\n", paystackErr.Code)
-        fmt.Printf("Error Type: %s\n", paystackErr.Type)
-    } else {
-        fmt.Printf("Other error: %v\n", err)
+    // Handle system errors (network, parsing, server issues)
+    fmt.Printf("System error: %v\n", err)
+    return
+}
+
+// Check if the API call was successful
+if resp.IsError() {
+    // Handle API errors
+    fmt.Printf("API Error: %s\n", resp.GetErrorMessage())
+    fmt.Printf("Error Code: %s\n", resp.GetErrorCode())
+    fmt.Printf("Error Type: %s\n", resp.GetErrorType())
+    
+    // Check specific error types
+    if resp.IsAuthenticationError() {
+        fmt.Println("Authentication failed - check your API key")
+    } else if resp.IsValidationError() {
+        fmt.Println("Validation error - check your request parameters")
+    } else if resp.IsNotFoundError() {
+        fmt.Println("Resource not found")
+    } else if resp.IsRateLimitError() {
+        fmt.Println("Rate limited - please retry after some time")
+    }
+    
+    // Get recommended next step if available
+    if nextStep := resp.GetNextStep(); nextStep != "" {
+        fmt.Printf("Next step: %s\n", nextStep)
     }
     return
 }
+
+// Use successful response
+fmt.Printf("Success! Reference: %s\n", resp.Data.Reference)
 ```
 
-### Error Methods
+### Response Helper Methods
 
-The `PaystackError` type provides several helper methods for error inspection:
+The `Response` type provides several helper methods for easy error checking:
 
-- `IsClientError()`: Returns true for 4xx status codes (client errors)
-- `IsServerError()`: Returns true for 5xx status codes (server errors)
+- `IsSuccess()`: Returns true if the API call succeeded (`status: true`)
+- `IsError()`: Returns true if the API call failed (`status: false`)
 - `IsAuthenticationError()`: Returns true for authentication-related errors
 - `IsValidationError()`: Returns true for validation errors
+- `IsNotFoundError()`: Returns true for resource not found errors
 - `IsRateLimitError()`: Returns true for rate limiting errors
-- `IsNotFoundError()`: Returns true for 404 errors
+- `GetErrorMessage()`: Returns the error message (empty if successful)
+- `GetErrorCode()`: Returns the error code (empty if successful)
+- `GetErrorType()`: Returns the error type (empty if successful)
 - `GetNextStep()`: Returns recommended next step from error metadata
 
-### Common Error Codes
+### Usage Patterns
 
-The library defines constants for common Paystack error codes:
+#### Simple Error Handling
+```go
+resp, err := client.Customers.Create(ctx, customerReq)
+if err != nil {
+    return fmt.Errorf("system error: %w", err)
+}
 
-- `ErrorCodeInvalidKey`: Invalid API key
-- `ErrorCodeValidationError`: Validation failed
-- `ErrorCodeInsufficientFunds`: Insufficient account balance
-- `ErrorCodeDuplicateReference`: Duplicate transaction reference
-- `ErrorCodeTransactionNotFound`: Transaction not found
-- `ErrorCodeCustomerNotFound`: Customer not found
-- `ErrorCodePlanNotFound`: Plan not found
-- `ErrorCodeAuthorizationNotFound`: Authorization not found
+if resp.IsError() {
+    return fmt.Errorf("API error: %s", resp.GetErrorMessage())
+}
 
-### HTTP Status Code Mapping
+// Use resp.Data
+fmt.Printf("Customer created: %s\n", resp.Data.CustomerCode)
+```
 
-The library handles all standard HTTP status codes as documented in the [Paystack API errors documentation](https://paystack.com/docs/api/errors/):
+#### Detailed Error Handling
+```go
+resp, err := client.Plans.Create(ctx, planReq)
+if err != nil {
+    log.Printf("System error creating plan: %v", err)
+    return
+}
 
-| Status Code | Description | Error Handling |
-|-------------|-------------|----------------|
-| **200** | Success | Request completed successfully |
-| **201** | Created | Resource created successfully |
-| **400** | Bad Request | Validation or client-side error - check request parameters |
-| **401** | Unauthorized | Invalid or missing API key - check authentication |
-| **403** | Forbidden | Access denied - insufficient permissions |
-| **404** | Not Found | Requested resource does not exist |
-| **409** | Conflict | Request conflicts with current state |
-| **412** | Precondition Failed | Required conditions not met |
-| **422** | Unprocessable Entity | Validation failed on submitted data |
-| **429** | Too Many Requests | Rate limit exceeded - implement backoff/retry |
-| **5xx** | Server Error | Paystack server error - should be reported to support |
+if resp.IsError() {
+    switch {
+    case resp.IsAuthenticationError():
+        log.Printf("Authentication failed: %s", resp.GetErrorMessage())
+        // Maybe refresh API key
+    case resp.IsValidationError():
+        log.Printf("Validation failed: %s", resp.GetErrorMessage())
+        if nextStep := resp.GetNextStep(); nextStep != "" {
+            log.Printf("Suggestion: %s", nextStep)
+        }
+    case resp.IsRateLimitError():
+        log.Printf("Rate limited, will retry later")
+        // Implement retry logic
+    default:
+        log.Printf("API error: %s (code: %s, type: %s)", 
+            resp.GetErrorMessage(), resp.GetErrorCode(), resp.GetErrorType())
+    }
+    return
+}
+
+fmt.Printf("Plan created successfully: %s\n", resp.Data.PlanCode)
+```
+
+### HTTP Status Code Handling
+
+The library handles HTTP status codes as follows:
+
+| Status Code | Handling | Description |
+|-------------|----------|-------------|
+| **200-201** | Success | Returns Response with `status: true` and data |
+| **400-499** | API Error | Returns Response with `status: false` and error details |
+| **500-599** | System Error | Returns Go `error` - these are server issues |
+
+**Client errors (4xx)** become Response objects with error information:
+- **400** Bad Request → `resp.IsValidationError()` often true
+- **401** Unauthorized → `resp.IsAuthenticationError()` returns true  
+- **403** Forbidden → API error with access denied message
+- **404** Not Found → `resp.IsNotFoundError()` returns true
+- **422** Unprocessable Entity → Validation error with detailed feedback
+- **429** Too Many Requests → `resp.IsRateLimitError()` returns true
+
+**Server errors (5xx)** become Go errors that should be handled as system failures.
 
 ### Production Error Handling
 
 For production applications, implement comprehensive error handling:
 
 ```go
-func handlePaystackError(err error) {
-    if paystackErr, ok := err.(*net.PaystackError); ok {
+func processPayment(ctx context.Context, client *paystack.Client, req *transactions.TransactionInitializeRequest) error {
+    resp, err := client.Transactions.Initialize(ctx, req)
+    if err != nil {
+        // System error - log and handle appropriately
+        log.Error("Payment system error", "error", err)
+        return fmt.Errorf("payment system unavailable: %w", err)
+    }
+
+    if resp.IsError() {
+        // API error - handle based on type
         switch {
-        case paystackErr.IsAuthenticationError():
-            // Log security event, check API key rotation
-            log.Error("Authentication failed", "error", paystackErr.Error())
+        case resp.IsAuthenticationError():
+            log.Error("Payment authentication failed", "message", resp.GetErrorMessage())
+            // Alert ops team, check API key rotation
+            return fmt.Errorf("payment service authentication failed")
             
-        case paystackErr.IsValidationError():
-            // Log validation issue, improve request validation
-            log.Warn("Validation error", "error", paystackErr.Message)
-            if nextStep := paystackErr.GetNextStep(); nextStep != "" {
-                log.Info("Suggestion", "next_step", nextStep)
+        case resp.IsValidationError():
+            log.Warn("Payment validation failed", "message", resp.GetErrorMessage())
+            if nextStep := resp.GetNextStep(); nextStep != "" {
+                log.Info("Payment validation suggestion", "step", nextStep)
             }
+            // Return user-friendly validation error
+            return fmt.Errorf("payment validation failed: %s", resp.GetErrorMessage())
             
-        case paystackErr.IsRateLimitError():
-            // Implement exponential backoff
-            log.Warn("Rate limited, retrying with backoff")
+        case resp.IsRateLimitError():
+            log.Warn("Payment rate limited")
+            // Implement exponential backoff retry
+            return fmt.Errorf("payment service busy, please try again")
             
-        case paystackErr.IsServerError():
-            // Report to monitoring, potentially notify Paystack
-            log.Error("Paystack server error", "status", paystackErr.StatusCode)
+        case resp.IsNotFoundError():
+            log.Warn("Payment resource not found", "message", resp.GetErrorMessage())
+            return fmt.Errorf("payment resource not found")
             
         default:
-            log.Error("Unexpected Paystack error", "error", paystackErr.Error())
+            log.Error("Unexpected payment API error", 
+                "message", resp.GetErrorMessage(),
+                "code", resp.GetErrorCode(),
+                "type", resp.GetErrorType())
+            return fmt.Errorf("payment failed: %s", resp.GetErrorMessage())
         }
-    } else {
-        // Network, timeout, or other non-API errors
-        log.Error("Non-Paystack error", "error", err)
     }
+
+    // Success - process the response
+    log.Info("Payment initialized successfully", "reference", resp.Data.Reference)
+    return nil
 }
 ```
+
+### Benefits of This Approach
+
+✅ **Clear separation**: System errors vs API responses are clearly distinguished  
+✅ **Intuitive**: API errors are part of the response, not thrown as exceptions  
+✅ **Consistent**: Matches how REST APIs actually work  
+✅ **Easier testing**: Mock API errors by returning Response objects with `status: false`  
+✅ **Better performance**: No error object construction for normal API responses  
+✅ **Type safe**: All error information is properly typed in the Response struct
 
 ## Types and Enums
 
@@ -490,6 +573,10 @@ if err != nil {
     log.Fatal(err)
 }
 
+if initResp.IsError() {
+    log.Fatalf("Failed to initialize transaction: %s", initResp.GetErrorMessage())
+}
+
 // Customer pays using the authorization URL
 fmt.Printf("Pay here: %s\n", initResp.Data.AuthorizationURL)
 
@@ -497,6 +584,10 @@ fmt.Printf("Pay here: %s\n", initResp.Data.AuthorizationURL)
 verifyResp, err := client.Transactions.Verify(context.Background(), initResp.Data.Reference)
 if err != nil {
     log.Fatal(err)
+}
+
+if verifyResp.IsError() {
+    log.Fatalf("Failed to verify transaction: %s", verifyResp.GetErrorMessage())
 }
 
 fmt.Printf("Payment status: %s\n", verifyResp.Data.Status)
