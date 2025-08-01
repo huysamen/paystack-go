@@ -16,11 +16,9 @@ func main() {
 
 	// Example 1: Full refund with customer communication
 	fmt.Println("=== Creating Full Refund with Customer Communication ===")
-	fullRefundReq := &refunds.RefundCreateRequest{
-		Transaction:  "T685312322670591", // Replace with actual transaction reference
-		CustomerNote: &[]string{"Your refund has been processed due to product unavailability. You should see the amount back in your account within 3-5 business days."}[0],
-		MerchantNote: &[]string{"Product out of stock - approved for full refund by customer service team"}[0],
-	}
+	fullRefundReq := refunds.NewRefundCreateRequest("T685312322670591"). // Replace with actual transaction reference
+										CustomerNote("Your refund has been processed due to product unavailability. You should see the amount back in your account within 3-5 business days.").
+										MerchantNote("Product out of stock - approved for full refund by customer service team")
 
 	fullRefund, err := client.Refunds.Create(ctx, fullRefundReq)
 	if err != nil {
@@ -33,13 +31,11 @@ func main() {
 
 	// Example 2: Partial refund for shipping costs
 	fmt.Println("\n=== Creating Partial Refund (Shipping Cost) ===")
-	partialRefundReq := &refunds.RefundCreateRequest{
-		Transaction:  "T123456789012345", // Replace with actual transaction reference
-		Amount:       &[]int{1500}[0],    // ₦15.00 shipping refund
-		Currency:     &[]string{"NGN"}[0],
-		CustomerNote: &[]string{"Shipping fee refund - your item was delayed beyond our delivery promise"}[0],
-		MerchantNote: &[]string{"Goodwill gesture for delivery delay - partial refund for shipping"}[0],
-	}
+	partialRefundReq := refunds.NewRefundCreateRequest("T123456789012345"). // Replace with actual transaction reference
+										Amount(1500). // ₦15.00 shipping refund
+										Currency("NGN").
+										CustomerNote("Shipping fee refund - your item was delayed beyond our delivery promise").
+										MerchantNote("Goodwill gesture for delivery delay - partial refund for shipping")
 
 	partialRefund, err := client.Refunds.Create(ctx, partialRefundReq)
 	if err != nil {
@@ -52,10 +48,9 @@ func main() {
 	fmt.Println("\n=== Advanced Refund Filtering and Analytics ===")
 
 	// Filter by transaction
-	transactionFilter := &refunds.RefundListRequest{
-		Transaction: &[]string{"T685312322670591"}[0],
-		PerPage:     &[]int{50}[0],
-	}
+	transactionFilter := refunds.NewRefundListRequest().
+		Transaction("T685312322670591").
+		PerPage(50)
 
 	transactionRefunds, err := client.Refunds.List(ctx, transactionFilter)
 	if err != nil {
@@ -67,12 +62,10 @@ func main() {
 	// Filter by date range (last 30 days)
 	thirtyDaysAgo := time.Now().AddDate(0, 0, -30)
 	now := time.Now()
-	dateRangeFilter := &refunds.RefundListRequest{
-		From:     &thirtyDaysAgo,
-		To:       &now,
-		Currency: &[]string{"NGN"}[0],
-		PerPage:  &[]int{100}[0],
-	}
+	dateRangeFilter := refunds.NewRefundListRequest().
+		DateRange(thirtyDaysAgo, now).
+		Currency("NGN").
+		PerPage(100)
 
 	recentRefunds, err := client.Refunds.List(ctx, dateRangeFilter)
 	if err != nil {
@@ -110,9 +103,7 @@ func main() {
 
 	// Example 4: Detailed refund analysis with channel breakdown
 	fmt.Println("\n=== Channel Analysis ===")
-	allRefunds, err := client.Refunds.List(ctx, &refunds.RefundListRequest{
-		PerPage: &[]int{100}[0],
-	})
+	allRefunds, err := client.Refunds.List(ctx, refunds.NewRefundListRequest().PerPage(100))
 
 	if err != nil {
 		log.Printf("All refunds error: %v\n", err)

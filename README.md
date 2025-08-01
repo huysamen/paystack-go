@@ -2528,11 +2528,9 @@ func main() {
     ctx := context.Background()
 
     // Create a full refund with customer communication
-    fullRefundReq := &refunds.RefundCreateRequest{
-        Transaction:  "T685312322670591", // Replace with actual transaction reference
-        CustomerNote: &[]string{"Your refund has been processed due to product unavailability. You should see the amount back in your account within 3-5 business days."}[0],
-        MerchantNote: &[]string{"Product out of stock - approved for full refund by customer service team"}[0],
-    }
+    fullRefundReq := refunds.NewRefundCreateRequest("T685312322670591"). // Replace with actual transaction reference
+        CustomerNote("Your refund has been processed due to product unavailability. You should see the amount back in your account within 3-5 business days.").
+        MerchantNote("Product out of stock - approved for full refund by customer service team")
 
     refund, err := client.Refunds.Create(ctx, fullRefundReq)
     if err != nil {
@@ -2544,13 +2542,11 @@ func main() {
         refund.Data.Transaction.ID)
 
     // Create a partial refund (e.g., shipping cost)
-    partialRefundReq := &refunds.RefundCreateRequest{
-        Transaction:  "T123456789012345", // Replace with actual transaction reference
-        Amount:       &[]int{1500}[0],    // ₦15.00 shipping refund
-        Currency:     &[]string{"NGN"}[0],
-        CustomerNote: &[]string{"Shipping fee refund - your item was delayed beyond our delivery promise"}[0],
-        MerchantNote: &[]string{"Goodwill gesture for delivery delay"}[0],
-    }
+    partialRefundReq := refunds.NewRefundCreateRequest("T123456789012345"). // Replace with actual transaction reference
+        Amount(1500).                                                     // ₦15.00 shipping refund
+        Currency("NGN").
+        CustomerNote("Shipping fee refund - your item was delayed beyond our delivery promise").
+        MerchantNote("Goodwill gesture for delivery delay")
 
     partialRefund, err := client.Refunds.Create(ctx, partialRefundReq)
     if err != nil {
@@ -2561,12 +2557,10 @@ func main() {
 
     // List refunds with filtering
     thirtyDaysAgo := time.Now().AddDate(0, 0, -30)
-    listReq := &refunds.RefundListRequest{
-        From:     &thirtyDaysAgo,
-        To:       &[]time.Time{time.Now()}[0],
-        Currency: &[]string{"NGN"}[0],
-        PerPage:  &[]int{50}[0],
-    }
+    listReq := refunds.NewRefundListRequest().
+        DateRange(thirtyDaysAgo, time.Now()).
+        Currency("NGN").
+        PerPage(50)
 
     refundsList, err := client.Refunds.List(ctx, listReq)
     if err != nil {

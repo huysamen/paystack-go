@@ -1,10 +1,14 @@
 package refunds
 
 import (
+	"errors"
 	"net/http"
 )
 
 const refundsBasePath = "/refund"
+
+// ErrBuilderRequired is returned when a builder is required but not provided
+var ErrBuilderRequired = errors.New("builder is required - use New*Request() methods to create requests")
 
 // Client represents the refunds API client
 type Client struct {

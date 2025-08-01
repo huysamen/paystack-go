@@ -2,44 +2,77 @@ package refunds
 
 import (
 	"context"
-	"fmt"
+	"time"
 
 	"github.com/huysamen/paystack-go/net"
 )
 
+// RefundListRequestBuilder provides a fluent interface for building RefundListRequest
+type RefundListRequestBuilder struct {
+	req *RefundListRequest
+}
+
+// NewRefundListRequest creates a new builder for RefundListRequest
+func NewRefundListRequest() *RefundListRequestBuilder {
+	return &RefundListRequestBuilder{
+		req: &RefundListRequest{},
+	}
+}
+
+// Transaction filters by transaction reference
+func (b *RefundListRequestBuilder) Transaction(transaction string) *RefundListRequestBuilder {
+	b.req.Transaction = &transaction
+	return b
+}
+
+// Currency filters by currency
+func (b *RefundListRequestBuilder) Currency(currency string) *RefundListRequestBuilder {
+	b.req.Currency = &currency
+	return b
+}
+
+// DateRange sets both start and end date filters
+func (b *RefundListRequestBuilder) DateRange(from, to time.Time) *RefundListRequestBuilder {
+	b.req.From = &from
+	b.req.To = &to
+	return b
+}
+
+// From sets the start date filter
+func (b *RefundListRequestBuilder) From(from time.Time) *RefundListRequestBuilder {
+	b.req.From = &from
+	return b
+}
+
+// To sets the end date filter
+func (b *RefundListRequestBuilder) To(to time.Time) *RefundListRequestBuilder {
+	b.req.To = &to
+	return b
+}
+
+// PerPage sets the number of records per page
+func (b *RefundListRequestBuilder) PerPage(perPage int) *RefundListRequestBuilder {
+	b.req.PerPage = &perPage
+	return b
+}
+
+// Page sets the page number
+func (b *RefundListRequestBuilder) Page(page int) *RefundListRequestBuilder {
+	b.req.Page = &page
+	return b
+}
+
+// Build returns the constructed RefundListRequest
+func (b *RefundListRequestBuilder) Build() *RefundListRequest {
+	return b.req
+}
+
 // List retrieves all refunds available on your integration using a builder
 func (c *Client) List(ctx context.Context, builder *RefundListRequestBuilder) (*RefundListResponse, error) {
-	req := builder.Build()
-
-	if err := validateRefundListRequest(req); err != nil {
-		return nil, err
+	if builder == nil {
+		builder = NewRefundListRequest()
 	}
 
 	url := c.baseURL + refundsBasePath
 	return net.Get[[]Refund](ctx, c.client, c.secret, url)
-}
-
-// validateRefundListRequest validates the refund list request
-func validateRefundListRequest(req *RefundListRequest) error {
-	if req.PerPage != nil && (*req.PerPage < 1 || *req.PerPage > 100) {
-		return fmt.Errorf("per_page must be between 1 and 100")
-	}
-
-	if req.Page != nil && *req.Page < 1 {
-		return fmt.Errorf("page must be greater than 0")
-	}
-
-	if req.From != nil && req.To != nil && req.From.After(*req.To) {
-		return fmt.Errorf("from date must be before to date")
-	}
-
-	if req.Transaction != nil && *req.Transaction == "" {
-		return fmt.Errorf("transaction cannot be empty")
-	}
-
-	if req.Currency != nil && *req.Currency == "" {
-		return fmt.Errorf("currency cannot be empty")
-	}
-
-	return nil
 }
