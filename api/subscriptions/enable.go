@@ -13,7 +13,6 @@ type SubscriptionEnableRequest struct {
 	Token string `json:"token"` // Email token
 }
 
-
 type SubscriptionEnableResponse struct {
 	Message string `json:"message"`
 }
@@ -22,7 +21,6 @@ func (c *Client) Enable(ctx context.Context, req *SubscriptionEnableRequest) (*t
 	if req == nil {
 		return nil, errors.New("request cannot be nil")
 	}
-
 
 	path := subscriptionBasePath + "/enable"
 

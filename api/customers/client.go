@@ -1,10 +1,16 @@
 package customers
 
 import (
+	"errors"
 	"net/http"
 )
 
 const customerBasePath = "/customer"
+
+var (
+	// ErrBuilderRequired is returned when a required builder is nil
+	ErrBuilderRequired = errors.New("builder cannot be nil")
+)
 
 type Client struct {
 	client  *http.Client

@@ -13,7 +13,6 @@ type SubscriptionDisableRequest struct {
 	Token string `json:"token"` // Email token
 }
 
-
 type SubscriptionDisableResponse struct {
 	Message string `json:"message"`
 }
@@ -22,7 +21,6 @@ func (c *Client) Disable(ctx context.Context, req *SubscriptionDisableRequest) (
 	if req == nil {
 		return nil, errors.New("request cannot be nil")
 	}
-
 
 	path := subscriptionBasePath + "/disable"
 

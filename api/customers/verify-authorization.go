@@ -2,13 +2,13 @@ package customers
 
 import (
 	"context"
-	"errors"
 	"fmt"
 
 	"github.com/huysamen/paystack-go/net"
 	"github.com/huysamen/paystack-go/types"
 )
 
+// AuthorizationVerifyResponse represents the response from verifying an authorization
 type AuthorizationVerifyResponse struct {
 	AuthorizationCode string            `json:"authorization_code"`
 	Channel           types.Channel     `json:"channel"`
@@ -17,14 +17,16 @@ type AuthorizationVerifyResponse struct {
 	Customer          CustomerReference `json:"customer"`
 }
 
+// CustomerReference represents a customer reference
 type CustomerReference struct {
 	Code  string `json:"code"`
 	Email string `json:"email"`
 }
 
+// VerifyAuthorization verifies an authorization by reference
 func (c *Client) VerifyAuthorization(ctx context.Context, reference string) (*types.Response[AuthorizationVerifyResponse], error) {
 	if reference == "" {
-		return nil, errors.New("reference is required")
+		return nil, fmt.Errorf("reference is required")
 	}
 
 	path := fmt.Sprintf("%s/authorization/verify/%s", customerBasePath, reference)

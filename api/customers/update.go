@@ -2,13 +2,13 @@ package customers
 
 import (
 	"context"
-	"errors"
 	"fmt"
 
 	"github.com/huysamen/paystack-go/net"
 	"github.com/huysamen/paystack-go/types"
 )
 
+// Request type
 type CustomerUpdateRequest struct {
 	FirstName *string        `json:"first_name,omitempty"`
 	LastName  *string        `json:"last_name,omitempty"`
@@ -16,18 +16,67 @@ type CustomerUpdateRequest struct {
 	Metadata  map[string]any `json:"metadata,omitempty"`
 }
 
-func (c *Client) Update(ctx context.Context, code string, req *CustomerUpdateRequest) (*types.Response[Customer], error) {
-	if code == "" {
-		return nil, errors.New("customer code is required")
+// Builder for updating CustomerUpdateRequest
+type CustomerUpdateRequestBuilder struct {
+	firstName *string
+	lastName  *string
+	phone     *string
+	metadata  map[string]any
+}
+
+// NewUpdateCustomerRequest creates a new builder for customer update
+func NewUpdateCustomerRequest() *CustomerUpdateRequestBuilder {
+	return &CustomerUpdateRequestBuilder{}
+}
+
+// FirstName sets the first name
+func (b *CustomerUpdateRequestBuilder) FirstName(firstName string) *CustomerUpdateRequestBuilder {
+	b.firstName = &firstName
+	return b
+}
+
+// LastName sets the last name
+func (b *CustomerUpdateRequestBuilder) LastName(lastName string) *CustomerUpdateRequestBuilder {
+	b.lastName = &lastName
+	return b
+}
+
+// Phone sets the phone number
+func (b *CustomerUpdateRequestBuilder) Phone(phone string) *CustomerUpdateRequestBuilder {
+	b.phone = &phone
+	return b
+}
+
+// Metadata sets the metadata
+func (b *CustomerUpdateRequestBuilder) Metadata(metadata map[string]any) *CustomerUpdateRequestBuilder {
+	b.metadata = metadata
+	return b
+}
+
+// Build creates the CustomerUpdateRequest
+func (b *CustomerUpdateRequestBuilder) Build() *CustomerUpdateRequest {
+	return &CustomerUpdateRequest{
+		FirstName: b.firstName,
+		LastName:  b.lastName,
+		Phone:     b.phone,
+		Metadata:  b.metadata,
+	}
+}
+
+// Update updates a customer with the provided builder
+func (c *Client) Update(ctx context.Context, customerCode string, builder *CustomerUpdateRequestBuilder) (*types.Response[types.Customer], error) {
+	if customerCode == "" {
+		return nil, fmt.Errorf("customer code is required")
 	}
 
-	if req == nil {
-		return nil, errors.New("request cannot be nil")
+	if builder == nil {
+		return nil, ErrBuilderRequired
 	}
 
-	path := fmt.Sprintf("%s/%s", customerBasePath, code)
+	req := builder.Build()
+	path := fmt.Sprintf("%s/%s", customerBasePath, customerCode)
 
-	return net.Put[CustomerUpdateRequest, Customer](
+	return net.Put[CustomerUpdateRequest, types.Customer](
 		ctx,
 		c.client,
 		c.secret,

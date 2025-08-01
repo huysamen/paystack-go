@@ -2,18 +2,30 @@ package customers
 
 import (
 	"context"
-	"errors"
 	"fmt"
 
 	"github.com/huysamen/paystack-go/net"
 	"github.com/huysamen/paystack-go/types"
 )
 
+// Account represents customer account details for direct debit
+type Account struct {
+	Number   string `json:"number"`
+	BankCode string `json:"bank_code"`
+}
+
+// Address represents customer address information
+type Address struct {
+	Street string `json:"street"`
+	City   string `json:"city"`
+	State  string `json:"state"`
+}
+
+// Request and Response types
 type DirectDebitInitializeRequest struct {
 	Account Account `json:"account"`
 	Address Address `json:"address"`
 }
-
 
 type DirectDebitInitializeResponse struct {
 	RedirectURL string `json:"redirect_url"`
@@ -21,16 +33,46 @@ type DirectDebitInitializeResponse struct {
 	Reference   string `json:"reference"`
 }
 
-func (c *Client) InitializeDirectDebit(ctx context.Context, customerID string, req *DirectDebitInitializeRequest) (*types.Response[DirectDebitInitializeResponse], error) {
+// Builder for DirectDebitInitializeRequest
+type DirectDebitInitializeRequestBuilder struct {
+	account Account
+	address Address
+}
+
+// NewInitializeDirectDebitRequest creates a new builder for direct debit initialization
+func NewInitializeDirectDebitRequest(accountNumber, bankCode, street, city, state string) *DirectDebitInitializeRequestBuilder {
+	return &DirectDebitInitializeRequestBuilder{
+		account: Account{
+			Number:   accountNumber,
+			BankCode: bankCode,
+		},
+		address: Address{
+			Street: street,
+			City:   city,
+			State:  state,
+		},
+	}
+}
+
+// Build creates the DirectDebitInitializeRequest
+func (b *DirectDebitInitializeRequestBuilder) Build() *DirectDebitInitializeRequest {
+	return &DirectDebitInitializeRequest{
+		Account: b.account,
+		Address: b.address,
+	}
+}
+
+// InitializeDirectDebit initializes direct debit for a customer
+func (c *Client) InitializeDirectDebit(ctx context.Context, customerID string, builder *DirectDebitInitializeRequestBuilder) (*types.Response[DirectDebitInitializeResponse], error) {
 	if customerID == "" {
-		return nil, errors.New("customer ID is required")
+		return nil, fmt.Errorf("customer ID is required")
 	}
 
-	if req == nil {
-		return nil, errors.New("request cannot be nil")
+	if builder == nil {
+		return nil, ErrBuilderRequired
 	}
 
-
+	req := builder.Build()
 	path := fmt.Sprintf("%s/%s/initialize-direct-debit", customerBasePath, customerID)
 
 	return net.Post[DirectDebitInitializeRequest, DirectDebitInitializeResponse](

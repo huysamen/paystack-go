@@ -2,13 +2,13 @@ package customers
 
 import (
 	"context"
-	"errors"
 	"fmt"
 
 	"github.com/huysamen/paystack-go/net"
 	"github.com/huysamen/paystack-go/types"
 )
 
+// MandateAuthorization represents a mandate authorization
 type MandateAuthorization struct {
 	ID                int               `json:"id"`
 	Status            string            `json:"status"`
@@ -22,11 +22,13 @@ type MandateAuthorization struct {
 	Customer          CustomerReference `json:"customer"`
 }
 
+// FetchMandateAuthorizationsResponse represents the list of mandate authorizations
 type FetchMandateAuthorizationsResponse []MandateAuthorization
 
+// FetchMandateAuthorizations fetches mandate authorizations for a customer
 func (c *Client) FetchMandateAuthorizations(ctx context.Context, customerID string) (*types.Response[FetchMandateAuthorizationsResponse], error) {
 	if customerID == "" {
-		return nil, errors.New("customer ID is required")
+		return nil, fmt.Errorf("customer ID is required")
 	}
 
 	path := fmt.Sprintf("%s/%s/directdebit-mandate-authorizations", customerBasePath, customerID)

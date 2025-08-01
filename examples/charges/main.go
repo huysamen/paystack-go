@@ -1,13 +1,12 @@
-
 package main
 
 import (
-"context"
-"fmt"
-"log"
+	"context"
+	"fmt"
+	"log"
 
-"github.com/huysamen/paystack-go"
-"github.com/huysamen/paystack-go/api/charges"
+	"github.com/huysamen/paystack-go"
+	"github.com/huysamen/paystack-go/api/charges"
 )
 
 func main() {
@@ -20,15 +19,15 @@ func main() {
 	// 1. Create a charge with bank details using builder pattern
 	fmt.Println("1. Creating charge with bank details...")
 	createBuilder := charges.NewCreateChargeRequest("customer@example.com", "50000"). // ₦500.00 in kobo
-		Bank(&charges.BankDetails{
+												Bank(&charges.BankDetails{
 			Code:          "057", // Zenith Bank
 			AccountNumber: "0000000000",
 		}).
 		Reference("charge-" + generateReference()).
 		Metadata(map[string]any{
-"payment_type":  "bank_charge",
-"customer_note": "Direct bank charge example",
-})
+			"payment_type":  "bank_charge",
+			"customer_note": "Direct bank charge example",
+		})
 
 	charge, err := client.Charges.Create(ctx, createBuilder)
 	if err != nil {
@@ -109,12 +108,12 @@ func main() {
 		fmt.Println("   🏠 Address required - submitting address...")
 
 		addressBuilder := charges.NewSubmitAddressRequest(
-"123 Main Street, Apartment 4B",
-charge.Data.Reference,
-"Lagos",
-"Lagos",
-"100001",
-)
+			"123 Main Street, Apartment 4B",
+			charge.Data.Reference,
+			"Lagos",
+			"Lagos",
+			"100001",
+		)
 
 		addressCharge, err := client.Charges.SubmitAddress(ctx, addressBuilder)
 		if err != nil {

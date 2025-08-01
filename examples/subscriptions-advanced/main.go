@@ -20,20 +20,18 @@ func main() {
 	// Complete workflow: Create customer -> Create plan -> Create subscription
 	fmt.Println("=== Complete Subscription Workflow ===")
 
-	// 1. Create a customer
+	// 1. Create a customer using builder pattern
 	fmt.Println("\n1. Creating customer...")
-	customerReq := &customers.CustomerCreateRequest{
-		Email:     "subscriber@example.com",
-		FirstName: stringPtr("Premium"),
-		LastName:  stringPtr("Subscriber"),
-		Phone:     stringPtr("+2348123456789"),
-		Metadata: map[string]any{
+	customerBuilder := customers.NewCreateCustomerRequest("subscriber@example.com").
+		FirstName("Premium").
+		LastName("Subscriber").
+		Phone("+2348123456789").
+		Metadata(map[string]any{
 			"subscription_tier": "premium",
 			"signup_source":     "website",
-		},
-	}
+		})
 
-	customerResp, err := client.Customers.Create(context.Background(), customerReq)
+	customerResp, err := client.Customers.Create(context.Background(), customerBuilder)
 	if err != nil {
 		log.Fatalf("Failed to create customer: %v", err)
 	}

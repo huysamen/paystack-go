@@ -2,27 +2,46 @@ package customers
 
 import (
 	"context"
-	"errors"
 
 	"github.com/huysamen/paystack-go/net"
 	"github.com/huysamen/paystack-go/types"
 )
 
+// Request and Response types
 type DeactivateAuthorizationRequest struct {
 	AuthorizationCode string `json:"authorization_code"`
 }
-
 
 type DeactivateAuthorizationResponse struct {
 	Message string `json:"message"`
 }
 
-func (c *Client) DeactivateAuthorization(ctx context.Context, req *DeactivateAuthorizationRequest) (*types.Response[DeactivateAuthorizationResponse], error) {
-	if req == nil {
-		return nil, errors.New("request cannot be nil")
+// Builder for DeactivateAuthorizationRequest
+type DeactivateAuthorizationRequestBuilder struct {
+	authorizationCode string
+}
+
+// NewDeactivateAuthorizationRequest creates a new builder for deactivating authorization
+func NewDeactivateAuthorizationRequest(authorizationCode string) *DeactivateAuthorizationRequestBuilder {
+	return &DeactivateAuthorizationRequestBuilder{
+		authorizationCode: authorizationCode,
+	}
+}
+
+// Build creates the DeactivateAuthorizationRequest
+func (b *DeactivateAuthorizationRequestBuilder) Build() *DeactivateAuthorizationRequest {
+	return &DeactivateAuthorizationRequest{
+		AuthorizationCode: b.authorizationCode,
+	}
+}
+
+// DeactivateAuthorization deactivates an authorization with the provided builder
+func (c *Client) DeactivateAuthorization(ctx context.Context, builder *DeactivateAuthorizationRequestBuilder) (*types.Response[DeactivateAuthorizationResponse], error) {
+	if builder == nil {
+		return nil, ErrBuilderRequired
 	}
 
-
+	req := builder.Build()
 	path := customerBasePath + "/authorization/deactivate"
 
 	return net.Post[DeactivateAuthorizationRequest, DeactivateAuthorizationResponse](

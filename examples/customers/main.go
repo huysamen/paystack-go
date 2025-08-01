@@ -13,20 +13,18 @@ func main() {
 	// Initialize client
 	client := paystack.DefaultClient("sk_test_your_secret_key")
 
-	// Create a customer
-	createReq := &customers.CustomerCreateRequest{
-		Email:     "customer@example.com",
-		FirstName: stringPtr("John"),
-		LastName:  stringPtr("Doe"),
-		Phone:     stringPtr("+2348123456789"),
-		Metadata: map[string]any{
+	// Create a customer using builder pattern
+	createBuilder := customers.NewCreateCustomerRequest("customer@example.com").
+		FirstName("John").
+		LastName("Doe").
+		Phone("+2348123456789").
+		Metadata(map[string]any{
 			"user_id": "12345",
 			"type":    "premium",
-		},
-	}
+		})
 
 	fmt.Println("Creating customer...")
-	createResp, err := client.Customers.Create(context.Background(), createReq)
+	createResp, err := client.Customers.Create(context.Background(), createBuilder)
 	if err != nil {
 		log.Fatalf("Failed to create customer: %v", err)
 	}
@@ -64,47 +62,41 @@ func main() {
 	fmt.Printf("- Authorizations: %d\n", len(fetchResp.Data.Authorizations))
 	fmt.Printf("- Transactions: %d\n", len(fetchResp.Data.Transactions))
 
-	// Update customer
+	// Update customer using builder pattern
 	fmt.Println("\nUpdating customer...")
-	updateReq := &customers.CustomerUpdateRequest{
-		FirstName: stringPtr("Jane"),
-		Phone:     stringPtr("+2348987654321"),
-		Metadata: map[string]any{
+	updateBuilder := customers.NewUpdateCustomerRequest().
+		FirstName("Jane").
+		Phone("+2348987654321").
+		Metadata(map[string]any{
 			"user_id": "12345",
 			"type":    "premium",
 			"updated": true,
-		},
-	}
+		})
 
-	updateResp, err := client.Customers.Update(context.Background(), createResp.Data.CustomerCode, updateReq)
+	updateResp, err := client.Customers.Update(context.Background(), createResp.Data.CustomerCode, updateBuilder)
 	if err != nil {
 		log.Fatalf("Failed to update customer: %v", err)
 	}
 
-	fmt.Printf("Customer updated: %s\n", *updateResp.Data.FirstName)
+	fmt.Printf("Customer updated: %s\n", updateResp.Data.FirstName)
 
-	// Set risk action (whitelist customer)
+	// Set risk action (whitelist customer) using builder pattern
 	fmt.Println("\nWhitelisting customer...")
-	riskReq := &customers.CustomerRiskActionRequest{
-		Customer:   createResp.Data.CustomerCode,
-		RiskAction: (*customers.RiskAction)(&[]customers.RiskAction{customers.RiskActionAllow}[0]),
-	}
+	riskBuilder := customers.NewSetRiskActionRequest(createResp.Data.CustomerCode).
+		RiskAction(customers.RiskActionAllow)
 
-	riskResp, err := client.Customers.SetRiskAction(context.Background(), riskReq)
+	riskResp, err := client.Customers.SetRiskAction(context.Background(), riskBuilder)
 	if err != nil {
 		log.Fatalf("Failed to set risk action: %v", err)
 	}
 
 	fmt.Printf("Customer risk action set to: %s\n", riskResp.Data.RiskAction)
 
-	// Initialize authorization for direct debit
+	// Initialize authorization for direct debit using builder pattern
 	fmt.Println("\nInitializing authorization...")
-	authReq := &customers.AuthorizationInitializeRequest{
-		Email:   createResp.Data.Email,
-		Channel: "direct_debit",
-	}
+	authBuilder := customers.NewInitializeAuthorizationRequest(createResp.Data.Email, "direct_debit")
 
-	authResp, err := client.Customers.InitializeAuthorization(context.Background(), authReq)
+	authResp, err := client.Customers.InitializeAuthorization(context.Background(), authBuilder)
 	if err != nil {
 		log.Fatalf("Failed to initialize authorization: %v", err)
 	}

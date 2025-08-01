@@ -87,8 +87,8 @@ func (r *CustomerListRequest) toQuery() string {
 }
 
 type CustomerListResponse struct {
-	Data []Customer `json:"data"`
-	Meta types.Meta `json:"meta"`
+	Data []types.Customer `json:"data"`
+	Meta types.Meta       `json:"meta"`
 }
 
 // List lists customers using a builder (fluent interface)

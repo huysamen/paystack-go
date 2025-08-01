@@ -16,12 +16,10 @@ type SubscriptionCreateRequest struct {
 	StartDate     *time.Time `json:"start_date,omitempty"`    // Date for first debit (ISO 8601)
 }
 
-
 func (c *Client) Create(ctx context.Context, req *SubscriptionCreateRequest) (*types.Response[Subscription], error) {
 	if req == nil {
 		return nil, errors.New("request cannot be nil")
 	}
-
 
 	return net.Post[SubscriptionCreateRequest, Subscription](
 		ctx,
