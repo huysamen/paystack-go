@@ -35,15 +35,14 @@ func main() {
 
 	// Example 2: Create Dedicated Virtual Account for existing customer
 	fmt.Println("\n2. Creating dedicated virtual account for existing customer...")
-	createReq := &dedicatedvirtualaccount.CreateDedicatedVirtualAccountRequest{
-		Customer:      "CUS_xnxdt6s1zg5f4nx", // Replace with actual customer code
-		PreferredBank: preferredBank,
-		FirstName:     "John",
-		LastName:      "Doe",
-		Phone:         "+2348100000000",
-	}
+	createBuilder := dedicatedvirtualaccount.NewCreateDedicatedVirtualAccountBuilder().
+		Customer("CUS_xnxdt6s1zg5f4nx"). // Replace with actual customer code
+		PreferredBank(preferredBank).
+		FirstName("John").
+		LastName("Doe").
+		Phone("+2348100000000")
 
-	account, err := client.DedicatedVirtualAccount.Create(ctx, createReq)
+	account, err := client.DedicatedVirtualAccount.Create(ctx, createBuilder)
 	if err != nil {
 		log.Printf("Error creating dedicated virtual account: %v", err)
 		// Continue with other examples
@@ -54,17 +53,16 @@ func main() {
 
 	// Example 3: Assign Dedicated Virtual Account (create customer and assign)
 	fmt.Println("\n3. Assigning dedicated virtual account (create customer and assign)...")
-	assignReq := &dedicatedvirtualaccount.AssignDedicatedVirtualAccountRequest{
-		Email:         "jane.doe@example.com",
-		FirstName:     "Jane",
-		LastName:      "Doe",
-		Phone:         "+2348100000001",
-		PreferredBank: preferredBank,
-		Country:       "NG",
-		MiddleName:    "Ann",
-	}
+	assignBuilder := dedicatedvirtualaccount.NewAssignDedicatedVirtualAccountBuilder().
+		Email("jane.doe@example.com").
+		FirstName("Jane").
+		LastName("Doe").
+		Phone("+2348100000001").
+		PreferredBank(preferredBank).
+		Country("NG").
+		MiddleName("Ann")
 
-	assignResp, err := client.DedicatedVirtualAccount.Assign(ctx, assignReq)
+	assignResp, err := client.DedicatedVirtualAccount.Assign(ctx, assignBuilder)
 	if err != nil {
 		log.Printf("Error assigning dedicated virtual account: %v", err)
 	} else {
@@ -73,13 +71,11 @@ func main() {
 
 	// Example 4: List Dedicated Virtual Accounts
 	fmt.Println("\n4. Listing dedicated virtual accounts...")
-	active := true
-	listReq := &dedicatedvirtualaccount.ListDedicatedVirtualAccountsRequest{
-		Active:   &active,
-		Currency: "NGN",
-	}
+	listBuilder := dedicatedvirtualaccount.NewListDedicatedVirtualAccountsBuilder().
+		Active(true).
+		Currency("NGN")
 
-	accounts, err := client.DedicatedVirtualAccount.List(ctx, listReq)
+	accounts, err := client.DedicatedVirtualAccount.List(ctx, listBuilder)
 	if err != nil {
 		log.Printf("Error listing dedicated virtual accounts: %v", err)
 		return
@@ -111,13 +107,12 @@ func main() {
 
 		// Example 6: Split Transaction
 		fmt.Println("\n6. Adding split to dedicated virtual account...")
-		splitReq := &dedicatedvirtualaccount.SplitDedicatedAccountTransactionRequest{
-			Customer:      "CUS_xnxdt6s1zg5f4nx", // Replace with actual customer code
-			SplitCode:     "SPL_98WF13Zu8w5",     // Replace with actual split code
-			PreferredBank: preferredBank,
-		}
+		splitBuilder := dedicatedvirtualaccount.NewSplitDedicatedAccountTransactionBuilder().
+			Customer("CUS_xnxdt6s1zg5f4nx"). // Replace with actual customer code
+			SplitCode("SPL_98WF13Zu8w5").    // Replace with actual split code
+			PreferredBank(preferredBank)
 
-		splitAccount, err := client.DedicatedVirtualAccount.SplitTransaction(ctx, splitReq)
+		splitAccount, err := client.DedicatedVirtualAccount.SplitTransaction(ctx, splitBuilder)
 		if err != nil {
 			log.Printf("Error adding split to account: %v", err)
 		} else {
@@ -126,11 +121,10 @@ func main() {
 
 		// Example 7: Remove Split
 		fmt.Println("\n7. Removing split from dedicated virtual account...")
-		removeSplitReq := &dedicatedvirtualaccount.RemoveSplitFromDedicatedAccountRequest{
-			AccountNumber: fetchedAccount.AccountNumber,
-		}
+		removeSplitBuilder := dedicatedvirtualaccount.NewRemoveSplitFromDedicatedAccountBuilder().
+			AccountNumber(fetchedAccount.AccountNumber)
 
-		removeSplitResp, err := client.DedicatedVirtualAccount.RemoveSplit(ctx, removeSplitReq)
+		removeSplitResp, err := client.DedicatedVirtualAccount.RemoveSplit(ctx, removeSplitBuilder)
 		if err != nil {
 			log.Printf("Error removing split: %v", err)
 		} else {
@@ -141,13 +135,12 @@ func main() {
 	// Example 8: Requery Dedicated Account
 	if len(accounts.Data) > 0 {
 		fmt.Println("\n8. Requerying dedicated virtual account...")
-		requeryReq := &dedicatedvirtualaccount.RequeryDedicatedAccountRequest{
-			AccountNumber: accounts.Data[0].AccountNumber,
-			ProviderSlug:  accounts.Data[0].Bank.Slug,
-			Date:          "2024-01-15", // Replace with actual date
-		}
+		requeryBuilder := dedicatedvirtualaccount.NewRequeryDedicatedAccountBuilder().
+			AccountNumber(accounts.Data[0].AccountNumber).
+			ProviderSlug(accounts.Data[0].Bank.Slug).
+			Date("2024-01-15") // Replace with actual date
 
-		requeryResp, err := client.DedicatedVirtualAccount.Requery(ctx, requeryReq)
+		requeryResp, err := client.DedicatedVirtualAccount.Requery(ctx, requeryBuilder)
 		if err != nil {
 			log.Printf("Error requerying account: %v", err)
 		} else {
@@ -157,12 +150,11 @@ func main() {
 
 	// Example 9: List by provider (filter by bank)
 	fmt.Println("\n9. Listing accounts by provider...")
-	providerListReq := &dedicatedvirtualaccount.ListDedicatedVirtualAccountsRequest{
-		ProviderSlug: "wema-bank", // Replace with actual provider slug
-		Currency:     "NGN",
-	}
+	providerListBuilder := dedicatedvirtualaccount.NewListDedicatedVirtualAccountsBuilder().
+		ProviderSlug("wema-bank"). // Replace with actual provider slug
+		Currency("NGN")
 
-	providerAccounts, err := client.DedicatedVirtualAccount.List(ctx, providerListReq)
+	providerAccounts, err := client.DedicatedVirtualAccount.List(ctx, providerListBuilder)
 	if err != nil {
 		log.Printf("Error listing accounts by provider: %v", err)
 	} else {

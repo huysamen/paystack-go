@@ -6,18 +6,75 @@ import (
 	"github.com/huysamen/paystack-go/net"
 )
 
+// SplitDedicatedAccountTransactionRequest represents the request to add split to dedicated account
+type SplitDedicatedAccountTransactionRequest struct {
+	Customer      string `json:"customer"`
+	Subaccount    string `json:"subaccount,omitempty"`
+	SplitCode     string `json:"split_code,omitempty"`
+	PreferredBank string `json:"preferred_bank,omitempty"`
+}
+
+// SplitDedicatedAccountTransactionResponse represents the response from adding split to dedicated account
+type SplitDedicatedAccountTransactionResponse struct {
+	Status  bool                     `json:"status"`
+	Message string                   `json:"message"`
+	Data    *DedicatedVirtualAccount `json:"data"`
+}
+
+// SplitDedicatedAccountTransactionBuilder builds requests for splitting dedicated account transactions
+type SplitDedicatedAccountTransactionBuilder struct {
+	request *SplitDedicatedAccountTransactionRequest
+}
+
+// NewSplitDedicatedAccountTransactionBuilder creates a new builder for splitting dedicated account transactions
+func NewSplitDedicatedAccountTransactionBuilder() *SplitDedicatedAccountTransactionBuilder {
+	return &SplitDedicatedAccountTransactionBuilder{
+		request: &SplitDedicatedAccountTransactionRequest{},
+	}
+}
+
+// Customer sets the customer for splitting the dedicated account transaction
+func (b *SplitDedicatedAccountTransactionBuilder) Customer(customer string) *SplitDedicatedAccountTransactionBuilder {
+	b.request.Customer = customer
+	return b
+}
+
+// Subaccount sets the subaccount for splitting the dedicated account transaction
+func (b *SplitDedicatedAccountTransactionBuilder) Subaccount(subaccount string) *SplitDedicatedAccountTransactionBuilder {
+	b.request.Subaccount = subaccount
+	return b
+}
+
+// SplitCode sets the split code for splitting the dedicated account transaction
+func (b *SplitDedicatedAccountTransactionBuilder) SplitCode(splitCode string) *SplitDedicatedAccountTransactionBuilder {
+	b.request.SplitCode = splitCode
+	return b
+}
+
+// PreferredBank sets the preferred bank for splitting the dedicated account transaction
+func (b *SplitDedicatedAccountTransactionBuilder) PreferredBank(preferredBank string) *SplitDedicatedAccountTransactionBuilder {
+	b.request.PreferredBank = preferredBank
+	return b
+}
+
+// Build returns the built request
+func (b *SplitDedicatedAccountTransactionBuilder) Build() *SplitDedicatedAccountTransactionRequest {
+	return b.request
+}
+
 // SplitTransaction splits a dedicated virtual account transaction with one or more accounts
-func (c *Client) SplitTransaction(ctx context.Context, req *SplitDedicatedAccountTransactionRequest) (*DedicatedVirtualAccount, error) {
-	if err := validateSplitRequest(req); err != nil {
-		return nil, err
+func (c *Client) SplitTransaction(ctx context.Context, builder *SplitDedicatedAccountTransactionBuilder) (*DedicatedVirtualAccount, error) {
+	if builder == nil {
+		return nil, ErrBuilderRequired
 	}
 
+	req := builder.Build()
 	endpoint := dedicatedVirtualAccountBasePath + "/split"
-	resp, err := net.Post[SplitDedicatedAccountTransactionRequest, DedicatedVirtualAccount](
+	resp, err := net.Post[SplitDedicatedAccountTransactionRequest, SplitDedicatedAccountTransactionResponse](
 		ctx, c.client, c.secret, endpoint, req, c.baseURL,
 	)
 	if err != nil {
 		return nil, err
 	}
-	return &resp.Data, nil
+	return resp.Data.Data, nil
 }

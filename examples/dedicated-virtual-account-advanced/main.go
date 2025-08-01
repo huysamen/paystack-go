@@ -69,16 +69,15 @@ func createAccountWithValidation(ctx context.Context, client *paystack.Client) e
 	selectedProvider := providers.Data[0]
 	fmt.Printf("Using provider: %s (%s)\n", selectedProvider.BankName, selectedProvider.ProviderSlug)
 
-	// Create account request with full validation
-	createReq := &dedicatedvirtualaccount.CreateDedicatedVirtualAccountRequest{
-		Customer:      "CUS_example123",
-		PreferredBank: selectedProvider.ProviderSlug,
-		FirstName:     "John",
-		LastName:      "Doe",
-		Phone:         "+234801000000",
-	}
+	// Create account request with full validation using builder
+	createBuilder := dedicatedvirtualaccount.NewCreateDedicatedVirtualAccountBuilder().
+		Customer("CUS_example123").
+		PreferredBank(selectedProvider.ProviderSlug).
+		FirstName("John").
+		LastName("Doe").
+		Phone("+234801000000")
 
-	account, err := client.DedicatedVirtualAccount.Create(ctx, createReq)
+	account, err := client.DedicatedVirtualAccount.Create(ctx, createBuilder)
 	if err != nil {
 		return fmt.Errorf("failed to create account: %w", err)
 	}
@@ -90,14 +89,12 @@ func createAccountWithValidation(ctx context.Context, client *paystack.Client) e
 func manageAccountLifecycle(ctx context.Context, client *paystack.Client) error {
 	fmt.Println("\n2. Managing account lifecycle...")
 
-	// List active accounts
-	active := true
-	listReq := &dedicatedvirtualaccount.ListDedicatedVirtualAccountsRequest{
-		Active:   &active,
-		Currency: "NGN",
-	}
+	// List active accounts using builder
+	listBuilder := dedicatedvirtualaccount.NewListDedicatedVirtualAccountsBuilder().
+		Active(true).
+		Currency("NGN")
 
-	accounts, err := client.DedicatedVirtualAccount.List(ctx, listReq)
+	accounts, err := client.DedicatedVirtualAccount.List(ctx, listBuilder)
 	if err != nil {
 		return fmt.Errorf("failed to list accounts: %w", err)
 	}
@@ -119,15 +116,14 @@ func manageAccountLifecycle(ctx context.Context, client *paystack.Client) error 
 	fmt.Printf("✓ Account details: %s - Active: %t, Assigned: %t\n",
 		account.AccountNumber, account.Active, account.Assigned)
 
-	// Requery account status
+	// Requery account status using builder
 	if account.Bank.Slug != "" {
-		requeryReq := &dedicatedvirtualaccount.RequeryDedicatedAccountRequest{
-			AccountNumber: account.AccountNumber,
-			ProviderSlug:  account.Bank.Slug,
-			Date:          time.Now().Format("2006-01-02"),
-		}
+		requeryBuilder := dedicatedvirtualaccount.NewRequeryDedicatedAccountBuilder().
+			AccountNumber(account.AccountNumber).
+			ProviderSlug(account.Bank.Slug).
+			Date(time.Now().Format("2006-01-02"))
 
-		requeryResp, err := client.DedicatedVirtualAccount.Requery(ctx, requeryReq)
+		requeryResp, err := client.DedicatedVirtualAccount.Requery(ctx, requeryBuilder)
 		if err != nil {
 			return fmt.Errorf("failed to requery account: %w", err)
 		}
@@ -141,12 +137,11 @@ func manageAccountLifecycle(ctx context.Context, client *paystack.Client) error 
 func manageSplitTransactions(ctx context.Context, client *paystack.Client) error {
 	fmt.Println("\n3. Managing split transactions...")
 
-	// List accounts to work with
-	listReq := &dedicatedvirtualaccount.ListDedicatedVirtualAccountsRequest{
-		Currency: "NGN",
-	}
+	// List accounts to work with using builder
+	listBuilder := dedicatedvirtualaccount.NewListDedicatedVirtualAccountsBuilder().
+		Currency("NGN")
 
-	accounts, err := client.DedicatedVirtualAccount.List(ctx, listReq)
+	accounts, err := client.DedicatedVirtualAccount.List(ctx, listBuilder)
 	if err != nil {
 		return fmt.Errorf("failed to list accounts: %w", err)
 	}
@@ -156,26 +151,24 @@ func manageSplitTransactions(ctx context.Context, client *paystack.Client) error
 		return nil
 	}
 
-	// Example: Add split to account (requires valid split code)
-	splitReq := &dedicatedvirtualaccount.SplitDedicatedAccountTransactionRequest{
-		Customer:      "CUS_example123",
-		SplitCode:     "SPL_example123", // Replace with actual split code
-		PreferredBank: "wema-bank",      // Replace with actual provider
-	}
+	// Example: Add split to account (requires valid split code) using builder
+	splitBuilder := dedicatedvirtualaccount.NewSplitDedicatedAccountTransactionBuilder().
+		Customer("CUS_example123").
+		SplitCode("SPL_example123"). // Replace with actual split code
+		PreferredBank("wema-bank")   // Replace with actual provider
 
-	splitAccount, err := client.DedicatedVirtualAccount.SplitTransaction(ctx, splitReq)
+	splitAccount, err := client.DedicatedVirtualAccount.SplitTransaction(ctx, splitBuilder)
 	if err != nil {
 		// Expected to fail with test data, log but continue
 		log.Printf("Split addition failed (expected with test data): %v", err)
 	} else {
 		fmt.Printf("✓ Split added to account: %s\n", splitAccount.AccountNumber)
 
-		// Remove split from account
-		removeSplitReq := &dedicatedvirtualaccount.RemoveSplitFromDedicatedAccountRequest{
-			AccountNumber: splitAccount.AccountNumber,
-		}
+		// Remove split from account using builder
+		removeSplitBuilder := dedicatedvirtualaccount.NewRemoveSplitFromDedicatedAccountBuilder().
+			AccountNumber(splitAccount.AccountNumber)
 
-		removeSplitResp, err := client.DedicatedVirtualAccount.RemoveSplit(ctx, removeSplitReq)
+		removeSplitResp, err := client.DedicatedVirtualAccount.RemoveSplit(ctx, removeSplitBuilder)
 		if err != nil {
 			return fmt.Errorf("failed to remove split: %w", err)
 		}
@@ -200,14 +193,13 @@ func monitorAccounts(ctx context.Context, client *paystack.Client) error {
 		fmt.Printf("  - %s (%s)\n", provider.BankName, provider.ProviderSlug)
 	}
 
-	// Monitor accounts by provider
+	// Monitor accounts by provider using builder
 	for _, provider := range providers.Data[:min(3, len(providers.Data))] { // Check first 3 providers
-		listReq := &dedicatedvirtualaccount.ListDedicatedVirtualAccountsRequest{
-			ProviderSlug: provider.ProviderSlug,
-			Currency:     "NGN",
-		}
+		listBuilder := dedicatedvirtualaccount.NewListDedicatedVirtualAccountsBuilder().
+			ProviderSlug(provider.ProviderSlug).
+			Currency("NGN")
 
-		accounts, err := client.DedicatedVirtualAccount.List(ctx, listReq)
+		accounts, err := client.DedicatedVirtualAccount.List(ctx, listBuilder)
 		if err != nil {
 			log.Printf("Failed to list accounts for provider %s: %v", provider.BankName, err)
 			continue

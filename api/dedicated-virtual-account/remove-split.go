@@ -1,80 +1,60 @@
 package dedicatedvirtualaccount
 
 import (
-	"bytes"
 	"context"
-	"encoding/json"
-	"fmt"
-	"net/http"
 
+	"github.com/huysamen/paystack-go/net"
 	"github.com/huysamen/paystack-go/types"
 )
 
+// RemoveSplitFromDedicatedAccountRequest represents the request to remove split from dedicated account
+type RemoveSplitFromDedicatedAccountRequest struct {
+	AccountNumber string `json:"account_number"`
+}
+
+// RemoveSplitFromDedicatedAccountResponse represents the response from removing split from dedicated account
+type RemoveSplitFromDedicatedAccountResponse struct {
+	Status  bool                     `json:"status"`
+	Message string                   `json:"message"`
+	Data    *DedicatedVirtualAccount `json:"data"`
+}
+
+// RemoveSplitFromDedicatedAccountBuilder builds requests for removing split from dedicated accounts
+type RemoveSplitFromDedicatedAccountBuilder struct {
+	request *RemoveSplitFromDedicatedAccountRequest
+}
+
+// NewRemoveSplitFromDedicatedAccountBuilder creates a new builder for removing split from dedicated accounts
+func NewRemoveSplitFromDedicatedAccountBuilder() *RemoveSplitFromDedicatedAccountBuilder {
+	return &RemoveSplitFromDedicatedAccountBuilder{
+		request: &RemoveSplitFromDedicatedAccountRequest{},
+	}
+}
+
+// AccountNumber sets the account number for removing split from the dedicated account
+func (b *RemoveSplitFromDedicatedAccountBuilder) AccountNumber(accountNumber string) *RemoveSplitFromDedicatedAccountBuilder {
+	b.request.AccountNumber = accountNumber
+	return b
+}
+
+// Build returns the built request
+func (b *RemoveSplitFromDedicatedAccountBuilder) Build() *RemoveSplitFromDedicatedAccountRequest {
+	return b.request
+}
+
 // RemoveSplit removes split payment setup from a dedicated virtual account
-// Note: This uses a custom implementation because the Paystack API requires DELETE with body
-func (c *Client) RemoveSplit(ctx context.Context, req *RemoveSplitFromDedicatedAccountRequest) (*types.Response[DedicatedVirtualAccount], error) {
-	if err := validateRemoveSplitRequest(req); err != nil {
-		return nil, err
+func (c *Client) RemoveSplit(ctx context.Context, builder *RemoveSplitFromDedicatedAccountBuilder) (*types.Response[DedicatedVirtualAccount], error) {
+	if builder == nil {
+		return nil, ErrBuilderRequired
 	}
 
-	// Construct the full URL
+	req := builder.Build()
 	endpoint := dedicatedVirtualAccountBasePath + "/split"
-	baseURL := c.baseURL
-	if baseURL == "" {
-		baseURL = "https://api.paystack.co"
-	}
-	fullURL := baseURL + endpoint
-
-	// Marshal the request body
-	data, err := json.Marshal(req)
+	resp, err := net.DeleteWithBody[RemoveSplitFromDedicatedAccountRequest, DedicatedVirtualAccount](
+		ctx, c.client, c.secret, endpoint, req, c.baseURL,
+	)
 	if err != nil {
 		return nil, err
 	}
-
-	// Create the HTTP request
-	httpReq, err := http.NewRequestWithContext(ctx, http.MethodDelete, fullURL, bytes.NewBuffer(data))
-	if err != nil {
-		return nil, err
-	}
-
-	// Set headers
-	httpReq.Header.Set("Authorization", "Bearer "+c.secret)
-	httpReq.Header.Set("Content-Type", "application/json")
-
-	// Execute the request
-	resp, err := c.client.Do(httpReq)
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-
-	// Read response body
-	var buf bytes.Buffer
-	_, err = buf.ReadFrom(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-	body := buf.Bytes()
-
-	// Check for HTTP errors
-	if resp.StatusCode >= 400 {
-		var paystackErr map[string]any
-		if err := json.Unmarshal(body, &paystackErr); err == nil {
-			if msg, ok := paystackErr["message"].(string); ok {
-				return nil, fmt.Errorf("paystack api error (status %d): %s", resp.StatusCode, msg)
-			}
-		}
-		return nil, fmt.Errorf("paystack api error (status %d)", resp.StatusCode)
-	}
-
-	// Parse response
-	result := new(types.Response[DedicatedVirtualAccount])
-	if len(body) > 0 {
-		err = json.Unmarshal(body, result)
-		if err != nil {
-			return nil, err
-		}
-	}
-
-	return result, nil
+	return resp, nil
 }
