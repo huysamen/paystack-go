@@ -26,10 +26,8 @@ func main() {
 
 	fmt.Printf("Current payment session timeout: %d seconds\n", timeout.Data.PaymentSessionTimeout)
 
-	// Update payment session timeout to 45 seconds
-	updateReq := &integration.UpdateTimeoutRequest{
-		Timeout: 45,
-	}
+	// Update payment session timeout to 45 seconds using builder pattern
+	updateReq := integration.NewUpdateTimeoutRequest(45)
 
 	updatedTimeout, err := client.Integration.UpdateTimeout(ctx, updateReq)
 	if err != nil {
@@ -39,9 +37,7 @@ func main() {
 	fmt.Printf("Updated payment session timeout: %d seconds\n", updatedTimeout.Data.PaymentSessionTimeout)
 
 	// Set timeout to 0 to disable session timeouts
-	disableReq := &integration.UpdateTimeoutRequest{
-		Timeout: 0,
-	}
+	disableReq := integration.NewUpdateTimeoutRequest(0)
 
 	disabledTimeout, err := client.Integration.UpdateTimeout(ctx, disableReq)
 	if err != nil {
@@ -51,9 +47,7 @@ func main() {
 	fmt.Printf("Session timeouts disabled (timeout: %d)\n", disabledTimeout.Data.PaymentSessionTimeout)
 
 	// Restore original timeout
-	restoreReq := &integration.UpdateTimeoutRequest{
-		Timeout: timeout.Data.PaymentSessionTimeout,
-	}
+	restoreReq := integration.NewUpdateTimeoutRequest(timeout.Data.PaymentSessionTimeout)
 
 	restoredTimeout, err := client.Integration.UpdateTimeout(ctx, restoreReq)
 	if err != nil {

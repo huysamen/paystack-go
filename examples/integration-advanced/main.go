@@ -65,9 +65,7 @@ func main() {
 		fmt.Printf("%d. Configuring %s...\n", i+2, scenario.name)
 		fmt.Printf("   %s\n", scenario.description)
 
-		updateReq := &integration.UpdateTimeoutRequest{
-			Timeout: scenario.timeout,
-		}
+		updateReq := integration.NewUpdateTimeoutRequest(scenario.timeout)
 
 		updatedTimeout, err := client.Integration.UpdateTimeout(ctx, updateReq)
 		if err != nil {
@@ -101,9 +99,7 @@ func main() {
 
 	// 3. Restore original timeout
 	fmt.Println("5. Restoring original timeout settings...")
-	restoreReq := &integration.UpdateTimeoutRequest{
-		Timeout: originalTimeout.Data.PaymentSessionTimeout,
-	}
+	restoreReq := integration.NewUpdateTimeoutRequest(originalTimeout.Data.PaymentSessionTimeout)
 
 	restoredTimeout, err := client.Integration.UpdateTimeout(ctx, restoreReq)
 	if err != nil {
@@ -130,9 +126,7 @@ func main() {
 	fmt.Println("=== Error Handling Example ===")
 
 	// Try to set an invalid timeout (negative value)
-	invalidReq := &integration.UpdateTimeoutRequest{
-		Timeout: -1,
-	}
+	invalidReq := integration.NewUpdateTimeoutRequest(-1)
 
 	_, err = client.Integration.UpdateTimeout(ctx, invalidReq)
 	if err != nil {

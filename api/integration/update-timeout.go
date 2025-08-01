@@ -2,17 +2,62 @@ package integration
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/huysamen/paystack-go/net"
+	"github.com/huysamen/paystack-go/types"
 )
 
+// UpdateTimeoutRequest represents the request to update payment session timeout
+type UpdateTimeoutRequest struct {
+	Timeout int `json:"timeout"`
+}
+
+// UpdateTimeoutRequestBuilder provides a fluent interface for building UpdateTimeoutRequest
+type UpdateTimeoutRequestBuilder struct {
+	req *UpdateTimeoutRequest
+}
+
+// NewUpdateTimeoutRequest creates a new builder for UpdateTimeoutRequest
+func NewUpdateTimeoutRequest(timeout int) *UpdateTimeoutRequestBuilder {
+	return &UpdateTimeoutRequestBuilder{
+		req: &UpdateTimeoutRequest{
+			Timeout: timeout,
+		},
+	}
+}
+
+// Build returns the constructed UpdateTimeoutRequest
+func (b *UpdateTimeoutRequestBuilder) Build() *UpdateTimeoutRequest {
+	return b.req
+}
+
+// UpdateTimeoutResponse represents the response from updating payment session timeout
+type UpdateTimeoutResponse = types.Response[UpdateTimeoutData]
+
+// UpdateTimeoutData contains the updated payment session timeout information
+type UpdateTimeoutData struct {
+	PaymentSessionTimeout int `json:"payment_session_timeout"`
+}
+
 // UpdateTimeout updates the payment session timeout on your integration
-func (c *Client) UpdateTimeout(ctx context.Context, req *UpdateTimeoutRequest) (*UpdateTimeoutResponse, error) {
-	if req == nil {
-		return nil, fmt.Errorf("update timeout request cannot be nil")
+func (c *Client) UpdateTimeout(ctx context.Context, builder *UpdateTimeoutRequestBuilder) (*UpdateTimeoutResponse, error) {
+	if builder == nil {
+		return nil, ErrBuilderRequired
 	}
 
-	url := c.baseURL + integrationBasePath + "/payment_session_timeout"
-	return net.Put[UpdateTimeoutRequest, UpdateTimeoutData](ctx, c.client, c.secret, url, req)
+	req := builder.Build()
+
+	resp, err := net.Put[UpdateTimeoutRequest, UpdateTimeoutData](
+		ctx,
+		c.client,
+		c.secret,
+		integrationBasePath+"/payment_session_timeout",
+		req,
+		c.baseURL,
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	return resp, nil
 }

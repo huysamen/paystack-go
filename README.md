@@ -2562,7 +2562,7 @@ func main() {
 
     fmt.Printf("Current payment session timeout: %d seconds\n", timeout.Data.PaymentSessionTimeout)
 
-    // Configure timeout for different checkout scenarios
+    // Configure timeout for different checkout scenarios using builder pattern
     scenarios := []struct {
         name    string
         timeout int
@@ -2577,9 +2577,8 @@ func main() {
     for _, scenario := range scenarios {
         fmt.Printf("\nConfiguring %s (%s)...\n", scenario.name, scenario.useCase)
         
-        updateReq := &integration.UpdateTimeoutRequest{
-            Timeout: scenario.timeout,
-        }
+        // Use builder pattern for timeout updates
+        updateReq := integration.NewUpdateTimeoutRequest(scenario.timeout)
 
         updatedTimeout, err := client.Integration.UpdateTimeout(ctx, updateReq)
         if err != nil {
