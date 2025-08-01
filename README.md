@@ -33,33 +33,6 @@ A comprehensive Go client library for the [Paystack API](https://paystack.com/do
 - ✅ **Configuration**: Support for different environments and custom HTTP clients
 - ✅ **Builder Pattern**: Fluent, chainable API for complex requests (Transactions module) - no more `&[]int{50}[0]` syntax!
 
-## Key Improvements
-
-### Clean Builder Pattern API
-
-This library is migrating to a fluent builder pattern for complex requests, eliminating the need for awkward pointer syntax:
-
-```go
-// ❌ Old way (error-prone)
-req := &transactions.TransactionListRequest{
-    PerPage:  &[]int{50}[0],
-    Page:     &[]int{1}[0],
-    Customer: &[]uint64{12345}[0],
-    Status:   &[]string{"success"}[0],
-}
-
-// ✅ New way (clean and readable) - Available for Transactions
-builder := transactions.NewTransactionListRequest().
-    PerPage(50).
-    Page(1).
-    Customer(12345).
-    Status("success")
-
-resp, err := client.Transactions.List(context.Background(), builder)
-```
-
-> **Note**: The builder pattern is currently available for **Transactions** and is being gradually rolled out to other modules. Other examples in this README will be updated as the pattern is implemented across all APIs.
-
 ## Installation
 
 ```bash
