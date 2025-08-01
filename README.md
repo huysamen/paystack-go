@@ -2535,34 +2535,21 @@ import (
     "log"
 
     "github.com/huysamen/paystack-go"
-    "github.com/huysamen/paystack-go/api/bulk-charges"
+    bulkcharges "github.com/huysamen/paystack-go/api/bulk-charges"
 )
 
 func main() {
     client := paystack.DefaultClient("sk_test_your_secret_key_here")
     ctx := context.Background()
 
-    // Prepare bulk charges (e.g., salary payments)
-    charges := bulkcharges.InitiateBulkChargeRequest{
-        {
-            Authorization: "AUTH_employee_001",
-            Amount:        250000, // ₦2,500.00 salary
-            Reference:     "salary-jan-2024-001",
-        },
-        {
-            Authorization: "AUTH_employee_002", 
-            Amount:        180000, // ₦1,800.00 salary
-            Reference:     "salary-jan-2024-002",
-        },
-        {
-            Authorization: "AUTH_employee_003",
-            Amount:        320000, // ₦3,200.00 salary  
-            Reference:     "salary-jan-2024-003",
-        },
-    }
+    // Prepare bulk charges using builder pattern (e.g., salary payments)
+    chargesBuilder := bulkcharges.NewInitiateBulkChargeRequest().
+        AddItem("AUTH_employee_001", 250000, "salary-jan-2024-001"). // ₦2,500.00 salary
+        AddItem("AUTH_employee_002", 180000, "salary-jan-2024-002"). // ₦1,800.00 salary
+        AddItem("AUTH_employee_003", 320000, "salary-jan-2024-003")  // ₦3,200.00 salary
 
     // Initiate bulk charge batch
-    batch, err := client.BulkCharges.Initiate(ctx, charges)
+    batch, err := client.BulkCharges.Initiate(ctx, chargesBuilder)
     if err != nil {
         log.Fatal(err)
     }
@@ -2581,11 +2568,10 @@ func main() {
         fetchedBatch.Data.PendingCharges, 
         fetchedBatch.Data.TotalCharges)
 
-    // Get detailed charge information
-    chargesReq := &bulkcharges.FetchChargesInBatchRequest{
-        PerPage: &[]int{50}[0],
-        Status:  &[]string{"success"}[0], // Filter successful charges
-    }
+    // Get detailed charge information using builder
+    chargesReq := bulkcharges.NewFetchChargesInBatchRequest().
+        PerPage(50).
+        Status("success") // Filter successful charges
 
     chargeDetails, err := client.BulkCharges.FetchChargesInBatch(
         ctx, batch.Data.BatchCode, chargesReq)
@@ -2600,6 +2586,19 @@ func main() {
             float64(charge.Amount)/100,
             charge.Customer.Email)
     }
+
+    // List bulk charge batches with date filtering using builder
+    listReq := bulkcharges.NewListBulkChargeBatchesRequest().
+        PerPage(20).
+        Page(1).
+        DateRange("2024-01-01", "2024-01-31")
+
+    batches, err := client.BulkCharges.List(ctx, listReq)
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    fmt.Printf("Found %d batches in January 2024\n", len(batches.Data))
 
     // Pause batch if needed (for large batches)
     if fetchedBatch.Data.Status == "active" {

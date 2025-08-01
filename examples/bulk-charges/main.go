@@ -21,29 +21,17 @@ func main() {
 	client := paystack.DefaultClient(apiKey)
 	ctx := context.Background()
 
-	fmt.Println("=== Bulk Charges API - Basic Examples ===\n")
+	fmt.Println("=== Bulk Charges API - Basic Examples ===")
+	fmt.Println()
 
-	// 1. Initiate Bulk Charge
+	// 1. Initiate Bulk Charge using builder
 	fmt.Println("1. Initiating bulk charge...")
-	charges := bulkcharges.InitiateBulkChargeRequest{
-		{
-			Authorization: "AUTH_example_123",
-			Amount:        2500, // ₦25.00 in kobo
-			Reference:     "bulk-charge-ref-001",
-		},
-		{
-			Authorization: "AUTH_example_456",
-			Amount:        5000, // ₦50.00 in kobo
-			Reference:     "bulk-charge-ref-002",
-		},
-		{
-			Authorization: "AUTH_example_789",
-			Amount:        7500, // ₦75.00 in kobo
-			Reference:     "bulk-charge-ref-003",
-		},
-	}
+	initiateBuilder := bulkcharges.NewInitiateBulkChargeRequest().
+		AddItem("AUTH_example_123", 2500, "bulk-charge-ref-001"). // ₦25.00 in kobo
+		AddItem("AUTH_example_456", 5000, "bulk-charge-ref-002"). // ₦50.00 in kobo
+		AddItem("AUTH_example_789", 7500, "bulk-charge-ref-003")  // ₦75.00 in kobo
 
-	batch, err := client.BulkCharges.Initiate(ctx, charges)
+	batch, err := client.BulkCharges.Initiate(ctx, initiateBuilder)
 	if err != nil {
 		log.Printf("Error initiating bulk charge: %v", err)
 		// Continue with other examples using a placeholder batch code
@@ -58,16 +46,13 @@ func main() {
 	}
 	fmt.Println()
 
-	// 2. List Bulk Charge Batches
+	// 2. List Bulk Charge Batches using builder
 	fmt.Println("2. Listing bulk charge batches...")
-	perPage := 10
-	page := 1
-	listReq := &bulkcharges.ListBulkChargeBatchesRequest{
-		PerPage: &perPage,
-		Page:    &page,
-	}
+	listBuilder := bulkcharges.NewListBulkChargeBatchesRequest().
+		PerPage(10).
+		Page(1)
 
-	batches, err := client.BulkCharges.List(ctx, listReq)
+	batches, err := client.BulkCharges.List(ctx, listBuilder)
 	if err != nil {
 		log.Printf("Error listing bulk charge batches: %v", err)
 	} else {
@@ -99,15 +84,14 @@ func main() {
 	}
 	fmt.Println()
 
-	// 4. Fetch Charges in a Batch
+	// 4. Fetch Charges in a Batch using builder
 	fmt.Println("4. Fetching charges in batch...")
 	if batch != nil && batch.Data.BatchCode != "" {
-		chargesReq := &bulkcharges.FetchChargesInBatchRequest{
-			PerPage: &perPage,
-			Page:    &page,
-		}
+		chargesBuilder := bulkcharges.NewFetchChargesInBatchRequest().
+			PerPage(10).
+			Page(1)
 
-		charges, err := client.BulkCharges.FetchChargesInBatch(ctx, batch.Data.BatchCode, chargesReq)
+		charges, err := client.BulkCharges.FetchChargesInBatch(ctx, batch.Data.BatchCode, chargesBuilder)
 		if err != nil {
 			log.Printf("Error fetching charges in batch: %v", err)
 		} else {

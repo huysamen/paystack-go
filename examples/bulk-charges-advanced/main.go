@@ -30,7 +30,11 @@ func main() {
 	fmt.Println("===================================")
 
 	// Simulate a large batch of charges (e.g., salary payments)
+	chargesBuilder := bulkcharges.NewInitiateBulkChargeRequest()
+
+	// Add sample charges using the builder
 	charges := generateSampleCharges(50) // Generate 50 sample charges
+	chargesBuilder.AddItems(charges)
 
 	fmt.Printf("Preparing bulk charge with %d items...\n", len(charges))
 
@@ -43,7 +47,7 @@ func main() {
 	fmt.Printf("Total amount to be charged: ₦%.2f\n", float64(totalAmount)/100)
 	fmt.Printf("Average per charge: ₦%.2f\n", float64(totalAmount)/float64(len(charges))/100)
 
-	batch, err := client.BulkCharges.Initiate(ctx, charges)
+	batch, err := client.BulkCharges.Initiate(ctx, chargesBuilder)
 	if err != nil {
 		log.Printf("Error initiating bulk charge: %v", err)
 	} else {
@@ -117,13 +121,12 @@ func main() {
 	if batch != nil {
 		batchCode := batch.Data.BatchCode
 
-		// Fetch all charges in the batch
-		chargesReq := &bulkcharges.FetchChargesInBatchRequest{
-			PerPage: func() *int { p := 100; return &p }(),
-			Page:    func() *int { p := 1; return &p }(),
-		}
+		// Fetch all charges in the batch using builder
+		chargesBuilder := bulkcharges.NewFetchChargesInBatchRequest().
+			PerPage(100).
+			Page(1)
 
-		charges, err := client.BulkCharges.FetchChargesInBatch(ctx, batchCode, chargesReq)
+		charges, err := client.BulkCharges.FetchChargesInBatch(ctx, batchCode, chargesBuilder)
 		if err != nil {
 			log.Printf("Error fetching charges: %v", err)
 		} else {
@@ -158,18 +161,16 @@ func main() {
 	fmt.Println("4. Historical Batch Analysis")
 	fmt.Println("============================")
 
-	// Get recent batches with date filtering
+	// Get recent batches with date filtering using builder
 	thirtyDaysAgo := time.Now().AddDate(0, 0, -30).Format("2006-01-02")
 	today := time.Now().Format("2006-01-02")
 
-	listReq := &bulkcharges.ListBulkChargeBatchesRequest{
-		PerPage: func() *int { p := 20; return &p }(),
-		Page:    func() *int { p := 1; return &p }(),
-		From:    &thirtyDaysAgo,
-		To:      &today,
-	}
+	listBuilder := bulkcharges.NewListBulkChargeBatchesRequest().
+		PerPage(20).
+		Page(1).
+		DateRange(thirtyDaysAgo, today)
 
-	batches, err := client.BulkCharges.List(ctx, listReq)
+	batches, err := client.BulkCharges.List(ctx, listBuilder)
 	if err != nil {
 		log.Printf("Error listing batches: %v", err)
 	} else {
@@ -226,8 +227,8 @@ func main() {
 }
 
 // generateSampleCharges creates sample charges for demonstration
-func generateSampleCharges(count int) bulkcharges.InitiateBulkChargeRequest {
-	charges := make(bulkcharges.InitiateBulkChargeRequest, count)
+func generateSampleCharges(count int) []bulkcharges.BulkChargeItem {
+	charges := make([]bulkcharges.BulkChargeItem, count)
 
 	baseAmounts := []int64{2500, 5000, 7500, 10000, 15000} // Various amounts
 

@@ -3,46 +3,63 @@ package bulkcharges
 import (
 	"context"
 	"errors"
-	"strings"
 
 	"github.com/huysamen/paystack-go/net"
 )
 
-// ValidateInitiateBulkChargeRequest validates the initiate bulk charge request
-func ValidateInitiateBulkChargeRequest(req InitiateBulkChargeRequest) error {
-	if len(req) == 0 {
-		return errors.New("at least one bulk charge item is required")
+// InitiateBulkChargeRequest represents the request to initiate a bulk charge
+type InitiateBulkChargeRequest []BulkChargeItem
+
+// InitiateBulkChargeRequestBuilder provides a fluent interface for building InitiateBulkChargeRequest
+type InitiateBulkChargeRequestBuilder struct {
+	req *InitiateBulkChargeRequest
+}
+
+// NewInitiateBulkChargeRequest creates a new builder for InitiateBulkChargeRequest
+func NewInitiateBulkChargeRequest() *InitiateBulkChargeRequestBuilder {
+	return &InitiateBulkChargeRequestBuilder{
+		req: &InitiateBulkChargeRequest{},
 	}
+}
 
-	if len(req) > 200 {
-		return errors.New("maximum of 200 charges allowed per bulk charge request")
-	}
+// AddItem adds a bulk charge item to the request
+func (b *InitiateBulkChargeRequestBuilder) AddItem(authorization string, amount int64, reference string) *InitiateBulkChargeRequestBuilder {
+	*b.req = append(*b.req, BulkChargeItem{
+		Authorization: authorization,
+		Amount:        amount,
+		Reference:     reference,
+	})
+	return b
+}
 
-	for i, item := range req {
-		if strings.TrimSpace(item.Authorization) == "" {
-			return errors.New("authorization is required for bulk charge item at index " +
-				string(rune(i)))
-		}
+// AddItems adds multiple bulk charge items to the request
+func (b *InitiateBulkChargeRequestBuilder) AddItems(items []BulkChargeItem) *InitiateBulkChargeRequestBuilder {
+	*b.req = append(*b.req, items...)
+	return b
+}
 
-		if item.Amount <= 0 {
-			return errors.New("amount must be greater than 0 for bulk charge item at index " +
-				string(rune(i)))
-		}
+// Build returns the constructed InitiateBulkChargeRequest
+func (b *InitiateBulkChargeRequestBuilder) Build() *InitiateBulkChargeRequest {
+	return b.req
+}
 
-		if strings.TrimSpace(item.Reference) == "" {
-			return errors.New("reference is required for bulk charge item at index " +
-				string(rune(i)))
-		}
-	}
-
-	return nil
+// InitiateBulkChargeResponse represents the response from initiating a bulk charge
+type InitiateBulkChargeResponse struct {
+	Status  bool            `json:"status"`
+	Message string          `json:"message"`
+	Data    BulkChargeBatch `json:"data"`
 }
 
 // Initiate sends an array of objects with authorization codes and amounts for batch processing
-func (c *Client) Initiate(ctx context.Context, req InitiateBulkChargeRequest) (*InitiateBulkChargeResponse, error) {
+func (c *Client) Initiate(ctx context.Context, builder *InitiateBulkChargeRequestBuilder) (*InitiateBulkChargeResponse, error) {
+	if builder == nil {
+		return nil, errors.New("builder cannot be nil")
+	}
+
+	req := builder.Build()
 
 	resp, err := net.Post[InitiateBulkChargeRequest, InitiateBulkChargeResponse](
-		ctx, c.client, c.secret, bulkChargesBasePath, &req, c.baseURL,
+		ctx, c.client, c.secret, bulkChargesBasePath, req, c.baseURL,
 	)
 	if err != nil {
 		return nil, err
