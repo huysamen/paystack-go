@@ -1,64 +1,69 @@
 package disputes
 
 import (
-	"context"
-	"fmt"
+"context"
+"errors"
 
-	"github.com/huysamen/paystack-go/net"
+"github.com/huysamen/paystack-go/net"
+"github.com/huysamen/paystack-go/types"
 )
 
-// Resolve resolves a dispute on your integration
-func (c *Client) Resolve(ctx context.Context, disputeID string, req *DisputeResolveRequest) (*DisputeResolveResponse, error) {
-	if disputeID == "" {
-		return nil, fmt.Errorf("dispute ID is required")
-	}
-
-	if req == nil {
-		return nil, fmt.Errorf("resolve dispute request cannot be nil")
-	}
-
-	if err := validateDisputeResolveRequest(req); err != nil {
-		return nil, err
-	}
-
-	url := c.baseURL + disputesBasePath + "/" + disputeID + "/resolve"
-	return net.Put[DisputeResolveRequest, Dispute](ctx, c.client, c.secret, url, req)
+// ResolveDisputeRequest represents the request to resolve a dispute
+type ResolveDisputeRequest struct {
+	Resolution       DisputeResolution `json:"resolution"`
+	Message          string            `json:"message"`
+	RefundAmount     int               `json:"refund_amount"`
+	UploadedFileName string            `json:"uploaded_filename"`
+	Evidence         *int              `json:"evidence,omitempty"`
 }
 
-// validateDisputeResolveRequest validates the dispute resolve request
-func validateDisputeResolveRequest(req *DisputeResolveRequest) error {
-	if req.Resolution == "" {
-		return fmt.Errorf("resolution is required")
+// ResolveDisputeResponse represents the response from resolving a dispute
+type ResolveDisputeResponse = types.Response[Dispute]
+
+// ResolveDisputeBuilder builds requests for resolving disputes
+type ResolveDisputeBuilder struct {
+	request *ResolveDisputeRequest
+}
+
+// NewResolveDisputeBuilder creates a new builder for resolving disputes
+func NewResolveDisputeBuilder(resolution DisputeResolution, message string, refundAmount int, uploadedFileName string) *ResolveDisputeBuilder {
+	return &ResolveDisputeBuilder{
+		request: &ResolveDisputeRequest{
+			Resolution:       resolution,
+			Message:          message,
+			RefundAmount:     refundAmount,
+			UploadedFileName: uploadedFileName,
+		},
+	}
+}
+
+// Evidence sets the evidence ID
+func (b *ResolveDisputeBuilder) Evidence(evidence int) *ResolveDisputeBuilder {
+	b.request.Evidence = &evidence
+	return b
+}
+
+// Build returns the built request
+func (b *ResolveDisputeBuilder) Build() *ResolveDisputeRequest {
+	return b.request
+}
+
+// Resolve resolves a dispute on your integration
+func (c *Client) Resolve(ctx context.Context, disputeID string, builder *ResolveDisputeBuilder) (*types.Response[Dispute], error) {
+	if disputeID == "" {
+		return nil, errors.New("dispute ID is required")
 	}
 
-	validResolutions := []string{
-		string(DisputeResolutionMerchantAccepted),
-		string(DisputeResolutionDeclined),
+	if builder == nil {
+		return nil, errors.New(ErrBuilderRequired)
 	}
 
-	valid := false
-	for _, resolution := range validResolutions {
-		if string(req.Resolution) == resolution {
-			valid = true
-			break
-		}
-	}
+	endpoint := c.baseURL + disputesBasePath + "/" + disputeID + "/resolve"
+	req := builder.Build()
 
-	if !valid {
-		return fmt.Errorf("invalid dispute resolution: %s", req.Resolution)
+	resp, err := net.Put[ResolveDisputeRequest, Dispute](ctx, c.client, c.secret, endpoint, req, c.baseURL)
+	if err != nil {
+		return nil, err
 	}
-
-	if req.Message == "" {
-		return fmt.Errorf("message is required")
-	}
-
-	if req.RefundAmount < 0 {
-		return fmt.Errorf("refund amount must be greater than or equal to 0")
-	}
-
-	if req.UploadedFileName == "" {
-		return fmt.Errorf("uploaded filename is required")
-	}
-
-	return nil
+	return resp, nil
 }

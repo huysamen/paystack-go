@@ -23,7 +23,7 @@ A comprehensive Go client library for the [Paystack API](https://paystack.com/do
 - ✅ **Dedicated Virtual Account**: Create and manage dedicated virtual accounts for unique customer payments
 - ✅ **Apple Pay**: Register and manage domains for Apple Pay integration
 - ✅ **Charges**: Create charges for multiple payment channels (card, bank, USSD, mobile money, QR, transfer) with submission workflows
-- ✅ **Disputes**: Manage transaction disputes with evidence handling, resolution workflows, and comprehensive documentation
+- ✅ **Disputes**: Manage transaction disputes with evidence handling, resolution workflows, and comprehensive documentation with builder pattern support
 - ✅ **Refunds**: Process transaction refunds with full or partial amounts, customer communication, and comprehensive tracking
 - ✅ **Integration**: Manage payment session timeout settings and integration configuration
 - ✅ **Verification**: Resolve account numbers, validate accounts, resolve card BINs
@@ -31,7 +31,7 @@ A comprehensive Go client library for the [Paystack API](https://paystack.com/do
 - ✅ **Type Safety**: Strongly typed request/response structures
 - ✅ **Error Handling**: Clean, intuitive error handling with API errors as Response objects
 - ✅ **Configuration**: Support for different environments and custom HTTP clients
-- ✅ **Builder Pattern**: Fluent, chainable API for complex requests (Transactions, Bulk Charges, Apple Pay, Charges, Customers, Dedicated Virtual Account, Direct Debit modules) - no more `&[]int{50}[0]` syntax!
+- ✅ **Builder Pattern**: Fluent, chainable API for complex requests (Transactions, Bulk Charges, Apple Pay, Charges, Customers, Dedicated Virtual Account, Direct Debit, Disputes modules) - no more `&[]int{50}[0]` syntax!
 
 ## Installation
 
@@ -2244,14 +2244,13 @@ func main() {
     client := paystack.DefaultClient("sk_test_your_secret_key_here")
     ctx := context.Background()
 
-    // List all disputes with filtering
-    listReq := &disputes.DisputeListRequest{
-        Status:  &[]disputes.DisputeStatus{disputes.DisputeStatusPending}[0],
-        PerPage: &[]int{10}[0],
-        From:    &[]time.Time{time.Now().AddDate(0, -1, 0)}[0], // Last month
-    }
+    // List all disputes with filtering using builder pattern
+    listBuilder := disputes.NewListDisputesBuilder().
+        Status(disputes.DisputeStatusPending).
+        PerPage(10).
+        From(time.Now().AddDate(0, -1, 0)) // Last month
 
-    disputesList, err := client.Disputes.List(ctx, listReq)
+    disputesList, err := client.Disputes.List(ctx, listBuilder)
     if err != nil {
         log.Fatal(err)
     }
@@ -2276,16 +2275,15 @@ func main() {
                 float64(detailedDispute.Data.Transaction.Amount)/100)
         }
 
-        // Add evidence to support your case
-        evidenceReq := &disputes.DisputeEvidenceRequest{
-            CustomerEmail:   "customer@example.com",
-            CustomerName:    "John Doe",
-            CustomerPhone:   "+2348123456789",
-            ServiceDetails:  "Product delivered successfully with tracking number. Customer confirmed receipt via phone.",
-            DeliveryAddress: &[]string{"123 Main Street, Lagos, Nigeria"}[0],
-        }
+        // Add evidence to support your case using builder pattern
+        evidenceBuilder := disputes.NewAddEvidenceBuilder(
+            "customer@example.com",
+            "John Doe",
+            "+2348123456789",
+            "Product delivered successfully with tracking number. Customer confirmed receipt via phone.",
+        ).DeliveryAddress("123 Main Street, Lagos, Nigeria")
 
-        evidence, err := client.Disputes.AddEvidence(ctx, disputeID, evidenceReq)
+        evidence, err := client.Disputes.AddEvidence(ctx, disputeID, evidenceBuilder)
         if err != nil {
             log.Fatal(err)
         }
@@ -2293,11 +2291,9 @@ func main() {
         fmt.Printf("Evidence added: ID %d\n", evidence.Data.ID)
 
         // Get upload URL for supporting documents
-        uploadReq := &disputes.DisputeUploadURLRequest{
-            UploadFileName: "delivery-receipt.pdf",
-        }
+        uploadBuilder := disputes.NewGetUploadURLBuilder("delivery-receipt.pdf")
 
-        uploadURL, err := client.Disputes.GetUploadURL(ctx, disputeID, uploadReq)
+        uploadURL, err := client.Disputes.GetUploadURL(ctx, disputeID, uploadBuilder)
         if err != nil {
             log.Fatal(err)
         }
@@ -2306,24 +2302,23 @@ func main() {
         // Use the uploadURL.Data.SignedURL to upload your file
 
         // Update dispute with additional information
-        updateReq := &disputes.DisputeUpdateRequest{
-            RefundAmount: &[]int{0}[0], // No refund needed
-        }
+        updateBuilder := disputes.NewUpdateDisputeBuilder().
+            RefundAmount(0) // No refund needed
 
-        _, err = client.Disputes.Update(ctx, disputeID, updateReq)
+        _, err = client.Disputes.Update(ctx, disputeID, updateBuilder)
         if err != nil {
             log.Fatal(err)
         }
 
         // Resolve the dispute after gathering evidence
-        resolveReq := &disputes.DisputeResolveRequest{
-            Resolution:       disputes.DisputeResolutionDeclined,
-            Message:          "Comprehensive evidence provided showing valid transaction and successful delivery",
-            RefundAmount:     0,
-            UploadedFileName: "delivery-receipt.pdf",
-        }
+        resolveBuilder := disputes.NewResolveDisputeBuilder(
+            disputes.DisputeResolutionDeclined,
+            "Comprehensive evidence provided showing valid transaction and successful delivery",
+            0,
+            "delivery-receipt.pdf",
+        )
 
-        resolvedDispute, err := client.Disputes.Resolve(ctx, disputeID, resolveReq)
+        resolvedDispute, err := client.Disputes.Resolve(ctx, disputeID, resolveBuilder)
         if err != nil {
             log.Fatal(err)
         }
@@ -2335,18 +2330,17 @@ func main() {
     }
 
     // Export disputes for record keeping
-    exportReq := &disputes.DisputeExportRequest{
-        From:    &[]time.Time{time.Now().AddDate(0, -3, 0)}[0], // Last 3 months
-        To:      &[]time.Time{time.Now()}[0],
-        Status:  &[]disputes.DisputeStatus{disputes.DisputeStatusResolved}[0],
-    }
+    exportBuilder := disputes.NewExportDisputesBuilder().
+        DateRange(time.Now().AddDate(0, -3, 0), time.Now()). // Last 3 months
+        Status(disputes.DisputeStatusResolved)
 
-    exportResult, err := client.Disputes.Export(ctx, exportReq)
+    exportResult, err := client.Disputes.Export(ctx, exportBuilder)
     if err != nil {
         log.Fatal(err)
     }
 
     fmt.Printf("Disputes exported to: %s\n", exportResult.Data.Path)
+}
 }
 ```
 

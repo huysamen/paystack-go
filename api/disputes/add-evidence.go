@@ -2,21 +2,76 @@ package disputes
 
 import (
 	"context"
-	"fmt"
+	"errors"
+	"time"
 
 	"github.com/huysamen/paystack-go/net"
+	"github.com/huysamen/paystack-go/types"
 )
 
+// AddEvidenceRequest represents the request to add evidence to a dispute
+type AddEvidenceRequest struct {
+	CustomerEmail   string     `json:"customer_email"`
+	CustomerName    string     `json:"customer_name"`
+	CustomerPhone   string     `json:"customer_phone"`
+	ServiceDetails  string     `json:"service_details"`
+	DeliveryAddress *string    `json:"delivery_address,omitempty"`
+	DeliveryDate    *time.Time `json:"delivery_date,omitempty"`
+}
+
+// AddEvidenceResponse represents the response from adding evidence to a dispute
+type AddEvidenceResponse = types.Response[Evidence]
+
+// AddEvidenceBuilder builds requests for adding evidence to disputes
+type AddEvidenceBuilder struct {
+	request *AddEvidenceRequest
+}
+
+// NewAddEvidenceBuilder creates a new builder for adding evidence
+func NewAddEvidenceBuilder(customerEmail, customerName, customerPhone, serviceDetails string) *AddEvidenceBuilder {
+	return &AddEvidenceBuilder{
+		request: &AddEvidenceRequest{
+			CustomerEmail:  customerEmail,
+			CustomerName:   customerName,
+			CustomerPhone:  customerPhone,
+			ServiceDetails: serviceDetails,
+		},
+	}
+}
+
+// DeliveryAddress sets the delivery address
+func (b *AddEvidenceBuilder) DeliveryAddress(address string) *AddEvidenceBuilder {
+	b.request.DeliveryAddress = &address
+	return b
+}
+
+// DeliveryDate sets the delivery date
+func (b *AddEvidenceBuilder) DeliveryDate(date time.Time) *AddEvidenceBuilder {
+	b.request.DeliveryDate = &date
+	return b
+}
+
+// Build returns the built request
+func (b *AddEvidenceBuilder) Build() *AddEvidenceRequest {
+	return b.request
+}
+
 // AddEvidence provides evidence for a dispute
-func (c *Client) AddEvidence(ctx context.Context, disputeID string, req *DisputeEvidenceRequest) (*DisputeEvidenceResponse, error) {
+func (c *Client) AddEvidence(ctx context.Context, disputeID string, builder *AddEvidenceBuilder) (*types.Response[Evidence], error) {
 	if disputeID == "" {
-		return nil, fmt.Errorf("dispute ID is required")
+		return nil, errors.New("dispute ID is required")
 	}
 
-	if req == nil {
-		return nil, fmt.Errorf("add evidence request cannot be nil")
+	if builder == nil {
+		return nil, errors.New(ErrBuilderRequired)
 	}
 
-	url := c.baseURL + disputesBasePath + "/" + disputeID + "/evidence"
-	return net.Post[DisputeEvidenceRequest, Evidence](ctx, c.client, c.secret, url, req)
+	endpoint := c.baseURL + disputesBasePath + "/" + disputeID + "/evidence"
+	req := builder.Build()
+
+	resp, err := net.Post[AddEvidenceRequest, Evidence](ctx, c.client, c.secret, endpoint, req, c.baseURL)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
 }

@@ -6,6 +6,9 @@ import (
 
 const disputesBasePath = "/dispute"
 
+// ErrBuilderRequired is returned when a builder is required but not provided
+const ErrBuilderRequired = "builder is required"
+
 // Client represents the disputes API client
 type Client struct {
 	client  *http.Client

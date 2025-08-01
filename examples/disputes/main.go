@@ -1,4 +1,3 @@
-// go:build example
 //go:build example
 // +build example
 
@@ -23,12 +22,11 @@ func main() {
 
 	// 1. List all disputes
 	fmt.Println("1. Listing all disputes...")
-	listReq := &disputes.DisputeListRequest{
-		PerPage: intPtr(10),
-		Page:    intPtr(1),
-	}
+	listBuilder := disputes.NewListDisputesBuilder().
+		PerPage(10).
+		Page(1)
 
-	disputesList, err := client.Disputes.List(ctx, listReq)
+	disputesList, err := client.Disputes.List(ctx, listBuilder)
 	if err != nil {
 		log.Printf("Error listing disputes: %v", err)
 	} else {
@@ -47,12 +45,11 @@ func main() {
 
 	// 2. List disputes by status
 	fmt.Println("2. Listing pending disputes...")
-	pendingReq := &disputes.DisputeListRequest{
-		Status:  &[]disputes.DisputeStatus{disputes.DisputeStatusPending}[0],
-		PerPage: intPtr(5),
-	}
+	pendingBuilder := disputes.NewListDisputesBuilder().
+		Status(disputes.DisputeStatusPending).
+		PerPage(5)
 
-	pendingDisputes, err := client.Disputes.List(ctx, pendingReq)
+	pendingDisputes, err := client.Disputes.List(ctx, pendingBuilder)
 	if err != nil {
 		log.Printf("Error listing pending disputes: %v", err)
 	} else {
@@ -65,13 +62,11 @@ func main() {
 	thirtyDaysAgo := time.Now().AddDate(0, 0, -30)
 	now := time.Now()
 
-	recentReq := &disputes.DisputeListRequest{
-		From:    &thirtyDaysAgo,
-		To:      &now,
-		PerPage: intPtr(5),
-	}
+	recentBuilder := disputes.NewListDisputesBuilder().
+		DateRange(thirtyDaysAgo, now).
+		PerPage(5)
 
-	recentDisputes, err := client.Disputes.List(ctx, recentReq)
+	recentDisputes, err := client.Disputes.List(ctx, recentBuilder)
 	if err != nil {
 		log.Printf("Error listing recent disputes: %v", err)
 	} else {
@@ -115,15 +110,14 @@ func main() {
 
 		// 6. Add evidence (example with validation)
 		fmt.Printf("6. Adding evidence to dispute ID: %s...\n", disputeID)
-		evidenceReq := &disputes.DisputeEvidenceRequest{
-			CustomerEmail:   "customer@example.com",
-			CustomerName:    "John Doe",
-			CustomerPhone:   "+2348123456789",
-			ServiceDetails:  "Product delivered successfully on time with receipt",
-			DeliveryAddress: stringPtr("123 Main Street, Lagos, Nigeria"),
-		}
+		evidenceBuilder := disputes.NewAddEvidenceBuilder(
+			"customer@example.com",
+			"John Doe",
+			"+2348123456789",
+			"Product delivered successfully on time with receipt",
+		).DeliveryAddress("123 Main Street, Lagos, Nigeria")
 
-		evidence, err := client.Disputes.AddEvidence(ctx, disputeID, evidenceReq)
+		evidence, err := client.Disputes.AddEvidence(ctx, disputeID, evidenceBuilder)
 		if err != nil {
 			log.Printf("Error adding evidence: %v", err)
 		} else {
@@ -133,11 +127,9 @@ func main() {
 
 		// 7. Get upload URL for file evidence
 		fmt.Println("7. Getting upload URL for evidence file...")
-		uploadReq := &disputes.DisputeUploadURLRequest{
-			UploadFileName: "receipt.pdf",
-		}
+		uploadBuilder := disputes.NewGetUploadURLBuilder("receipt.pdf")
 
-		uploadURL, err := client.Disputes.GetUploadURL(ctx, disputeID, uploadReq)
+		uploadURL, err := client.Disputes.GetUploadURL(ctx, disputeID, uploadBuilder)
 		if err != nil {
 			log.Printf("Error getting upload URL: %v", err)
 		} else {
@@ -148,28 +140,28 @@ func main() {
 
 		// 8. Update dispute (example)
 		fmt.Printf("8. Updating dispute ID: %s...\n", disputeID)
-		updateReq := &disputes.DisputeUpdateRequest{
-			RefundAmount: intPtr(5000), // ₦50.00 refund
-		}
+		updateBuilder := disputes.NewUpdateDisputeBuilder().
+			RefundAmount(5000).
+			UploadedFileName("receipt.pdf")
 
-		updatedDispute, err := client.Disputes.Update(ctx, disputeID, updateReq)
+		updatedDispute, err := client.Disputes.Update(ctx, disputeID, updateBuilder)
 		if err != nil {
 			log.Printf("Error updating dispute: %v", err)
 		} else {
-			fmt.Printf("Dispute updated successfully: %d records\n", len(updatedDispute.Data))
+			fmt.Printf("Dispute updated successfully: Status %s\n", updatedDispute.Data.Status)
 		}
 		fmt.Println()
 
 		// 9. Resolve dispute (example - be careful with this in production)
 		fmt.Printf("9. Resolving dispute ID: %s...\n", disputeID)
-		resolveReq := &disputes.DisputeResolveRequest{
-			Resolution:       disputes.DisputeResolutionMerchantAccepted,
-			Message:          "Customer contacted directly and issue resolved amicably",
-			RefundAmount:     5000,          // ₦50.00
-			UploadedFileName: "receipt.pdf", // from upload URL step
-		}
+		resolveBuilder := disputes.NewResolveDisputeBuilder(
+			disputes.DisputeResolutionMerchantAccepted,
+			"Customer contacted directly and issue resolved amicably",
+			5000,          // ₦50.00
+			"receipt.pdf", // from upload URL step
+		)
 
-		resolvedDispute, err := client.Disputes.Resolve(ctx, disputeID, resolveReq)
+		resolvedDispute, err := client.Disputes.Resolve(ctx, disputeID, resolveBuilder)
 		if err != nil {
 			log.Printf("Error resolving dispute: %v", err)
 		} else {
@@ -183,13 +175,11 @@ func main() {
 
 	// 10. Export disputes
 	fmt.Println("10. Exporting disputes...")
-	exportReq := &disputes.DisputeExportRequest{
-		From:    &thirtyDaysAgo,
-		To:      &now,
-		PerPage: intPtr(100),
-	}
+	exportBuilder := disputes.NewExportDisputesBuilder().
+		DateRange(thirtyDaysAgo, now).
+		PerPage(100)
 
-	exportResult, err := client.Disputes.Export(ctx, exportReq)
+	exportResult, err := client.Disputes.Export(ctx, exportBuilder)
 	if err != nil {
 		log.Printf("Error exporting disputes: %v", err)
 	} else {
@@ -202,7 +192,7 @@ func main() {
 	fmt.Println("\n=== Disputes Demo Complete ===")
 }
 
-// Helper functions
+// Helper functions (no longer needed with builder pattern)
 func intPtr(i int) *int {
 	return &i
 }
