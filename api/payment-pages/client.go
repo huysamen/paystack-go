@@ -1,10 +1,14 @@
 package paymentpages
 
 import (
+	"errors"
 	"net/http"
 )
 
 const paymentPagesBasePath = "/page"
+
+// ErrBuilderRequired is returned when a builder is required but not provided
+var ErrBuilderRequired = errors.New("builder cannot be nil")
 
 // Client is the Payment Pages API client
 type Client struct {

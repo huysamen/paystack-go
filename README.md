@@ -1864,93 +1864,145 @@ fmt.Printf("Updated price: ₦%.2f\n", float64(updatedProduct.Price)/100)
 
 ### Payment Pages Management
 
+Payment pages provide a flexible way to accept payments through secure, hosted pages using builder patterns for easy configuration.
+
 ```go
-// Create a payment page for course enrollment
-fixedAmount := true
-collectPhone := false
-createReq := &payment_pages.CreatePaymentPageRequest{
-    Name:         "Premium Course Access",
-    Description:  "One-time payment for premium course access with lifetime updates",
-    Amount:       func() *int { amount := 25000; return &amount }(), // ₦250.00
-    Currency:     "NGN",
-    Type:         "payment",
-    FixedAmount:  &fixedAmount,
-    CollectPhone: &collectPhone,
-    CustomFields: []payment_pages.CustomField{
-        {
-            DisplayName:  "Full Name",
-            VariableName: "student_name",
-            Required:     true,
-        },
-        {
-            DisplayName:  "Phone Number",
-            VariableName: "phone_number",
-            Required:     true,
-        },
-    },
-    Metadata: &types.Metadata{
-        "course_id":   "premium-001",
-        "instructor":  "John Doe",
-        "duration":    "6 months",
-    },
-    RedirectURL:    "https://myapp.com/course-access",
-    SuccessMessage: "Welcome! You now have access to the premium course.",
-}
+package main
 
-page, err := client.PaymentPages.Create(context.Background(), createReq)
-if err != nil {
-    log.Fatal(err)
-}
+import (
+    "context"
+    "fmt"
+    "log"
 
-fmt.Printf("Payment page created: %s\n", page.Name)
-fmt.Printf("Payment URL: https://paystack.com/pay/%s\n", page.Slug)
+    "github.com/huysamen/paystack-go"
+    "github.com/huysamen/paystack-go/api/payment-pages"
+    "github.com/huysamen/paystack-go/types"
+)
 
-// Check if a custom slug is available
-slug := "premium-course-2024"
-slugResp, err := client.PaymentPages.CheckSlugAvailability(context.Background(), slug)
-if err != nil {
-    log.Fatal(err)
-}
+func main() {
+    client := paystack.DefaultClient("sk_test_your_secret_key_here")
+    ctx := context.Background()
 
-if slugResp.Status {
-    fmt.Printf("Slug '%s' is available\n", slug)
-} else {
-    fmt.Printf("Slug '%s' is not available\n", slug)
-}
+    // Create a comprehensive payment page using builder pattern
+    createReq := paymentpages.NewCreatePaymentPageRequest("Premium Course Access").
+        Description("One-time payment for premium course access with lifetime updates").
+        Amount(25000). // ₦250.00
+        Currency("NGN").
+        Type("payment").
+        FixedAmount(true).
+        CollectPhone(false).
+        AddCustomField("Full Name", "student_name", true).
+        AddCustomField("Phone Number", "phone_number", true).
+        AddCustomField("Experience Level", "experience", false).
+        Metadata(&types.Metadata{
+            "course_id":   "premium-001",
+            "instructor":  "John Doe",
+            "duration":    "6 months",
+            "skill_level": "intermediate",
+        }).
+        RedirectURL("https://myapp.com/course-access").
+        SuccessMessage("🎉 Welcome! You now have access to the premium course.").
+        NotificationEmail("notifications@myapp.com")
 
-// List all payment pages with pagination
-listReq := &payment_pages.ListPaymentPagesRequest{
-    PerPage: 10,
-    Page:    1,
-}
-
-pagesResp, err := client.PaymentPages.List(context.Background(), listReq)
-if err != nil {
-    log.Fatal(err)
-}
-
-fmt.Printf("Found %d payment pages:\n", len(pagesResp.Data))
-for _, p := range pagesResp.Data {
-    amountStr := "Variable amount"
-    if p.Amount != nil {
-        amountStr = fmt.Sprintf("₦%.2f", float64(*p.Amount)/100)
+    pageResp, err := client.PaymentPages.Create(ctx, createReq)
+    if err != nil {
+        log.Fatal(err)
     }
-    fmt.Printf("  - %s: %s (Active: %t)\n", p.Name, amountStr, p.Active)
-}
 
-// Update payment page with early bird pricing
-updateReq := &payment_pages.UpdatePaymentPageRequest{
-    Name:        "Premium Course Access - Early Bird Special",
-    Description: "🐦 Early Bird: Save 20%! Premium course access with lifetime updates",
-    Amount:      func() *int { amount := 20000; return &amount }(), // ₦200.00 (discounted)
-}
+    page := &pageResp.Data
+    fmt.Printf("Payment page created: %s\n", page.Name)
+    fmt.Printf("Payment URL: https://paystack.com/pay/%s\n", page.Slug)
 
-updatedPage, err := client.PaymentPages.Update(context.Background(), page.Slug, updateReq)
-if err != nil {
-    log.Fatal(err)
-}
+    // Check if a custom slug is available
+    slug := "premium-course-2024"
+    slugResp, err := client.PaymentPages.CheckSlugAvailability(ctx, slug)
+    if err != nil {
+        log.Fatal(err)
+    }
 
-fmt.Printf("Updated page: %s - ₦%.2f\n", updatedPage.Name, float64(*updatedPage.Amount)/100)
+    if slugResp.Status {
+        fmt.Printf("Slug '%s' is available\n", slug)
+    } else {
+        fmt.Printf("Slug '%s' is not available\n", slug)
+    }
+
+    // List all payment pages with filtering using builder pattern
+    listReq := paymentpages.NewListPaymentPagesRequest().
+        PerPage(10).
+        Page(1).
+        From("2024-01-01"). // Filter from specific date
+        To("2024-12-31")    // Filter to specific date
+
+    pagesResp, err := client.PaymentPages.List(ctx, listReq)
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    fmt.Printf("Found %d payment pages:\n", len(pagesResp.Data))
+    for _, p := range pagesResp.Data {
+        amountStr := "Variable amount"
+        if p.Amount != nil {
+            amountStr = fmt.Sprintf("₦%.2f", float64(*p.Amount)/100)
+        }
+        fmt.Printf("  - %s: %s (Active: %t)\n", p.Name, amountStr, p.Active)
+    }
+
+    // Update payment page with early bird pricing using builder pattern
+    updateReq := paymentpages.NewUpdatePaymentPageRequest().
+        Name("Premium Course Access - Early Bird Special").
+        Description("🐦 Early Bird: Save 20%! Premium course access with lifetime updates").
+        Amount(20000). // ₦200.00 (discounted)
+        Active(true)
+
+    updatedPageResp, err := client.PaymentPages.Update(ctx, page.Slug, updateReq)
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    updatedPage := &updatedPageResp.Data
+    fmt.Printf("Updated page: %s - ₦%.2f\n", updatedPage.Name, float64(*updatedPage.Amount)/100)
+
+    // Add products to the payment page (requires existing product IDs)
+    if productIDs := []int{123, 456}; len(productIDs) > 0 {
+        addProductsReq := paymentpages.NewAddProductsToPageRequest().
+            Products(productIDs)
+        
+        // Could also add products individually:
+        // addProductsReq.AddProduct(789).AddProduct(101112)
+
+        productPageResp, err := client.PaymentPages.AddProducts(ctx, page.ID, addProductsReq)
+        if err != nil {
+            log.Printf("Note: Failed to add products: %v", err)
+        } else {
+            productPage := &productPageResp.Data
+            fmt.Printf("Added %d products to page: %s\n", len(productPage.Products), productPage.Name)
+        }
+    }
+
+    // Advanced use case: Variable amount donation page
+    donationReq := paymentpages.NewCreatePaymentPageRequest("Help Our Cause").
+        Description("Support our mission with a donation of any amount").
+        Currency("NGN").
+        Type("donation").
+        FixedAmount(false). // Allow variable amounts
+        CollectPhone(true).
+        AddCustomField("Donor Name", "donor_name", true).
+        AddCustomField("Message", "donor_message", false).
+        SuccessMessage("Thank you for your generous donation! Your support means everything to us.").
+        Metadata(&types.Metadata{
+            "campaign_id": "help-2024",
+            "category":    "charity",
+        })
+
+    donationResp, err := client.PaymentPages.Create(ctx, donationReq)
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    donation := &donationResp.Data
+    fmt.Printf("Donation page created: %s\n", donation.Name)
+    fmt.Printf("Donation URL: https://paystack.com/pay/%s\n", donation.Slug)
+}
 ```
 
 ### Payment Requests Management

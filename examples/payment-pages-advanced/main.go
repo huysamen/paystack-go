@@ -26,50 +26,34 @@ func main() {
 	fmt.Println("🚀 Payment Pages Advanced Example")
 	fmt.Println("=================================")
 
-	// Scenario 1: E-commerce product showcase page
+	// Scenario 1: E-commerce product showcase page using builder pattern
 	fmt.Println("\n📦 Scenario 1: E-commerce Product Showcase")
 	fmt.Println("Creating a flexible payment page for multiple products...")
 
-	collectPhone := true
-	productPageReq := &payment_pages.CreatePaymentPageRequest{
-		Name:         "Tech Store - Premium Electronics",
-		Description:  "Browse and purchase premium electronics with flexible pricing",
-		Type:         "product",
-		Currency:     "NGN",
-		CollectPhone: &collectPhone,
-		CustomFields: []payment_pages.CustomField{
-			{
-				DisplayName:  "Delivery Address",
-				VariableName: "delivery_address",
-				Required:     true,
-			},
-			{
-				DisplayName:  "Phone Number",
-				VariableName: "phone_number",
-				Required:     true,
-			},
-			{
-				DisplayName:  "Special Instructions",
-				VariableName: "special_instructions",
-				Required:     false,
-			},
-		},
-		Metadata: &types.Metadata{
+	productPageReq := payment_pages.NewCreatePaymentPageRequest("Tech Store - Premium Electronics").
+		Description("Browse and purchase premium electronics with flexible pricing").
+		Type("product").
+		Currency("NGN").
+		CollectPhone(true).
+		AddCustomField("Delivery Address", "delivery_address", true).
+		AddCustomField("Phone Number", "phone_number", true).
+		AddCustomField("Special Instructions", "special_instructions", false).
+		Metadata(&types.Metadata{
 			"store_id":     "tech-store-001",
 			"category":     "electronics",
 			"allow_pickup": "true",
 			"contact":      "+234123456789",
-		},
-		RedirectURL:       "https://techstore.example.com/thank-you",
-		SuccessMessage:    "Thank you! Your order has been received. We'll contact you within 24 hours for delivery arrangements.",
-		NotificationEmail: "orders@techstore.example.com",
-	}
+		}).
+		RedirectURL("https://techstore.example.com/thank-you").
+		SuccessMessage("Thank you! Your order has been received. We'll contact you within 24 hours for delivery arrangements.").
+		NotificationEmail("orders@techstore.example.com")
 
-	productPage, err := client.PaymentPages.Create(ctx, productPageReq)
+	productPageResp, err := client.PaymentPages.Create(ctx, productPageReq)
 	if err != nil {
 		log.Fatalf("Failed to create product page: %v", err)
 	}
 
+	productPage := &productPageResp.Data
 	fmt.Printf("✅ Product showcase page created:\n")
 	fmt.Printf("   Name: %s\n", productPage.Name)
 	fmt.Printf("   URL: https://paystack.com/pay/%s\n", productPage.Slug)

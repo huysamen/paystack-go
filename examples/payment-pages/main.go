@@ -22,31 +22,28 @@ func main() {
 	client := paystack.DefaultClient(secretKey)
 	ctx := context.Background()
 
-	// Example 1: Create a payment page
+	// Example 1: Create a payment page using builder pattern
 	fmt.Println("=== Creating Payment Page ===")
-	fixedAmount := true
-	collectPhone := false
-	createReq := &payment_pages.CreatePaymentPageRequest{
-		Name:         "Premium Course Access",
-		Description:  "One-time payment for premium course access",
-		Amount:       func() *int { amount := 25000; return &amount }(), // 250.00 NGN
-		Currency:     "NGN",
-		Type:         "payment",
-		FixedAmount:  &fixedAmount,
-		CollectPhone: &collectPhone,
-		Metadata: &types.Metadata{
+	createReq := payment_pages.NewCreatePaymentPageRequest("Premium Course Access").
+		Description("One-time payment for premium course access").
+		Amount(25000). // 250.00 NGN
+		Currency("NGN").
+		Type("payment").
+		FixedAmount(true).
+		CollectPhone(false).
+		Metadata(&types.Metadata{
 			"course_id":  "premium-001",
 			"instructor": "John Doe",
 			"duration":   "6 months",
-		},
-		SuccessMessage: "Thank you for your payment! You now have access to the premium course.",
-	}
+		}).
+		SuccessMessage("Thank you for your payment! You now have access to the premium course.")
 
-	page, err := client.PaymentPages.Create(ctx, createReq)
+	pageResp, err := client.PaymentPages.Create(ctx, createReq)
 	if err != nil {
 		log.Fatalf("Failed to create payment page: %v", err)
 	}
 
+	page := &pageResp.Data
 	fmt.Printf("Payment Page Created:\n")
 	fmt.Printf("  ID: %d\n", page.ID)
 	fmt.Printf("  Name: %s\n", page.Name)
@@ -69,41 +66,41 @@ func main() {
 
 	// Example 3: Fetch the created payment page
 	fmt.Println("\n=== Fetching Payment Page ===")
-	fetchedPage, err := client.PaymentPages.Fetch(ctx, pageSlug)
+	fetchedPageResp, err := client.PaymentPages.Fetch(ctx, pageSlug)
 	if err != nil {
 		log.Fatalf("Failed to fetch payment page: %v", err)
 	}
 
+	fetchedPage := &fetchedPageResp.Data
 	fmt.Printf("Fetched Page:\n")
 	fmt.Printf("  Name: %s\n", fetchedPage.Name)
 	fmt.Printf("  Description: %s\n", fetchedPage.Description)
 	fmt.Printf("  Active: %t\n", fetchedPage.Active)
 	fmt.Printf("  Type: %s\n", fetchedPage.Type)
 
-	// Example 4: Update the payment page
+	// Example 4: Update the payment page using builder pattern
 	fmt.Println("\n=== Updating Payment Page ===")
-	updateReq := &payment_pages.UpdatePaymentPageRequest{
-		Name:        "Premium Course Access - Limited Time",
-		Description: "Special offer: One-time payment for premium course access with bonus materials",
-		Amount:      func() *int { amount := 20000; return &amount }(), // 200.00 NGN (discounted)
-	}
+	updateReq := payment_pages.NewUpdatePaymentPageRequest().
+		Name("Premium Course Access - Limited Time").
+		Description("Special offer: One-time payment for premium course access with bonus materials").
+		Amount(20000) // 200.00 NGN (discounted)
 
-	updatedPage, err := client.PaymentPages.Update(ctx, pageSlug, updateReq)
+	updatedPageResp, err := client.PaymentPages.Update(ctx, pageSlug, updateReq)
 	if err != nil {
 		log.Fatalf("Failed to update payment page: %v", err)
 	}
 
+	updatedPage := &updatedPageResp.Data
 	fmt.Printf("Updated Page:\n")
 	fmt.Printf("  Name: %s\n", updatedPage.Name)
 	fmt.Printf("  Description: %s\n", updatedPage.Description)
 	fmt.Printf("  Amount: %v NGN\n", float64(*updatedPage.Amount)/100)
 
-	// Example 5: List payment pages
+	// Example 5: List payment pages using builder pattern
 	fmt.Println("\n=== Listing Payment Pages ===")
-	listReq := &payment_pages.ListPaymentPagesRequest{
-		PerPage: 5,
-		Page:    1,
-	}
+	listReq := payment_pages.NewListPaymentPagesRequest().
+		PerPage(5).
+		Page(1)
 
 	pagesResp, err := client.PaymentPages.List(ctx, listReq)
 	if err != nil {
