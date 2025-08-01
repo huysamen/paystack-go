@@ -49,15 +49,11 @@ func settlementAnalytics(client *paystack.Client) {
 	// Get last 30 days of settlements
 	thirtyDaysAgo := time.Now().AddDate(0, 0, -30)
 	now := time.Now()
-	perPage := 100
-	page := 1
 
-	request := &settlements.SettlementListRequest{
-		From:    &thirtyDaysAgo,
-		To:      &now,
-		PerPage: &perPage,
-		Page:    &page,
-	}
+	request := settlements.NewSettlementListRequest().
+		DateRange(thirtyDaysAgo, now).
+		PerPage(100).
+		Page(1)
 
 	response, err := client.Settlements.List(context.Background(), request)
 	if err != nil {
@@ -106,12 +102,9 @@ func settlementAnalytics(client *paystack.Client) {
 // reconcileTransactions helps reconcile transactions within settlements
 func reconcileTransactions(client *paystack.Client) {
 	// Get recent settlements
-	perPage := 10
-	page := 1
-	request := &settlements.SettlementListRequest{
-		PerPage: &perPage,
-		Page:    &page,
-	}
+	request := settlements.NewSettlementListRequest().
+		PerPage(10).
+		Page(1)
 
 	settlementsData, err := client.Settlements.List(context.Background(), request)
 	if err != nil {
@@ -129,12 +122,9 @@ func reconcileTransactions(client *paystack.Client) {
 		settlementID := fmt.Sprintf("%d", settlement.ID)
 
 		// Get transactions for this settlement
-		txPerPage := 50
-		txPage := 1
-		txRequest := &settlements.SettlementTransactionListRequest{
-			PerPage: &txPerPage,
-			Page:    &txPage,
-		}
+		txRequest := settlements.NewSettlementTransactionListRequest().
+			PerPage(50).
+			Page(1)
 
 		transactions, err := client.Settlements.ListTransactions(context.Background(), settlementID, txRequest)
 		if err != nil {
@@ -181,16 +171,12 @@ func analyzeSettlementPerformance(client *paystack.Client) {
 	last7Days := time.Now().AddDate(0, 0, -7)
 	last30Days := time.Now().AddDate(0, 0, -30)
 	now := time.Now()
-	perPage := 100
-	page := 1
 
 	// Last 7 days
-	weekRequest := &settlements.SettlementListRequest{
-		From:    &last7Days,
-		To:      &now,
-		PerPage: &perPage,
-		Page:    &page,
-	}
+	weekRequest := settlements.NewSettlementListRequest().
+		DateRange(last7Days, now).
+		PerPage(100).
+		Page(1)
 
 	weekSettlements, err := client.Settlements.List(context.Background(), weekRequest)
 	if err != nil {
@@ -199,12 +185,10 @@ func analyzeSettlementPerformance(client *paystack.Client) {
 	}
 
 	// Last 30 days
-	monthRequest := &settlements.SettlementListRequest{
-		From:    &last30Days,
-		To:      &now,
-		PerPage: &perPage,
-		Page:    &page,
-	}
+	monthRequest := settlements.NewSettlementListRequest().
+		DateRange(last30Days, now).
+		PerPage(100).
+		Page(1)
 
 	monthSettlements, err := client.Settlements.List(context.Background(), monthRequest)
 	if err != nil {
@@ -273,12 +257,9 @@ func analyzeSubaccountRevenue(client *paystack.Client) {
 	fmt.Println("💼 Subaccount Revenue Analysis")
 
 	// Get all settlements (limited for demo)
-	perPage := 50
-	page := 1
-	request := &settlements.SettlementListRequest{
-		PerPage: &perPage,
-		Page:    &page,
-	}
+	request := settlements.NewSettlementListRequest().
+		PerPage(50).
+		Page(1)
 
 	allSettlements, err := client.Settlements.List(context.Background(), request)
 	if err != nil {

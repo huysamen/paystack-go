@@ -1240,6 +1240,7 @@ The settlements API allows you to track payouts and settlement records.
 package main
 
 import (
+    "context"
     "fmt"
     "log"
     "time"
@@ -1250,16 +1251,14 @@ import (
 
 func main() {
     client := paystack.DefaultClient("sk_test_your_secret_key_here")
+    ctx := context.Background()
 
     // List all settlements
-    perPage := 50
-    page := 1
-    listReq := &settlements.SettlementListRequest{
-        PerPage: &perPage,
-        Page:    &page,
-    }
+    listReq := settlements.NewSettlementListRequest().
+        PerPage(50).
+        Page(1)
 
-    resp, err := client.Settlements.List(listReq)
+    resp, err := client.Settlements.List(ctx, listReq)
     if err != nil {
         log.Fatal(err)
     }
@@ -1267,19 +1266,16 @@ func main() {
     fmt.Printf("Found %d settlements\n", len(resp.Data))
     
     // List settlements with filters
-    status := settlements.SettlementStatusSuccess
     thirtyDaysAgo := time.Now().AddDate(0, 0, -30)
     now := time.Now()
     
-    filteredReq := &settlements.SettlementListRequest{
-        Status:  &status,
-        From:    &thirtyDaysAgo,
-        To:      &now,
-        PerPage: &perPage,
-        Page:    &page,
-    }
+    filteredReq := settlements.NewSettlementListRequest().
+        Status(settlements.SettlementStatusSuccess).
+        DateRange(thirtyDaysAgo, now).
+        PerPage(50).
+        Page(1)
 
-    filteredResp, err := client.Settlements.List(filteredReq)
+    filteredResp, err := client.Settlements.List(ctx, filteredReq)
     if err != nil {
         log.Fatal(err)
     }
@@ -1290,12 +1286,11 @@ func main() {
     if len(resp.Data) > 0 {
         settlementID := fmt.Sprintf("%d", resp.Data[0].ID)
         
-        txReq := &settlements.SettlementTransactionListRequest{
-            PerPage: &perPage,
-            Page:    &page,
-        }
+        txReq := settlements.NewSettlementTransactionListRequest().
+            PerPage(50).
+            Page(1)
 
-        txResp, err := client.Settlements.ListTransactions(settlementID, txReq)
+        txResp, err := client.Settlements.ListTransactions(ctx, settlementID, txReq)
         if err != nil {
             log.Fatal(err)
         }

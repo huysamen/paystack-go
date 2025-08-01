@@ -22,14 +22,11 @@ func main() {
 
 	// Example 1: List all settlements
 	fmt.Println("=== Listing All Settlements ===")
-	perPage := 10
-	page := 1
-	listParams := &settlements.SettlementListRequest{
-		PerPage: &perPage,
-		Page:    &page,
-	}
+	listReq := settlements.NewSettlementListRequest().
+		PerPage(10).
+		Page(1)
 
-	response, err := client.Settlements.List(context.Background(), listParams)
+	response, err := client.Settlements.List(context.Background(), listReq)
 	if err != nil {
 		log.Printf("Error listing settlements: %v", err)
 	} else {
@@ -46,16 +43,12 @@ func main() {
 
 	// Example 2: List settlements with status filter
 	fmt.Println("\n=== Listing Successful Settlements ===")
-	successStatus := settlements.SettlementStatusSuccess
-	successPerPage := 5
-	successPage := 1
-	successParams := &settlements.SettlementListRequest{
-		Status:  &successStatus,
-		PerPage: &successPerPage,
-		Page:    &successPage,
-	}
+	successReq := settlements.NewSettlementListRequest().
+		Status(settlements.SettlementStatusSuccess).
+		PerPage(5).
+		Page(1)
 
-	successResponse, err := client.Settlements.List(context.Background(), successParams)
+	successResponse, err := client.Settlements.List(context.Background(), successReq)
 	if err != nil {
 		log.Printf("Error listing successful settlements: %v", err)
 	} else {
@@ -69,15 +62,12 @@ func main() {
 	// Example 3: List settlements for a specific subaccount
 	fmt.Println("\n=== Listing Settlements for Subaccount ===")
 	subaccountCode := "ACCT_xxxxxxxxxx" // Replace with actual subaccount code
-	subaccountPerPage := 5
-	subaccountPage := 1
-	subaccountParams := &settlements.SettlementListRequest{
-		Subaccount: &subaccountCode,
-		PerPage:    &subaccountPerPage,
-		Page:       &subaccountPage,
-	}
+	subaccountReq := settlements.NewSettlementListRequest().
+		Subaccount(subaccountCode).
+		PerPage(5).
+		Page(1)
 
-	subaccountResponse, err := client.Settlements.List(context.Background(), subaccountParams)
+	subaccountResponse, err := client.Settlements.List(context.Background(), subaccountReq)
 	if err != nil {
 		log.Printf("Error listing subaccount settlements: %v", err)
 	} else {
@@ -93,14 +83,11 @@ func main() {
 		settlementID := fmt.Sprintf("%d", response.Data[0].ID)
 		fmt.Printf("\n=== Listing Transactions for Settlement %s ===\n", settlementID)
 
-		txPerPage := 10
-		txPage := 1
-		txParams := &settlements.SettlementTransactionListRequest{
-			PerPage: &txPerPage,
-			Page:    &txPage,
-		}
+		txReq := settlements.NewSettlementTransactionListRequest().
+			PerPage(10).
+			Page(1)
 
-		txResponse, err := client.Settlements.ListTransactions(context.Background(), settlementID, txParams)
+		txResponse, err := client.Settlements.ListTransactions(context.Background(), settlementID, txReq)
 		if err != nil {
 			log.Printf("Error listing settlement transactions: %v", err)
 		} else {
@@ -116,16 +103,12 @@ func main() {
 	fmt.Println("\n=== Listing Settlements from Last Month ===")
 	lastMonth := time.Now().AddDate(0, -1, 0)
 	now := time.Now()
-	datePerPage := 10
-	datePage := 1
-	dateParams := &settlements.SettlementListRequest{
-		From:    &lastMonth,
-		To:      &now,
-		PerPage: &datePerPage,
-		Page:    &datePage,
-	}
+	dateReq := settlements.NewSettlementListRequest().
+		DateRange(lastMonth, now).
+		PerPage(10).
+		Page(1)
 
-	dateResponse, err := client.Settlements.List(context.Background(), dateParams)
+	dateResponse, err := client.Settlements.List(context.Background(), dateReq)
 	if err != nil {
 		log.Printf("Error listing settlements by date: %v", err)
 	} else {

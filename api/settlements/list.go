@@ -2,47 +2,88 @@ package settlements
 
 import (
 	"context"
-	"net/url"
-	"strconv"
 	"time"
 
 	"github.com/huysamen/paystack-go/net"
 )
 
+// SettlementListRequestBuilder provides a fluent interface for building SettlementListRequest
+type SettlementListRequestBuilder struct {
+	req *SettlementListRequest
+}
+
+// NewSettlementListRequest creates a new builder for SettlementListRequest
+func NewSettlementListRequest() *SettlementListRequestBuilder {
+	return &SettlementListRequestBuilder{
+		req: &SettlementListRequest{},
+	}
+}
+
+// PerPage sets the number of records per page
+func (b *SettlementListRequestBuilder) PerPage(perPage int) *SettlementListRequestBuilder {
+	b.req.PerPage = &perPage
+	return b
+}
+
+// Page sets the page number
+func (b *SettlementListRequestBuilder) Page(page int) *SettlementListRequestBuilder {
+	b.req.Page = &page
+	return b
+}
+
+// Status filters by settlement status
+func (b *SettlementListRequestBuilder) Status(status SettlementStatus) *SettlementListRequestBuilder {
+	b.req.Status = &status
+	return b
+}
+
+// Subaccount filters by subaccount ID (use "none" for main account only)
+func (b *SettlementListRequestBuilder) Subaccount(subaccount string) *SettlementListRequestBuilder {
+	b.req.Subaccount = &subaccount
+	return b
+}
+
+// MainAccountOnly filters for main account settlements only
+func (b *SettlementListRequestBuilder) MainAccountOnly() *SettlementListRequestBuilder {
+	none := "none"
+	b.req.Subaccount = &none
+	return b
+}
+
+// DateRange sets both start and end date filters
+func (b *SettlementListRequestBuilder) DateRange(from, to time.Time) *SettlementListRequestBuilder {
+	b.req.From = &from
+	b.req.To = &to
+	return b
+}
+
+// From sets the start date filter
+func (b *SettlementListRequestBuilder) From(from time.Time) *SettlementListRequestBuilder {
+	b.req.From = &from
+	return b
+}
+
+// To sets the end date filter
+func (b *SettlementListRequestBuilder) To(to time.Time) *SettlementListRequestBuilder {
+	b.req.To = &to
+	return b
+}
+
+// Build returns the constructed SettlementListRequest
+func (b *SettlementListRequestBuilder) Build() *SettlementListRequest {
+	return b.req
+}
+
 // List retrieves a list of settlements using a builder (fluent interface)
 func (c *Client) List(ctx context.Context, builder *SettlementListRequestBuilder) (*SettlementListResponse, error) {
-	req := builder.Build()
-	params := url.Values{}
-
-	if req != nil {
-		if req.PerPage != nil {
-			params.Set("perPage", strconv.Itoa(*req.PerPage))
-		}
-		if req.Page != nil {
-			params.Set("page", strconv.Itoa(*req.Page))
-		}
-		if req.Status != nil {
-			params.Set("status", req.Status.String())
-		}
-		if req.Subaccount != nil {
-			params.Set("subaccount", *req.Subaccount)
-		}
-		if req.From != nil {
-			params.Set("from", req.From.Format(time.RFC3339))
-		}
-		if req.To != nil {
-			params.Set("to", req.To.Format(time.RFC3339))
-		}
+	if builder == nil {
+		builder = NewSettlementListRequest()
 	}
 
-	endpoint := settlementBasePath
-	if len(params) > 0 {
-		endpoint += "?" + params.Encode()
-	}
-
-	resp, err := net.Get[SettlementListResponse](ctx, c.client, c.secret, endpoint, c.baseURL)
+	url := c.baseURL + settlementBasePath
+	response, err := net.Get[[]Settlement](ctx, c.client, c.secret, url)
 	if err != nil {
 		return nil, err
 	}
-	return &resp.Data, nil
+	return response, nil
 }
