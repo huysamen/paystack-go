@@ -23,6 +23,7 @@ A comprehensive Go client library for the [Paystack API](https://paystack.com/do
 - ✅ **Dedicated Virtual Account**: Create and manage dedicated virtual accounts for unique customer payments
 - ✅ **Apple Pay**: Register and manage domains for Apple Pay integration
 - ✅ **Charges**: Create charges for multiple payment channels (card, bank, USSD, mobile money, QR, transfer) with submission workflows
+- ✅ **Disputes**: Manage transaction disputes with evidence handling, resolution workflows, and comprehensive documentation
 - ✅ **Integration**: Manage payment session timeout settings and integration configuration
 - ✅ **Verification**: Resolve account numbers, validate accounts, resolve card BINs
 - ✅ **Miscellaneous**: List banks/countries/states for address verification and geographic support
@@ -201,6 +202,17 @@ func main() {
 - **Submit Birthday**: Submit date of birth for charges requiring birthday verification
 - **Submit Address**: Submit billing address for charges requiring address verification
 - **Check Pending Charge**: Check the status of pending charges (bank, USSD, QR, mobile money)
+
+### Disputes
+
+- **List Disputes**: Retrieve all disputes filed against your integration with filtering by status, date range, and transaction
+- **Fetch Dispute**: Get detailed information about a specific dispute including transaction details and evidence
+- **List Transaction Disputes**: Get dispute history and messages for a particular transaction
+- **Update Dispute**: Update dispute details including refund amounts and uploaded evidence files
+- **Add Evidence**: Provide comprehensive evidence for disputes including customer details and service information
+- **Get Upload URL**: Generate signed URLs for uploading dispute evidence documents and attachments
+- **Resolve Dispute**: Resolve disputes with merchant acceptance or decline decisions and supporting documentation
+- **Export Disputes**: Export dispute data to CSV format with date range and status filtering
 
 ### Integration
 
@@ -1930,6 +1942,131 @@ func stringPtr(s string) *string {
 
 func generateReference() string {
     return fmt.Sprintf("%d", time.Now().UnixNano()%1000000000)
+}
+```
+
+### Disputes Management and Resolution
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "log"
+    "time"
+
+    "github.com/huysamen/paystack-go"
+    "github.com/huysamen/paystack-go/api/disputes"
+)
+
+func main() {
+    client := paystack.DefaultClient("sk_test_your_secret_key_here")
+    ctx := context.Background()
+
+    // List all disputes with filtering
+    listReq := &disputes.DisputeListRequest{
+        Status:  &[]disputes.DisputeStatus{disputes.DisputeStatusPending}[0],
+        PerPage: &[]int{10}[0],
+        From:    &[]time.Time{time.Now().AddDate(0, -1, 0)}[0], // Last month
+    }
+
+    disputesList, err := client.Disputes.List(ctx, listReq)
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    fmt.Printf("Found %d pending disputes\n", len(disputesList.Data))
+
+    if len(disputesList.Data) > 0 {
+        dispute := disputesList.Data[0]
+        disputeID := fmt.Sprintf("%d", dispute.ID)
+
+        // Fetch detailed dispute information
+        detailedDispute, err := client.Disputes.Fetch(ctx, disputeID)
+        if err != nil {
+            log.Fatal(err)
+        }
+
+        fmt.Printf("Dispute Status: %s\n", detailedDispute.Data.Status)
+        fmt.Printf("Category: %s\n", detailedDispute.Data.Category)
+        if detailedDispute.Data.Transaction != nil {
+            fmt.Printf("Transaction: %s (₦%.2f)\n", 
+                detailedDispute.Data.Transaction.Reference,
+                float64(detailedDispute.Data.Transaction.Amount)/100)
+        }
+
+        // Add evidence to support your case
+        evidenceReq := &disputes.DisputeEvidenceRequest{
+            CustomerEmail:   "customer@example.com",
+            CustomerName:    "John Doe",
+            CustomerPhone:   "+2348123456789",
+            ServiceDetails:  "Product delivered successfully with tracking number. Customer confirmed receipt via phone.",
+            DeliveryAddress: &[]string{"123 Main Street, Lagos, Nigeria"}[0],
+        }
+
+        evidence, err := client.Disputes.AddEvidence(ctx, disputeID, evidenceReq)
+        if err != nil {
+            log.Fatal(err)
+        }
+
+        fmt.Printf("Evidence added: ID %d\n", evidence.Data.ID)
+
+        // Get upload URL for supporting documents
+        uploadReq := &disputes.DisputeUploadURLRequest{
+            UploadFileName: "delivery-receipt.pdf",
+        }
+
+        uploadURL, err := client.Disputes.GetUploadURL(ctx, disputeID, uploadReq)
+        if err != nil {
+            log.Fatal(err)
+        }
+
+        fmt.Printf("Upload URL generated (expires in %d seconds)\n", uploadURL.Data.ExpiresIn)
+        // Use the uploadURL.Data.SignedURL to upload your file
+
+        // Update dispute with additional information
+        updateReq := &disputes.DisputeUpdateRequest{
+            RefundAmount: &[]int{0}[0], // No refund needed
+        }
+
+        _, err = client.Disputes.Update(ctx, disputeID, updateReq)
+        if err != nil {
+            log.Fatal(err)
+        }
+
+        // Resolve the dispute after gathering evidence
+        resolveReq := &disputes.DisputeResolveRequest{
+            Resolution:       disputes.DisputeResolutionDeclined,
+            Message:          "Comprehensive evidence provided showing valid transaction and successful delivery",
+            RefundAmount:     0,
+            UploadedFileName: "delivery-receipt.pdf",
+        }
+
+        resolvedDispute, err := client.Disputes.Resolve(ctx, disputeID, resolveReq)
+        if err != nil {
+            log.Fatal(err)
+        }
+
+        fmt.Printf("Dispute resolved: %s\n", resolvedDispute.Data.Status)
+        if resolvedDispute.Data.Resolution != nil {
+            fmt.Printf("Resolution: %s\n", *resolvedDispute.Data.Resolution)
+        }
+    }
+
+    // Export disputes for record keeping
+    exportReq := &disputes.DisputeExportRequest{
+        From:    &[]time.Time{time.Now().AddDate(0, -3, 0)}[0], // Last 3 months
+        To:      &[]time.Time{time.Now()}[0],
+        Status:  &[]disputes.DisputeStatus{disputes.DisputeStatusResolved}[0],
+    }
+
+    exportResult, err := client.Disputes.Export(ctx, exportReq)
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    fmt.Printf("Disputes exported to: %s\n", exportResult.Data.Path)
 }
 ```
 
