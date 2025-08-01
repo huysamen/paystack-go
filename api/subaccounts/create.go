@@ -2,6 +2,7 @@ package subaccounts
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/huysamen/paystack-go/net"
 )
@@ -19,4 +20,12 @@ func (c *Client) Create(ctx context.Context, req *SubaccountCreateRequest) (*Sub
 		return nil, err
 	}
 	return &resp.Data, nil
+}
+
+// CreateWithBuilder creates a new subaccount using the builder pattern
+func (c *Client) CreateWithBuilder(ctx context.Context, builder *SubaccountCreateRequestBuilder) (*SubaccountCreateResponse, error) {
+	if builder == nil {
+		return nil, fmt.Errorf("builder cannot be nil")
+	}
+	return c.Create(ctx, builder.Build())
 }

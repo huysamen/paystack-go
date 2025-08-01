@@ -206,6 +206,66 @@ type DisputeListRequest struct {
 	Status      *DisputeStatus `json:"status,omitempty"`
 }
 
+// DisputeListRequestBuilder provides a fluent interface for building DisputeListRequest
+type DisputeListRequestBuilder struct {
+	req *DisputeListRequest
+}
+
+// NewDisputeListRequest creates a new builder for DisputeListRequest
+func NewDisputeListRequest() *DisputeListRequestBuilder {
+	return &DisputeListRequestBuilder{
+		req: &DisputeListRequest{},
+	}
+}
+
+// From sets the start date filter
+func (b *DisputeListRequestBuilder) From(from time.Time) *DisputeListRequestBuilder {
+	b.req.From = &from
+	return b
+}
+
+// To sets the end date filter
+func (b *DisputeListRequestBuilder) To(to time.Time) *DisputeListRequestBuilder {
+	b.req.To = &to
+	return b
+}
+
+// DateRange sets both from and to dates for convenience
+func (b *DisputeListRequestBuilder) DateRange(from, to time.Time) *DisputeListRequestBuilder {
+	b.req.From = &from
+	b.req.To = &to
+	return b
+}
+
+// PerPage sets the number of disputes per page
+func (b *DisputeListRequestBuilder) PerPage(perPage int) *DisputeListRequestBuilder {
+	b.req.PerPage = &perPage
+	return b
+}
+
+// Page sets the page number
+func (b *DisputeListRequestBuilder) Page(page int) *DisputeListRequestBuilder {
+	b.req.Page = &page
+	return b
+}
+
+// Transaction filters by transaction ID
+func (b *DisputeListRequestBuilder) Transaction(transaction string) *DisputeListRequestBuilder {
+	b.req.Transaction = &transaction
+	return b
+}
+
+// Status filters by dispute status
+func (b *DisputeListRequestBuilder) Status(status DisputeStatus) *DisputeListRequestBuilder {
+	b.req.Status = &status
+	return b
+}
+
+// Build returns the constructed DisputeListRequest
+func (b *DisputeListRequestBuilder) Build() *DisputeListRequest {
+	return b.req
+}
+
 // DisputeListResponse represents the response from listing disputes
 type DisputeListResponse = types.Response[[]Dispute]
 
@@ -243,6 +303,35 @@ type DisputeUpdateRequest struct {
 	UploadedFileName *string `json:"uploaded_filename,omitempty"`
 }
 
+// DisputeUpdateRequestBuilder provides a fluent interface for building DisputeUpdateRequest
+type DisputeUpdateRequestBuilder struct {
+	req *DisputeUpdateRequest
+}
+
+// NewDisputeUpdateRequest creates a new builder for DisputeUpdateRequest
+func NewDisputeUpdateRequest() *DisputeUpdateRequestBuilder {
+	return &DisputeUpdateRequestBuilder{
+		req: &DisputeUpdateRequest{},
+	}
+}
+
+// RefundAmount sets the refund amount
+func (b *DisputeUpdateRequestBuilder) RefundAmount(amount int) *DisputeUpdateRequestBuilder {
+	b.req.RefundAmount = &amount
+	return b
+}
+
+// UploadedFileName sets the uploaded file name
+func (b *DisputeUpdateRequestBuilder) UploadedFileName(fileName string) *DisputeUpdateRequestBuilder {
+	b.req.UploadedFileName = &fileName
+	return b
+}
+
+// Build returns the constructed DisputeUpdateRequest
+func (b *DisputeUpdateRequestBuilder) Build() *DisputeUpdateRequest {
+	return b.req
+}
+
 // DisputeEvidenceRequest represents the request to add evidence to a dispute
 type DisputeEvidenceRequest struct {
 	CustomerEmail   string     `json:"customer_email"`
@@ -251,6 +340,40 @@ type DisputeEvidenceRequest struct {
 	ServiceDetails  string     `json:"service_details"`
 	DeliveryAddress *string    `json:"delivery_address,omitempty"`
 	DeliveryDate    *time.Time `json:"delivery_date,omitempty"`
+}
+
+// DisputeEvidenceRequestBuilder provides a fluent interface for building DisputeEvidenceRequest
+type DisputeEvidenceRequestBuilder struct {
+	req *DisputeEvidenceRequest
+}
+
+// NewDisputeEvidenceRequest creates a new builder for DisputeEvidenceRequest
+func NewDisputeEvidenceRequest(customerEmail, customerName, customerPhone, serviceDetails string) *DisputeEvidenceRequestBuilder {
+	return &DisputeEvidenceRequestBuilder{
+		req: &DisputeEvidenceRequest{
+			CustomerEmail:  customerEmail,
+			CustomerName:   customerName,
+			CustomerPhone:  customerPhone,
+			ServiceDetails: serviceDetails,
+		},
+	}
+}
+
+// DeliveryAddress sets the delivery address
+func (b *DisputeEvidenceRequestBuilder) DeliveryAddress(address string) *DisputeEvidenceRequestBuilder {
+	b.req.DeliveryAddress = &address
+	return b
+}
+
+// DeliveryDate sets the delivery date
+func (b *DisputeEvidenceRequestBuilder) DeliveryDate(date time.Time) *DisputeEvidenceRequestBuilder {
+	b.req.DeliveryDate = &date
+	return b
+}
+
+// Build returns the constructed DisputeEvidenceRequest
+func (b *DisputeEvidenceRequestBuilder) Build() *DisputeEvidenceRequest {
+	return b.req
 }
 
 // DisputeUploadURLRequest represents the request to get upload URL for a dispute
@@ -274,6 +397,34 @@ type DisputeResolveRequest struct {
 	Evidence         *int              `json:"evidence,omitempty"`
 }
 
+// DisputeResolveRequestBuilder provides a fluent interface for building DisputeResolveRequest
+type DisputeResolveRequestBuilder struct {
+	req *DisputeResolveRequest
+}
+
+// NewDisputeResolveRequest creates a new builder for DisputeResolveRequest
+func NewDisputeResolveRequest(resolution DisputeResolution, message string, refundAmount int, uploadedFileName string) *DisputeResolveRequestBuilder {
+	return &DisputeResolveRequestBuilder{
+		req: &DisputeResolveRequest{
+			Resolution:       resolution,
+			Message:          message,
+			RefundAmount:     refundAmount,
+			UploadedFileName: uploadedFileName,
+		},
+	}
+}
+
+// Evidence sets the evidence ID
+func (b *DisputeResolveRequestBuilder) Evidence(evidence int) *DisputeResolveRequestBuilder {
+	b.req.Evidence = &evidence
+	return b
+}
+
+// Build returns the constructed DisputeResolveRequest
+func (b *DisputeResolveRequestBuilder) Build() *DisputeResolveRequest {
+	return b.req
+}
+
 // DisputeExportRequest represents the request to export disputes
 type DisputeExportRequest struct {
 	From        *time.Time     `json:"from,omitempty"`
@@ -282,6 +433,66 @@ type DisputeExportRequest struct {
 	Page        *int           `json:"page,omitempty"`
 	Transaction *string        `json:"transaction,omitempty"`
 	Status      *DisputeStatus `json:"status,omitempty"`
+}
+
+// DisputeExportRequestBuilder provides a fluent interface for building DisputeExportRequest
+type DisputeExportRequestBuilder struct {
+	req *DisputeExportRequest
+}
+
+// NewDisputeExportRequest creates a new builder for DisputeExportRequest
+func NewDisputeExportRequest() *DisputeExportRequestBuilder {
+	return &DisputeExportRequestBuilder{
+		req: &DisputeExportRequest{},
+	}
+}
+
+// From sets the start date filter
+func (b *DisputeExportRequestBuilder) From(from time.Time) *DisputeExportRequestBuilder {
+	b.req.From = &from
+	return b
+}
+
+// To sets the end date filter
+func (b *DisputeExportRequestBuilder) To(to time.Time) *DisputeExportRequestBuilder {
+	b.req.To = &to
+	return b
+}
+
+// DateRange sets both from and to dates for convenience
+func (b *DisputeExportRequestBuilder) DateRange(from, to time.Time) *DisputeExportRequestBuilder {
+	b.req.From = &from
+	b.req.To = &to
+	return b
+}
+
+// PerPage sets the number of disputes per page
+func (b *DisputeExportRequestBuilder) PerPage(perPage int) *DisputeExportRequestBuilder {
+	b.req.PerPage = &perPage
+	return b
+}
+
+// Page sets the page number
+func (b *DisputeExportRequestBuilder) Page(page int) *DisputeExportRequestBuilder {
+	b.req.Page = &page
+	return b
+}
+
+// Transaction filters by transaction ID
+func (b *DisputeExportRequestBuilder) Transaction(transaction string) *DisputeExportRequestBuilder {
+	b.req.Transaction = &transaction
+	return b
+}
+
+// Status filters by dispute status
+func (b *DisputeExportRequestBuilder) Status(status DisputeStatus) *DisputeExportRequestBuilder {
+	b.req.Status = &status
+	return b
+}
+
+// Build returns the constructed DisputeExportRequest
+func (b *DisputeExportRequestBuilder) Build() *DisputeExportRequest {
+	return b.req
 }
 
 // ExportData represents export data

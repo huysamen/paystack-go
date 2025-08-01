@@ -27,3 +27,11 @@ func (c *Client) Update(ctx context.Context, idOrCode string, req *SubaccountUpd
 	}
 	return &resp.Data, nil
 }
+
+// UpdateWithBuilder updates an existing subaccount using the builder pattern
+func (c *Client) UpdateWithBuilder(ctx context.Context, idOrCode string, builder *SubaccountUpdateRequestBuilder) (*SubaccountUpdateResponse, error) {
+	if builder == nil {
+		return nil, fmt.Errorf("builder cannot be nil")
+	}
+	return c.Update(ctx, idOrCode, builder.Build())
+}

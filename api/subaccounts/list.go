@@ -39,3 +39,11 @@ func (c *Client) List(ctx context.Context, req *SubaccountListRequest) (*Subacco
 	}
 	return &resp.Data, nil
 }
+
+// ListWithBuilder retrieves a list of subaccounts using the builder pattern
+func (c *Client) ListWithBuilder(ctx context.Context, builder *SubaccountListRequestBuilder) (*SubaccountListResponse, error) {
+	if builder == nil {
+		return c.List(ctx, nil)
+	}
+	return c.List(ctx, builder.Build())
+}
