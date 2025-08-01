@@ -7,13 +7,12 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/huysamen/paystack-go/net"
 	"github.com/huysamen/paystack-go/types"
 )
 
 // UnregisterDomain unregisters a top-level domain or subdomain previously used for Apple Pay integration
 // Note: This uses a custom implementation because the Paystack API requires DELETE with body
-func (c *Client) UnregisterDomain(ctx context.Context, req *UnregisterDomainRequest) (*UnregisterDomainResponse, error) {
+func (c *Client) UnregisterDomain(ctx context.Context, req *UnregisterDomainRequest) (*types.Response[UnregisterDomainResponse], error) {
 	if req == nil {
 		return nil, fmt.Errorf("request cannot be nil")
 	}
@@ -59,14 +58,7 @@ func (c *Client) UnregisterDomain(ctx context.Context, req *UnregisterDomainRequ
 		return nil, fmt.Errorf("failed to decode response: %w", err)
 	}
 
-	// Check for API errors
-	if !apiResp.Status {
-		return nil, &net.PaystackError{
-			StatusCode: resp.StatusCode,
-			Message:    apiResp.Message,
-			Status:     apiResp.Status,
-		}
-	}
-
-	return &apiResp.Data, nil
+	// The response now contains all error information in the Response struct
+	// No need to convert API errors to Go errors - let the caller handle them
+	return &apiResp, nil
 }

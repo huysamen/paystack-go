@@ -14,155 +14,6 @@ import (
 
 const apiURL = "https://api.paystack.co"
 
-// Common Paystack error codes
-const (
-	ErrorCodeInvalidKey            = "invalid_Key"
-	ErrorCodeValidationError       = "validation_error"
-	ErrorCodeInsufficientFunds     = "insufficient_funds"
-	ErrorCodeDuplicateReference    = "duplicate_reference"
-	ErrorCodeTransactionNotFound   = "transaction_not_found"
-	ErrorCodeCustomerNotFound      = "customer_not_found"
-	ErrorCodePlanNotFound          = "plan_not_found"
-	ErrorCodeAuthorizationNotFound = "authorization_not_found"
-)
-
-// Common Paystack error types
-const (
-	ErrorTypeValidation     = "validation_error"
-	ErrorTypeAuthentication = "authentication_error"
-	ErrorTypeAuthorization  = "authorization_error"
-	ErrorTypeNotFound       = "not_found_error"
-	ErrorTypeServerError    = "server_error"
-	ErrorTypeRateLimit      = "rate_limit_error"
-	ErrorTypeUnexpected     = "unexpected_error"
-)
-
-// PaystackError represents an error response from the Paystack API
-type PaystackError struct {
-	StatusCode int            `json:"-"`
-	Message    string         `json:"message"`
-	Status     bool           `json:"status"`
-	Code       string         `json:"code,omitempty"`
-	Type       string         `json:"type,omitempty"`
-	Meta       map[string]any `json:"meta,omitempty"`
-	Cause      error          `json:"-"` // Underlying cause of the error
-}
-
-func (e *PaystackError) Error() string {
-	var errorMsg strings.Builder
-
-	// Base error format
-	errorMsg.WriteString(fmt.Sprintf("paystack api error (status %d): %s", e.StatusCode, e.Message))
-
-	// Add error code if available
-	if e.Code != "" {
-		errorMsg.WriteString(fmt.Sprintf(" [code: %s]", e.Code))
-	}
-
-	// Add error type if available
-	if e.Type != "" {
-		errorMsg.WriteString(fmt.Sprintf(" [type: %s]", e.Type))
-	}
-
-	// Add meta information if available
-	if len(e.Meta) > 0 {
-		if nextStep, ok := e.Meta["nextStep"].(string); ok && nextStep != "" {
-			errorMsg.WriteString(fmt.Sprintf(" [next step: %s]", nextStep))
-		}
-	}
-
-	// Add underlying cause if available
-	if e.Cause != nil {
-		errorMsg.WriteString(fmt.Sprintf(", cause: %v", e.Cause))
-	}
-
-	return errorMsg.String()
-}
-
-// Unwrap returns the underlying cause error for error wrapping support
-func (e *PaystackError) Unwrap() error {
-	return e.Cause
-}
-
-// Is allows error comparison using errors.Is
-func (e *PaystackError) Is(target error) bool {
-	if t, ok := target.(*PaystackError); ok {
-		return e.StatusCode == t.StatusCode && e.Code == t.Code
-	}
-	return false
-}
-
-// IsClientError returns true if the error is a client error (4xx status code)
-func (e *PaystackError) IsClientError() bool {
-	return e.StatusCode >= 400 && e.StatusCode < 500
-}
-
-// IsServerError returns true if the error is a server error (5xx status code)
-func (e *PaystackError) IsServerError() bool {
-	return e.StatusCode >= 500 && e.StatusCode < 600
-}
-
-// IsAuthenticationError returns true if the error is related to authentication
-func (e *PaystackError) IsAuthenticationError() bool {
-	return e.StatusCode == http.StatusUnauthorized ||
-		e.Code == "invalid_Key" ||
-		strings.Contains(strings.ToLower(e.Message), "invalid key")
-}
-
-// IsValidationError returns true if the error is a validation error
-func (e *PaystackError) IsValidationError() bool {
-	return e.StatusCode == http.StatusBadRequest ||
-		e.StatusCode == http.StatusUnprocessableEntity ||
-		e.Type == "validation_error" ||
-		strings.Contains(strings.ToLower(e.Type), "validation")
-}
-
-// IsRateLimitError returns true if the error is due to rate limiting
-func (e *PaystackError) IsRateLimitError() bool {
-	return e.StatusCode == http.StatusTooManyRequests
-}
-
-// IsNotFoundError returns true if the resource was not found
-func (e *PaystackError) IsNotFoundError() bool {
-	return e.StatusCode == http.StatusNotFound
-}
-
-// GetNextStep returns the recommended next step if available in the error meta
-func (e *PaystackError) GetNextStep() string {
-	if len(e.Meta) > 0 {
-		if nextStep, ok := e.Meta["nextStep"].(string); ok {
-			return nextStep
-		}
-	}
-	return ""
-}
-
-// NewPaystackError creates a new PaystackError with the given parameters
-func NewPaystackError(statusCode int, message, code, errorType string) *PaystackError {
-	return &PaystackError{
-		StatusCode: statusCode,
-		Message:    message,
-		Status:     false,
-		Code:       code,
-		Type:       errorType,
-	}
-}
-
-// NewValidationError creates a validation error
-func NewValidationError(message string) *PaystackError {
-	return NewPaystackError(http.StatusBadRequest, message, "", ErrorTypeValidation)
-}
-
-// NewAuthenticationError creates an authentication error
-func NewAuthenticationError(message string) *PaystackError {
-	return NewPaystackError(http.StatusUnauthorized, message, ErrorCodeInvalidKey, ErrorTypeAuthentication)
-}
-
-// NewNotFoundError creates a not found error
-func NewNotFoundError(message string) *PaystackError {
-	return NewPaystackError(http.StatusNotFound, message, "", ErrorTypeNotFound)
-}
-
 func getBaseURL(baseURL ...string) string {
 	if len(baseURL) > 0 && baseURL[0] != "" {
 		return baseURL[0]
@@ -322,42 +173,13 @@ func doReq(ctx context.Context, client *http.Client, method, secret, fullURL str
 		return nil, err
 	}
 
-	switch rsp.StatusCode {
-	case http.StatusOK, http.StatusCreated:
-		return body, nil
-	case http.StatusBadRequest, http.StatusUnauthorized, http.StatusForbidden,
-		http.StatusNotFound, http.StatusUnprocessableEntity, http.StatusTooManyRequests,
-		http.StatusConflict, http.StatusPreconditionFailed:
-		// Try to parse Paystack error response
-		var paystackErr PaystackError
-		if len(body) > 0 {
-			if err := json.Unmarshal(body, &paystackErr); err == nil {
-				paystackErr.StatusCode = rsp.StatusCode
-				return nil, &paystackErr
-			}
-		}
-		// Fallback to generic error if parsing fails
-		return nil, &PaystackError{
-			StatusCode: rsp.StatusCode,
-			Message:    getHTTPErrorMessage(rsp.StatusCode, body),
-			Status:     false,
-		}
-	case http.StatusInternalServerError, http.StatusBadGateway, http.StatusServiceUnavailable,
-		http.StatusGatewayTimeout:
-		// Server errors - these should be reported to Paystack
-		return nil, &PaystackError{
-			StatusCode: rsp.StatusCode,
-			Message:    fmt.Sprintf("Paystack server error (HTTP %d). Please report this to Paystack support.", rsp.StatusCode),
-			Status:     false,
-			Type:       "server_error",
-		}
-	default:
-		// Unexpected status codes
-		return nil, &PaystackError{
-			StatusCode: rsp.StatusCode,
-			Message:    fmt.Sprintf("unexpected HTTP status code: %d", rsp.StatusCode),
-			Status:     false,
-			Type:       "unexpected_error",
-		}
+	// For server errors (5xx), return actual Go errors since these are system issues
+	if rsp.StatusCode >= 500 {
+		return nil, fmt.Errorf("paystack server error (HTTP %d): %s", rsp.StatusCode, getHTTPErrorMessage(rsp.StatusCode, body))
 	}
+
+	// For all other status codes (including 4xx client errors), return the body
+	// The response will be parsed by the calling function and API errors will be
+	// represented as Response objects with status: false
+	return body, nil
 }
