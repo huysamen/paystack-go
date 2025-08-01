@@ -134,10 +134,9 @@ func main() {
 
 	// 5. List all subscriptions for reporting
 	fmt.Println("\n5. Listing all subscriptions...")
-	allSubsReq := &subscriptions.SubscriptionListRequest{
-		PerPage: intPtr(20),
-		Page:    intPtr(1),
-	}
+	allSubsReq := subscriptions.NewSubscriptionListRequest().
+		PerPage(20).
+		Page(1)
 
 	allSubsResp, err := client.Subscriptions.List(context.Background(), allSubsReq)
 	if err != nil {

@@ -9,8 +9,9 @@ import (
 	"github.com/huysamen/paystack-go/net"
 )
 
-// List retrieves a list of settlements
-func (c *Client) List(ctx context.Context, req *SettlementListRequest) (*SettlementListResponse, error) {
+// List retrieves a list of settlements using a builder (fluent interface)
+func (c *Client) List(ctx context.Context, builder *SettlementListRequestBuilder) (*SettlementListResponse, error) {
+	req := builder.Build()
 	params := url.Values{}
 
 	if req != nil {

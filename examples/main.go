@@ -210,11 +210,9 @@ func exportExample() {
 	to := time.Now()
 	perPage := 100
 
-	exportReq := &transactions.TransactionExportRequest{
-		From:    &from,
-		To:      &to,
-		PerPage: &perPage,
-	}
+	exportReq := transactions.NewTransactionExportRequest().
+		DateRange(from, to).
+		PerPage(perPage)
 
 	resp, err := client.Transactions.Export(context.Background(), exportReq)
 	if err != nil {

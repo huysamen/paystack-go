@@ -10,12 +10,13 @@ import (
 	"github.com/huysamen/paystack-go/net"
 )
 
-// ListTransactions retrieves transactions for a specific settlement
-func (c *Client) ListTransactions(ctx context.Context, settlementID string, req *SettlementTransactionListRequest) (*SettlementTransactionListResponse, error) {
+// ListTransactions retrieves transactions for a specific settlement using a builder (fluent interface)
+func (c *Client) ListTransactions(ctx context.Context, settlementID string, builder *SettlementTransactionListRequestBuilder) (*SettlementTransactionListResponse, error) {
 	if settlementID == "" {
 		return nil, fmt.Errorf("settlement_id is required")
 	}
 
+	req := builder.Build()
 	params := url.Values{}
 
 	if req != nil {

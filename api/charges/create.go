@@ -16,3 +16,11 @@ func (c *Client) Create(ctx context.Context, req *CreateChargeRequest) (*CreateC
 	url := c.baseURL + chargesBasePath
 	return net.Post[CreateChargeRequest, ChargeData](ctx, c.client, c.secret, url, req)
 }
+
+// CreateWithBuilder initiates a payment using the builder pattern
+func (c *Client) CreateWithBuilder(ctx context.Context, builder *CreateChargeRequestBuilder) (*CreateChargeResponse, error) {
+	if builder == nil {
+		return nil, fmt.Errorf("builder cannot be nil")
+	}
+	return c.Create(ctx, builder.Build())
+}

@@ -37,3 +37,11 @@ func (c *Client) ValidateAccount(ctx context.Context, req *AccountValidateReques
 	}
 	return &resp.Data, nil
 }
+
+// ValidateAccountWithBuilder validates an account using the builder pattern
+func (c *Client) ValidateAccountWithBuilder(ctx context.Context, builder *AccountValidateRequestBuilder) (*AccountValidateResponse, error) {
+	if builder == nil {
+		return nil, fmt.Errorf("builder cannot be nil")
+	}
+	return c.ValidateAccount(ctx, builder.Build())
+}

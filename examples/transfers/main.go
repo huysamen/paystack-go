@@ -64,10 +64,9 @@ func main() {
 
 	// 2. List transfers
 	fmt.Println("\n=== Listing Transfers ===")
-	listReq := &transfers.TransferListRequest{
-		PerPage: intPtr(10),
-		Page:    intPtr(1),
-	}
+	listReq := transfers.NewTransferListRequest().
+		PerPage(10).
+		Page(1)
 
 	listResp, err := client.Transfers.List(context.Background(), listReq)
 	if err != nil {
@@ -190,11 +189,9 @@ func main() {
 	from := time.Now().AddDate(0, 0, -7)
 	to := time.Now()
 
-	recentReq := &transfers.TransferListRequest{
-		PerPage: intPtr(20),
-		From:    &from,
-		To:      &to,
-	}
+	recentReq := transfers.NewTransferListRequest().
+		PerPage(20).
+		DateRange(from, to)
 
 	recentResp, err := client.Transfers.List(context.Background(), recentReq)
 	if err != nil {

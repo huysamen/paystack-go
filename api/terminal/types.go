@@ -106,6 +106,41 @@ type TerminalListRequest struct {
 	Previous *string `json:"previous,omitempty"` // Cursor for previous page (optional)
 }
 
+// TerminalListRequestBuilder provides a fluent interface for building TerminalListRequest
+type TerminalListRequestBuilder struct {
+	req *TerminalListRequest
+}
+
+// NewTerminalListRequest creates a new builder for TerminalListRequest
+func NewTerminalListRequest() *TerminalListRequestBuilder {
+	return &TerminalListRequestBuilder{
+		req: &TerminalListRequest{},
+	}
+}
+
+// PerPage sets the number of terminals per page
+func (b *TerminalListRequestBuilder) PerPage(perPage int) *TerminalListRequestBuilder {
+	b.req.PerPage = &perPage
+	return b
+}
+
+// Next sets the cursor for next page
+func (b *TerminalListRequestBuilder) Next(next string) *TerminalListRequestBuilder {
+	b.req.Next = &next
+	return b
+}
+
+// Previous sets the cursor for previous page
+func (b *TerminalListRequestBuilder) Previous(previous string) *TerminalListRequestBuilder {
+	b.req.Previous = &previous
+	return b
+}
+
+// Build returns the constructed TerminalListRequest
+func (b *TerminalListRequestBuilder) Build() *TerminalListRequest {
+	return b.req
+}
+
 // TerminalListResponse represents the response from listing terminals
 type TerminalListResponse struct {
 	Status  bool       `json:"status"`
@@ -133,6 +168,35 @@ type TerminalFetchResponse struct {
 type TerminalUpdateRequest struct {
 	Name    *string `json:"name,omitempty"`    // Name of the terminal (optional)
 	Address *string `json:"address,omitempty"` // Address of the terminal (optional)
+}
+
+// TerminalUpdateRequestBuilder provides a fluent interface for building TerminalUpdateRequest
+type TerminalUpdateRequestBuilder struct {
+	req *TerminalUpdateRequest
+}
+
+// NewTerminalUpdateRequest creates a new builder for TerminalUpdateRequest
+func NewTerminalUpdateRequest() *TerminalUpdateRequestBuilder {
+	return &TerminalUpdateRequestBuilder{
+		req: &TerminalUpdateRequest{},
+	}
+}
+
+// Name sets the terminal name
+func (b *TerminalUpdateRequestBuilder) Name(name string) *TerminalUpdateRequestBuilder {
+	b.req.Name = &name
+	return b
+}
+
+// Address sets the terminal address
+func (b *TerminalUpdateRequestBuilder) Address(address string) *TerminalUpdateRequestBuilder {
+	b.req.Address = &address
+	return b
+}
+
+// Build returns the constructed TerminalUpdateRequest
+func (b *TerminalUpdateRequestBuilder) Build() *TerminalUpdateRequest {
+	return b.req
 }
 
 // TerminalUpdateResponse represents the response from updating a terminal

@@ -25,3 +25,11 @@ func (c *Client) Update(ctx context.Context, terminalID string, req *TerminalUpd
 	}
 	return &resp.Data, nil
 }
+
+// UpdateWithBuilder updates a terminal's details using the builder pattern
+func (c *Client) UpdateWithBuilder(ctx context.Context, terminalID string, builder *TerminalUpdateRequestBuilder) (*TerminalUpdateResponse, error) {
+	if builder == nil {
+		return nil, fmt.Errorf("builder cannot be nil")
+	}
+	return c.Update(ctx, terminalID, builder.Build())
+}

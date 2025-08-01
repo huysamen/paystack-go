@@ -89,6 +89,91 @@ type CreatePaymentRequestRequest struct {
 	SplitCode        string     `json:"split_code,omitempty"`
 }
 
+// CreatePaymentRequestRequestBuilder provides a fluent interface for building CreatePaymentRequestRequest
+type CreatePaymentRequestRequestBuilder struct {
+	req *CreatePaymentRequestRequest
+}
+
+// NewCreatePaymentRequestRequest creates a new builder for CreatePaymentRequestRequest
+func NewCreatePaymentRequestRequest(customer string) *CreatePaymentRequestRequestBuilder {
+	return &CreatePaymentRequestRequestBuilder{
+		req: &CreatePaymentRequestRequest{
+			Customer: customer,
+		},
+	}
+}
+
+// Amount sets the payment amount (optional, for flexible amount)
+func (b *CreatePaymentRequestRequestBuilder) Amount(amount int) *CreatePaymentRequestRequestBuilder {
+	b.req.Amount = &amount
+	return b
+}
+
+// DueDate sets the due date
+func (b *CreatePaymentRequestRequestBuilder) DueDate(dueDate string) *CreatePaymentRequestRequestBuilder {
+	b.req.DueDate = dueDate
+	return b
+}
+
+// Description sets the payment description
+func (b *CreatePaymentRequestRequestBuilder) Description(description string) *CreatePaymentRequestRequestBuilder {
+	b.req.Description = description
+	return b
+}
+
+// LineItems sets the line items
+func (b *CreatePaymentRequestRequestBuilder) LineItems(lineItems []LineItem) *CreatePaymentRequestRequestBuilder {
+	b.req.LineItems = lineItems
+	return b
+}
+
+// Tax sets the tax information
+func (b *CreatePaymentRequestRequestBuilder) Tax(tax []Tax) *CreatePaymentRequestRequestBuilder {
+	b.req.Tax = tax
+	return b
+}
+
+// Currency sets the currency
+func (b *CreatePaymentRequestRequestBuilder) Currency(currency string) *CreatePaymentRequestRequestBuilder {
+	b.req.Currency = currency
+	return b
+}
+
+// SendNotification sets whether to send notification
+func (b *CreatePaymentRequestRequestBuilder) SendNotification(sendNotification bool) *CreatePaymentRequestRequestBuilder {
+	b.req.SendNotification = &sendNotification
+	return b
+}
+
+// Draft sets whether this is a draft
+func (b *CreatePaymentRequestRequestBuilder) Draft(draft bool) *CreatePaymentRequestRequestBuilder {
+	b.req.Draft = &draft
+	return b
+}
+
+// HasInvoice sets whether to generate an invoice
+func (b *CreatePaymentRequestRequestBuilder) HasInvoice(hasInvoice bool) *CreatePaymentRequestRequestBuilder {
+	b.req.HasInvoice = &hasInvoice
+	return b
+}
+
+// InvoiceNumber sets the invoice number
+func (b *CreatePaymentRequestRequestBuilder) InvoiceNumber(invoiceNumber int) *CreatePaymentRequestRequestBuilder {
+	b.req.InvoiceNumber = &invoiceNumber
+	return b
+}
+
+// SplitCode sets the split code
+func (b *CreatePaymentRequestRequestBuilder) SplitCode(splitCode string) *CreatePaymentRequestRequestBuilder {
+	b.req.SplitCode = splitCode
+	return b
+}
+
+// Build returns the constructed CreatePaymentRequestRequest
+func (b *CreatePaymentRequestRequestBuilder) Build() *CreatePaymentRequestRequest {
+	return b.req
+}
+
 // UpdatePaymentRequestRequest represents the request to update a payment request
 type UpdatePaymentRequestRequest struct {
 	Customer         string     `json:"customer,omitempty"`
@@ -104,6 +189,89 @@ type UpdatePaymentRequestRequest struct {
 	SplitCode        string     `json:"split_code,omitempty"`
 }
 
+// UpdatePaymentRequestRequestBuilder provides a fluent interface for building UpdatePaymentRequestRequest
+type UpdatePaymentRequestRequestBuilder struct {
+	req *UpdatePaymentRequestRequest
+}
+
+// NewUpdatePaymentRequestRequest creates a new builder for UpdatePaymentRequestRequest
+func NewUpdatePaymentRequestRequest() *UpdatePaymentRequestRequestBuilder {
+	return &UpdatePaymentRequestRequestBuilder{
+		req: &UpdatePaymentRequestRequest{},
+	}
+}
+
+// Customer sets the customer
+func (b *UpdatePaymentRequestRequestBuilder) Customer(customer string) *UpdatePaymentRequestRequestBuilder {
+	b.req.Customer = customer
+	return b
+}
+
+// Amount sets the payment amount
+func (b *UpdatePaymentRequestRequestBuilder) Amount(amount int) *UpdatePaymentRequestRequestBuilder {
+	b.req.Amount = &amount
+	return b
+}
+
+// DueDate sets the due date
+func (b *UpdatePaymentRequestRequestBuilder) DueDate(dueDate string) *UpdatePaymentRequestRequestBuilder {
+	b.req.DueDate = dueDate
+	return b
+}
+
+// Description sets the payment description
+func (b *UpdatePaymentRequestRequestBuilder) Description(description string) *UpdatePaymentRequestRequestBuilder {
+	b.req.Description = description
+	return b
+}
+
+// LineItems sets the line items
+func (b *UpdatePaymentRequestRequestBuilder) LineItems(lineItems []LineItem) *UpdatePaymentRequestRequestBuilder {
+	b.req.LineItems = lineItems
+	return b
+}
+
+// Tax sets the tax information
+func (b *UpdatePaymentRequestRequestBuilder) Tax(tax []Tax) *UpdatePaymentRequestRequestBuilder {
+	b.req.Tax = tax
+	return b
+}
+
+// Currency sets the currency
+func (b *UpdatePaymentRequestRequestBuilder) Currency(currency string) *UpdatePaymentRequestRequestBuilder {
+	b.req.Currency = currency
+	return b
+}
+
+// SendNotification sets whether to send notification
+func (b *UpdatePaymentRequestRequestBuilder) SendNotification(sendNotification bool) *UpdatePaymentRequestRequestBuilder {
+	b.req.SendNotification = &sendNotification
+	return b
+}
+
+// Draft sets whether this is a draft
+func (b *UpdatePaymentRequestRequestBuilder) Draft(draft bool) *UpdatePaymentRequestRequestBuilder {
+	b.req.Draft = &draft
+	return b
+}
+
+// InvoiceNumber sets the invoice number
+func (b *UpdatePaymentRequestRequestBuilder) InvoiceNumber(invoiceNumber int) *UpdatePaymentRequestRequestBuilder {
+	b.req.InvoiceNumber = &invoiceNumber
+	return b
+}
+
+// SplitCode sets the split code
+func (b *UpdatePaymentRequestRequestBuilder) SplitCode(splitCode string) *UpdatePaymentRequestRequestBuilder {
+	b.req.SplitCode = splitCode
+	return b
+}
+
+// Build returns the constructed UpdatePaymentRequestRequest
+func (b *UpdatePaymentRequestRequestBuilder) Build() *UpdatePaymentRequestRequest {
+	return b.req
+}
+
 // ListPaymentRequestsRequest represents the request to list payment requests
 type ListPaymentRequestsRequest struct {
 	PerPage        int    `json:"perPage,omitempty"`
@@ -116,9 +284,104 @@ type ListPaymentRequestsRequest struct {
 	To             string `json:"to,omitempty"`
 }
 
+// ListPaymentRequestsRequestBuilder provides a fluent interface for building ListPaymentRequestsRequest
+type ListPaymentRequestsRequestBuilder struct {
+	req *ListPaymentRequestsRequest
+}
+
+// NewListPaymentRequestsRequest creates a new builder for ListPaymentRequestsRequest
+func NewListPaymentRequestsRequest() *ListPaymentRequestsRequestBuilder {
+	return &ListPaymentRequestsRequestBuilder{
+		req: &ListPaymentRequestsRequest{},
+	}
+}
+
+// PerPage sets the number of payment requests per page
+func (b *ListPaymentRequestsRequestBuilder) PerPage(perPage int) *ListPaymentRequestsRequestBuilder {
+	b.req.PerPage = perPage
+	return b
+}
+
+// Page sets the page number
+func (b *ListPaymentRequestsRequestBuilder) Page(page int) *ListPaymentRequestsRequestBuilder {
+	b.req.Page = page
+	return b
+}
+
+// Customer sets the customer filter
+func (b *ListPaymentRequestsRequestBuilder) Customer(customer string) *ListPaymentRequestsRequestBuilder {
+	b.req.Customer = customer
+	return b
+}
+
+// Status sets the status filter
+func (b *ListPaymentRequestsRequestBuilder) Status(status string) *ListPaymentRequestsRequestBuilder {
+	b.req.Status = status
+	return b
+}
+
+// Currency sets the currency filter
+func (b *ListPaymentRequestsRequestBuilder) Currency(currency string) *ListPaymentRequestsRequestBuilder {
+	b.req.Currency = currency
+	return b
+}
+
+// IncludeArchive sets whether to include archived requests
+func (b *ListPaymentRequestsRequestBuilder) IncludeArchive(includeArchive string) *ListPaymentRequestsRequestBuilder {
+	b.req.IncludeArchive = includeArchive
+	return b
+}
+
+// From sets the start date filter
+func (b *ListPaymentRequestsRequestBuilder) From(from string) *ListPaymentRequestsRequestBuilder {
+	b.req.From = from
+	return b
+}
+
+// To sets the end date filter
+func (b *ListPaymentRequestsRequestBuilder) To(to string) *ListPaymentRequestsRequestBuilder {
+	b.req.To = to
+	return b
+}
+
+// DateRange sets both from and to dates for convenience
+func (b *ListPaymentRequestsRequestBuilder) DateRange(from, to string) *ListPaymentRequestsRequestBuilder {
+	b.req.From = from
+	b.req.To = to
+	return b
+}
+
+// Build returns the constructed ListPaymentRequestsRequest
+func (b *ListPaymentRequestsRequestBuilder) Build() *ListPaymentRequestsRequest {
+	return b.req
+}
+
 // FinalizePaymentRequestRequest represents the request to finalize a payment request
 type FinalizePaymentRequestRequest struct {
 	SendNotification *bool `json:"send_notification,omitempty"`
+}
+
+// FinalizePaymentRequestRequestBuilder provides a fluent interface for building FinalizePaymentRequestRequest
+type FinalizePaymentRequestRequestBuilder struct {
+	req *FinalizePaymentRequestRequest
+}
+
+// NewFinalizePaymentRequestRequest creates a new builder for FinalizePaymentRequestRequest
+func NewFinalizePaymentRequestRequest() *FinalizePaymentRequestRequestBuilder {
+	return &FinalizePaymentRequestRequestBuilder{
+		req: &FinalizePaymentRequestRequest{},
+	}
+}
+
+// SendNotification sets whether to send notification
+func (b *FinalizePaymentRequestRequestBuilder) SendNotification(sendNotification bool) *FinalizePaymentRequestRequestBuilder {
+	b.req.SendNotification = &sendNotification
+	return b
+}
+
+// Build returns the constructed FinalizePaymentRequestRequest
+func (b *FinalizePaymentRequestRequestBuilder) Build() *FinalizePaymentRequestRequest {
+	return b.req
 }
 
 // PaymentRequestTotal represents payment request totals by status and currency

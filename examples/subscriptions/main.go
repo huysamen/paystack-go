@@ -44,11 +44,10 @@ func main() {
 
 	// List subscriptions
 	fmt.Println("\nListing subscriptions...")
-	listReq := &subscriptions.SubscriptionListRequest{
-		PerPage:  intPtr(10),
-		Page:     intPtr(1),
-		Customer: intPtr(createResp.Data.Customer.ID), // filter by customer
-	}
+	listReq := subscriptions.NewSubscriptionListRequest().
+		PerPage(10).
+		Page(1).
+		Customer(createResp.Data.Customer.ID) // filter by customer
 
 	listResp, err := client.Subscriptions.List(context.Background(), listReq)
 	if err != nil {

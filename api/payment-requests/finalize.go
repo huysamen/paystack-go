@@ -18,3 +18,11 @@ func (c *Client) Finalize(ctx context.Context, code string, req *FinalizePayment
 
 	return &resp.Data, nil
 }
+
+// FinalizeWithBuilder finalizes a draft payment request using the builder pattern
+func (c *Client) FinalizeWithBuilder(ctx context.Context, code string, builder *FinalizePaymentRequestRequestBuilder) (*PaymentRequest, error) {
+	if builder == nil {
+		return c.Finalize(ctx, code, &FinalizePaymentRequestRequest{})
+	}
+	return c.Finalize(ctx, code, builder.Build())
+}

@@ -114,11 +114,9 @@ func main() {
 	yesterday := time.Now().AddDate(0, 0, -1)
 	today := time.Now()
 
-	monitorReq := &transfers.TransferListRequest{
-		PerPage: intPtr(100),
-		From:    &yesterday,
-		To:      &today,
-	}
+	monitorReq := transfers.NewTransferListRequest().
+		PerPage(100).
+		DateRange(yesterday, today)
 
 	monitorResp, err := client.Transfers.List(context.Background(), monitorReq)
 	if err != nil {

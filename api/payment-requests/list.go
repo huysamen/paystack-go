@@ -49,3 +49,11 @@ func (c *Client) List(ctx context.Context, req *ListPaymentRequestsRequest) (*ty
 		ctx, c.client, c.secret, endpoint, c.baseURL,
 	)
 }
+
+// ListWithBuilder retrieves payment requests using the builder pattern
+func (c *Client) ListWithBuilder(ctx context.Context, builder *ListPaymentRequestsRequestBuilder) (*types.Response[[]PaymentRequest], error) {
+	if builder == nil {
+		return c.List(ctx, nil)
+	}
+	return c.List(ctx, builder.Build())
+}

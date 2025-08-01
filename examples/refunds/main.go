@@ -14,14 +14,9 @@ func main() {
 	ctx := context.Background()
 
 	// Create a refund for a transaction
-	refundReq := &refunds.RefundCreateRequest{
-		Transaction: "T685312322670591", // Replace with actual transaction reference
-		// Amount is optional - omitting it will refund the full transaction amount
-		// Amount: &[]int{5000}[0], // Partial refund of ₦50.00 in kobo
-		// Currency: &[]string{"NGN"}[0], // Optional, defaults to transaction currency
-		CustomerNote: &[]string{"Product returned due to defect"}[0],
-		MerchantNote: &[]string{"Quality control issue, full refund approved"}[0],
-	}
+	refundReq := refunds.NewRefundCreateRequest("T685312322670591"). // Replace with actual transaction reference
+										CustomerNote("Product returned due to defect").
+										MerchantNote("Quality control issue, full refund approved")
 
 	refund, err := client.Refunds.Create(ctx, refundReq)
 	if err != nil {
@@ -35,11 +30,9 @@ func main() {
 	fmt.Printf("Status: Queued for processing\n")
 
 	// List recent refunds
-	listReq := &refunds.RefundListRequest{
-		PerPage: &[]int{10}[0],
-		Page:    &[]int{1}[0],
-		// Currency: &[]string{"NGN"}[0], // Filter by currency
-	}
+	listReq := refunds.NewRefundListRequest().
+		PerPage(10).
+		Page(1)
 
 	refundsList, err := client.Refunds.List(ctx, listReq)
 	if err != nil {
