@@ -11,8 +11,8 @@ import (
 
 type TransactionInitializeRequest struct {
 	// Required fields
-	Amount int    `json:"amount" validate:"required,min=1"`
-	Email  string `json:"email" validate:"required,email"`
+	Amount int    `json:"amount"`
+	Email  string `json:"email"`
 
 	// Optional fields
 	Currency          types.Currency  `json:"currency,omitempty"`

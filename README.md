@@ -31,7 +31,6 @@ A comprehensive Go client library for the [Paystack API](https://paystack.com/do
 - ✅ **Type Safety**: Strongly typed request/response structures
 - ✅ **Error Handling**: Clean, intuitive error handling with API errors as Response objects
 - ✅ **Configuration**: Support for different environments and custom HTTP clients
-- ✅ **Validation**: Request validation for required fields
 
 ## Installation
 
@@ -137,7 +136,7 @@ func main() {
 
 ### Transactions
 
-- **Initialize Transaction**: Create a new transaction with validation
+- **Initialize Transaction**: Create a new transaction
 - **Verify Transaction**: Verify a transaction by reference
 - **Charge Authorization**: Charge a customer's authorization
 - **List Transactions**: List all transactions with advanced filtering (customer, status, date range, amount, etc.)

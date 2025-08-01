@@ -41,7 +41,7 @@ func (c RefundChannel) String() string {
 
 // RefundCreateRequest represents the request payload for creating a refund
 type RefundCreateRequest struct {
-	Transaction  string  `json:"transaction" validate:"required"`
+	Transaction  string  `json:"transaction"`
 	Amount       *int    `json:"amount,omitempty"`
 	Currency     *string `json:"currency,omitempty"`
 	CustomerNote *string `json:"customer_note,omitempty"`

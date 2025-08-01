@@ -10,9 +10,9 @@ import (
 
 type PlanCreateRequest struct {
 	// Required fields
-	Name     string         `json:"name" validate:"required"`
-	Amount   int            `json:"amount" validate:"required,min=1"`
-	Interval types.Interval `json:"interval" validate:"required"`
+	Name     string         `json:"name"`
+	Amount   int            `json:"amount"`
+	Interval types.Interval `json:"interval"`
 
 	// Optional fields
 	Description  string         `json:"description,omitempty"`
