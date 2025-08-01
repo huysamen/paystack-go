@@ -8,9 +8,6 @@ import (
 
 // Finalize finalizes a draft payment request
 func (c *Client) Finalize(ctx context.Context, code string, req *FinalizePaymentRequestRequest) (*PaymentRequest, error) {
-	if err := ValidateCode(code); err != nil {
-		return nil, err
-	}
 
 	resp, err := net.Post[FinalizePaymentRequestRequest, PaymentRequest](
 		ctx, c.client, c.secret, paymentRequestsBasePath+"/finalize/"+code, req, c.baseURL,

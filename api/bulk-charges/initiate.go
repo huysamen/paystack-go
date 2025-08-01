@@ -40,9 +40,6 @@ func ValidateInitiateBulkChargeRequest(req InitiateBulkChargeRequest) error {
 
 // Initiate sends an array of objects with authorization codes and amounts for batch processing
 func (c *Client) Initiate(ctx context.Context, req InitiateBulkChargeRequest) (*InitiateBulkChargeResponse, error) {
-	if err := ValidateInitiateBulkChargeRequest(req); err != nil {
-		return nil, err
-	}
 
 	resp, err := net.Post[InitiateBulkChargeRequest, InitiateBulkChargeResponse](
 		ctx, c.client, c.secret, bulkChargesBasePath, &req, c.baseURL,

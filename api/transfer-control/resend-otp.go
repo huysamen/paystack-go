@@ -41,9 +41,6 @@ func ValidateResendOTPRequest(req *ResendOTPRequest) error {
 
 // ResendOTP generates a new OTP and sends to customer in the event they are having trouble receiving one
 func (c *Client) ResendOTP(ctx context.Context, req *ResendOTPRequest) (*ResendOTPResponse, error) {
-	if err := ValidateResendOTPRequest(req); err != nil {
-		return nil, err
-	}
 
 	resp, err := net.Post[ResendOTPRequest, ResendOTPResponse](
 		ctx, c.client, c.secret, "/transfer/resend_otp", req, c.baseURL,

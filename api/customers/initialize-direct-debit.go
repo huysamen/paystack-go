@@ -14,24 +14,6 @@ type DirectDebitInitializeRequest struct {
 	Address Address `json:"address"`
 }
 
-func (r *DirectDebitInitializeRequest) Validate() error {
-	if r.Account.Number == "" {
-		return errors.New("account number is required")
-	}
-	if r.Account.BankCode == "" {
-		return errors.New("bank code is required")
-	}
-	if r.Address.Street == "" {
-		return errors.New("address street is required")
-	}
-	if r.Address.City == "" {
-		return errors.New("address city is required")
-	}
-	if r.Address.State == "" {
-		return errors.New("address state is required")
-	}
-	return nil
-}
 
 type DirectDebitInitializeResponse struct {
 	RedirectURL string `json:"redirect_url"`
@@ -48,9 +30,6 @@ func (c *Client) InitializeDirectDebit(ctx context.Context, customerID string, r
 		return nil, errors.New("request cannot be nil")
 	}
 
-	if err := req.Validate(); err != nil {
-		return nil, err
-	}
 
 	path := fmt.Sprintf("%s/%s/initialize-direct-debit", customerBasePath, customerID)
 

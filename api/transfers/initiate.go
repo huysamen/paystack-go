@@ -18,29 +18,9 @@ type TransferInitiateRequest struct {
 	Reference        *string `json:"reference,omitempty"`         // Unique identifier for transfer
 }
 
-func (r *TransferInitiateRequest) Validate() error {
-	if r.Source == "" {
-		return errors.New("source is required")
-	}
-	if r.Source != "balance" {
-		return errors.New("only 'balance' source is supported")
-	}
-	if r.Amount <= 0 {
-		return errors.New("amount must be greater than 0")
-	}
-	if r.Recipient == "" {
-		return errors.New("recipient is required")
-	}
-	return nil
-}
-
 func (c *Client) Initiate(ctx context.Context, req *TransferInitiateRequest) (*types.Response[Transfer], error) {
 	if req == nil {
 		return nil, errors.New("request cannot be nil")
-	}
-
-	if err := req.Validate(); err != nil {
-		return nil, err
 	}
 
 	return net.Post[TransferInitiateRequest, Transfer](

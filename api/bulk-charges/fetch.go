@@ -18,9 +18,6 @@ func ValidateIDOrCode(idOrCode string) error {
 
 // Fetch retrieves a specific bulk charge batch by ID or batch code
 func (c *Client) Fetch(ctx context.Context, idOrCode string) (*FetchBulkChargeBatchResponse, error) {
-	if err := ValidateIDOrCode(idOrCode); err != nil {
-		return nil, err
-	}
 
 	resp, err := net.Get[FetchBulkChargeBatchResponse](
 		ctx, c.client, c.secret, bulkChargesBasePath+"/"+idOrCode, c.baseURL,

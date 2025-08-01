@@ -16,24 +16,12 @@ type SubscriptionCreateRequest struct {
 	StartDate     *time.Time `json:"start_date,omitempty"`    // Date for first debit (ISO 8601)
 }
 
-func (r *SubscriptionCreateRequest) Validate() error {
-	if r.Customer == "" {
-		return errors.New("customer is required")
-	}
-	if r.Plan == "" {
-		return errors.New("plan is required")
-	}
-	return nil
-}
 
 func (c *Client) Create(ctx context.Context, req *SubscriptionCreateRequest) (*types.Response[Subscription], error) {
 	if req == nil {
 		return nil, errors.New("request cannot be nil")
 	}
 
-	if err := req.Validate(); err != nil {
-		return nil, err
-	}
 
 	return net.Post[SubscriptionCreateRequest, Subscription](
 		ctx,

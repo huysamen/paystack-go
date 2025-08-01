@@ -16,20 +16,9 @@ type CustomerCreateRequest struct {
 	Metadata  map[string]any `json:"metadata,omitempty"`
 }
 
-func (r *CustomerCreateRequest) Validate() error {
-	if r.Email == "" {
-		return errors.New("email is required")
-	}
-	return nil
-}
-
 func (c *Client) Create(ctx context.Context, req *CustomerCreateRequest) (*types.Response[Customer], error) {
 	if req == nil {
 		return nil, errors.New("request cannot be nil")
-	}
-
-	if err := req.Validate(); err != nil {
-		return nil, err
 	}
 
 	return net.Post[CustomerCreateRequest, Customer](

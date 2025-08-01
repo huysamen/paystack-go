@@ -21,38 +21,6 @@ type CustomerValidateRequest struct {
 	MiddleName    *string `json:"middle_name,omitempty"`
 }
 
-func (r *CustomerValidateRequest) Validate() error {
-	if r.FirstName == "" {
-		return errors.New("first_name is required")
-	}
-	if r.LastName == "" {
-		return errors.New("last_name is required")
-	}
-	if r.Type == "" {
-		return errors.New("type is required")
-	}
-	if r.Type != "bank_account" {
-		return errors.New("only 'bank_account' type is supported")
-	}
-	if r.Value == "" {
-		return errors.New("value is required")
-	}
-	if r.Country == "" {
-		return errors.New("country is required")
-	}
-	if r.BVN == "" {
-		return errors.New("bvn is required")
-	}
-	if r.Type == "bank_account" {
-		if r.BankCode == "" {
-			return errors.New("bank_code is required for bank_account type")
-		}
-		if r.AccountNumber == "" {
-			return errors.New("account_number is required for bank_account type")
-		}
-	}
-	return nil
-}
 
 type CustomerValidateResponse struct {
 	Message string `json:"message"`
@@ -67,9 +35,6 @@ func (c *Client) Validate(ctx context.Context, code string, req *CustomerValidat
 		return nil, errors.New("request cannot be nil")
 	}
 
-	if err := req.Validate(); err != nil {
-		return nil, err
-	}
 
 	path := fmt.Sprintf("%s/%s/identification", customerBasePath, code)
 

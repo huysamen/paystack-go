@@ -24,20 +24,6 @@ type PlanUpdateRequest struct {
 	UpdateExistingSubscriptions *bool          `json:"update_existing_subscriptions,omitempty"`
 }
 
-// Validate checks if the request has all required fields
-func (r *PlanUpdateRequest) Validate() error {
-	if r.Name == "" {
-		return errors.New("name is required")
-	}
-	if r.Amount <= 0 {
-		return errors.New("amount is required and must be greater than 0")
-	}
-	if r.Interval == types.IntervalUnknown {
-		return errors.New("interval is required")
-	}
-	return nil
-}
-
 type PlanUpdateResponse struct {
 	Status  bool   `json:"status"`
 	Message string `json:"message"`
@@ -50,10 +36,6 @@ func (c *Client) Update(ctx context.Context, idOrCode string, req *PlanUpdateReq
 
 	if req == nil {
 		return nil, errors.New("request cannot be nil")
-	}
-
-	if err := req.Validate(); err != nil {
-		return nil, fmt.Errorf("validation failed: %w", err)
 	}
 
 	return net.Put[PlanUpdateRequest, PlanUpdateResponse](

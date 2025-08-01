@@ -23,9 +23,6 @@ func ValidateFinalizeDisableOTPRequest(req *FinalizeDisableOTPRequest) error {
 
 // FinalizeDisableOTP finalizes the request to disable OTP on your transfers
 func (c *Client) FinalizeDisableOTP(ctx context.Context, req *FinalizeDisableOTPRequest) (*FinalizeDisableOTPResponse, error) {
-	if err := ValidateFinalizeDisableOTPRequest(req); err != nil {
-		return nil, err
-	}
 
 	resp, err := net.Post[FinalizeDisableOTPRequest, FinalizeDisableOTPResponse](
 		ctx, c.client, c.secret, "/transfer/disable_otp_finalize", req, c.baseURL,

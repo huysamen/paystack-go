@@ -18,9 +18,6 @@ func ValidateBatchCode(batchCode string) error {
 
 // Pause pauses processing of a bulk charge batch
 func (c *Client) Pause(ctx context.Context, batchCode string) (*PauseBulkChargeBatchResponse, error) {
-	if err := ValidateBatchCode(batchCode); err != nil {
-		return nil, err
-	}
 
 	resp, err := net.Get[PauseBulkChargeBatchResponse](
 		ctx, c.client, c.secret, bulkChargesBasePath+"/pause/"+batchCode, c.baseURL,

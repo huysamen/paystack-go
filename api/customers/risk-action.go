@@ -21,21 +21,12 @@ type CustomerRiskActionRequest struct {
 	RiskAction *RiskAction `json:"risk_action"` // Optional, defaults to default
 }
 
-func (r *CustomerRiskActionRequest) Validate() error {
-	if r.Customer == "" {
-		return errors.New("customer code or email is required")
-	}
-	return nil
-}
 
 func (c *Client) SetRiskAction(ctx context.Context, req *CustomerRiskActionRequest) (*types.Response[Customer], error) {
 	if req == nil {
 		return nil, errors.New("request cannot be nil")
 	}
 
-	if err := req.Validate(); err != nil {
-		return nil, err
-	}
 
 	path := customerBasePath + "/set_risk_action"
 

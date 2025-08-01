@@ -13,12 +13,6 @@ type DirectDebitActivationChargeRequest struct {
 	AuthorizationID int `json:"authorization_id"`
 }
 
-func (r *DirectDebitActivationChargeRequest) Validate() error {
-	if r.AuthorizationID <= 0 {
-		return errors.New("authorization_id must be a positive integer")
-	}
-	return nil
-}
 
 type DirectDebitActivationChargeResponse struct {
 	Message string `json:"message"`
@@ -33,9 +27,6 @@ func (c *Client) DirectDebitActivationCharge(ctx context.Context, customerID str
 		return nil, errors.New("request cannot be nil")
 	}
 
-	if err := req.Validate(); err != nil {
-		return nil, err
-	}
 
 	path := fmt.Sprintf("%s/%s/directdebit-activation-charge", customerBasePath, customerID)
 

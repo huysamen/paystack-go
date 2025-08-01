@@ -9,9 +9,6 @@ import (
 
 // SendNotification sends notification of a payment request to your customers
 func (c *Client) SendNotification(ctx context.Context, code string) (*types.Response[any], error) {
-	if err := ValidateCode(code); err != nil {
-		return nil, err
-	}
 
 	return net.Post[any, any](
 		ctx, c.client, c.secret, paymentRequestsBasePath+"/notify/"+code, nil, c.baseURL,

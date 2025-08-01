@@ -13,15 +13,6 @@ type SubscriptionDisableRequest struct {
 	Token string `json:"token"` // Email token
 }
 
-func (r *SubscriptionDisableRequest) Validate() error {
-	if r.Code == "" {
-		return errors.New("subscription code is required")
-	}
-	if r.Token == "" {
-		return errors.New("email token is required")
-	}
-	return nil
-}
 
 type SubscriptionDisableResponse struct {
 	Message string `json:"message"`
@@ -32,9 +23,6 @@ func (c *Client) Disable(ctx context.Context, req *SubscriptionDisableRequest) (
 		return nil, errors.New("request cannot be nil")
 	}
 
-	if err := req.Validate(); err != nil {
-		return nil, err
-	}
 
 	path := subscriptionBasePath + "/disable"
 

@@ -9,9 +9,6 @@ import (
 
 // Archive archives a payment request. A payment request will no longer be fetched on list or returned on verify
 func (c *Client) Archive(ctx context.Context, code string) (*types.Response[any], error) {
-	if err := ValidateCode(code); err != nil {
-		return nil, err
-	}
 
 	return net.Post[any, any](
 		ctx, c.client, c.secret, paymentRequestsBasePath+"/archive/"+code, nil, c.baseURL,

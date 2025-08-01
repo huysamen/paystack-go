@@ -16,18 +16,6 @@ type AuthorizationInitializeRequest struct {
 	Address     *Address `json:"address,omitempty"`
 }
 
-func (r *AuthorizationInitializeRequest) Validate() error {
-	if r.Email == "" {
-		return errors.New("email is required")
-	}
-	if r.Channel == "" {
-		return errors.New("channel is required")
-	}
-	if r.Channel != "direct_debit" {
-		return errors.New("only 'direct_debit' channel is supported")
-	}
-	return nil
-}
 
 type AuthorizationInitializeResponse struct {
 	RedirectURL string `json:"redirect_url"`
@@ -40,9 +28,6 @@ func (c *Client) InitializeAuthorization(ctx context.Context, req *Authorization
 		return nil, errors.New("request cannot be nil")
 	}
 
-	if err := req.Validate(); err != nil {
-		return nil, err
-	}
 
 	path := customerBasePath + "/authorization/initialize"
 

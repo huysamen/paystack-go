@@ -13,23 +13,9 @@ type TransferFinalizeRequest struct {
 	OTP          string `json:"otp"`           // OTP sent to business phone
 }
 
-func (r *TransferFinalizeRequest) Validate() error {
-	if r.TransferCode == "" {
-		return errors.New("transfer_code is required")
-	}
-	if r.OTP == "" {
-		return errors.New("otp is required")
-	}
-	return nil
-}
-
 func (c *Client) Finalize(ctx context.Context, req *TransferFinalizeRequest) (*types.Response[Transfer], error) {
 	if req == nil {
 		return nil, errors.New("request cannot be nil")
-	}
-
-	if err := req.Validate(); err != nil {
-		return nil, err
 	}
 
 	path := transferBasePath + "/finalize_transfer"

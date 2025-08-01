@@ -26,17 +26,11 @@ func ValidateChargeStatus(status string) error {
 
 // FetchChargesInBatch retrieves the charges associated with a specified batch code
 func (c *Client) FetchChargesInBatch(ctx context.Context, idOrCode string, req *FetchChargesInBatchRequest) (*FetchChargesInBatchResponse, error) {
-	if err := ValidateIDOrCode(idOrCode); err != nil {
-		return nil, err
-	}
 
 	params := url.Values{}
 
 	if req != nil {
 		if req.Status != nil {
-			if err := ValidateChargeStatus(*req.Status); err != nil {
-				return nil, err
-			}
 			params.Set("status", *req.Status)
 		}
 		if req.PerPage != nil {

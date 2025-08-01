@@ -8,10 +8,6 @@ import (
 
 // Create creates a new payment page
 func (c *Client) Create(ctx context.Context, req *CreatePaymentPageRequest) (*PaymentPage, error) {
-	if err := ValidateCreatePaymentPageRequest(req); err != nil {
-		return nil, err
-	}
-
 	resp, err := net.Post[CreatePaymentPageRequest, PaymentPage](
 		ctx, c.client, c.secret, paymentPagesBasePath, req, c.baseURL,
 	)

@@ -8,9 +8,6 @@ import (
 
 // Create creates a payment request for a transaction on your integration
 func (c *Client) Create(ctx context.Context, req *CreatePaymentRequestRequest) (*PaymentRequest, error) {
-	if err := ValidateCreatePaymentRequestRequest(req); err != nil {
-		return nil, err
-	}
 
 	resp, err := net.Post[CreatePaymentRequestRequest, PaymentRequest](
 		ctx, c.client, c.secret, paymentRequestsBasePath, req, c.baseURL,

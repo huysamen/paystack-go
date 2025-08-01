@@ -7,7 +7,6 @@ import (
 
 	"github.com/huysamen/paystack-go/net"
 	"github.com/huysamen/paystack-go/types"
-	"github.com/huysamen/paystack-go/utils"
 )
 
 type TransactionInitializeRequest struct {
@@ -29,24 +28,6 @@ type TransactionInitializeRequest struct {
 	Bearer            types.Bearer    `json:"bearer,omitempty"`
 }
 
-// Validate checks if the request has all required fields
-func (r *TransactionInitializeRequest) Validate() error {
-	var errs []error
-
-	// Validate amount
-	if err := utils.ValidateAmount(r.Amount); err != nil {
-		errs = append(errs, err)
-	}
-
-	// Validate email
-	if err := utils.ValidateEmail(r.Email); err != nil {
-		errs = append(errs, err)
-	}
-
-	// Return combined errors
-	return utils.CombineValidationErrors(errs...)
-}
-
 type TransactionInitializeResponse struct {
 	AuthorizationURL string `json:"authorization_url"`
 	AccessCode       string `json:"access_code"`
@@ -56,10 +37,6 @@ type TransactionInitializeResponse struct {
 func (c *Client) Initialize(ctx context.Context, req *TransactionInitializeRequest) (*types.Response[TransactionInitializeResponse], error) {
 	if req == nil {
 		return nil, errors.New("request cannot be nil")
-	}
-
-	if err := req.Validate(); err != nil {
-		return nil, fmt.Errorf("validation failed: %w", err)
 	}
 
 	return net.Post[TransactionInitializeRequest, TransactionInitializeResponse](

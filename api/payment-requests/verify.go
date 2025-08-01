@@ -8,9 +8,6 @@ import (
 
 // Verify verifies details of a payment request on your integration
 func (c *Client) Verify(ctx context.Context, code string) (*PaymentRequest, error) {
-	if err := ValidateCode(code); err != nil {
-		return nil, err
-	}
 
 	resp, err := net.Get[PaymentRequest](
 		ctx, c.client, c.secret, paymentRequestsBasePath+"/verify/"+code, c.baseURL,
