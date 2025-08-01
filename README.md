@@ -301,6 +301,13 @@ func main() {
 - **List Settlements**: Get all settlements with status, date, and subaccount filtering
 - **List Settlement Transactions**: Retrieve transactions within a specific settlement
 
+### Subaccounts
+
+- **Create Subaccount**: Create subaccounts for revenue sharing with businesses and partners
+- **List Subaccounts**: Get all subaccounts with pagination and date filtering
+- **Fetch Subaccount**: Retrieve detailed subaccount information by ID or code
+- **Update Subaccount**: Modify subaccount details, commission rates, and contact information
+
 ### Terminal
 
 - **Send Event**: Send invoice or transaction events to terminal devices
@@ -1297,6 +1304,88 @@ func main() {
 
         fmt.Printf("Found %d transactions in settlement %s\n", len(txResp.Data), settlementID)
     }
+}
+```
+
+### Subaccounts
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "log"
+
+    "github.com/huysamen/paystack-go"
+    "github.com/huysamen/paystack-go/api/subaccounts"
+)
+
+func main() {
+    client := paystack.DefaultClient("your-secret-key")
+    ctx := context.Background()
+
+    // Create a subaccount using the builder pattern
+    createReq := subaccounts.NewSubaccountCreateRequest(
+        "TechShop Marketplace",  // business name
+        "044",                   // bank code (Access Bank)
+        "0123456789",           // account number
+        18.5,                   // percentage charge (platform takes 18.5%)
+    ).
+        Description("Electronics vendor on marketplace platform").
+        PrimaryContactName("John Vendor").
+        PrimaryContactEmail("john@techshop.com").
+        PrimaryContactPhone("+2348123456789").
+        Metadata(map[string]any{
+            "vendor_tier": "premium",
+            "category":    "electronics",
+            "verified":    true,
+        })
+
+    resp, err := client.Subaccounts.Create(ctx, createReq)
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    fmt.Printf("Subaccount created: %s (%.1f%% commission)\n", 
+        resp.Data.SubaccountCode, resp.Data.PercentageCharge)
+
+    // Update subaccount with performance-based commission adjustment
+    updateReq := subaccounts.NewSubaccountUpdateRequest().
+        PercentageCharge(15.0). // Reduced commission as reward
+        Description("Premium electronics vendor - Performance tier").
+        Metadata(map[string]any{
+            "vendor_tier":      "premium_plus",
+            "performance_tier": "top_performer",
+            "commission_reason": "performance_reward",
+        })
+
+    updateResp, err := client.Subaccounts.Update(ctx, resp.Data.SubaccountCode, updateReq)
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    fmt.Printf("Commission updated to %.1f%%\n", updateResp.Data.PercentageCharge)
+
+    // List subaccounts with filtering
+    listReq := subaccounts.NewSubaccountListRequest().
+        PerPage(10).
+        Page(1)
+
+    listResp, err := client.Subaccounts.List(ctx, listReq)
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    fmt.Printf("Found %d subaccounts\n", len(listResp.Data))
+
+    // Fetch specific subaccount
+    fetchResp, err := client.Subaccounts.Fetch(ctx, resp.Data.SubaccountCode)
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    fmt.Printf("Fetched: %s - %s\n", fetchResp.Data.BusinessName, fetchResp.Data.SubaccountCode)
 }
 ```
 

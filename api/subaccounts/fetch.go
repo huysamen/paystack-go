@@ -15,9 +15,5 @@ func (c *Client) Fetch(ctx context.Context, idOrCode string) (*SubaccountFetchRe
 
 	endpoint := fmt.Sprintf("%s/%s", subaccountBasePath, idOrCode)
 
-	resp, err := net.Get[SubaccountFetchResponse](ctx, c.client, c.secret, endpoint, c.baseURL)
-	if err != nil {
-		return nil, err
-	}
-	return &resp.Data, nil
+	return net.Get[Subaccount](ctx, c.client, c.secret, endpoint, c.baseURL)
 }

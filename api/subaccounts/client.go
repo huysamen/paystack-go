@@ -1,11 +1,14 @@
 package subaccounts
 
 import (
-	"fmt"
+	"errors"
 	"net/http"
 )
 
 const subaccountBasePath = "/subaccount"
+
+// ErrBuilderRequired is returned when a builder is required but not provided
+var ErrBuilderRequired = errors.New("builder is required - use New*Request() methods to create requests")
 
 type Client struct {
 	client  *http.Client
@@ -20,41 +23,4 @@ func NewClient(httpClient *http.Client, secret, baseURL string) *Client {
 		secret:  secret,
 		baseURL: baseURL,
 	}
-}
-
-// Validation functions
-
-func validateCreateRequest(req *SubaccountCreateRequest) error {
-	if req == nil {
-		return fmt.Errorf("request cannot be nil")
-	}
-	if req.BusinessName == "" {
-		return fmt.Errorf("business_name is required")
-	}
-	if req.BankCode == "" {
-		return fmt.Errorf("settlement_bank is required")
-	}
-	if req.AccountNumber == "" {
-		return fmt.Errorf("account_number is required")
-	}
-	if req.PercentageCharge < 0 || req.PercentageCharge > 100 {
-		return fmt.Errorf("percentage_charge must be between 0 and 100")
-	}
-	return nil
-}
-
-func validateUpdateRequest(req *SubaccountUpdateRequest) error {
-	if req == nil {
-		return fmt.Errorf("request cannot be nil")
-	}
-	if req.BusinessName == "" {
-		return fmt.Errorf("business_name is required")
-	}
-	if req.Description == "" {
-		return fmt.Errorf("description is required")
-	}
-	if req.PercentageCharge != nil && (*req.PercentageCharge < 0 || *req.PercentageCharge > 100) {
-		return fmt.Errorf("percentage_charge must be between 0 and 100")
-	}
-	return nil
 }

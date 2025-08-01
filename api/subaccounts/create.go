@@ -2,30 +2,70 @@ package subaccounts
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/huysamen/paystack-go/net"
 )
 
-// Create creates a new subaccount
-func (c *Client) Create(ctx context.Context, req *SubaccountCreateRequest) (*SubaccountCreateResponse, error) {
-	if err := validateCreateRequest(req); err != nil {
-		return nil, err
-	}
-
-	resp, err := net.Post[SubaccountCreateRequest, SubaccountCreateResponse](
-		ctx, c.client, c.secret, subaccountBasePath, req, c.baseURL,
-	)
-	if err != nil {
-		return nil, err
-	}
-	return &resp.Data, nil
+// SubaccountCreateRequestBuilder provides a fluent interface for building SubaccountCreateRequest
+type SubaccountCreateRequestBuilder struct {
+	req *SubaccountCreateRequest
 }
 
-// CreateWithBuilder creates a new subaccount using the builder pattern
-func (c *Client) CreateWithBuilder(ctx context.Context, builder *SubaccountCreateRequestBuilder) (*SubaccountCreateResponse, error) {
-	if builder == nil {
-		return nil, fmt.Errorf("builder cannot be nil")
+// NewSubaccountCreateRequest creates a new builder for SubaccountCreateRequest
+func NewSubaccountCreateRequest(businessName, bankCode, accountNumber string, percentageCharge float64) *SubaccountCreateRequestBuilder {
+	return &SubaccountCreateRequestBuilder{
+		req: &SubaccountCreateRequest{
+			BusinessName:     businessName,
+			BankCode:         bankCode,
+			AccountNumber:    accountNumber,
+			PercentageCharge: percentageCharge,
+		},
 	}
-	return c.Create(ctx, builder.Build())
+}
+
+// Description sets the subaccount description
+func (b *SubaccountCreateRequestBuilder) Description(description string) *SubaccountCreateRequestBuilder {
+	b.req.Description = &description
+	return b
+}
+
+// PrimaryContactEmail sets the primary contact email
+func (b *SubaccountCreateRequestBuilder) PrimaryContactEmail(email string) *SubaccountCreateRequestBuilder {
+	b.req.PrimaryContactEmail = &email
+	return b
+}
+
+// PrimaryContactName sets the primary contact name
+func (b *SubaccountCreateRequestBuilder) PrimaryContactName(name string) *SubaccountCreateRequestBuilder {
+	b.req.PrimaryContactName = &name
+	return b
+}
+
+// PrimaryContactPhone sets the primary contact phone
+func (b *SubaccountCreateRequestBuilder) PrimaryContactPhone(phone string) *SubaccountCreateRequestBuilder {
+	b.req.PrimaryContactPhone = &phone
+	return b
+}
+
+// Metadata sets the subaccount metadata
+func (b *SubaccountCreateRequestBuilder) Metadata(metadata map[string]any) *SubaccountCreateRequestBuilder {
+	b.req.Metadata = metadata
+	return b
+}
+
+// Build returns the constructed SubaccountCreateRequest
+func (b *SubaccountCreateRequestBuilder) Build() *SubaccountCreateRequest {
+	return b.req
+}
+
+// Create creates a new subaccount using the builder pattern
+func (c *Client) Create(ctx context.Context, builder *SubaccountCreateRequestBuilder) (*SubaccountCreateResponse, error) {
+	if builder == nil {
+		return nil, ErrBuilderRequired
+	}
+
+	req := builder.Build()
+	return net.Post[SubaccountCreateRequest, Subaccount](
+		ctx, c.client, c.secret, subaccountBasePath, req, c.baseURL,
+	)
 }
