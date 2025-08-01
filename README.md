@@ -350,17 +350,115 @@ func main() {
 
 ## Error Handling
 
-The library provides structured error handling with Paystack-specific error types:
+The library provides comprehensive error handling with detailed Paystack-specific error types:
 
 ```go
 resp, err := client.Transactions.Initialize(context.Background(), req)
 if err != nil {
     if paystackErr, ok := err.(*net.PaystackError); ok {
         fmt.Printf("Paystack API Error: %s (Status: %d)\n", paystackErr.Message, paystackErr.StatusCode)
+        
+        // Check error type
+        if paystackErr.IsAuthenticationError() {
+            fmt.Println("Authentication failed - check your API key")
+        } else if paystackErr.IsValidationError() {
+            fmt.Println("Validation error - check your request parameters")
+            if nextStep := paystackErr.GetNextStep(); nextStep != "" {
+                fmt.Printf("Next step: %s\n", nextStep)
+            }
+        } else if paystackErr.IsRateLimitError() {
+            fmt.Println("Rate limited - please retry after some time")
+        } else if paystackErr.IsServerError() {
+            fmt.Println("Server error - please report to Paystack support")
+        }
+        
+        // Access detailed error information
+        fmt.Printf("Error Code: %s\n", paystackErr.Code)
+        fmt.Printf("Error Type: %s\n", paystackErr.Type)
     } else {
         fmt.Printf("Other error: %v\n", err)
     }
     return
+}
+```
+
+### Error Methods
+
+The `PaystackError` type provides several helper methods for error inspection:
+
+- `IsClientError()`: Returns true for 4xx status codes (client errors)
+- `IsServerError()`: Returns true for 5xx status codes (server errors)
+- `IsAuthenticationError()`: Returns true for authentication-related errors
+- `IsValidationError()`: Returns true for validation errors
+- `IsRateLimitError()`: Returns true for rate limiting errors
+- `IsNotFoundError()`: Returns true for 404 errors
+- `GetNextStep()`: Returns recommended next step from error metadata
+
+### Common Error Codes
+
+The library defines constants for common Paystack error codes:
+
+- `ErrorCodeInvalidKey`: Invalid API key
+- `ErrorCodeValidationError`: Validation failed
+- `ErrorCodeInsufficientFunds`: Insufficient account balance
+- `ErrorCodeDuplicateReference`: Duplicate transaction reference
+- `ErrorCodeTransactionNotFound`: Transaction not found
+- `ErrorCodeCustomerNotFound`: Customer not found
+- `ErrorCodePlanNotFound`: Plan not found
+- `ErrorCodeAuthorizationNotFound`: Authorization not found
+
+### HTTP Status Code Mapping
+
+The library handles all standard HTTP status codes as documented in the [Paystack API errors documentation](https://paystack.com/docs/api/errors/):
+
+| Status Code | Description | Error Handling |
+|-------------|-------------|----------------|
+| **200** | Success | Request completed successfully |
+| **201** | Created | Resource created successfully |
+| **400** | Bad Request | Validation or client-side error - check request parameters |
+| **401** | Unauthorized | Invalid or missing API key - check authentication |
+| **403** | Forbidden | Access denied - insufficient permissions |
+| **404** | Not Found | Requested resource does not exist |
+| **409** | Conflict | Request conflicts with current state |
+| **412** | Precondition Failed | Required conditions not met |
+| **422** | Unprocessable Entity | Validation failed on submitted data |
+| **429** | Too Many Requests | Rate limit exceeded - implement backoff/retry |
+| **5xx** | Server Error | Paystack server error - should be reported to support |
+
+### Production Error Handling
+
+For production applications, implement comprehensive error handling:
+
+```go
+func handlePaystackError(err error) {
+    if paystackErr, ok := err.(*net.PaystackError); ok {
+        switch {
+        case paystackErr.IsAuthenticationError():
+            // Log security event, check API key rotation
+            log.Error("Authentication failed", "error", paystackErr.Error())
+            
+        case paystackErr.IsValidationError():
+            // Log validation issue, improve request validation
+            log.Warn("Validation error", "error", paystackErr.Message)
+            if nextStep := paystackErr.GetNextStep(); nextStep != "" {
+                log.Info("Suggestion", "next_step", nextStep)
+            }
+            
+        case paystackErr.IsRateLimitError():
+            // Implement exponential backoff
+            log.Warn("Rate limited, retrying with backoff")
+            
+        case paystackErr.IsServerError():
+            // Report to monitoring, potentially notify Paystack
+            log.Error("Paystack server error", "status", paystackErr.StatusCode)
+            
+        default:
+            log.Error("Unexpected Paystack error", "error", paystackErr.Error())
+        }
+    } else {
+        // Network, timeout, or other non-API errors
+        log.Error("Non-Paystack error", "error", err)
+    }
 }
 ```
 
