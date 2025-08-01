@@ -71,8 +71,9 @@ func advancedConfigExample() {
 	// Create client with custom config
 	client := paystack.NewClient(config)
 
-	// Use the client
-	resp, err := client.Transactions.List(context.Background(), nil)
+	// Use the client with the new builder pattern
+	builder := transactions.NewTransactionListRequest().PerPage(10)
+	resp, err := client.Transactions.List(context.Background(), builder)
 	if err != nil {
 		log.Printf("Error listing transactions: %v", err)
 		return

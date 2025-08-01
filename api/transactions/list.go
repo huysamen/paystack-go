@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/huysamen/paystack-go/net"
+	"github.com/huysamen/paystack-go/options"
 	"github.com/huysamen/paystack-go/types"
 )
 
@@ -20,6 +21,78 @@ type TransactionListRequest struct {
 	From       *time.Time
 	To         *time.Time
 	Amount     *int
+}
+
+// TransactionListRequestBuilder provides a fluent interface for building TransactionListRequest
+type TransactionListRequestBuilder struct {
+	req *TransactionListRequest
+}
+
+// NewTransactionListRequest creates a new builder for TransactionListRequest
+func NewTransactionListRequest() *TransactionListRequestBuilder {
+	return &TransactionListRequestBuilder{
+		req: &TransactionListRequest{},
+	}
+}
+
+// PerPage sets the number of records per page
+func (b *TransactionListRequestBuilder) PerPage(perPage int) *TransactionListRequestBuilder {
+	b.req.PerPage = options.Int(perPage)
+	return b
+}
+
+// Page sets the page number
+func (b *TransactionListRequestBuilder) Page(page int) *TransactionListRequestBuilder {
+	b.req.Page = options.Int(page)
+	return b
+}
+
+// Customer filters by customer ID
+func (b *TransactionListRequestBuilder) Customer(customer uint64) *TransactionListRequestBuilder {
+	b.req.Customer = options.Uint64(customer)
+	return b
+}
+
+// TerminalID filters by terminal ID
+func (b *TransactionListRequestBuilder) TerminalID(terminalID string) *TransactionListRequestBuilder {
+	b.req.TerminalID = options.String(terminalID)
+	return b
+}
+
+// Status filters by transaction status
+func (b *TransactionListRequestBuilder) Status(status string) *TransactionListRequestBuilder {
+	b.req.Status = options.String(status)
+	return b
+}
+
+// DateRange sets both start and end date filters
+func (b *TransactionListRequestBuilder) DateRange(from, to time.Time) *TransactionListRequestBuilder {
+	b.req.From = options.Time(from)
+	b.req.To = options.Time(to)
+	return b
+}
+
+// From sets the start date filter
+func (b *TransactionListRequestBuilder) From(from time.Time) *TransactionListRequestBuilder {
+	b.req.From = options.Time(from)
+	return b
+}
+
+// To sets the end date filter
+func (b *TransactionListRequestBuilder) To(to time.Time) *TransactionListRequestBuilder {
+	b.req.To = options.Time(to)
+	return b
+}
+
+// Amount filters by transaction amount
+func (b *TransactionListRequestBuilder) Amount(amount int) *TransactionListRequestBuilder {
+	b.req.Amount = options.Int(amount)
+	return b
+}
+
+// Build returns the constructed TransactionListRequest
+func (b *TransactionListRequestBuilder) Build() *TransactionListRequest {
+	return b.req
 }
 
 func (r *TransactionListRequest) toQuery() string {
@@ -55,7 +128,9 @@ func (r *TransactionListRequest) toQuery() string {
 
 type TransactionListResponse []types.Transaction
 
-func (c *Client) List(ctx context.Context, req *TransactionListRequest) (*types.Response[TransactionListResponse], error) {
+// List lists transactions using a builder (fluent interface)
+func (c *Client) List(ctx context.Context, builder *TransactionListRequestBuilder) (*types.Response[TransactionListResponse], error) {
+	req := builder.Build()
 	path := transactionBasePath
 
 	if req != nil {
@@ -71,13 +146,4 @@ func (c *Client) List(ctx context.Context, req *TransactionListRequest) (*types.
 		path,
 		c.baseURL,
 	)
-}
-
-// ListPage is a convenience method for simple pagination (deprecated, use List with TransactionListRequest)
-func (c *Client) ListPage(ctx context.Context, perPage, page int) (*types.Response[TransactionListResponse], error) {
-	req := &TransactionListRequest{
-		PerPage: &perPage,
-		Page:    &page,
-	}
-	return c.List(ctx, req)
 }

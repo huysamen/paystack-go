@@ -31,6 +31,34 @@ A comprehensive Go client library for the [Paystack API](https://paystack.com/do
 - ✅ **Type Safety**: Strongly typed request/response structures
 - ✅ **Error Handling**: Clean, intuitive error handling with API errors as Response objects
 - ✅ **Configuration**: Support for different environments and custom HTTP clients
+- ✅ **Builder Pattern**: Fluent, chainable API for complex requests (Transactions module) - no more `&[]int{50}[0]` syntax!
+
+## Key Improvements
+
+### Clean Builder Pattern API
+
+This library is migrating to a fluent builder pattern for complex requests, eliminating the need for awkward pointer syntax:
+
+```go
+// ❌ Old way (error-prone)
+req := &transactions.TransactionListRequest{
+    PerPage:  &[]int{50}[0],
+    Page:     &[]int{1}[0],
+    Customer: &[]uint64{12345}[0],
+    Status:   &[]string{"success"}[0],
+}
+
+// ✅ New way (clean and readable) - Available for Transactions
+builder := transactions.NewTransactionListRequest().
+    PerPage(50).
+    Page(1).
+    Customer(12345).
+    Status("success")
+
+resp, err := client.Transactions.List(context.Background(), builder)
+```
+
+> **Note**: The builder pattern is currently available for **Transactions** and is being gradually rolled out to other modules. Other examples in this README will be updated as the pattern is implemented across all APIs.
 
 ## Installation
 
@@ -139,7 +167,7 @@ func main() {
 - **Initialize Transaction**: Create a new transaction
 - **Verify Transaction**: Verify a transaction by reference
 - **Charge Authorization**: Charge a customer's authorization
-- **List Transactions**: List all transactions with advanced filtering (customer, status, date range, amount, etc.)
+- **List Transactions**: List all transactions with advanced filtering (customer, status, date range, amount, etc.) - **Uses clean builder pattern API!**
 - **Fetch Transaction**: Fetch a single transaction by ID
 - **Export Transactions**: Export transactions to CSV
 - **Partial Debit**: Perform partial debit on a customer's account
@@ -595,22 +623,18 @@ fmt.Printf("Payment status: %s\n", verifyResp.Data.Status)
 ### List Transactions with Advanced Filtering
 
 ```go
-// List with customer filter and date range
+// List with customer filter and date range using builder pattern
 from := time.Now().AddDate(0, -1, 0) // Last month
 to := time.Now()
-customer := uint64(12345)
-status := "success"
 
-listReq := &transactions.TransactionListRequest{
-    PerPage:  &[]int{50}[0],
-    Page:     &[]int{1}[0],
-    Customer: &customer,
-    Status:   &status,
-    From:     &from,
-    To:       &to,
-}
+builder := transactions.NewTransactionListRequest().
+    PerPage(50).
+    Page(1).
+    Customer(12345).
+    Status("success").
+    DateRange(from, to)
 
-resp, err := client.Transactions.List(listReq)
+resp, err := client.Transactions.List(context.Background(), builder)
 if err != nil {
     log.Fatal(err)
 }
