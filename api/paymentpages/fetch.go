@@ -12,16 +12,5 @@ type FetchPaymentPageResponse = types.Response[PaymentPage]
 
 // Fetch gets details of a payment page on your integration
 func (c *Client) Fetch(ctx context.Context, idOrSlug string) (*FetchPaymentPageResponse, error) {
-	resp, err := net.Get[PaymentPage](
-		ctx,
-		c.client,
-		c.secret,
-		paymentPagesBasePath+"/"+idOrSlug,
-		c.baseURL,
-	)
-	if err != nil {
-		return nil, err
-	}
-
-	return resp, nil
+	return net.Get[PaymentPage](ctx, c.Client, c.Secret, basePath+"/"+idOrSlug, c.BaseURL)
 }

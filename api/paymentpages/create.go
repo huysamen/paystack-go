@@ -153,24 +153,6 @@ func (b *CreatePaymentPageRequestBuilder) Build() *CreatePaymentPageRequest {
 type CreatePaymentPageResponse = types.Response[PaymentPage]
 
 // Create creates a new payment page using the builder pattern
-func (c *Client) Create(ctx context.Context, builder *CreatePaymentPageRequestBuilder) (*CreatePaymentPageResponse, error) {
-	if builder == nil {
-		return nil, ErrBuilderRequired
-	}
-
-	req := builder.Build()
-
-	resp, err := net.Post[CreatePaymentPageRequest, PaymentPage](
-		ctx,
-		c.client,
-		c.secret,
-		paymentPagesBasePath,
-		req,
-		c.baseURL,
-	)
-	if err != nil {
-		return nil, err
-	}
-
-	return resp, nil
+func (c *Client) Create(ctx context.Context, builder *CreatePaymentPageRequestBuilder) (*types.Response[PaymentPage], error) {
+	return net.Post[CreatePaymentPageRequest, PaymentPage](ctx, c.Client, c.Secret, basePath, builder.Build(), c.BaseURL)
 }

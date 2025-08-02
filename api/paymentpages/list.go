@@ -81,16 +81,10 @@ func (c *Client) List(ctx context.Context, builder *ListPaymentPagesRequestBuild
 		}
 	}
 
-	endpoint := paymentPagesBasePath
+	endpoint := basePath
 	if len(params) > 0 {
 		endpoint += "?" + params.Encode()
 	}
 
-	return net.Get[[]PaymentPage](
-		ctx,
-		c.client,
-		c.secret,
-		endpoint,
-		c.baseURL,
-	)
+	return net.Get[[]PaymentPage](ctx, c.Client, c.Secret, endpoint, c.BaseURL)
 }
