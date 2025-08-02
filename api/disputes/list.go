@@ -85,11 +85,7 @@ func (b *ListDisputesBuilder) Build() *ListDisputesRequest {
 
 // List retrieves disputes filed against your integration
 func (c *Client) List(ctx context.Context, builder *ListDisputesBuilder) (*types.Response[[]Dispute], error) {
-	if builder == nil {
-		return nil, ErrBuilderRequired
-	}
-
-	endpoint := c.baseURL + disputesBasePath
+	endpoint := basePath
 	req := builder.Build()
 
 	// Build query parameters
@@ -117,9 +113,5 @@ func (c *Client) List(ctx context.Context, builder *ListDisputesBuilder) (*types
 		endpoint += "?" + params.Encode()
 	}
 
-	resp, err := net.Get[[]Dispute](ctx, c.client, c.secret, endpoint, c.baseURL)
-	if err != nil {
-		return nil, err
-	}
-	return resp, nil
+	return net.Get[[]Dispute](ctx, c.Client, c.Secret, endpoint, c.BaseURL)
 }

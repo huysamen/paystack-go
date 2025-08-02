@@ -1,14 +1,11 @@
 package disputes
 
 import (
-"context"
-"errors"
+	"context"
 
-"github.com/huysamen/paystack-go/net"
-"github.com/huysamen/paystack-go/types"
-)
-
-// UpdateDisputeRequest represents the request to update a dispute
+	"github.com/huysamen/paystack-go/net"
+	"github.com/huysamen/paystack-go/types"
+) // UpdateDisputeRequest represents the request to update a dispute
 type UpdateDisputeRequest struct {
 	RefundAmount     *int    `json:"refund_amount,omitempty"`
 	UploadedFileName *string `json:"uploaded_filename,omitempty"`
@@ -48,20 +45,5 @@ func (b *UpdateDisputeBuilder) Build() *UpdateDisputeRequest {
 
 // Update updates the details of a dispute on your integration
 func (c *Client) Update(ctx context.Context, disputeID string, builder *UpdateDisputeBuilder) (*types.Response[Dispute], error) {
-	if disputeID == "" {
-		return nil, errors.New("dispute ID is required")
-	}
-
-	if builder == nil {
-		return nil, ErrBuilderRequired
-	}
-
-	endpoint := c.baseURL + disputesBasePath + "/" + disputeID
-	req := builder.Build()
-
-	resp, err := net.Put[UpdateDisputeRequest, Dispute](ctx, c.client, c.secret, endpoint, req, c.baseURL)
-	if err != nil {
-		return nil, err
-	}
-	return resp, nil
+	return net.Put[UpdateDisputeRequest, Dispute](ctx, c.Client, c.Secret, basePath+"/"+disputeID, builder.Build(), c.BaseURL)
 }

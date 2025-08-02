@@ -2,7 +2,6 @@ package disputes
 
 import (
 	"context"
-	"errors"
 	"time"
 
 	"github.com/huysamen/paystack-go/net"
@@ -58,20 +57,5 @@ func (b *AddEvidenceBuilder) Build() *AddEvidenceRequest {
 
 // AddEvidence provides evidence for a dispute
 func (c *Client) AddEvidence(ctx context.Context, disputeID string, builder *AddEvidenceBuilder) (*types.Response[Evidence], error) {
-	if disputeID == "" {
-		return nil, errors.New("dispute ID is required")
-	}
-
-	if builder == nil {
-		return nil, ErrBuilderRequired
-	}
-
-	endpoint := c.baseURL + disputesBasePath + "/" + disputeID + "/evidence"
-	req := builder.Build()
-
-	resp, err := net.Post[AddEvidenceRequest, Evidence](ctx, c.client, c.secret, endpoint, req, c.baseURL)
-	if err != nil {
-		return nil, err
-	}
-	return resp, nil
+	return net.Post[AddEvidenceRequest, Evidence](ctx, c.Client, c.Secret, basePath+"/"+disputeID+"/evidence", builder.Build(), c.BaseURL)
 }

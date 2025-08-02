@@ -1,11 +1,11 @@
 package disputes
 
 import (
-"context"
-"errors"
+	"context"
+	"errors"
 
-"github.com/huysamen/paystack-go/net"
-"github.com/huysamen/paystack-go/types"
+	"github.com/huysamen/paystack-go/net"
+	"github.com/huysamen/paystack-go/types"
 )
 
 // ListTransactionDisputesResponse represents the response from listing transaction disputes
@@ -17,10 +17,5 @@ func (c *Client) ListTransactionDisputes(ctx context.Context, transactionID stri
 		return nil, errors.New("transaction ID is required")
 	}
 
-	endpoint := c.baseURL + "/transaction/" + transactionID + "/disputes"
-	resp, err := net.Get[TransactionDisputeData](ctx, c.client, c.secret, endpoint, c.baseURL)
-	if err != nil {
-		return nil, err
-	}
-	return resp, nil
+	return net.Get[TransactionDisputeData](ctx, c.Client, c.Secret, "/transaction/"+transactionID+"/disputes", c.BaseURL)
 }

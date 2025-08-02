@@ -85,11 +85,7 @@ func (b *ExportDisputesBuilder) Build() *ExportDisputesRequest {
 
 // Export exports disputes available on your integration
 func (c *Client) Export(ctx context.Context, builder *ExportDisputesBuilder) (*types.Response[ExportData], error) {
-	if builder == nil {
-		return nil, ErrBuilderRequired
-	}
-
-	endpoint := c.baseURL + disputesBasePath + "/export"
+	endpoint := basePath + "/export"
 	req := builder.Build()
 
 	// Build query parameters
@@ -117,9 +113,5 @@ func (c *Client) Export(ctx context.Context, builder *ExportDisputesBuilder) (*t
 		endpoint += "?" + params.Encode()
 	}
 
-	resp, err := net.Get[ExportData](ctx, c.client, c.secret, endpoint, c.baseURL)
-	if err != nil {
-		return nil, err
-	}
-	return resp, nil
+	return net.Get[ExportData](ctx, c.Client, c.Secret, endpoint, c.BaseURL)
 }

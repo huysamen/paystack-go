@@ -1,14 +1,11 @@
 package disputes
 
 import (
-"context"
-"errors"
+	"context"
 
-"github.com/huysamen/paystack-go/net"
-"github.com/huysamen/paystack-go/types"
-)
-
-// ResolveDisputeRequest represents the request to resolve a dispute
+	"github.com/huysamen/paystack-go/net"
+	"github.com/huysamen/paystack-go/types"
+) // ResolveDisputeRequest represents the request to resolve a dispute
 type ResolveDisputeRequest struct {
 	Resolution       DisputeResolution `json:"resolution"`
 	Message          string            `json:"message"`
@@ -50,20 +47,5 @@ func (b *ResolveDisputeBuilder) Build() *ResolveDisputeRequest {
 
 // Resolve resolves a dispute on your integration
 func (c *Client) Resolve(ctx context.Context, disputeID string, builder *ResolveDisputeBuilder) (*types.Response[Dispute], error) {
-	if disputeID == "" {
-		return nil, errors.New("dispute ID is required")
-	}
-
-	if builder == nil {
-		return nil, ErrBuilderRequired
-	}
-
-	endpoint := c.baseURL + disputesBasePath + "/" + disputeID + "/resolve"
-	req := builder.Build()
-
-	resp, err := net.Put[ResolveDisputeRequest, Dispute](ctx, c.client, c.secret, endpoint, req, c.baseURL)
-	if err != nil {
-		return nil, err
-	}
-	return resp, nil
+	return net.Put[ResolveDisputeRequest, Dispute](ctx, c.Client, c.Secret, basePath+"/"+disputeID+"/resolve", builder.Build(), c.BaseURL)
 }
