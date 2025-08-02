@@ -36,12 +36,6 @@ func (b *ResendOTPRequestBuilder) Build() *ResendOTPRequest {
 
 // ResendOTP generates a new OTP and sends to customer in the event they are having trouble receiving one
 func (c *Client) ResendOTP(ctx context.Context, builder *ResendOTPRequestBuilder) (*types.Response[any], error) {
-	if builder == nil {
-		return nil, ErrBuilderRequired
-	}
-
 	req := builder.Build()
-	return net.Post[ResendOTPRequest, any](
-		ctx, c.client, c.secret, "/transfer/resend_otp", req, c.baseURL,
-	)
+	return net.Post[ResendOTPRequest, any](ctx, c.Client, c.Secret, "/transfer/resend_otp", req, c.BaseURL)
 }

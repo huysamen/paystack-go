@@ -9,5 +9,5 @@ import (
 
 // CheckBalance fetches the available balance on your integration
 func (c *Client) CheckBalance(ctx context.Context) (*types.Response[[]Balance], error) {
-	return net.Get[[]Balance](ctx, c.client, c.secret, "/balance", "", c.baseURL)
+	return net.Get[[]Balance](ctx, c.Client, c.Secret, basePath, "", c.BaseURL)
 }

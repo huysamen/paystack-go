@@ -30,12 +30,6 @@ func (b *FinalizeDisableOTPRequestBuilder) Build() *FinalizeDisableOTPRequest {
 
 // FinalizeDisableOTP finalizes the request to disable OTP on your transfers
 func (c *Client) FinalizeDisableOTP(ctx context.Context, builder *FinalizeDisableOTPRequestBuilder) (*types.Response[any], error) {
-	if builder == nil {
-		return nil, ErrBuilderRequired
-	}
-
 	req := builder.Build()
-	return net.Post[FinalizeDisableOTPRequest, any](
-		ctx, c.client, c.secret, "/transfer/disable_otp_finalize", req, c.baseURL,
-	)
+	return net.Post[FinalizeDisableOTPRequest, any](ctx, c.Client, c.Secret, "/transfer/disable_otp_finalize", req, c.BaseURL)
 }

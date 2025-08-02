@@ -37,40 +37,19 @@ type FinalizeDisableOTPRequest struct {
 }
 
 // CheckBalanceResponse represents the response from checking balance
-type CheckBalanceResponse struct {
-	Status  bool      `json:"status"`
-	Message string    `json:"message"`
-	Data    []Balance `json:"data"`
-}
+type CheckBalanceResponse = types.Response[[]Balance]
 
 // FetchBalanceLedgerResponse represents the response from fetching balance ledger
-type FetchBalanceLedgerResponse struct {
-	Status  bool            `json:"status"`
-	Message string          `json:"message"`
-	Data    []BalanceLedger `json:"data"`
-	Meta    *types.Meta     `json:"meta,omitempty"`
-}
+type FetchBalanceLedgerResponse = types.Response[[]BalanceLedger]
 
 // ResendOTPResponse represents the response from resending OTP
-type ResendOTPResponse struct {
-	Status  bool   `json:"status"`
-	Message string `json:"message"`
-}
+type ResendOTPResponse = types.Response[any]
 
 // DisableOTPResponse represents the response from disabling OTP
-type DisableOTPResponse struct {
-	Status  bool   `json:"status"`
-	Message string `json:"message"`
-}
+type DisableOTPResponse = types.Response[any]
 
 // FinalizeDisableOTPResponse represents the response from finalizing disable OTP
-type FinalizeDisableOTPResponse struct {
-	Status  bool   `json:"status"`
-	Message string `json:"message"`
-}
+type FinalizeDisableOTPResponse = types.Response[any]
 
 // EnableOTPResponse represents the response from enabling OTP
-type EnableOTPResponse struct {
-	Status  bool   `json:"status"`
-	Message string `json:"message"`
-}
+type EnableOTPResponse = types.Response[any]
