@@ -1,10 +1,14 @@
 package transfercontrol
 
 import (
+	"errors"
 	"net/http"
 )
 
 const transferControlBasePath = "/balance"
+
+// ErrBuilderRequired is returned when a builder is required but not provided
+var ErrBuilderRequired = errors.New("builder is required")
 
 // Client handles transfer control operations
 type Client struct {

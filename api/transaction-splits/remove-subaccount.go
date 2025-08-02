@@ -2,26 +2,25 @@ package transaction_splits
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"github.com/huysamen/paystack-go/net"
+	"github.com/huysamen/paystack-go/types"
 )
 
 // RemoveSubaccount removes a subaccount from a transaction split
-func (c *Client) RemoveSubaccount(ctx context.Context, id string, req *TransactionSplitSubaccountRemoveRequest) (*TransactionSplitSubaccountRemoveResponse, error) {
-	if err := validateTransactionSplitID(id); err != nil {
-		return nil, err
+func (c *Client) RemoveSubaccount(ctx context.Context, id string, builder *TransactionSplitSubaccountRemoveRequestBuilder) (*types.Response[any], error) {
+	if id == "" {
+		return nil, errors.New("transaction split ID is required")
 	}
-	if err := validateSubaccountRemoveRequest(req); err != nil {
-		return nil, err
+	if builder == nil {
+		return nil, ErrBuilderRequired
 	}
 
+	req := builder.Build()
 	endpoint := fmt.Sprintf("%s/%s/subaccount/remove", transactionSplitBasePath, id)
-	resp, err := net.Post[TransactionSplitSubaccountRemoveRequest, TransactionSplitSubaccountRemoveResponse](
+	return net.Post[TransactionSplitSubaccountRemoveRequest, any](
 		ctx, c.client, c.secret, endpoint, req, c.baseURL,
 	)
-	if err != nil {
-		return nil, err
-	}
-	return &resp.Data, nil
 }

@@ -7,10 +7,16 @@ import (
 	"time"
 
 	"github.com/huysamen/paystack-go/net"
+	"github.com/huysamen/paystack-go/types"
 )
 
 // List retrieves a list of transfer recipients
-func (c *Client) List(ctx context.Context, req *TransferRecipientListRequest) (*TransferRecipientListResponse, error) {
+func (c *Client) List(ctx context.Context, builder *TransferRecipientListRequestBuilder) (*types.Response[[]TransferRecipient], error) {
+	if builder == nil {
+		return nil, ErrBuilderRequired
+	}
+
+	req := builder.Build()
 	params := url.Values{}
 
 	if req != nil {
@@ -28,14 +34,10 @@ func (c *Client) List(ctx context.Context, req *TransferRecipientListRequest) (*
 		}
 	}
 
-	endpoint := transferRecipientBasePath
+	queryParams := ""
 	if len(params) > 0 {
-		endpoint += "?" + params.Encode()
+		queryParams = params.Encode()
 	}
 
-	resp, err := net.Get[TransferRecipientListResponse](ctx, c.client, c.secret, endpoint, c.baseURL)
-	if err != nil {
-		return nil, err
-	}
-	return &resp.Data, nil
+	return net.Get[[]TransferRecipient](ctx, c.client, c.secret, transferRecipientBasePath, queryParams, c.baseURL)
 }

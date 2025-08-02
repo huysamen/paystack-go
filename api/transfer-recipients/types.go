@@ -275,3 +275,33 @@ type TransferRecipientDeleteResponse struct {
 	Status  bool   `json:"status"`
 	Message string `json:"message"`
 }
+
+// BulkCreateTransferRecipientRequestBuilder builds a BulkCreateTransferRecipientRequest
+type BulkCreateTransferRecipientRequestBuilder struct {
+	request BulkCreateTransferRecipientRequest
+}
+
+// NewBulkCreateTransferRecipientRequestBuilder creates a new builder
+func NewBulkCreateTransferRecipientRequestBuilder() *BulkCreateTransferRecipientRequestBuilder {
+	return &BulkCreateTransferRecipientRequestBuilder{}
+}
+
+// Batch sets the batch of recipients
+func (b *BulkCreateTransferRecipientRequestBuilder) Batch(batch []BulkRecipientItem) *BulkCreateTransferRecipientRequestBuilder {
+	b.request.Batch = batch
+	return b
+}
+
+// AddRecipient adds a single recipient to the batch
+func (b *BulkCreateTransferRecipientRequestBuilder) AddRecipient(item BulkRecipientItem) *BulkCreateTransferRecipientRequestBuilder {
+	if b.request.Batch == nil {
+		b.request.Batch = make([]BulkRecipientItem, 0)
+	}
+	b.request.Batch = append(b.request.Batch, item)
+	return b
+}
+
+// Build returns the built BulkCreateTransferRecipientRequest
+func (b *BulkCreateTransferRecipientRequestBuilder) Build() *BulkCreateTransferRecipientRequest {
+	return &b.request
+}

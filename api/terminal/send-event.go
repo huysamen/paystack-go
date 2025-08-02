@@ -2,26 +2,24 @@ package terminal
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"github.com/huysamen/paystack-go/net"
+	"github.com/huysamen/paystack-go/types"
 )
 
 // SendEvent sends an event to a terminal
-func (c *Client) SendEvent(ctx context.Context, terminalID string, req *TerminalSendEventRequest) (*TerminalSendEventResponse, error) {
-	if err := validateTerminalID(terminalID); err != nil {
-		return nil, err
+func (c *Client) SendEvent(ctx context.Context, terminalID string, req *TerminalSendEventRequest) (*types.Response[any], error) {
+	if terminalID == "" {
+		return nil, errors.New("terminal ID is required")
 	}
-	if err := validateSendEventRequest(req); err != nil {
-		return nil, err
+	if req == nil {
+		return nil, errors.New("request cannot be nil")
 	}
 
 	endpoint := fmt.Sprintf("%s/%s/event", terminalBasePath, terminalID)
-	resp, err := net.Post[TerminalSendEventRequest, TerminalSendEventResponse](
+	return net.Post[TerminalSendEventRequest, any](
 		ctx, c.client, c.secret, endpoint, req, c.baseURL,
 	)
-	if err != nil {
-		return nil, err
-	}
-	return &resp.Data, nil
 }

@@ -1,11 +1,15 @@
 package transfer_recipients
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
 )
 
 const transferRecipientBasePath = "/transferrecipient"
+
+// ErrBuilderRequired is returned when a builder is required but not provided
+var ErrBuilderRequired = errors.New("builder is required")
 
 type Client struct {
 	client  *http.Client

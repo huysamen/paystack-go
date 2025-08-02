@@ -4,14 +4,10 @@ import (
 	"context"
 
 	"github.com/huysamen/paystack-go/net"
+	"github.com/huysamen/paystack-go/types"
 )
 
 // CheckBalance fetches the available balance on your integration
-func (c *Client) CheckBalance(ctx context.Context) (*CheckBalanceResponse, error) {
-	resp, err := net.Get[CheckBalanceResponse](ctx, c.client, c.secret, "/balance", c.baseURL)
-	if err != nil {
-		return nil, err
-	}
-
-	return &resp.Data, nil
+func (c *Client) CheckBalance(ctx context.Context) (*types.Response[[]Balance], error) {
+	return net.Get[[]Balance](ctx, c.client, c.secret, "/balance", "", c.baseURL)
 }

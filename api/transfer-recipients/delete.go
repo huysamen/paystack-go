@@ -2,22 +2,19 @@ package transfer_recipients
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"github.com/huysamen/paystack-go/net"
+	"github.com/huysamen/paystack-go/types"
 )
 
 // Delete deletes a transfer recipient (sets it to inactive)
-func (c *Client) Delete(ctx context.Context, idOrCode string) (*TransferRecipientDeleteResponse, error) {
+func (c *Client) Delete(ctx context.Context, idOrCode string) (*types.Response[any], error) {
 	if idOrCode == "" {
-		return nil, fmt.Errorf("id_or_code is required")
+		return nil, errors.New("id or code is required")
 	}
 
 	endpoint := fmt.Sprintf("%s/%s", transferRecipientBasePath, idOrCode)
-
-	resp, err := net.Delete[TransferRecipientDeleteResponse](ctx, c.client, c.secret, endpoint, c.baseURL)
-	if err != nil {
-		return nil, err
-	}
-	return &resp.Data, nil
+	return net.Delete[any](ctx, c.client, c.secret, endpoint, c.baseURL)
 }

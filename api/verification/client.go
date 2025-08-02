@@ -1,6 +1,7 @@
 package verification
 
 import (
+	"errors"
 	"net/http"
 )
 
@@ -9,6 +10,9 @@ const (
 	accountValidateBasePath = "/bank/validate"
 	cardBINResolveBasePath  = "/decision/bin"
 )
+
+// ErrBuilderRequired is returned when a builder is required but not provided
+var ErrBuilderRequired = errors.New("builder is required")
 
 type Client struct {
 	client  *http.Client

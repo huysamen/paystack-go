@@ -4,19 +4,17 @@ import (
 	"context"
 
 	"github.com/huysamen/paystack-go/net"
+	"github.com/huysamen/paystack-go/types"
 )
 
 // Create creates a new transfer recipient
-func (c *Client) Create(ctx context.Context, req *TransferRecipientCreateRequest) (*TransferRecipientCreateResponse, error) {
-	if err := validateCreateRequest(req); err != nil {
-		return nil, err
+func (c *Client) Create(ctx context.Context, builder *TransferRecipientCreateRequestBuilder) (*types.Response[TransferRecipient], error) {
+	if builder == nil {
+		return nil, ErrBuilderRequired
 	}
 
-	resp, err := net.Post[TransferRecipientCreateRequest, TransferRecipientCreateResponse](
+	req := builder.Build()
+	return net.Post[TransferRecipientCreateRequest, TransferRecipient](
 		ctx, c.client, c.secret, transferRecipientBasePath, req, c.baseURL,
 	)
-	if err != nil {
-		return nil, err
-	}
-	return &resp.Data, nil
 }

@@ -71,6 +71,65 @@ type TransactionSplitCreateRequest struct {
 	BearerSubaccount *string                      `json:"bearer_subaccount,omitempty"` // Subaccount code if bearer_type is subaccount (optional)
 }
 
+// TransactionSplitCreateRequestBuilder provides a fluent interface for building TransactionSplitCreateRequest
+type TransactionSplitCreateRequestBuilder struct {
+	name             string
+	splitType        TransactionSplitType
+	currency         types.Currency
+	subaccounts      []TransactionSplitSubaccount
+	bearerType       *TransactionSplitBearerType
+	bearerSubaccount *string
+}
+
+// NewTransactionSplitCreateRequest creates a new builder for creating a transaction split
+func NewTransactionSplitCreateRequest(name string, splitType TransactionSplitType, currency types.Currency) *TransactionSplitCreateRequestBuilder {
+	return &TransactionSplitCreateRequestBuilder{
+		name:        name,
+		splitType:   splitType,
+		currency:    currency,
+		subaccounts: make([]TransactionSplitSubaccount, 0),
+	}
+}
+
+// AddSubaccount adds a subaccount to the split
+func (b *TransactionSplitCreateRequestBuilder) AddSubaccount(subaccount string, share int) *TransactionSplitCreateRequestBuilder {
+	b.subaccounts = append(b.subaccounts, TransactionSplitSubaccount{
+		Subaccount: subaccount,
+		Share:      share,
+	})
+	return b
+}
+
+// Subaccounts sets all subaccounts at once
+func (b *TransactionSplitCreateRequestBuilder) Subaccounts(subaccounts []TransactionSplitSubaccount) *TransactionSplitCreateRequestBuilder {
+	b.subaccounts = subaccounts
+	return b
+}
+
+// BearerType sets who bears the charges
+func (b *TransactionSplitCreateRequestBuilder) BearerType(bearerType TransactionSplitBearerType) *TransactionSplitCreateRequestBuilder {
+	b.bearerType = &bearerType
+	return b
+}
+
+// BearerSubaccount sets the subaccount that bears the charges (when bearer_type is subaccount)
+func (b *TransactionSplitCreateRequestBuilder) BearerSubaccount(subaccount string) *TransactionSplitCreateRequestBuilder {
+	b.bearerSubaccount = &subaccount
+	return b
+}
+
+// Build creates the TransactionSplitCreateRequest
+func (b *TransactionSplitCreateRequestBuilder) Build() *TransactionSplitCreateRequest {
+	return &TransactionSplitCreateRequest{
+		Name:             b.name,
+		Type:             b.splitType,
+		Currency:         b.currency,
+		Subaccounts:      b.subaccounts,
+		BearerType:       b.bearerType,
+		BearerSubaccount: b.bearerSubaccount,
+	}
+}
+
 // TransactionSplitCreateResponse represents the response from creating a split
 type TransactionSplitCreateResponse struct {
 	Status  bool             `json:"status"`
@@ -89,6 +148,84 @@ type TransactionSplitListRequest struct {
 	Page    *int       `json:"page,omitempty"`    // Page number (default: 1)
 	From    *time.Time `json:"from,omitempty"`    // Start date filter (optional)
 	To      *time.Time `json:"to,omitempty"`      // End date filter (optional)
+}
+
+// TransactionSplitListRequestBuilder provides a fluent interface for building TransactionSplitListRequest
+type TransactionSplitListRequestBuilder struct {
+	name    *string
+	active  *bool
+	sortBy  *string
+	perPage *int
+	page    *int
+	from    *time.Time
+	to      *time.Time
+}
+
+// NewTransactionSplitListRequest creates a new builder for listing transaction splits
+func NewTransactionSplitListRequest() *TransactionSplitListRequestBuilder {
+	return &TransactionSplitListRequestBuilder{}
+}
+
+// Name filters by split name
+func (b *TransactionSplitListRequestBuilder) Name(name string) *TransactionSplitListRequestBuilder {
+	b.name = &name
+	return b
+}
+
+// Active filters by active status
+func (b *TransactionSplitListRequestBuilder) Active(active bool) *TransactionSplitListRequestBuilder {
+	b.active = &active
+	return b
+}
+
+// SortBy sets the sort field
+func (b *TransactionSplitListRequestBuilder) SortBy(sortBy string) *TransactionSplitListRequestBuilder {
+	b.sortBy = &sortBy
+	return b
+}
+
+// PerPage sets the number of records per page
+func (b *TransactionSplitListRequestBuilder) PerPage(perPage int) *TransactionSplitListRequestBuilder {
+	b.perPage = &perPage
+	return b
+}
+
+// Page sets the page number
+func (b *TransactionSplitListRequestBuilder) Page(page int) *TransactionSplitListRequestBuilder {
+	b.page = &page
+	return b
+}
+
+// DateRange sets both from and to dates
+func (b *TransactionSplitListRequestBuilder) DateRange(from, to time.Time) *TransactionSplitListRequestBuilder {
+	b.from = &from
+	b.to = &to
+	return b
+}
+
+// From sets the start date filter
+func (b *TransactionSplitListRequestBuilder) From(from time.Time) *TransactionSplitListRequestBuilder {
+	b.from = &from
+	return b
+}
+
+// To sets the end date filter
+func (b *TransactionSplitListRequestBuilder) To(to time.Time) *TransactionSplitListRequestBuilder {
+	b.to = &to
+	return b
+}
+
+// Build creates the TransactionSplitListRequest
+func (b *TransactionSplitListRequestBuilder) Build() *TransactionSplitListRequest {
+	return &TransactionSplitListRequest{
+		Name:    b.name,
+		Active:  b.active,
+		SortBy:  b.sortBy,
+		PerPage: b.perPage,
+		Page:    b.page,
+		From:    b.from,
+		To:      b.to,
+	}
 }
 
 // TransactionSplitListResponse represents the response from listing splits
@@ -118,6 +255,53 @@ type TransactionSplitUpdateRequest struct {
 	BearerSubaccount *string                     `json:"bearer_subaccount,omitempty"` // Subaccount code if bearer_type is subaccount (optional)
 }
 
+// TransactionSplitUpdateRequestBuilder provides a fluent interface for building TransactionSplitUpdateRequest
+type TransactionSplitUpdateRequestBuilder struct {
+	name             *string
+	active           *bool
+	bearerType       *TransactionSplitBearerType
+	bearerSubaccount *string
+}
+
+// NewTransactionSplitUpdateRequest creates a new builder for updating a transaction split
+func NewTransactionSplitUpdateRequest() *TransactionSplitUpdateRequestBuilder {
+	return &TransactionSplitUpdateRequestBuilder{}
+}
+
+// Name sets the split name
+func (b *TransactionSplitUpdateRequestBuilder) Name(name string) *TransactionSplitUpdateRequestBuilder {
+	b.name = &name
+	return b
+}
+
+// Active sets the active status
+func (b *TransactionSplitUpdateRequestBuilder) Active(active bool) *TransactionSplitUpdateRequestBuilder {
+	b.active = &active
+	return b
+}
+
+// BearerType sets who bears the charges
+func (b *TransactionSplitUpdateRequestBuilder) BearerType(bearerType TransactionSplitBearerType) *TransactionSplitUpdateRequestBuilder {
+	b.bearerType = &bearerType
+	return b
+}
+
+// BearerSubaccount sets the subaccount that bears the charges
+func (b *TransactionSplitUpdateRequestBuilder) BearerSubaccount(subaccount string) *TransactionSplitUpdateRequestBuilder {
+	b.bearerSubaccount = &subaccount
+	return b
+}
+
+// Build creates the TransactionSplitUpdateRequest
+func (b *TransactionSplitUpdateRequestBuilder) Build() *TransactionSplitUpdateRequest {
+	return &TransactionSplitUpdateRequest{
+		Name:             b.name,
+		Active:           b.active,
+		BearerType:       b.bearerType,
+		BearerSubaccount: b.bearerSubaccount,
+	}
+}
+
 // TransactionSplitUpdateResponse represents the response from updating a split
 type TransactionSplitUpdateResponse struct {
 	Status  bool             `json:"status"`
@@ -133,16 +317,68 @@ type TransactionSplitSubaccountAddRequest struct {
 	Share      int    `json:"share"`      // Share amount (percentage or flat amount)
 }
 
-// TransactionSplitSubaccountAddResponse represents the response from adding/updating a subaccount in a split
-type TransactionSplitSubaccountAddResponse struct {
-	Status  bool             `json:"status"`
-	Message string           `json:"message"`
-	Data    TransactionSplit `json:"data"`
+// TransactionSplitSubaccountAddRequestBuilder provides a fluent interface for building TransactionSplitSubaccountAddRequest
+type TransactionSplitSubaccountAddRequestBuilder struct {
+	subaccount string
+	share      int
+}
+
+// NewTransactionSplitSubaccountAddRequest creates a new builder for adding a subaccount to a split
+func NewTransactionSplitSubaccountAddRequest(subaccount string, share int) *TransactionSplitSubaccountAddRequestBuilder {
+	return &TransactionSplitSubaccountAddRequestBuilder{
+		subaccount: subaccount,
+		share:      share,
+	}
+}
+
+// Subaccount sets the subaccount code
+func (b *TransactionSplitSubaccountAddRequestBuilder) Subaccount(subaccount string) *TransactionSplitSubaccountAddRequestBuilder {
+	b.subaccount = subaccount
+	return b
+}
+
+// Share sets the share amount
+func (b *TransactionSplitSubaccountAddRequestBuilder) Share(share int) *TransactionSplitSubaccountAddRequestBuilder {
+	b.share = share
+	return b
+}
+
+// Build creates the TransactionSplitSubaccountAddRequest
+func (b *TransactionSplitSubaccountAddRequestBuilder) Build() *TransactionSplitSubaccountAddRequest {
+	return &TransactionSplitSubaccountAddRequest{
+		Subaccount: b.subaccount,
+		Share:      b.share,
+	}
 }
 
 // TransactionSplitSubaccountRemoveRequest represents the request to remove a subaccount from a split
 type TransactionSplitSubaccountRemoveRequest struct {
 	Subaccount string `json:"subaccount"` // Subaccount code
+}
+
+// TransactionSplitSubaccountRemoveRequestBuilder provides a fluent interface for building TransactionSplitSubaccountRemoveRequest
+type TransactionSplitSubaccountRemoveRequestBuilder struct {
+	subaccount string
+}
+
+// NewTransactionSplitSubaccountRemoveRequest creates a new builder for removing a subaccount from a split
+func NewTransactionSplitSubaccountRemoveRequest(subaccount string) *TransactionSplitSubaccountRemoveRequestBuilder {
+	return &TransactionSplitSubaccountRemoveRequestBuilder{
+		subaccount: subaccount,
+	}
+}
+
+// Subaccount sets the subaccount code
+func (b *TransactionSplitSubaccountRemoveRequestBuilder) Subaccount(subaccount string) *TransactionSplitSubaccountRemoveRequestBuilder {
+	b.subaccount = subaccount
+	return b
+}
+
+// Build creates the TransactionSplitSubaccountRemoveRequest
+func (b *TransactionSplitSubaccountRemoveRequestBuilder) Build() *TransactionSplitSubaccountRemoveRequest {
+	return &TransactionSplitSubaccountRemoveRequest{
+		Subaccount: b.subaccount,
+	}
 }
 
 // TransactionSplitSubaccountRemoveResponse represents the response from removing a subaccount from a split

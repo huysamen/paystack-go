@@ -4,19 +4,17 @@ import (
 	"context"
 
 	"github.com/huysamen/paystack-go/net"
+	"github.com/huysamen/paystack-go/types"
 )
 
 // BulkCreate creates multiple transfer recipients in a single request
-func (c *Client) BulkCreate(ctx context.Context, req *BulkCreateTransferRecipientRequest) (*BulkCreateTransferRecipientResponse, error) {
-	if err := validateBulkCreateRequest(req); err != nil {
-		return nil, err
+func (c *Client) BulkCreate(ctx context.Context, builder *BulkCreateTransferRecipientRequestBuilder) (*types.Response[BulkCreateResult], error) {
+	if builder == nil {
+		return nil, ErrBuilderRequired
 	}
 
-	resp, err := net.Post[BulkCreateTransferRecipientRequest, BulkCreateTransferRecipientResponse](
+	req := builder.Build()
+	return net.Post[BulkCreateTransferRecipientRequest, BulkCreateResult](
 		ctx, c.client, c.secret, transferRecipientBasePath+"/bulk", req, c.baseURL,
 	)
-	if err != nil {
-		return nil, err
-	}
-	return &resp.Data, nil
 }

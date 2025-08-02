@@ -2,34 +2,25 @@ package terminal
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"github.com/huysamen/paystack-go/net"
+	"github.com/huysamen/paystack-go/types"
 )
 
 // Update updates a terminal's details
-func (c *Client) Update(ctx context.Context, terminalID string, req *TerminalUpdateRequest) (*TerminalUpdateResponse, error) {
-	if err := validateTerminalID(terminalID); err != nil {
-		return nil, err
+func (c *Client) Update(ctx context.Context, terminalID string, builder *TerminalUpdateRequestBuilder) (*types.Response[Terminal], error) {
+	if terminalID == "" {
+		return nil, errors.New("terminal ID is required")
 	}
-	if err := validateUpdateRequest(req); err != nil {
-		return nil, err
+	if builder == nil {
+		return nil, ErrBuilderRequired
 	}
 
+	req := builder.Build()
 	endpoint := fmt.Sprintf("%s/%s", terminalBasePath, terminalID)
-	resp, err := net.Put[TerminalUpdateRequest, TerminalUpdateResponse](
+	return net.Put[TerminalUpdateRequest, Terminal](
 		ctx, c.client, c.secret, endpoint, req, c.baseURL,
 	)
-	if err != nil {
-		return nil, err
-	}
-	return &resp.Data, nil
-}
-
-// UpdateWithBuilder updates a terminal's details using the builder pattern
-func (c *Client) UpdateWithBuilder(ctx context.Context, terminalID string, builder *TerminalUpdateRequestBuilder) (*TerminalUpdateResponse, error) {
-	if builder == nil {
-		return nil, fmt.Errorf("builder cannot be nil")
-	}
-	return c.Update(ctx, terminalID, builder.Build())
 }

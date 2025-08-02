@@ -32,6 +32,33 @@ type AccountResolveRequest struct {
 	BankCode      string `json:"bank_code"`      // Required: bank code
 }
 
+// AccountResolveRequestBuilder builds an AccountResolveRequest
+type AccountResolveRequestBuilder struct {
+	request AccountResolveRequest
+}
+
+// NewAccountResolveRequestBuilder creates a new builder
+func NewAccountResolveRequestBuilder() *AccountResolveRequestBuilder {
+	return &AccountResolveRequestBuilder{}
+}
+
+// AccountNumber sets the account number
+func (b *AccountResolveRequestBuilder) AccountNumber(accountNumber string) *AccountResolveRequestBuilder {
+	b.request.AccountNumber = accountNumber
+	return b
+}
+
+// BankCode sets the bank code
+func (b *AccountResolveRequestBuilder) BankCode(bankCode string) *AccountResolveRequestBuilder {
+	b.request.BankCode = bankCode
+	return b
+}
+
+// Build returns the built AccountResolveRequest
+func (b *AccountResolveRequestBuilder) Build() *AccountResolveRequest {
+	return &b.request
+}
+
 // AccountResolveResponse represents the response from resolving an account
 type AccountResolveResponse struct {
 	Status  bool              `json:"status"`

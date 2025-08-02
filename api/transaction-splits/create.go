@@ -4,19 +4,17 @@ import (
 	"context"
 
 	"github.com/huysamen/paystack-go/net"
+	"github.com/huysamen/paystack-go/types"
 )
 
 // Create creates a new transaction split
-func (c *Client) Create(ctx context.Context, req *TransactionSplitCreateRequest) (*TransactionSplitCreateResponse, error) {
-	if err := validateCreateRequest(req); err != nil {
-		return nil, err
+func (c *Client) Create(ctx context.Context, builder *TransactionSplitCreateRequestBuilder) (*types.Response[TransactionSplit], error) {
+	if builder == nil {
+		return nil, ErrBuilderRequired
 	}
 
-	resp, err := net.Post[TransactionSplitCreateRequest, TransactionSplitCreateResponse](
+	req := builder.Build()
+	return net.Post[TransactionSplitCreateRequest, TransactionSplit](
 		ctx, c.client, c.secret, transactionSplitBasePath, req, c.baseURL,
 	)
-	if err != nil {
-		return nil, err
-	}
-	return &resp.Data, nil
 }

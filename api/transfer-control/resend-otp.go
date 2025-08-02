@@ -2,52 +2,46 @@ package transfercontrol
 
 import (
 	"context"
-	"errors"
-	"strings"
 
 	"github.com/huysamen/paystack-go/net"
+	"github.com/huysamen/paystack-go/types"
 )
 
-// ValidateResendOTPRequest validates the resend OTP request
-func ValidateResendOTPRequest(req *ResendOTPRequest) error {
-	if req == nil {
-		return errors.New("request cannot be nil")
-	}
+// ResendOTPRequestBuilder builds a ResendOTPRequest
+type ResendOTPRequestBuilder struct {
+	request ResendOTPRequest
+}
 
-	if strings.TrimSpace(req.TransferCode) == "" {
-		return errors.New("transfer_code is required")
-	}
+// NewResendOTPRequestBuilder creates a new builder
+func NewResendOTPRequestBuilder() *ResendOTPRequestBuilder {
+	return &ResendOTPRequestBuilder{}
+}
 
-	if strings.TrimSpace(req.Reason) == "" {
-		return errors.New("reason is required")
-	}
+// TransferCode sets the transfer code for the request
+func (b *ResendOTPRequestBuilder) TransferCode(transferCode string) *ResendOTPRequestBuilder {
+	b.request.TransferCode = transferCode
+	return b
+}
 
-	// Validate reason values
-	validReasons := []string{"resend_otp", "transfer"}
-	isValidReason := false
-	for _, validReason := range validReasons {
-		if req.Reason == validReason {
-			isValidReason = true
-			break
-		}
-	}
+// Reason sets the reason for the request
+func (b *ResendOTPRequestBuilder) Reason(reason string) *ResendOTPRequestBuilder {
+	b.request.Reason = reason
+	return b
+}
 
-	if !isValidReason {
-		return errors.New("reason must be either 'resend_otp' or 'transfer'")
-	}
-
-	return nil
+// Build returns the built ResendOTPRequest
+func (b *ResendOTPRequestBuilder) Build() *ResendOTPRequest {
+	return &b.request
 }
 
 // ResendOTP generates a new OTP and sends to customer in the event they are having trouble receiving one
-func (c *Client) ResendOTP(ctx context.Context, req *ResendOTPRequest) (*ResendOTPResponse, error) {
-
-	resp, err := net.Post[ResendOTPRequest, ResendOTPResponse](
-		ctx, c.client, c.secret, "/transfer/resend_otp", req, c.baseURL,
-	)
-	if err != nil {
-		return nil, err
+func (c *Client) ResendOTP(ctx context.Context, builder *ResendOTPRequestBuilder) (*types.Response[any], error) {
+	if builder == nil {
+		return nil, ErrBuilderRequired
 	}
 
-	return &resp.Data, nil
+	req := builder.Build()
+	return net.Post[ResendOTPRequest, any](
+		ctx, c.client, c.secret, "/transfer/resend_otp", req, c.baseURL,
+	)
 }

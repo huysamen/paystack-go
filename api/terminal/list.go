@@ -6,13 +6,15 @@ import (
 	"strconv"
 
 	"github.com/huysamen/paystack-go/net"
+	"github.com/huysamen/paystack-go/types"
 )
 
 // List retrieves a list of terminals
-func (c *Client) List(ctx context.Context, req *TerminalListRequest) (*TerminalListResponse, error) {
+func (c *Client) List(ctx context.Context, builder *TerminalListRequestBuilder) (*types.Response[[]Terminal], error) {
 	params := url.Values{}
 
-	if req != nil {
+	if builder != nil {
+		req := builder.Build()
 		if req.PerPage != nil {
 			params.Set("perPage", strconv.Itoa(*req.PerPage))
 		}
@@ -29,17 +31,5 @@ func (c *Client) List(ctx context.Context, req *TerminalListRequest) (*TerminalL
 		endpoint += "?" + params.Encode()
 	}
 
-	resp, err := net.Get[TerminalListResponse](ctx, c.client, c.secret, endpoint, c.baseURL)
-	if err != nil {
-		return nil, err
-	}
-	return &resp.Data, nil
-}
-
-// ListWithBuilder retrieves a list of terminals using the builder pattern
-func (c *Client) ListWithBuilder(ctx context.Context, builder *TerminalListRequestBuilder) (*TerminalListResponse, error) {
-	if builder == nil {
-		return c.List(ctx, nil)
-	}
-	return c.List(ctx, builder.Build())
+	return net.Get[[]Terminal](ctx, c.client, c.secret, endpoint, c.baseURL)
 }

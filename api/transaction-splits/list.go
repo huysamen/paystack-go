@@ -7,13 +7,15 @@ import (
 	"time"
 
 	"github.com/huysamen/paystack-go/net"
+	"github.com/huysamen/paystack-go/types"
 )
 
 // List retrieves a list of transaction splits
-func (c *Client) List(ctx context.Context, req *TransactionSplitListRequest) (*TransactionSplitListResponse, error) {
+func (c *Client) List(ctx context.Context, builder *TransactionSplitListRequestBuilder) (*types.Response[[]TransactionSplit], error) {
 	params := url.Values{}
 
-	if req != nil {
+	if builder != nil {
+		req := builder.Build()
 		if req.Name != nil {
 			params.Set("name", *req.Name)
 		}
@@ -42,9 +44,5 @@ func (c *Client) List(ctx context.Context, req *TransactionSplitListRequest) (*T
 		endpoint += "?" + params.Encode()
 	}
 
-	resp, err := net.Get[TransactionSplitListResponse](ctx, c.client, c.secret, endpoint, c.baseURL)
-	if err != nil {
-		return nil, err
-	}
-	return &resp.Data, nil
+	return net.Get[[]TransactionSplit](ctx, c.client, c.secret, endpoint, c.baseURL)
 }

@@ -2,34 +2,40 @@ package transfercontrol
 
 import (
 	"context"
-	"errors"
-	"strings"
 
 	"github.com/huysamen/paystack-go/net"
+	"github.com/huysamen/paystack-go/types"
 )
 
-// ValidateFinalizeDisableOTPRequest validates the finalize disable OTP request
-func ValidateFinalizeDisableOTPRequest(req *FinalizeDisableOTPRequest) error {
-	if req == nil {
-		return errors.New("request cannot be nil")
-	}
+// FinalizeDisableOTPRequestBuilder builds a FinalizeDisableOTPRequest
+type FinalizeDisableOTPRequestBuilder struct {
+	request FinalizeDisableOTPRequest
+}
 
-	if strings.TrimSpace(req.OTP) == "" {
-		return errors.New("otp is required")
-	}
+// NewFinalizeDisableOTPRequestBuilder creates a new builder
+func NewFinalizeDisableOTPRequestBuilder() *FinalizeDisableOTPRequestBuilder {
+	return &FinalizeDisableOTPRequestBuilder{}
+}
 
-	return nil
+// OTP sets the OTP for the request
+func (b *FinalizeDisableOTPRequestBuilder) OTP(otp string) *FinalizeDisableOTPRequestBuilder {
+	b.request.OTP = otp
+	return b
+}
+
+// Build returns the built FinalizeDisableOTPRequest
+func (b *FinalizeDisableOTPRequestBuilder) Build() *FinalizeDisableOTPRequest {
+	return &b.request
 }
 
 // FinalizeDisableOTP finalizes the request to disable OTP on your transfers
-func (c *Client) FinalizeDisableOTP(ctx context.Context, req *FinalizeDisableOTPRequest) (*FinalizeDisableOTPResponse, error) {
-
-	resp, err := net.Post[FinalizeDisableOTPRequest, FinalizeDisableOTPResponse](
-		ctx, c.client, c.secret, "/transfer/disable_otp_finalize", req, c.baseURL,
-	)
-	if err != nil {
-		return nil, err
+func (c *Client) FinalizeDisableOTP(ctx context.Context, builder *FinalizeDisableOTPRequestBuilder) (*types.Response[any], error) {
+	if builder == nil {
+		return nil, ErrBuilderRequired
 	}
 
-	return &resp.Data, nil
+	req := builder.Build()
+	return net.Post[FinalizeDisableOTPRequest, any](
+		ctx, c.client, c.secret, "/transfer/disable_otp_finalize", req, c.baseURL,
+	)
 }

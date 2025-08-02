@@ -2,21 +2,25 @@ package terminal
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"github.com/huysamen/paystack-go/net"
+	"github.com/huysamen/paystack-go/types"
 )
 
-// FetchTerminalStatus checks the availability of a terminal
-func (c *Client) FetchTerminalStatus(ctx context.Context, terminalID string) (*TerminalPresenceResponse, error) {
-	if err := validateTerminalID(terminalID); err != nil {
-		return nil, err
+// TerminalPresence represents the data returned from fetching terminal presence
+type TerminalPresence struct {
+	Online    bool `json:"online"`    // Whether terminal is online
+	Available bool `json:"available"` // Whether terminal is available for events
+}
+
+// FetchTerminalStatus fetches the status of a terminal
+func (c *Client) FetchTerminalStatus(ctx context.Context, terminalID string) (*types.Response[TerminalPresence], error) {
+	if terminalID == "" {
+		return nil, errors.New("terminal ID is required")
 	}
 
 	endpoint := fmt.Sprintf("%s/%s/presence", terminalBasePath, terminalID)
-	resp, err := net.Get[TerminalPresenceResponse](ctx, c.client, c.secret, endpoint, c.baseURL)
-	if err != nil {
-		return nil, err
-	}
-	return &resp.Data, nil
+	return net.Get[TerminalPresence](ctx, c.client, c.secret, endpoint, "", c.baseURL)
 }
