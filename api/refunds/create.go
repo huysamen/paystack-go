@@ -51,12 +51,5 @@ func (b *RefundCreateRequestBuilder) Build() *RefundCreateRequest {
 
 // Create initiates a refund on a transaction using a builder
 func (c *Client) Create(ctx context.Context, builder *RefundCreateRequestBuilder) (*RefundCreateResponse, error) {
-	if builder == nil {
-		return nil, ErrBuilderRequired
-	}
-
-	req := builder.Build()
-
-	url := c.baseURL + refundsBasePath
-	return net.Post[RefundCreateRequest, RefundCreateData](ctx, c.client, c.secret, url, req)
+	return net.Post[RefundCreateRequest, RefundCreateData](ctx, c.Client, c.Secret, basePath, builder.Build(), c.BaseURL)
 }

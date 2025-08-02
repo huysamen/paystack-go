@@ -9,10 +9,5 @@ import (
 
 // Fetch retrieves details of a specific refund
 func (c *Client) Fetch(ctx context.Context, refundID string) (*RefundFetchResponse, error) {
-	if refundID == "" {
-		return nil, fmt.Errorf("refund ID is required")
-	}
-
-	url := c.baseURL + refundsBasePath + "/" + refundID
-	return net.Get[Refund](ctx, c.client, c.secret, url)
+	return net.Get[Refund](ctx, c.Client, c.Secret, fmt.Sprintf("%s/%s", basePath, refundID), c.BaseURL)
 }

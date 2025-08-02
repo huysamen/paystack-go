@@ -69,10 +69,5 @@ func (b *RefundListRequestBuilder) Build() *RefundListRequest {
 
 // List retrieves all refunds available on your integration using a builder
 func (c *Client) List(ctx context.Context, builder *RefundListRequestBuilder) (*RefundListResponse, error) {
-	if builder == nil {
-		builder = NewRefundListRequest()
-	}
-
-	url := c.baseURL + refundsBasePath
-	return net.Get[[]Refund](ctx, c.client, c.secret, url)
+	return net.Get[[]Refund](ctx, c.Client, c.Secret, basePath, c.BaseURL)
 }
