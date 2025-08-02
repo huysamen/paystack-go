@@ -46,6 +46,25 @@ type CreateVirtualTerminalRequest struct {
 	CustomFields []CustomField                `json:"custom_fields,omitempty"`
 }
 
+// CreateVirtualTerminalRequestBuilder provides a fluent interface for building CreateVirtualTerminalRequest
+type CreateVirtualTerminalRequestBuilder struct {
+	req *CreateVirtualTerminalRequest
+}
+
+// NewCreateVirtualTerminalRequest creates a new builder for CreateVirtualTerminalRequest
+func NewCreateVirtualTerminalRequest(name string) *CreateVirtualTerminalRequestBuilder {
+	return &CreateVirtualTerminalRequestBuilder{
+		req: &CreateVirtualTerminalRequest{
+			Name: name,
+		},
+	}
+}
+
+// Build returns the constructed CreateVirtualTerminalRequest
+func (b *CreateVirtualTerminalRequestBuilder) Build() *CreateVirtualTerminalRequest {
+	return b.req
+}
+
 // ListVirtualTerminalsRequest represents the request to list virtual terminals
 type ListVirtualTerminalsRequest struct {
 	Status   string `json:"status,omitempty"`
@@ -53,6 +72,23 @@ type ListVirtualTerminalsRequest struct {
 	Search   string `json:"search,omitempty"`
 	Next     string `json:"next,omitempty"`
 	Previous string `json:"previous,omitempty"`
+}
+
+// ListVirtualTerminalsRequestBuilder provides a fluent interface for building ListVirtualTerminalsRequest
+type ListVirtualTerminalsRequestBuilder struct {
+	req *ListVirtualTerminalsRequest
+}
+
+// NewListVirtualTerminalsRequest creates a new builder for ListVirtualTerminalsRequest
+func NewListVirtualTerminalsRequest() *ListVirtualTerminalsRequestBuilder {
+	return &ListVirtualTerminalsRequestBuilder{
+		req: &ListVirtualTerminalsRequest{},
+	}
+}
+
+// Build returns the constructed ListVirtualTerminalsRequest
+func (b *ListVirtualTerminalsRequestBuilder) Build() *ListVirtualTerminalsRequest {
+	return b.req
 }
 
 // UpdateVirtualTerminalRequest represents the request to update a virtual terminal
@@ -78,21 +114,6 @@ type AddSplitCodeRequest struct {
 // RemoveSplitCodeRequest represents the request to remove a split code from a virtual terminal
 type RemoveSplitCodeRequest struct {
 	SplitCode string `json:"split_code"`
-}
-
-// CreateVirtualTerminalResponse represents the response from creating a virtual terminal
-type CreateVirtualTerminalResponse struct {
-	Status  bool            `json:"status"`
-	Message string          `json:"message"`
-	Data    VirtualTerminal `json:"data"`
-}
-
-// ListVirtualTerminalsResponse represents the response from listing virtual terminals
-type ListVirtualTerminalsResponse struct {
-	Status  bool              `json:"status"`
-	Message string            `json:"message"`
-	Data    []VirtualTerminal `json:"data"`
-	Meta    *types.Meta       `json:"meta,omitempty"`
 }
 
 // FetchVirtualTerminalResponse represents the response from fetching a virtual terminal

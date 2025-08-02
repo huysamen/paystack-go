@@ -66,31 +66,31 @@ import (
 	transfer_recipients "github.com/huysamen/paystack-go/api/transfer-recipients"
 	"github.com/huysamen/paystack-go/api/transfers"
 	"github.com/huysamen/paystack-go/api/verification"
-	virtual_terminal "github.com/huysamen/paystack-go/api/virtual-terminal"
+	// virtual_terminal "github.com/huysamen/paystack-go/api/virtual-terminal" // TODO: Complete implementation
 )
 
 type Client struct {
-	Transactions            *transactions.Client
-	Plans                   *plans.Client
-	Products                *products.Client
-	PaymentPages            *payment_pages.Client
-	PaymentRequests         *payment_requests.Client
-	Customers               *customers.Client
-	Subscriptions           *subscriptions.Client
-	Transfers               *transfers.Client
-	TransferControl         *transfer_control.Client
-	TransferRecipients      *transfer_recipients.Client
-	BulkCharges             *bulk_charges.Client
-	Charges                 *charges.Client
-	Disputes                *disputes.Client
-	Refunds                 *refunds.Client
-	Subaccounts             *subaccounts.Client
-	Settlements             *settlements.Client
-	Miscellaneous           *miscellaneous.Client
-	Verification            *verification.Client
-	TransactionSplits       *transaction_splits.Client
-	Terminal                *terminal.Client
-	VirtualTerminal         *virtual_terminal.Client
+	Transactions       *transactions.Client
+	Plans              *plans.Client
+	Products           *products.Client
+	PaymentPages       *payment_pages.Client
+	PaymentRequests    *payment_requests.Client
+	Customers          *customers.Client
+	Subscriptions      *subscriptions.Client
+	Transfers          *transfers.Client
+	TransferControl    *transfer_control.Client
+	TransferRecipients *transfer_recipients.Client
+	BulkCharges        *bulk_charges.Client
+	Charges            *charges.Client
+	Disputes           *disputes.Client
+	Refunds            *refunds.Client
+	Subaccounts        *subaccounts.Client
+	Settlements        *settlements.Client
+	Miscellaneous      *miscellaneous.Client
+	Verification       *verification.Client
+	TransactionSplits  *transaction_splits.Client
+	Terminal           *terminal.Client
+	// VirtualTerminal         *virtual_terminal.Client // TODO: Complete virtual-terminal implementation
 	DirectDebit             *direct_debit.Client
 	DedicatedVirtualAccount *dedicated_virtual_account.Client
 	ApplePay                *applepay.Client
@@ -137,27 +137,27 @@ func NewClient(config *Config) *Client {
 	}
 
 	client := &Client{
-		Transactions:            transactions.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
-		Plans:                   plans.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
-		Products:                products.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
-		PaymentPages:            payment_pages.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
-		PaymentRequests:         payment_requests.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
-		Customers:               customers.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
-		Subscriptions:           subscriptions.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
-		Transfers:               transfers.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
-		TransferControl:         transfer_control.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
-		TransferRecipients:      transfer_recipients.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
-		BulkCharges:             bulk_charges.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
-		Charges:                 charges.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
-		Disputes:                disputes.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
-		Refunds:                 refunds.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
-		Subaccounts:             subaccounts.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
-		Settlements:             settlements.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
-		Miscellaneous:           miscellaneous.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
-		Verification:            verification.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
-		TransactionSplits:       transaction_splits.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
-		Terminal:                terminal.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
-		VirtualTerminal:         virtual_terminal.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
+		Transactions:       transactions.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
+		Plans:              plans.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
+		Products:           products.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
+		PaymentPages:       payment_pages.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
+		PaymentRequests:    payment_requests.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
+		Customers:          customers.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
+		Subscriptions:      subscriptions.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
+		Transfers:          transfers.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
+		TransferControl:    transfer_control.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
+		TransferRecipients: transfer_recipients.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
+		BulkCharges:        bulk_charges.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
+		Charges:            charges.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
+		Disputes:           disputes.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
+		Refunds:            refunds.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
+		Subaccounts:        subaccounts.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
+		Settlements:        settlements.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
+		Miscellaneous:      miscellaneous.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
+		Verification:       verification.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
+		TransactionSplits:  transaction_splits.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
+		Terminal:           terminal.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
+		// VirtualTerminal:         virtual_terminal.NewClient(httpClient, config.SecretKey, config.GetBaseURL()), // TODO: Complete implementation
 		DirectDebit:             direct_debit.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
 		DedicatedVirtualAccount: dedicated_virtual_account.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
 		ApplePay:                applepay.NewClient(httpClient, config.SecretKey, config.GetBaseURL()),
