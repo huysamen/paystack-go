@@ -39,10 +39,10 @@ func (c *Client) List(ctx context.Context, builder *TransactionSplitListRequestB
 		}
 	}
 
-	endpoint := transactionSplitBasePath
+	query := ""
 	if len(params) > 0 {
-		endpoint += "?" + params.Encode()
+		query = params.Encode()
 	}
 
-	return net.Get[[]TransactionSplit](ctx, c.client, c.secret, endpoint, c.baseURL)
+	return net.Get[[]TransactionSplit](ctx, c.Client, c.Secret, basePath, query, c.BaseURL)
 }

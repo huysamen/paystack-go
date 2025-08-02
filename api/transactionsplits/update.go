@@ -2,7 +2,6 @@ package transactionsplits
 
 import (
 	"context"
-	"errors"
 	"fmt"
 
 	"github.com/huysamen/paystack-go/net"
@@ -11,16 +10,8 @@ import (
 
 // Update updates a transaction split
 func (c *Client) Update(ctx context.Context, id string, builder *TransactionSplitUpdateRequestBuilder) (*types.Response[TransactionSplit], error) {
-	if id == "" {
-		return nil, errors.New("transaction split ID is required")
-	}
-	if builder == nil {
-		return nil, ErrBuilderRequired
-	}
-
 	req := builder.Build()
-	endpoint := fmt.Sprintf("%s/%s", transactionSplitBasePath, id)
 	return net.Put[TransactionSplitUpdateRequest, TransactionSplit](
-		ctx, c.client, c.secret, endpoint, req, c.baseURL,
+		ctx, c.Client, c.Secret, fmt.Sprintf("%s/%s", basePath, id), req, c.BaseURL,
 	)
 }

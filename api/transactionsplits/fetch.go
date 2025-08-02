@@ -2,7 +2,6 @@ package transactionsplits
 
 import (
 	"context"
-	"errors"
 	"fmt"
 
 	"github.com/huysamen/paystack-go/net"
@@ -11,10 +10,5 @@ import (
 
 // Fetch retrieves a transaction split by ID
 func (c *Client) Fetch(ctx context.Context, id string) (*types.Response[TransactionSplit], error) {
-	if id == "" {
-		return nil, errors.New("transaction split ID is required")
-	}
-
-	endpoint := fmt.Sprintf("%s/%s", transactionSplitBasePath, id)
-	return net.Get[TransactionSplit](ctx, c.client, c.secret, endpoint, c.baseURL)
+	return net.Get[TransactionSplit](ctx, c.Client, c.Secret, fmt.Sprintf("%s/%s", basePath, id), "", c.BaseURL)
 }

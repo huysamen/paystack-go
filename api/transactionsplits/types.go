@@ -131,11 +131,7 @@ func (b *TransactionSplitCreateRequestBuilder) Build() *TransactionSplitCreateRe
 }
 
 // TransactionSplitCreateResponse represents the response from creating a split
-type TransactionSplitCreateResponse struct {
-	Status  bool             `json:"status"`
-	Message string           `json:"message"`
-	Data    TransactionSplit `json:"data"`
-}
+type TransactionSplitCreateResponse = types.Response[TransactionSplit]
 
 // TransactionSplit List
 
@@ -229,21 +225,12 @@ func (b *TransactionSplitListRequestBuilder) Build() *TransactionSplitListReques
 }
 
 // TransactionSplitListResponse represents the response from listing splits
-type TransactionSplitListResponse struct {
-	Status  bool               `json:"status"`
-	Message string             `json:"message"`
-	Data    []TransactionSplit `json:"data"`
-	Meta    types.Meta         `json:"meta"`
-}
+type TransactionSplitListResponse = types.Response[[]TransactionSplit]
 
 // TransactionSplit Fetch
 
 // TransactionSplitFetchResponse represents the response from fetching a split
-type TransactionSplitFetchResponse struct {
-	Status  bool             `json:"status"`
-	Message string           `json:"message"`
-	Data    TransactionSplit `json:"data"`
-}
+type TransactionSplitFetchResponse = types.Response[TransactionSplit]
 
 // TransactionSplit Update
 
@@ -303,11 +290,7 @@ func (b *TransactionSplitUpdateRequestBuilder) Build() *TransactionSplitUpdateRe
 }
 
 // TransactionSplitUpdateResponse represents the response from updating a split
-type TransactionSplitUpdateResponse struct {
-	Status  bool             `json:"status"`
-	Message string           `json:"message"`
-	Data    TransactionSplit `json:"data"`
-}
+type TransactionSplitUpdateResponse = types.Response[TransactionSplit]
 
 // TransactionSplit Subaccount Management
 
@@ -382,7 +365,4 @@ func (b *TransactionSplitSubaccountRemoveRequestBuilder) Build() *TransactionSpl
 }
 
 // TransactionSplitSubaccountRemoveResponse represents the response from removing a subaccount from a split
-type TransactionSplitSubaccountRemoveResponse struct {
-	Status  bool   `json:"status"`
-	Message string `json:"message"`
-}
+type TransactionSplitSubaccountRemoveResponse = types.Response[any]
