@@ -59,13 +59,9 @@ func (b *SubaccountListRequestBuilder) Build() *SubaccountListRequest {
 
 // List retrieves a list of subaccounts using the builder pattern
 func (c *Client) List(ctx context.Context, builder *SubaccountListRequestBuilder) (*SubaccountListResponse, error) {
-	var req *SubaccountListRequest
-	if builder != nil {
-		req = builder.Build()
-	}
-
 	params := url.Values{}
-	if req != nil {
+	if builder != nil {
+		req := builder.Build()
 		if req.PerPage != nil {
 			params.Set("perPage", strconv.Itoa(*req.PerPage))
 		}
@@ -80,10 +76,10 @@ func (c *Client) List(ctx context.Context, builder *SubaccountListRequestBuilder
 		}
 	}
 
-	endpoint := subaccountBasePath
+	endpoint := basePath
 	if len(params) > 0 {
 		endpoint += "?" + params.Encode()
 	}
 
-	return net.Get[[]Subaccount](ctx, c.client, c.secret, endpoint, c.baseURL)
+	return net.Get[[]Subaccount](ctx, c.Client, c.Secret, endpoint, c.BaseURL)
 }

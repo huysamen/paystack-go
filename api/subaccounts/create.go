@@ -60,12 +60,5 @@ func (b *SubaccountCreateRequestBuilder) Build() *SubaccountCreateRequest {
 
 // Create creates a new subaccount using the builder pattern
 func (c *Client) Create(ctx context.Context, builder *SubaccountCreateRequestBuilder) (*SubaccountCreateResponse, error) {
-	if builder == nil {
-		return nil, ErrBuilderRequired
-	}
-
-	req := builder.Build()
-	return net.Post[SubaccountCreateRequest, Subaccount](
-		ctx, c.client, c.secret, subaccountBasePath, req, c.baseURL,
-	)
+	return net.Post[SubaccountCreateRequest, Subaccount](ctx, c.Client, c.Secret, basePath, builder.Build(), c.BaseURL)
 }

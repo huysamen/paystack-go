@@ -86,17 +86,5 @@ func (b *SubaccountUpdateRequestBuilder) Build() *SubaccountUpdateRequest {
 
 // Update updates an existing subaccount using the builder pattern
 func (c *Client) Update(ctx context.Context, idOrCode string, builder *SubaccountUpdateRequestBuilder) (*SubaccountUpdateResponse, error) {
-	if idOrCode == "" {
-		return nil, fmt.Errorf("id_or_code is required")
-	}
-	if builder == nil {
-		return nil, ErrBuilderRequired
-	}
-
-	req := builder.Build()
-	endpoint := fmt.Sprintf("%s/%s", subaccountBasePath, idOrCode)
-
-	return net.Put[SubaccountUpdateRequest, Subaccount](
-		ctx, c.client, c.secret, endpoint, req, c.baseURL,
-	)
+	return net.Put[SubaccountUpdateRequest, Subaccount](ctx, c.Client, c.Secret, fmt.Sprintf("%s/%s", basePath, idOrCode), builder.Build(), c.BaseURL)
 }
