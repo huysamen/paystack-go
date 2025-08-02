@@ -58,10 +58,6 @@ func (b *RequeryDedicatedAccountBuilder) Build() *RequeryDedicatedAccountRequest
 
 // Requery requerying dedicated virtual account for new transactions
 func (c *Client) Requery(ctx context.Context, builder *RequeryDedicatedAccountBuilder) (*types.Response[any], error) {
-	if builder == nil {
-		return nil, ErrBuilderRequired
-	}
-
 	req := builder.Build()
 	params := url.Values{}
 	params.Set("account_number", req.AccountNumber)
@@ -70,12 +66,7 @@ func (c *Client) Requery(ctx context.Context, builder *RequeryDedicatedAccountBu
 		params.Set("date", req.Date)
 	}
 
-	endpoint := dedicatedVirtualAccountBasePath + "/requery?" + params.Encode()
-	resp, err := net.Get[any](
-		ctx, c.client, c.secret, endpoint, c.baseURL,
-	)
-	if err != nil {
-		return nil, err
-	}
-	return resp, nil
+	endpoint := basePath + "/requery?" + params.Encode()
+
+	return net.Get[any](ctx, c.Client, c.Secret, endpoint, c.BaseURL)
 }

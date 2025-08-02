@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/huysamen/paystack-go/net"
+	"github.com/huysamen/paystack-go/types"
 )
 
 // CreateDedicatedVirtualAccountRequest represents the request to create a dedicated virtual account
@@ -84,17 +85,6 @@ func (b *CreateDedicatedVirtualAccountBuilder) Build() *CreateDedicatedVirtualAc
 }
 
 // Create creates a dedicated virtual account for an existing customer
-func (c *Client) Create(ctx context.Context, builder *CreateDedicatedVirtualAccountBuilder) (*DedicatedVirtualAccount, error) {
-	if builder == nil {
-		return nil, ErrBuilderRequired
-	}
-
-	req := builder.Build()
-	resp, err := net.Post[CreateDedicatedVirtualAccountRequest, CreateDedicatedVirtualAccountResponse](
-		ctx, c.client, c.secret, dedicatedVirtualAccountBasePath, req, c.baseURL,
-	)
-	if err != nil {
-		return nil, err
-	}
-	return resp.Data.Data, nil
+func (c *Client) Create(ctx context.Context, builder *CreateDedicatedVirtualAccountBuilder) (*types.Response[CreateDedicatedVirtualAccountResponse], error) {
+	return net.Post[CreateDedicatedVirtualAccountRequest, CreateDedicatedVirtualAccountResponse](ctx, c.Client, c.Secret, basePath, builder.Build(), c.BaseURL)
 }

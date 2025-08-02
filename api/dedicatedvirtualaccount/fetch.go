@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/huysamen/paystack-go/net"
+	"github.com/huysamen/paystack-go/types"
 )
 
 // FetchDedicatedVirtualAccountResponse represents the response from fetching a dedicated virtual account
@@ -15,13 +16,8 @@ type FetchDedicatedVirtualAccountResponse struct {
 }
 
 // Fetch gets details of a dedicated virtual account on your integration
-func (c *Client) Fetch(ctx context.Context, dedicatedAccountID string) (*DedicatedVirtualAccount, error) {
-	endpoint := fmt.Sprintf("%s/%s", dedicatedVirtualAccountBasePath, dedicatedAccountID)
-	resp, err := net.Get[FetchDedicatedVirtualAccountResponse](
-		ctx, c.client, c.secret, endpoint, c.baseURL,
-	)
-	if err != nil {
-		return nil, err
-	}
-	return resp.Data.Data, nil
+func (c *Client) Fetch(ctx context.Context, dedicatedAccountID string) (*types.Response[FetchDedicatedVirtualAccountResponse], error) {
+	endpoint := fmt.Sprintf("%s/%s", basePath, dedicatedAccountID)
+
+	return net.Get[FetchDedicatedVirtualAccountResponse](ctx, c.Client, c.Secret, endpoint, c.BaseURL)
 }

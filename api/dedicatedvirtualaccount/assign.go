@@ -120,17 +120,7 @@ func (b *AssignDedicatedVirtualAccountBuilder) Build() *AssignDedicatedVirtualAc
 
 // Assign creates a customer, validates the customer, and assigns a dedicated virtual account
 func (c *Client) Assign(ctx context.Context, builder *AssignDedicatedVirtualAccountBuilder) (*types.Response[any], error) {
-	if builder == nil {
-		return nil, ErrBuilderRequired
-	}
-
-	req := builder.Build()
-	endpoint := dedicatedVirtualAccountBasePath + "/assign"
-	resp, err := net.Post[AssignDedicatedVirtualAccountRequest, any](
-		ctx, c.client, c.secret, endpoint, req, c.baseURL,
+	return net.Post[AssignDedicatedVirtualAccountRequest, any](
+		ctx, c.Client, c.Secret, basePath+"/assign", builder.Build(), c.BaseURL,
 	)
-	if err != nil {
-		return nil, err
-	}
-	return resp, nil
 }

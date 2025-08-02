@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/huysamen/paystack-go/net"
+	"github.com/huysamen/paystack-go/types"
 )
 
 // SplitDedicatedAccountTransactionRequest represents the request to add split to dedicated account
@@ -63,18 +64,6 @@ func (b *SplitDedicatedAccountTransactionBuilder) Build() *SplitDedicatedAccount
 }
 
 // SplitTransaction splits a dedicated virtual account transaction with one or more accounts
-func (c *Client) SplitTransaction(ctx context.Context, builder *SplitDedicatedAccountTransactionBuilder) (*DedicatedVirtualAccount, error) {
-	if builder == nil {
-		return nil, ErrBuilderRequired
-	}
-
-	req := builder.Build()
-	endpoint := dedicatedVirtualAccountBasePath + "/split"
-	resp, err := net.Post[SplitDedicatedAccountTransactionRequest, SplitDedicatedAccountTransactionResponse](
-		ctx, c.client, c.secret, endpoint, req, c.baseURL,
-	)
-	if err != nil {
-		return nil, err
-	}
-	return resp.Data.Data, nil
+func (c *Client) SplitTransaction(ctx context.Context, builder *SplitDedicatedAccountTransactionBuilder) (*types.Response[SplitDedicatedAccountTransactionResponse], error) {
+	return net.Post[SplitDedicatedAccountTransactionRequest, SplitDedicatedAccountTransactionResponse](ctx, c.Client, c.Secret, basePath+"/split", builder.Build(), c.BaseURL)
 }

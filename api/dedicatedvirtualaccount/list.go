@@ -75,7 +75,7 @@ func (b *ListDedicatedVirtualAccountsBuilder) Build() *ListDedicatedVirtualAccou
 
 // List retrieves dedicated virtual accounts available on your integration
 func (c *Client) List(ctx context.Context, builder *ListDedicatedVirtualAccountsBuilder) (*types.Response[[]DedicatedVirtualAccount], error) {
-	endpoint := dedicatedVirtualAccountBasePath
+	endpoint := basePath
 
 	if builder != nil {
 		req := builder.Build()
@@ -101,11 +101,5 @@ func (c *Client) List(ctx context.Context, builder *ListDedicatedVirtualAccounts
 		}
 	}
 
-	resp, err := net.Get[[]DedicatedVirtualAccount](
-		ctx, c.client, c.secret, endpoint, c.baseURL,
-	)
-	if err != nil {
-		return nil, err
-	}
-	return resp, nil
+	return net.Get[[]DedicatedVirtualAccount](ctx, c.Client, c.Secret, endpoint, c.BaseURL)
 }

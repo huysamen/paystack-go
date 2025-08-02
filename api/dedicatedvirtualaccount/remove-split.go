@@ -44,17 +44,5 @@ func (b *RemoveSplitFromDedicatedAccountBuilder) Build() *RemoveSplitFromDedicat
 
 // RemoveSplit removes split payment setup from a dedicated virtual account
 func (c *Client) RemoveSplit(ctx context.Context, builder *RemoveSplitFromDedicatedAccountBuilder) (*types.Response[DedicatedVirtualAccount], error) {
-	if builder == nil {
-		return nil, ErrBuilderRequired
-	}
-
-	req := builder.Build()
-	endpoint := dedicatedVirtualAccountBasePath + "/split"
-	resp, err := net.DeleteWithBody[RemoveSplitFromDedicatedAccountRequest, DedicatedVirtualAccount](
-		ctx, c.client, c.secret, endpoint, req, c.baseURL,
-	)
-	if err != nil {
-		return nil, err
-	}
-	return resp, nil
+	return net.DeleteWithBody[RemoveSplitFromDedicatedAccountRequest, DedicatedVirtualAccount](ctx, c.Client, c.Secret, basePath+"/split", builder.Build(), c.BaseURL)
 }

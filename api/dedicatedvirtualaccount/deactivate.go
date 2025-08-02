@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/huysamen/paystack-go/net"
+	"github.com/huysamen/paystack-go/types"
 )
 
 // DeactivateDedicatedAccountResponse represents the response from deactivating a dedicated account
@@ -15,13 +16,8 @@ type DeactivateDedicatedAccountResponse struct {
 }
 
 // Deactivate deactivates a dedicated virtual account on your integration
-func (c *Client) Deactivate(ctx context.Context, dedicatedAccountID string) (*DedicatedVirtualAccount, error) {
-	endpoint := fmt.Sprintf("%s/%s", dedicatedVirtualAccountBasePath, dedicatedAccountID)
-	resp, err := net.Delete[DeactivateDedicatedAccountResponse](
-		ctx, c.client, c.secret, endpoint, c.baseURL,
-	)
-	if err != nil {
-		return nil, err
-	}
-	return resp.Data.Data, nil
+func (c *Client) Deactivate(ctx context.Context, dedicatedAccountID string) (*types.Response[DeactivateDedicatedAccountResponse], error) {
+	endpoint := fmt.Sprintf("%s/%s", basePath, dedicatedAccountID)
+
+	return net.Delete[DeactivateDedicatedAccountResponse](ctx, c.Client, c.Secret, endpoint, c.BaseURL)
 }
