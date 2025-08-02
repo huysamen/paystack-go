@@ -1,5 +1,7 @@
 package verification
 
+import "github.com/huysamen/paystack-go/types"
+
 // AccountResolution represents the result of resolving an account number
 type AccountResolution struct {
 	AccountNumber string `json:"account_number"`
@@ -60,11 +62,7 @@ func (b *AccountResolveRequestBuilder) Build() *AccountResolveRequest {
 }
 
 // AccountResolveResponse represents the response from resolving an account
-type AccountResolveResponse struct {
-	Status  bool              `json:"status"`
-	Message string            `json:"message"`
-	Data    AccountResolution `json:"data"`
-}
+type AccountResolveResponse = types.Response[AccountResolution]
 
 // Account Validation
 
@@ -110,17 +108,9 @@ func (b *AccountValidateRequestBuilder) Build() *AccountValidateRequest {
 }
 
 // AccountValidateResponse represents the response from validating an account
-type AccountValidateResponse struct {
-	Status  bool              `json:"status"`
-	Message string            `json:"message"`
-	Data    AccountValidation `json:"data"`
-}
+type AccountValidateResponse = types.Response[AccountValidation]
 
 // Card BIN Resolution
 
 // CardBINResolveResponse represents the response from resolving a card BIN
-type CardBINResolveResponse struct {
-	Status  bool              `json:"status"`
-	Message string            `json:"message"`
-	Data    CardBINResolution `json:"data"`
-}
+type CardBINResolveResponse = types.Response[CardBINResolution]
