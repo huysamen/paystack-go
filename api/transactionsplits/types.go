@@ -1,4 +1,4 @@
-package transaction_splits
+package transactionsplits
 
 import (
 	"time"

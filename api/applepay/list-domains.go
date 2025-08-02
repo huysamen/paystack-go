@@ -50,27 +50,11 @@ func (b *ListDomainsRequestBuilder) Build() *ListDomainsRequest {
 }
 
 // ListDomainsResponse represents the response from listing Apple Pay domains
-type ListDomainsResponse struct {
-	Status  bool   `json:"status"`
-	Message string `json:"message"`
-	Data    struct {
-		DomainNames []string `json:"domainNames"`
-	} `json:"data"`
-	Meta *types.Meta `json:"meta,omitempty"`
+type ListDomainsResponseData struct {
+	DomainNames []string `json:"domainNames"`
 }
 
 // ListDomains lists all registered domains on your integration
-func (c *Client) ListDomains(ctx context.Context, builder *ListDomainsRequestBuilder) (*ListDomainsResponse, error) {
-	resp, err := net.Get[ListDomainsResponse](
-		ctx,
-		c.client,
-		c.secret,
-		applePayBasePath+"/domain",
-		c.baseURL,
-	)
-	if err != nil {
-		return nil, err
-	}
-
-	return &resp.Data, nil
+func (c *Client) ListDomains(ctx context.Context, builder *ListDomainsRequestBuilder) (*types.Response[ListDomainsResponseData], error) {
+	return net.Get[ListDomainsResponseData](ctx, c.Client, c.Secret, listPath, c.BaseURL)
 }

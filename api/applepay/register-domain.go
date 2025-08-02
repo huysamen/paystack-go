@@ -2,7 +2,6 @@ package applepay
 
 import (
 	"context"
-	"errors"
 
 	"github.com/huysamen/paystack-go/net"
 	"github.com/huysamen/paystack-go/types"
@@ -19,8 +18,8 @@ type RegisterDomainRequestBuilder struct {
 }
 
 // NewRegisterDomainRequest creates a new builder for RegisterDomainRequest
-func NewRegisterDomainRequest(domainName string) *RegisterDomainRequestBuilder {
-	return &RegisterDomainRequestBuilder{
+func NewRegisterDomainRequest(domainName string) RegisterDomainRequestBuilder {
+	return RegisterDomainRequestBuilder{
 		req: &RegisterDomainRequest{
 			DomainName: domainName,
 		},
@@ -33,22 +32,6 @@ func (b *RegisterDomainRequestBuilder) Build() *RegisterDomainRequest {
 }
 
 // RegisterDomain registers a top-level domain or subdomain for Apple Pay integration
-func (c *Client) RegisterDomain(ctx context.Context, builder *RegisterDomainRequestBuilder) (*types.Response[any], error) {
-	if builder == nil {
-		return nil, ErrBuilderRequired
-	}
-
-	req := builder.Build()
-	if req.DomainName == "" {
-		return nil, errors.New("domainName is required")
-	}
-
-	return net.Post[RegisterDomainRequest, any](
-		ctx,
-		c.client,
-		c.secret,
-		applePayBasePath+"/domain",
-		req,
-		c.baseURL,
-	)
+func (c *Client) RegisterDomain(ctx context.Context, builder RegisterDomainRequestBuilder) (*types.Response[any], error) {
+	return net.Post[RegisterDomainRequest, any](ctx, c.Client, c.Secret, registerPath, builder.Build(), c.BaseURL)
 }

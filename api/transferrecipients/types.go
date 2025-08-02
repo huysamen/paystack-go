@@ -1,4 +1,4 @@
-package transfer_recipients
+package transferrecipients
 
 import (
 	"time"

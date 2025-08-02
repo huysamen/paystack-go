@@ -2,7 +2,6 @@ package applepay
 
 import (
 	"context"
-	"errors"
 
 	"github.com/huysamen/paystack-go/net"
 	"github.com/huysamen/paystack-go/types"
@@ -19,8 +18,8 @@ type UnregisterDomainRequestBuilder struct {
 }
 
 // NewUnregisterDomainRequest creates a new builder for UnregisterDomainRequest
-func NewUnregisterDomainRequest(domainName string) *UnregisterDomainRequestBuilder {
-	return &UnregisterDomainRequestBuilder{
+func NewUnregisterDomainRequest(domainName string) UnregisterDomainRequestBuilder {
+	return UnregisterDomainRequestBuilder{
 		req: &UnregisterDomainRequest{
 			DomainName: domainName,
 		},
@@ -33,22 +32,6 @@ func (b *UnregisterDomainRequestBuilder) Build() *UnregisterDomainRequest {
 }
 
 // UnregisterDomain unregisters a top-level domain or subdomain previously used for Apple Pay integration
-func (c *Client) UnregisterDomain(ctx context.Context, builder *UnregisterDomainRequestBuilder) (*types.Response[any], error) {
-	if builder == nil {
-		return nil, ErrBuilderRequired
-	}
-
-	req := builder.Build()
-	if req.DomainName == "" {
-		return nil, errors.New("domainName is required")
-	}
-
-	return net.DeleteWithBody[UnregisterDomainRequest, any](
-		ctx,
-		c.client,
-		c.secret,
-		applePayBasePath+"/domain",
-		req,
-		c.baseURL,
-	)
+func (c *Client) UnregisterDomain(ctx context.Context, builder UnregisterDomainRequestBuilder) (*types.Response[any], error) {
+	return net.DeleteWithBody[UnregisterDomainRequest, any](ctx, c.Client, c.Secret, unregisterPath, builder.Build(), c.BaseURL)
 }
