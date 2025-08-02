@@ -1,31 +1,10 @@
 package plans
 
 import (
-	"errors"
-	"net/http"
+	"github.com/huysamen/paystack-go/api"
 )
 
-const (
-	planBasePath = "/plan"
-)
+const basePath = "/plan"
 
-// ErrBuilderRequired is returned when a required builder parameter is missing
-var ErrBuilderRequired = errors.New("builder is required")
-
-type Client struct {
-	client  *http.Client
-	secret  string
-	baseURL string
-}
-
-func NewClient(httpClient *http.Client, secret, baseURL string) *Client {
-	if baseURL == "" {
-		baseURL = "https://api.paystack.co"
-	}
-
-	return &Client{
-		client:  httpClient,
-		secret:  secret,
-		baseURL: baseURL,
-	}
-}
+// Client is the API client for the Plans API
+type Client api.API

@@ -9,56 +9,19 @@ import (
 )
 
 // FetchPlanResponse represents the response from fetching a plan
-type FetchPlanResponse struct {
-	Status  bool       `json:"status"`
-	Message string     `json:"message"`
-	Data    types.Plan `json:"data"`
-}
+type FetchPlanResponse = types.Response[types.Plan]
 
 // FetchByID fetches a plan by its ID
-func (c *Client) FetchByID(ctx context.Context, id uint64) (*types.Plan, error) {
-	resp, err := net.Get[types.Plan](
-		ctx,
-		c.client,
-		c.secret,
-		fmt.Sprintf("%s/%d", planBasePath, id),
-		c.baseURL,
-	)
-	if err != nil {
-		return nil, err
-	}
-
-	return &resp.Data, nil
+func (c *Client) FetchByID(ctx context.Context, id uint64) (*FetchPlanResponse, error) {
+	return net.Get[types.Plan](ctx, c.Client, c.Secret, fmt.Sprintf("%s/%d", basePath, id), c.BaseURL)
 }
 
 // FetchByCode fetches a plan by its code
-func (c *Client) FetchByCode(ctx context.Context, code string) (*types.Plan, error) {
-	resp, err := net.Get[types.Plan](
-		ctx,
-		c.client,
-		c.secret,
-		fmt.Sprintf("%s/%s", planBasePath, code),
-		c.baseURL,
-	)
-	if err != nil {
-		return nil, err
-	}
-
-	return &resp.Data, nil
+func (c *Client) FetchByCode(ctx context.Context, code string) (*FetchPlanResponse, error) {
+	return net.Get[types.Plan](ctx, c.Client, c.Secret, fmt.Sprintf("%s/%s", basePath, code), c.BaseURL)
 }
 
 // Fetch fetches a plan by ID or code (convenience method)
-func (c *Client) Fetch(ctx context.Context, idOrCode string) (*types.Plan, error) {
-	resp, err := net.Get[types.Plan](
-		ctx,
-		c.client,
-		c.secret,
-		fmt.Sprintf("%s/%s", planBasePath, idOrCode),
-		c.baseURL,
-	)
-	if err != nil {
-		return nil, err
-	}
-
-	return &resp.Data, nil
+func (c *Client) Fetch(ctx context.Context, idOrCode string) (*FetchPlanResponse, error) {
+	return net.Get[types.Plan](ctx, c.Client, c.Secret, fmt.Sprintf("%s/%s", basePath, idOrCode), c.BaseURL)
 }

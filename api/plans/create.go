@@ -74,29 +74,9 @@ func (b *CreatePlanRequestBuilder) Build() *CreatePlanRequest {
 }
 
 // CreatePlanResponse represents the response from creating a plan
-type CreatePlanResponse struct {
-	Status  bool       `json:"status"`
-	Message string     `json:"message"`
-	Data    types.Plan `json:"data"`
-}
+type CreatePlanResponse = types.Response[types.Plan]
 
 // Create creates a new subscription plan
-func (c *Client) Create(ctx context.Context, builder *CreatePlanRequestBuilder) (*types.Plan, error) {
-	if builder == nil {
-		return nil, ErrBuilderRequired
-	}
-
-	resp, err := net.Post[CreatePlanRequest, types.Plan](
-		ctx,
-		c.client,
-		c.secret,
-		planBasePath,
-		builder.Build(),
-		c.baseURL,
-	)
-	if err != nil {
-		return nil, err
-	}
-
-	return &resp.Data, nil
+func (c *Client) Create(ctx context.Context, builder *CreatePlanRequestBuilder) (*CreatePlanResponse, error) {
+	return net.Post[CreatePlanRequest, types.Plan](ctx, c.Client, c.Secret, basePath, builder.Build(), c.BaseURL)
 }

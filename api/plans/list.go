@@ -90,33 +90,18 @@ func (r *ListPlansRequest) toQuery() string {
 }
 
 // ListPlansResponse represents the response from listing plans
-type ListPlansResponse struct {
-	Status  bool         `json:"status"`
-	Message string       `json:"message"`
-	Data    []types.Plan `json:"data"`
-	Meta    *types.Meta  `json:"meta,omitempty"`
-}
+type ListPlansResponse = types.Response[[]types.Plan]
 
 // List lists plans using a builder (fluent interface)
-func (c *Client) List(ctx context.Context, builder *ListPlansRequestBuilder) (*types.Response[[]types.Plan], error) {
-	var req *ListPlansRequest
+func (c *Client) List(ctx context.Context, builder *ListPlansRequestBuilder) (*ListPlansResponse, error) {
+	path := basePath
+
 	if builder != nil {
-		req = builder.Build()
-	}
-
-	path := planBasePath
-
-	if req != nil {
+		req := builder.Build()
 		if query := req.toQuery(); query != "" {
 			path += "?" + query
 		}
 	}
 
-	return net.Get[[]types.Plan](
-		ctx,
-		c.client,
-		c.secret,
-		path,
-		c.baseURL,
-	)
+	return net.Get[[]types.Plan](ctx, c.Client, c.Secret, path, c.BaseURL)
 }

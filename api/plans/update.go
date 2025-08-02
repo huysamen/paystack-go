@@ -82,32 +82,9 @@ func (b *UpdatePlanRequestBuilder) Build() *UpdatePlanRequest {
 }
 
 // UpdatePlanResponse represents the response from updating a plan
-type UpdatePlanResponse struct {
-	Status  bool   `json:"status"`
-	Message string `json:"message"`
-}
+type UpdatePlanResponse = types.Response[any]
 
 // Update updates an existing subscription plan
 func (c *Client) Update(ctx context.Context, idOrCode string, builder *UpdatePlanRequestBuilder) (*UpdatePlanResponse, error) {
-	if idOrCode == "" {
-		return nil, fmt.Errorf("plan ID or code is required")
-	}
-
-	if builder == nil {
-		return nil, ErrBuilderRequired
-	}
-
-	resp, err := net.Put[UpdatePlanRequest, UpdatePlanResponse](
-		ctx,
-		c.client,
-		c.secret,
-		fmt.Sprintf("%s/%s", planBasePath, idOrCode),
-		builder.Build(),
-		c.baseURL,
-	)
-	if err != nil {
-		return nil, err
-	}
-
-	return &resp.Data, nil
+	return net.Put[UpdatePlanRequest, any](ctx, c.Client, c.Secret, fmt.Sprintf("%s/%s", basePath, idOrCode), builder.Build(), c.BaseURL)
 }
