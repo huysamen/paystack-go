@@ -49,26 +49,8 @@ func (b *SubscriptionCreateRequestBuilder) Build() *SubscriptionCreateRequest {
 }
 
 // SubscriptionCreateResponse represents the response from creating a subscription.
-type SubscriptionCreateResponse types.Response[Subscription]
+type SubscriptionCreateResponse = types.Response[Subscription]
 
 func (c *Client) Create(ctx context.Context, builder *SubscriptionCreateRequestBuilder) (*SubscriptionCreateResponse, error) {
-	if builder == nil {
-		return nil, ErrBuilderRequired
-	}
-
-	req := builder.Build()
-	resp, err := net.Post[SubscriptionCreateRequest, Subscription](
-		ctx,
-		c.client,
-		c.secret,
-		subscriptionBasePath,
-		req,
-		c.baseURL,
-	)
-	if err != nil {
-		return nil, err
-	}
-
-	response := SubscriptionCreateResponse(*resp)
-	return &response, nil
+	return net.Post[SubscriptionCreateRequest, Subscription](ctx, c.Client, c.Secret, basePath, builder.Build(), c.BaseURL)
 }

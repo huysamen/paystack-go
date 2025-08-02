@@ -2,25 +2,15 @@ package subscriptions
 
 import (
 	"context"
-	"errors"
 	"fmt"
 
 	"github.com/huysamen/paystack-go/net"
 	"github.com/huysamen/paystack-go/types"
 )
 
-func (c *Client) Fetch(ctx context.Context, idOrCode string) (*types.Response[SubscriptionWithInvoices], error) {
-	if idOrCode == "" {
-		return nil, errors.New("subscription ID or code is required")
-	}
+// SubscriptionFetchResponse represents the response from fetching a subscription
+type SubscriptionFetchResponse = types.Response[SubscriptionWithInvoices]
 
-	path := fmt.Sprintf("%s/%s", subscriptionBasePath, idOrCode)
-
-	return net.Get[SubscriptionWithInvoices](
-		ctx,
-		c.client,
-		c.secret,
-		path,
-		c.baseURL,
-	)
+func (c *Client) Fetch(ctx context.Context, idOrCode string) (*SubscriptionFetchResponse, error) {
+	return net.Get[SubscriptionWithInvoices](ctx, c.Client, c.Secret, fmt.Sprintf("%s/%s", basePath, idOrCode), c.BaseURL)
 }

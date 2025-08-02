@@ -78,27 +78,19 @@ func (r *SubscriptionListRequest) toQuery() string {
 	return params.Encode()
 }
 
-type SubscriptionListResponse struct {
-	Data []Subscription `json:"data"`
-	Meta types.Meta     `json:"meta"`
-}
+// SubscriptionListResponse represents the response from listing subscriptions
+type SubscriptionListResponse = types.Response[[]Subscription]
 
 // List lists subscriptions using a builder (fluent interface)
-func (c *Client) List(ctx context.Context, builder *SubscriptionListRequestBuilder) (*types.Response[SubscriptionListResponse], error) {
-	req := builder.Build()
-	path := subscriptionBasePath
+func (c *Client) List(ctx context.Context, builder *SubscriptionListRequestBuilder) (*SubscriptionListResponse, error) {
+	path := basePath
 
-	if req != nil {
+	if builder != nil {
+		req := builder.Build()
 		if query := req.toQuery(); query != "" {
 			path += "?" + query
 		}
 	}
 
-	return net.Get[SubscriptionListResponse](
-		ctx,
-		c.client,
-		c.secret,
-		path,
-		c.baseURL,
-	)
+	return net.Get[[]Subscription](ctx, c.Client, c.Secret, path, c.BaseURL)
 }

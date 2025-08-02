@@ -34,32 +34,12 @@ func (b *SubscriptionEnableRequestBuilder) Build() *SubscriptionEnableRequest {
 }
 
 // SubscriptionEnableResponse represents the response from enabling a subscription.
-type SubscriptionEnableResponse types.Response[struct {
+type SubscriptionEnableResponse = types.Response[struct {
 	Message string `json:"message"`
 }]
 
 func (c *Client) Enable(ctx context.Context, builder *SubscriptionEnableRequestBuilder) (*SubscriptionEnableResponse, error) {
-	if builder == nil {
-		return nil, ErrBuilderRequired
-	}
-
-	req := builder.Build()
-	path := subscriptionBasePath + "/enable"
-
-	resp, err := net.Post[SubscriptionEnableRequest, struct {
+	return net.Post[SubscriptionEnableRequest, struct {
 		Message string `json:"message"`
-	}](
-		ctx,
-		c.client,
-		c.secret,
-		path,
-		req,
-		c.baseURL,
-	)
-	if err != nil {
-		return nil, err
-	}
-
-	response := SubscriptionEnableResponse(*resp)
-	return &response, nil
+	}](ctx, c.Client, c.Secret, basePath+"/enable", builder.Build(), c.BaseURL)
 }

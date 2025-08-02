@@ -2,7 +2,6 @@ package subscriptions
 
 import (
 	"context"
-	"errors"
 	"fmt"
 
 	"github.com/huysamen/paystack-go/net"
@@ -13,22 +12,9 @@ type SendUpdateLinkResponse struct {
 	Message string `json:"message"`
 }
 
-func (c *Client) SendUpdateLink(ctx context.Context, code string) (*types.Response[SendUpdateLinkResponse], error) {
-	if code == "" {
-		return nil, errors.New("subscription code is required")
-	}
+// SubscriptionSendUpdateLinkResponse represents the response from sending update link
+type SubscriptionSendUpdateLinkResponse = types.Response[SendUpdateLinkResponse]
 
-	path := fmt.Sprintf("%s/%s/manage/email", subscriptionBasePath, code)
-
-	// This endpoint doesn't require a request body, but we need to pass something to Post
-	var emptyRequest struct{}
-
-	return net.Post[struct{}, SendUpdateLinkResponse](
-		ctx,
-		c.client,
-		c.secret,
-		path,
-		&emptyRequest,
-		c.baseURL,
-	)
+func (c *Client) SendUpdateLink(ctx context.Context, code string) (*SubscriptionSendUpdateLinkResponse, error) {
+	return net.Post[struct{}, SendUpdateLinkResponse](ctx, c.Client, c.Secret, fmt.Sprintf("%s/%s/manage/email", basePath, code), &struct{}{}, c.BaseURL)
 }

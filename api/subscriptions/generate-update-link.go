@@ -2,7 +2,6 @@ package subscriptions
 
 import (
 	"context"
-	"errors"
 	"fmt"
 
 	"github.com/huysamen/paystack-go/net"
@@ -13,18 +12,9 @@ type GenerateUpdateLinkResponse struct {
 	Link string `json:"link"`
 }
 
-func (c *Client) GenerateUpdateLink(ctx context.Context, code string) (*types.Response[GenerateUpdateLinkResponse], error) {
-	if code == "" {
-		return nil, errors.New("subscription code is required")
-	}
+// SubscriptionGenerateUpdateLinkResponse represents the response from generating update link
+type SubscriptionGenerateUpdateLinkResponse = types.Response[GenerateUpdateLinkResponse]
 
-	path := fmt.Sprintf("%s/%s/manage/link", subscriptionBasePath, code)
-
-	return net.Get[GenerateUpdateLinkResponse](
-		ctx,
-		c.client,
-		c.secret,
-		path,
-		c.baseURL,
-	)
+func (c *Client) GenerateUpdateLink(ctx context.Context, code string) (*SubscriptionGenerateUpdateLinkResponse, error) {
+	return net.Get[GenerateUpdateLinkResponse](ctx, c.Client, c.Secret, fmt.Sprintf("%s/%s/manage/link", basePath, code), c.BaseURL)
 }
