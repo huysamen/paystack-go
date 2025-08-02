@@ -58,14 +58,5 @@ func (b *SettlementTransactionListRequestBuilder) Build() *SettlementTransaction
 
 // ListTransactions retrieves transactions for a specific settlement using a builder (fluent interface)
 func (c *Client) ListTransactions(ctx context.Context, settlementID string, builder *SettlementTransactionListRequestBuilder) (*SettlementTransactionListResponse, error) {
-	if builder == nil {
-		return nil, ErrBuilderRequired
-	}
-
-	url := fmt.Sprintf("%s%s/%s/transactions", c.baseURL, settlementBasePath, settlementID)
-	response, err := net.Get[[]SettlementTransaction](ctx, c.client, c.secret, url)
-	if err != nil {
-		return nil, err
-	}
-	return response, nil
+	return net.Get[[]SettlementTransaction](ctx, c.Client, c.Secret, fmt.Sprintf("%s/%s/transactions", basePath, settlementID), c.BaseURL)
 }

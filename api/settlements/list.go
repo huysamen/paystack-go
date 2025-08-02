@@ -76,14 +76,5 @@ func (b *SettlementListRequestBuilder) Build() *SettlementListRequest {
 
 // List retrieves a list of settlements using a builder (fluent interface)
 func (c *Client) List(ctx context.Context, builder *SettlementListRequestBuilder) (*SettlementListResponse, error) {
-	if builder == nil {
-		builder = NewSettlementListRequest()
-	}
-
-	url := c.baseURL + settlementBasePath
-	response, err := net.Get[[]Settlement](ctx, c.client, c.secret, url)
-	if err != nil {
-		return nil, err
-	}
-	return response, nil
+	return net.Get[[]Settlement](ctx, c.Client, c.Secret, basePath, c.BaseURL)
 }
