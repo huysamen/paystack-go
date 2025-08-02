@@ -94,23 +94,14 @@ func (b *ListPaymentRequestsRequestBuilder) Build() *ListPaymentRequestsRequest 
 }
 
 // ListPaymentRequestsResponse represents the response from listing payment requests
-type ListPaymentRequestsResponse struct {
-	Status  bool             `json:"status"`
-	Message string           `json:"message"`
-	Data    []PaymentRequest `json:"data"`
-	Meta    *types.Meta      `json:"meta,omitempty"`
-}
+type ListPaymentRequestsResponse = types.Response[[]PaymentRequest]
 
 // List retrieves payment requests available on your integration
-func (c *Client) List(ctx context.Context, builder *ListPaymentRequestsRequestBuilder) (*types.Response[[]PaymentRequest], error) {
-	var req *ListPaymentRequestsRequest
-	if builder != nil {
-		req = builder.Build()
-	}
-
+func (c *Client) List(ctx context.Context, builder *ListPaymentRequestsRequestBuilder) (*ListPaymentRequestsResponse, error) {
 	params := url.Values{}
 
-	if req != nil {
+	if builder != nil {
+		req := builder.Build()
 		if req.PerPage > 0 {
 			params.Set("perPage", strconv.Itoa(req.PerPage))
 		}
@@ -137,12 +128,10 @@ func (c *Client) List(ctx context.Context, builder *ListPaymentRequestsRequestBu
 		}
 	}
 
-	endpoint := paymentRequestsBasePath
+	endpoint := basePath
 	if len(params) > 0 {
 		endpoint += "?" + params.Encode()
 	}
 
-	return net.Get[[]PaymentRequest](
-		ctx, c.client, c.secret, endpoint, c.baseURL,
-	)
+	return net.Get[[]PaymentRequest](ctx, c.Client, c.Secret, endpoint, c.BaseURL)
 }

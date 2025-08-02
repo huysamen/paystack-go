@@ -8,14 +8,9 @@ import (
 )
 
 // SendNotificationResponse represents the response from sending a notification
-type SendNotificationResponse struct {
-	Status  bool   `json:"status"`
-	Message string `json:"message"`
-}
+type SendNotificationResponse = types.Response[any]
 
 // SendNotification sends notification of a payment request to your customers
-func (c *Client) SendNotification(ctx context.Context, code string) (*types.Response[any], error) {
-	return net.Post[any, any](
-		ctx, c.client, c.secret, paymentRequestsBasePath+"/notify/"+code, nil, c.baseURL,
-	)
+func (c *Client) SendNotification(ctx context.Context, code string) (*SendNotificationResponse, error) {
+	return net.Post[any, any](ctx, c.Client, c.Secret, basePath+"/notify/"+code, nil, c.BaseURL)
 }

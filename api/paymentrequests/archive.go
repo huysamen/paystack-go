@@ -8,14 +8,9 @@ import (
 )
 
 // ArchivePaymentRequestResponse represents the response from archiving a payment request
-type ArchivePaymentRequestResponse struct {
-	Status  bool   `json:"status"`
-	Message string `json:"message"`
-}
+type ArchivePaymentRequestResponse = types.Response[any]
 
 // Archive archives a payment request. A payment request will no longer be fetched on list or returned on verify
-func (c *Client) Archive(ctx context.Context, code string) (*types.Response[any], error) {
-	return net.Post[any, any](
-		ctx, c.client, c.secret, paymentRequestsBasePath+"/archive/"+code, nil, c.baseURL,
-	)
+func (c *Client) Archive(ctx context.Context, code string) (*ArchivePaymentRequestResponse, error) {
+	return net.Post[any, any](ctx, c.Client, c.Secret, basePath+"/archive/"+code, nil, c.BaseURL)
 }

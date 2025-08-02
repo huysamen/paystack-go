@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/huysamen/paystack-go/net"
+	"github.com/huysamen/paystack-go/types"
 )
 
 // FinalizePaymentRequestRequest represents the request to finalize a payment request
@@ -35,14 +36,10 @@ func (b *FinalizePaymentRequestRequestBuilder) Build() *FinalizePaymentRequestRe
 }
 
 // FinalizePaymentRequestResponse represents the response from finalizing a payment request
-type FinalizePaymentRequestResponse struct {
-	Status  bool           `json:"status"`
-	Message string         `json:"message"`
-	Data    PaymentRequest `json:"data"`
-}
+type FinalizePaymentRequestResponse = types.Response[PaymentRequest]
 
 // Finalize finalizes a draft payment request
-func (c *Client) Finalize(ctx context.Context, code string, builder *FinalizePaymentRequestRequestBuilder) (*PaymentRequest, error) {
+func (c *Client) Finalize(ctx context.Context, code string, builder *FinalizePaymentRequestRequestBuilder) (*FinalizePaymentRequestResponse, error) {
 	var req *FinalizePaymentRequestRequest
 	if builder != nil {
 		req = builder.Build()
@@ -50,12 +47,5 @@ func (c *Client) Finalize(ctx context.Context, code string, builder *FinalizePay
 		req = &FinalizePaymentRequestRequest{}
 	}
 
-	resp, err := net.Post[FinalizePaymentRequestRequest, PaymentRequest](
-		ctx, c.client, c.secret, paymentRequestsBasePath+"/finalize/"+code, req, c.baseURL,
-	)
-	if err != nil {
-		return nil, err
-	}
-
-	return &resp.Data, nil
+	return net.Post[FinalizePaymentRequestRequest, PaymentRequest](ctx, c.Client, c.Secret, basePath+"/finalize/"+code, req, c.BaseURL)
 }

@@ -125,24 +125,9 @@ func (b *UpdatePaymentRequestRequestBuilder) Build() *UpdatePaymentRequestReques
 }
 
 // UpdatePaymentRequestResponse represents the response from updating a payment request
-type UpdatePaymentRequestResponse struct {
-	Status  bool           `json:"status"`
-	Message string         `json:"message"`
-	Data    PaymentRequest `json:"data"`
-}
+type UpdatePaymentRequestResponse = types.Response[PaymentRequest]
 
 // Update updates a payment request details on your integration
-func (c *Client) Update(ctx context.Context, idOrCode string, builder *UpdatePaymentRequestRequestBuilder) (*PaymentRequest, error) {
-	if builder == nil {
-		return nil, ErrBuilderRequired
-	}
-
-	resp, err := net.Put[UpdatePaymentRequestRequest, PaymentRequest](
-		ctx, c.client, c.secret, paymentRequestsBasePath+"/"+idOrCode, builder.Build(), c.baseURL,
-	)
-	if err != nil {
-		return nil, err
-	}
-
-	return &resp.Data, nil
+func (c *Client) Update(ctx context.Context, idOrCode string, builder *UpdatePaymentRequestRequestBuilder) (*UpdatePaymentRequestResponse, error) {
+	return net.Put[UpdatePaymentRequestRequest, PaymentRequest](ctx, c.Client, c.Secret, basePath+"/"+idOrCode, builder.Build(), c.BaseURL)
 }

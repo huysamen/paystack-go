@@ -132,24 +132,9 @@ func (b *CreatePaymentRequestRequestBuilder) Build() *CreatePaymentRequestReques
 }
 
 // CreatePaymentRequestResponse represents the response from creating a payment request
-type CreatePaymentRequestResponse struct {
-	Status  bool           `json:"status"`
-	Message string         `json:"message"`
-	Data    PaymentRequest `json:"data"`
-}
+type CreatePaymentRequestResponse = types.Response[PaymentRequest]
 
 // Create creates a payment request for a transaction on your integration
-func (c *Client) Create(ctx context.Context, builder *CreatePaymentRequestRequestBuilder) (*PaymentRequest, error) {
-	if builder == nil {
-		return nil, ErrBuilderRequired
-	}
-
-	resp, err := net.Post[CreatePaymentRequestRequest, PaymentRequest](
-		ctx, c.client, c.secret, paymentRequestsBasePath, builder.Build(), c.baseURL,
-	)
-	if err != nil {
-		return nil, err
-	}
-
-	return &resp.Data, nil
+func (c *Client) Create(ctx context.Context, builder *CreatePaymentRequestRequestBuilder) (*CreatePaymentRequestResponse, error) {
+	return net.Post[CreatePaymentRequestRequest, PaymentRequest](ctx, c.Client, c.Secret, basePath, builder.Build(), c.BaseURL)
 }
