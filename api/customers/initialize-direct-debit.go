@@ -64,23 +64,6 @@ func (b *DirectDebitInitializeRequestBuilder) Build() *DirectDebitInitializeRequ
 
 // InitializeDirectDebit initializes direct debit for a customer
 func (c *Client) InitializeDirectDebit(ctx context.Context, customerID string, builder *DirectDebitInitializeRequestBuilder) (*types.Response[DirectDebitInitializeResponse], error) {
-	if customerID == "" {
-		return nil, fmt.Errorf("customer ID is required")
-	}
-
-	if builder == nil {
-		return nil, ErrBuilderRequired
-	}
-
-	req := builder.Build()
-	path := fmt.Sprintf("%s/%s/initialize-direct-debit", customerBasePath, customerID)
-
-	return net.Post[DirectDebitInitializeRequest, DirectDebitInitializeResponse](
-		ctx,
-		c.client,
-		c.secret,
-		path,
-		req,
-		c.baseURL,
-	)
+	path := fmt.Sprintf("%s/%s/initialize-direct-debit", basePath, customerID)
+	return net.Post[DirectDebitInitializeRequest, DirectDebitInitializeResponse](ctx, c.Client, c.Secret, path, builder.Build(), c.BaseURL)
 }

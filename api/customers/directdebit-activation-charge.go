@@ -38,23 +38,6 @@ func (b *DirectDebitActivationChargeRequestBuilder) Build() *DirectDebitActivati
 
 // DirectDebitActivationCharge creates an activation charge for a direct debit authorization
 func (c *Client) DirectDebitActivationCharge(ctx context.Context, customerID string, builder *DirectDebitActivationChargeRequestBuilder) (*types.Response[DirectDebitActivationChargeResponse], error) {
-	if customerID == "" {
-		return nil, fmt.Errorf("customer ID is required")
-	}
-
-	if builder == nil {
-		return nil, ErrBuilderRequired
-	}
-
-	req := builder.Build()
-	path := fmt.Sprintf("%s/%s/directdebit-activation-charge", customerBasePath, customerID)
-
-	return net.Put[DirectDebitActivationChargeRequest, DirectDebitActivationChargeResponse](
-		ctx,
-		c.client,
-		c.secret,
-		path,
-		req,
-		c.baseURL,
-	)
+	path := fmt.Sprintf("%s/%s/directdebit-activation-charge", basePath, customerID)
+	return net.Put[DirectDebitActivationChargeRequest, DirectDebitActivationChargeResponse](ctx, c.Client, c.Secret, path, builder.Build(), c.BaseURL)
 }

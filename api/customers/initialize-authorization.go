@@ -77,19 +77,5 @@ func (b *AuthorizationInitializeRequestBuilder) Build() *AuthorizationInitialize
 
 // InitializeAuthorization initializes authorization for a customer
 func (c *Client) InitializeAuthorization(ctx context.Context, builder *AuthorizationInitializeRequestBuilder) (*types.Response[AuthorizationInitializeResponse], error) {
-	if builder == nil {
-		return nil, ErrBuilderRequired
-	}
-
-	req := builder.Build()
-	path := customerBasePath + "/authorization/initialize"
-
-	return net.Post[AuthorizationInitializeRequest, AuthorizationInitializeResponse](
-		ctx,
-		c.client,
-		c.secret,
-		path,
-		req,
-		c.baseURL,
-	)
+	return net.Post[AuthorizationInitializeRequest, AuthorizationInitializeResponse](ctx, c.Client, c.Secret, basePath+"/authorization/initialize", builder.Build(), c.BaseURL)
 }

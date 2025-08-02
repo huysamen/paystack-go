@@ -69,18 +69,5 @@ func (b *CustomerCreateRequestBuilder) Build() *CustomerCreateRequest {
 
 // Create creates a new customer with the provided builder
 func (c *Client) Create(ctx context.Context, builder *CustomerCreateRequestBuilder) (*types.Response[types.Customer], error) {
-	if builder == nil {
-		return nil, ErrBuilderRequired
-	}
-
-	req := builder.Build()
-
-	return net.Post[CustomerCreateRequest, types.Customer](
-		ctx,
-		c.client,
-		c.secret,
-		customerBasePath,
-		req,
-		c.baseURL,
-	)
+	return net.Post[CustomerCreateRequest, types.Customer](ctx, c.Client, c.Secret, basePath, builder.Build(), c.BaseURL)
 }

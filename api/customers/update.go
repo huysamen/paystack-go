@@ -65,23 +65,7 @@ func (b *CustomerUpdateRequestBuilder) Build() *CustomerUpdateRequest {
 
 // Update updates a customer with the provided builder
 func (c *Client) Update(ctx context.Context, customerCode string, builder *CustomerUpdateRequestBuilder) (*types.Response[types.Customer], error) {
-	if customerCode == "" {
-		return nil, fmt.Errorf("customer code is required")
-	}
+	path := fmt.Sprintf("%s/%s", basePath, customerCode)
 
-	if builder == nil {
-		return nil, ErrBuilderRequired
-	}
-
-	req := builder.Build()
-	path := fmt.Sprintf("%s/%s", customerBasePath, customerCode)
-
-	return net.Put[CustomerUpdateRequest, types.Customer](
-		ctx,
-		c.client,
-		c.secret,
-		path,
-		req,
-		c.baseURL,
-	)
+	return net.Put[CustomerUpdateRequest, types.Customer](ctx, c.Client, c.Secret, path, builder.Build(), c.BaseURL)
 }

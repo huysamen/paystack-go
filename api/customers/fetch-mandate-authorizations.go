@@ -27,17 +27,7 @@ type FetchMandateAuthorizationsResponse []MandateAuthorization
 
 // FetchMandateAuthorizations fetches mandate authorizations for a customer
 func (c *Client) FetchMandateAuthorizations(ctx context.Context, customerID string) (*types.Response[FetchMandateAuthorizationsResponse], error) {
-	if customerID == "" {
-		return nil, fmt.Errorf("customer ID is required")
-	}
+	path := fmt.Sprintf("%s/%s/directdebit-mandate-authorizations", basePath, customerID)
 
-	path := fmt.Sprintf("%s/%s/directdebit-mandate-authorizations", customerBasePath, customerID)
-
-	return net.Get[FetchMandateAuthorizationsResponse](
-		ctx,
-		c.client,
-		c.secret,
-		path,
-		c.baseURL,
-	)
+	return net.Get[FetchMandateAuthorizationsResponse](ctx, c.Client, c.Secret, path, c.BaseURL)
 }

@@ -25,17 +25,7 @@ type CustomerReference struct {
 
 // VerifyAuthorization verifies an authorization by reference
 func (c *Client) VerifyAuthorization(ctx context.Context, reference string) (*types.Response[AuthorizationVerifyResponse], error) {
-	if reference == "" {
-		return nil, fmt.Errorf("reference is required")
-	}
+	path := fmt.Sprintf("%s/authorization/verify/%s", basePath, reference)
 
-	path := fmt.Sprintf("%s/authorization/verify/%s", customerBasePath, reference)
-
-	return net.Get[AuthorizationVerifyResponse](
-		ctx,
-		c.client,
-		c.secret,
-		path,
-		c.baseURL,
-	)
+	return net.Get[AuthorizationVerifyResponse](ctx, c.Client, c.Secret, path, c.BaseURL)
 }

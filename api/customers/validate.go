@@ -85,23 +85,6 @@ func (b *CustomerValidateRequestBuilder) Build() *CustomerValidateRequest {
 
 // Validate validates a customer with the provided builder
 func (c *Client) Validate(ctx context.Context, customerCode string, builder *CustomerValidateRequestBuilder) (*types.Response[CustomerValidateResponse], error) {
-	if customerCode == "" {
-		return nil, fmt.Errorf("customer code is required")
-	}
-
-	if builder == nil {
-		return nil, ErrBuilderRequired
-	}
-
-	req := builder.Build()
-	path := fmt.Sprintf("%s/%s/identification", customerBasePath, customerCode)
-
-	return net.Post[CustomerValidateRequest, CustomerValidateResponse](
-		ctx,
-		c.client,
-		c.secret,
-		path,
-		req,
-		c.baseURL,
-	)
+	path := fmt.Sprintf("%s/%s/identification", basePath, customerCode)
+	return net.Post[CustomerValidateRequest, CustomerValidateResponse](ctx, c.Client, c.Secret, path, builder.Build(), c.BaseURL)
 }

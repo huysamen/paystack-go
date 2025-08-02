@@ -94,7 +94,7 @@ type CustomerListResponse struct {
 // List lists customers using a builder (fluent interface)
 func (c *Client) List(ctx context.Context, builder *CustomerListRequestBuilder) (*types.Response[CustomerListResponse], error) {
 	req := builder.Build()
-	path := customerBasePath
+	path := basePath
 
 	if req != nil {
 		if query := req.toQuery(); query != "" {
@@ -102,11 +102,5 @@ func (c *Client) List(ctx context.Context, builder *CustomerListRequestBuilder) 
 		}
 	}
 
-	return net.Get[CustomerListResponse](
-		ctx,
-		c.client,
-		c.secret,
-		path,
-		c.baseURL,
-	)
+	return net.Get[CustomerListResponse](ctx, c.Client, c.Secret, path, c.BaseURL)
 }

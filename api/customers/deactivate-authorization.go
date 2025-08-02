@@ -37,19 +37,5 @@ func (b *DeactivateAuthorizationRequestBuilder) Build() *DeactivateAuthorization
 
 // DeactivateAuthorization deactivates an authorization with the provided builder
 func (c *Client) DeactivateAuthorization(ctx context.Context, builder *DeactivateAuthorizationRequestBuilder) (*types.Response[DeactivateAuthorizationResponse], error) {
-	if builder == nil {
-		return nil, ErrBuilderRequired
-	}
-
-	req := builder.Build()
-	path := customerBasePath + "/authorization/deactivate"
-
-	return net.Post[DeactivateAuthorizationRequest, DeactivateAuthorizationResponse](
-		ctx,
-		c.client,
-		c.secret,
-		path,
-		req,
-		c.baseURL,
-	)
+	return net.Post[DeactivateAuthorizationRequest, DeactivateAuthorizationResponse](ctx, c.Client, c.Secret, basePath+"/authorization/deactivate", builder.Build(), c.BaseURL)
 }
