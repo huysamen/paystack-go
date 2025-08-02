@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/huysamen/paystack-go/net"
-	"github.com/huysamen/paystack-go/options"
+	"github.com/huysamen/paystack-go/optional"
 	"github.com/huysamen/paystack-go/types"
 )
 
@@ -37,56 +37,56 @@ func NewTransactionListRequest() *TransactionListRequestBuilder {
 
 // PerPage sets the number of records per page
 func (b *TransactionListRequestBuilder) PerPage(perPage int) *TransactionListRequestBuilder {
-	b.req.PerPage = options.Int(perPage)
+	b.req.PerPage = optional.Int(perPage)
 	return b
 }
 
 // Page sets the page number
 func (b *TransactionListRequestBuilder) Page(page int) *TransactionListRequestBuilder {
-	b.req.Page = options.Int(page)
+	b.req.Page = optional.Int(page)
 	return b
 }
 
 // Customer filters by customer ID
 func (b *TransactionListRequestBuilder) Customer(customer uint64) *TransactionListRequestBuilder {
-	b.req.Customer = options.Uint64(customer)
+	b.req.Customer = optional.Uint64(customer)
 	return b
 }
 
 // TerminalID filters by terminal ID
 func (b *TransactionListRequestBuilder) TerminalID(terminalID string) *TransactionListRequestBuilder {
-	b.req.TerminalID = options.String(terminalID)
+	b.req.TerminalID = optional.String(terminalID)
 	return b
 }
 
 // Status filters by transaction status
 func (b *TransactionListRequestBuilder) Status(status string) *TransactionListRequestBuilder {
-	b.req.Status = options.String(status)
+	b.req.Status = optional.String(status)
 	return b
 }
 
 // DateRange sets both start and end date filters
 func (b *TransactionListRequestBuilder) DateRange(from, to time.Time) *TransactionListRequestBuilder {
-	b.req.From = options.Time(from)
-	b.req.To = options.Time(to)
+	b.req.From = optional.Time(from)
+	b.req.To = optional.Time(to)
 	return b
 }
 
 // From sets the start date filter
 func (b *TransactionListRequestBuilder) From(from time.Time) *TransactionListRequestBuilder {
-	b.req.From = options.Time(from)
+	b.req.From = optional.Time(from)
 	return b
 }
 
 // To sets the end date filter
 func (b *TransactionListRequestBuilder) To(to time.Time) *TransactionListRequestBuilder {
-	b.req.To = options.Time(to)
+	b.req.To = optional.Time(to)
 	return b
 }
 
 // Amount filters by transaction amount
 func (b *TransactionListRequestBuilder) Amount(amount int) *TransactionListRequestBuilder {
-	b.req.Amount = options.Int(amount)
+	b.req.Amount = optional.Int(amount)
 	return b
 }
 

@@ -1,6 +1,6 @@
-// Package options provides utility functions for implementing functional options pattern
+// Package optional provides utility functions for implementing functional options pattern
 // across the Paystack Go SDK.
-package options
+package optional
 
 import "time"
 

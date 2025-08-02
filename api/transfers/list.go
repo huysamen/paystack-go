@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/huysamen/paystack-go/net"
-	"github.com/huysamen/paystack-go/options"
+	"github.com/huysamen/paystack-go/optional"
 	"github.com/huysamen/paystack-go/types"
 )
 
@@ -34,38 +34,38 @@ func NewTransferListRequest() *TransferListRequestBuilder {
 
 // PerPage sets the number of records per page
 func (b *TransferListRequestBuilder) PerPage(perPage int) *TransferListRequestBuilder {
-	b.req.PerPage = options.Int(perPage)
+	b.req.PerPage = optional.Int(perPage)
 	return b
 }
 
 // Page sets the page number
 func (b *TransferListRequestBuilder) Page(page int) *TransferListRequestBuilder {
-	b.req.Page = options.Int(page)
+	b.req.Page = optional.Int(page)
 	return b
 }
 
 // Recipient filters by recipient ID
 func (b *TransferListRequestBuilder) Recipient(recipient int) *TransferListRequestBuilder {
-	b.req.Recipient = options.Int(recipient)
+	b.req.Recipient = optional.Int(recipient)
 	return b
 }
 
 // DateRange sets both start and end date filters
 func (b *TransferListRequestBuilder) DateRange(from, to time.Time) *TransferListRequestBuilder {
-	b.req.From = options.Time(from)
-	b.req.To = options.Time(to)
+	b.req.From = optional.Time(from)
+	b.req.To = optional.Time(to)
 	return b
 }
 
 // From sets the start date filter
 func (b *TransferListRequestBuilder) From(from time.Time) *TransferListRequestBuilder {
-	b.req.From = options.Time(from)
+	b.req.From = optional.Time(from)
 	return b
 }
 
 // To sets the end date filter
 func (b *TransferListRequestBuilder) To(to time.Time) *TransferListRequestBuilder {
-	b.req.To = options.Time(to)
+	b.req.To = optional.Time(to)
 	return b
 }
 

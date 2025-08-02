@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/huysamen/paystack-go/net"
-	"github.com/huysamen/paystack-go/options"
+	"github.com/huysamen/paystack-go/optional"
 	"github.com/huysamen/paystack-go/types"
 )
 
@@ -41,44 +41,44 @@ func NewTransactionExportRequest() *TransactionExportRequestBuilder {
 
 // PerPage sets the number of records per page
 func (b *TransactionExportRequestBuilder) PerPage(perPage int) *TransactionExportRequestBuilder {
-	b.req.PerPage = options.Int(perPage)
+	b.req.PerPage = optional.Int(perPage)
 	return b
 }
 
 // Page sets the page number
 func (b *TransactionExportRequestBuilder) Page(page int) *TransactionExportRequestBuilder {
-	b.req.Page = options.Int(page)
+	b.req.Page = optional.Int(page)
 	return b
 }
 
 // DateRange sets both start and end date filters
 func (b *TransactionExportRequestBuilder) DateRange(from, to time.Time) *TransactionExportRequestBuilder {
-	b.req.From = options.Time(from)
-	b.req.To = options.Time(to)
+	b.req.From = optional.Time(from)
+	b.req.To = optional.Time(to)
 	return b
 }
 
 // From sets the start date filter
 func (b *TransactionExportRequestBuilder) From(from time.Time) *TransactionExportRequestBuilder {
-	b.req.From = options.Time(from)
+	b.req.From = optional.Time(from)
 	return b
 }
 
 // To sets the end date filter
 func (b *TransactionExportRequestBuilder) To(to time.Time) *TransactionExportRequestBuilder {
-	b.req.To = options.Time(to)
+	b.req.To = optional.Time(to)
 	return b
 }
 
 // Customer filters by customer ID
 func (b *TransactionExportRequestBuilder) Customer(customer uint64) *TransactionExportRequestBuilder {
-	b.req.Customer = options.Uint64(customer)
+	b.req.Customer = optional.Uint64(customer)
 	return b
 }
 
 // Status filters by transaction status
 func (b *TransactionExportRequestBuilder) Status(status string) *TransactionExportRequestBuilder {
-	b.req.Status = options.String(status)
+	b.req.Status = optional.String(status)
 	return b
 }
 
@@ -90,25 +90,25 @@ func (b *TransactionExportRequestBuilder) Currency(currency types.Currency) *Tra
 
 // Amount filters by transaction amount
 func (b *TransactionExportRequestBuilder) Amount(amount int) *TransactionExportRequestBuilder {
-	b.req.Amount = options.Int(amount)
+	b.req.Amount = optional.Int(amount)
 	return b
 }
 
 // Settled filters by settlement status
 func (b *TransactionExportRequestBuilder) Settled(settled bool) *TransactionExportRequestBuilder {
-	b.req.Settled = options.Bool(settled)
+	b.req.Settled = optional.Bool(settled)
 	return b
 }
 
 // Settlement filters by settlement ID
 func (b *TransactionExportRequestBuilder) Settlement(settlement uint64) *TransactionExportRequestBuilder {
-	b.req.Settlement = options.Uint64(settlement)
+	b.req.Settlement = optional.Uint64(settlement)
 	return b
 }
 
 // PaymentPage filters by payment page ID
 func (b *TransactionExportRequestBuilder) PaymentPage(paymentPage uint64) *TransactionExportRequestBuilder {
-	b.req.PaymentPage = options.Uint64(paymentPage)
+	b.req.PaymentPage = optional.Uint64(paymentPage)
 	return b
 }
 

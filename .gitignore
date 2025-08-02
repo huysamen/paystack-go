@@ -39,7 +39,7 @@ coverage.html
 !.gitignore
 !/api/
 !/net/
-!/options/
+!/optional/
 !/types/
 !/utils/
 

@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/huysamen/paystack-go/net"
-	"github.com/huysamen/paystack-go/options"
+	"github.com/huysamen/paystack-go/optional"
 	"github.com/huysamen/paystack-go/types"
 )
 
@@ -33,32 +33,32 @@ func NewTransactionTotalsRequest() *TransactionTotalsRequestBuilder {
 
 // PerPage sets the number of records per page
 func (b *TransactionTotalsRequestBuilder) PerPage(perPage int) *TransactionTotalsRequestBuilder {
-	b.req.PerPage = options.Int(perPage)
+	b.req.PerPage = optional.Int(perPage)
 	return b
 }
 
 // Page sets the page number
 func (b *TransactionTotalsRequestBuilder) Page(page int) *TransactionTotalsRequestBuilder {
-	b.req.Page = options.Int(page)
+	b.req.Page = optional.Int(page)
 	return b
 }
 
 // DateRange sets both start and end date filters
 func (b *TransactionTotalsRequestBuilder) DateRange(from, to time.Time) *TransactionTotalsRequestBuilder {
-	b.req.From = options.Time(from)
-	b.req.To = options.Time(to)
+	b.req.From = optional.Time(from)
+	b.req.To = optional.Time(to)
 	return b
 }
 
 // From sets the start date filter
 func (b *TransactionTotalsRequestBuilder) From(from time.Time) *TransactionTotalsRequestBuilder {
-	b.req.From = options.Time(from)
+	b.req.From = optional.Time(from)
 	return b
 }
 
 // To sets the end date filter
 func (b *TransactionTotalsRequestBuilder) To(to time.Time) *TransactionTotalsRequestBuilder {
-	b.req.To = options.Time(to)
+	b.req.To = optional.Time(to)
 	return b
 }
 

@@ -6,7 +6,7 @@ import (
 	"net/url"
 
 	"github.com/huysamen/paystack-go/net"
-	"github.com/huysamen/paystack-go/options"
+	"github.com/huysamen/paystack-go/optional"
 	"github.com/huysamen/paystack-go/types"
 )
 
@@ -32,25 +32,25 @@ func NewSubscriptionListRequest() *SubscriptionListRequestBuilder {
 
 // PerPage sets the number of records per page
 func (b *SubscriptionListRequestBuilder) PerPage(perPage int) *SubscriptionListRequestBuilder {
-	b.req.PerPage = options.Int(perPage)
+	b.req.PerPage = optional.Int(perPage)
 	return b
 }
 
 // Page sets the page number
 func (b *SubscriptionListRequestBuilder) Page(page int) *SubscriptionListRequestBuilder {
-	b.req.Page = options.Int(page)
+	b.req.Page = optional.Int(page)
 	return b
 }
 
 // Customer filters by customer ID
 func (b *SubscriptionListRequestBuilder) Customer(customer int) *SubscriptionListRequestBuilder {
-	b.req.Customer = options.Int(customer)
+	b.req.Customer = optional.Int(customer)
 	return b
 }
 
 // Plan filters by plan ID
 func (b *SubscriptionListRequestBuilder) Plan(plan int) *SubscriptionListRequestBuilder {
-	b.req.Plan = options.Int(plan)
+	b.req.Plan = optional.Int(plan)
 	return b
 }
 
