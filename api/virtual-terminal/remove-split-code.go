@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 
@@ -12,13 +13,15 @@ import (
 
 // RemoveSplitCode removes a split code from a virtual terminal
 // Note: This uses a custom implementation because the Paystack API requires DELETE with body
-func (c *Client) RemoveSplitCode(ctx context.Context, code string, req *RemoveSplitCodeRequest) (*types.Response[any], error) {
-	if err := validateCode(code); err != nil {
-		return nil, err
+func (c *Client) RemoveSplitCode(ctx context.Context, code string, builder *RemoveSplitCodeRequestBuilder) (*types.Response[any], error) {
+	if code == "" {
+		return nil, errors.New("virtual terminal code is required")
 	}
-	if err := validateRemoveSplitCodeRequest(req); err != nil {
-		return nil, err
+	if builder == nil {
+		return nil, ErrBuilderRequired
 	}
+
+	req := builder.Build()
 
 	// Construct the full URL
 	endpoint := fmt.Sprintf("%s/%s/split_code", virtualTerminalBasePath, code)

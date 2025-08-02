@@ -2,7 +2,7 @@ package applepay
 
 import (
 	"context"
-	"fmt"
+	"errors"
 
 	"github.com/huysamen/paystack-go/net"
 	"github.com/huysamen/paystack-go/types"
@@ -32,24 +32,18 @@ func (b *UnregisterDomainRequestBuilder) Build() *UnregisterDomainRequest {
 	return b.req
 }
 
-// UnregisterDomainResponse represents the response from unregistering an Apple Pay domain
-type UnregisterDomainResponse struct {
-	Status  bool   `json:"status"`
-	Message string `json:"message"`
-}
-
 // UnregisterDomain unregisters a top-level domain or subdomain previously used for Apple Pay integration
-func (c *Client) UnregisterDomain(ctx context.Context, builder *UnregisterDomainRequestBuilder) (*types.Response[UnregisterDomainResponse], error) {
+func (c *Client) UnregisterDomain(ctx context.Context, builder *UnregisterDomainRequestBuilder) (*types.Response[any], error) {
 	if builder == nil {
-		return nil, fmt.Errorf("builder cannot be nil")
+		return nil, ErrBuilderRequired
 	}
 
 	req := builder.Build()
 	if req.DomainName == "" {
-		return nil, fmt.Errorf("domainName is required")
+		return nil, errors.New("domainName is required")
 	}
 
-	resp, err := net.DeleteWithBody[UnregisterDomainRequest, UnregisterDomainResponse](
+	return net.DeleteWithBody[UnregisterDomainRequest, any](
 		ctx,
 		c.client,
 		c.secret,
@@ -57,9 +51,4 @@ func (c *Client) UnregisterDomain(ctx context.Context, builder *UnregisterDomain
 		req,
 		c.baseURL,
 	)
-	if err != nil {
-		return nil, err
-	}
-
-	return resp, nil
 }

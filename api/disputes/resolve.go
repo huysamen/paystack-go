@@ -55,7 +55,7 @@ func (c *Client) Resolve(ctx context.Context, disputeID string, builder *Resolve
 	}
 
 	if builder == nil {
-		return nil, errors.New(ErrBuilderRequired)
+		return nil, ErrBuilderRequired
 	}
 
 	endpoint := c.baseURL + disputesBasePath + "/" + disputeID + "/resolve"

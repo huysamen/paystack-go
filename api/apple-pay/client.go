@@ -1,10 +1,16 @@
 package applepay
 
 import (
+	"errors"
 	"net/http"
 )
 
 const applePayBasePath = "/apple-pay"
+
+var (
+	// ErrBuilderRequired is returned when a required builder is nil
+	ErrBuilderRequired = errors.New("builder cannot be nil")
+)
 
 // Client is the Apple Pay API client
 type Client struct {

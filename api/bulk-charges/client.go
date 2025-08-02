@@ -1,10 +1,16 @@
 package bulkcharges
 
 import (
+	"errors"
 	"net/http"
 )
 
 const bulkChargesBasePath = "/bulkcharge"
+
+var (
+	// ErrBuilderRequired is returned when a required builder is nil
+	ErrBuilderRequired = errors.New("builder cannot be nil")
+)
 
 // Client is the Bulk Charges API client
 type Client struct {

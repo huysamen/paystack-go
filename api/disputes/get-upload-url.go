@@ -43,7 +43,7 @@ func (c *Client) GetUploadURL(ctx context.Context, disputeID string, builder *Ge
 	}
 
 	if builder == nil {
-		return nil, errors.New(ErrBuilderRequired)
+		return nil, ErrBuilderRequired
 	}
 
 	endpoint := c.baseURL + disputesBasePath + "/" + disputeID + "/upload_url"

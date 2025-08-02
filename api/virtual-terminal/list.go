@@ -9,11 +9,8 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-// ListVirtualTerminalsResponse represents the response from listing virtual terminals.
-type ListVirtualTerminalsResponse types.Response[[]VirtualTerminal]
-
 // List lists virtual terminals using the builder pattern
-func (c *Client) List(ctx context.Context, builder *ListVirtualTerminalsRequestBuilder) (*ListVirtualTerminalsResponse, error) {
+func (c *Client) List(ctx context.Context, builder *ListVirtualTerminalsRequestBuilder) (*types.Response[[]VirtualTerminal], error) {
 	params := url.Values{}
 
 	if builder != nil {
@@ -40,11 +37,5 @@ func (c *Client) List(ctx context.Context, builder *ListVirtualTerminalsRequestB
 		endpoint += "?" + params.Encode()
 	}
 
-	resp, err := net.Get[[]VirtualTerminal](ctx, c.client, c.secret, endpoint, c.baseURL)
-	if err != nil {
-		return nil, err
-	}
-
-	response := ListVirtualTerminalsResponse(*resp)
-	return &response, nil
+	return net.Get[[]VirtualTerminal](ctx, c.client, c.secret, endpoint, c.baseURL)
 }

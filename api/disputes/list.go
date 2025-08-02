@@ -2,7 +2,6 @@ package disputes
 
 import (
 	"context"
-	"errors"
 	"net/url"
 	"strconv"
 	"time"
@@ -87,7 +86,7 @@ func (b *ListDisputesBuilder) Build() *ListDisputesRequest {
 // List retrieves disputes filed against your integration
 func (c *Client) List(ctx context.Context, builder *ListDisputesBuilder) (*types.Response[[]Dispute], error) {
 	if builder == nil {
-		return nil, errors.New(ErrBuilderRequired)
+		return nil, ErrBuilderRequired
 	}
 
 	endpoint := c.baseURL + disputesBasePath

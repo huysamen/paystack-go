@@ -2,24 +2,19 @@ package bulkcharges
 
 import (
 	"context"
+	"errors"
 
 	"github.com/huysamen/paystack-go/net"
+	"github.com/huysamen/paystack-go/types"
 )
 
-// PauseBulkChargeBatchResponse represents the response from pausing a bulk charge batch
-type PauseBulkChargeBatchResponse struct {
-	Status  bool   `json:"status"`
-	Message string `json:"message"`
-}
-
 // Pause pauses processing of a bulk charge batch
-func (c *Client) Pause(ctx context.Context, batchCode string) (*PauseBulkChargeBatchResponse, error) {
-	resp, err := net.Get[PauseBulkChargeBatchResponse](
-		ctx, c.client, c.secret, bulkChargesBasePath+"/pause/"+batchCode, c.baseURL,
-	)
-	if err != nil {
-		return nil, err
+func (c *Client) Pause(ctx context.Context, batchCode string) (*types.Response[any], error) {
+	if batchCode == "" {
+		return nil, errors.New("batch code is required")
 	}
 
-	return &resp.Data, nil
+	return net.Get[any](
+		ctx, c.client, c.secret, bulkChargesBasePath+"/pause/"+batchCode, c.baseURL,
+	)
 }

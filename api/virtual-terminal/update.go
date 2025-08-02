@@ -2,26 +2,25 @@ package virtualterminal
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"github.com/huysamen/paystack-go/net"
+	"github.com/huysamen/paystack-go/types"
 )
 
 // Update updates a virtual terminal
-func (c *Client) Update(ctx context.Context, code string, req *UpdateVirtualTerminalRequest) (*VirtualTerminal, error) {
-	if err := validateCode(code); err != nil {
-		return nil, err
+func (c *Client) Update(ctx context.Context, code string, builder *UpdateVirtualTerminalRequestBuilder) (*types.Response[VirtualTerminal], error) {
+	if code == "" {
+		return nil, errors.New("virtual terminal code is required")
 	}
-	if err := validateUpdateRequest(req); err != nil {
-		return nil, err
+	if builder == nil {
+		return nil, ErrBuilderRequired
 	}
 
+	req := builder.Build()
 	endpoint := fmt.Sprintf("%s/%s", virtualTerminalBasePath, code)
-	resp, err := net.Put[UpdateVirtualTerminalRequest, VirtualTerminal](
+	return net.Put[UpdateVirtualTerminalRequest, VirtualTerminal](
 		ctx, c.client, c.secret, endpoint, req, c.baseURL,
 	)
-	if err != nil {
-		return nil, err
-	}
-	return &resp.Data, nil
 }

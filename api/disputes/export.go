@@ -1,14 +1,13 @@
 package disputes
 
 import (
-"context"
-"errors"
-"net/url"
-"strconv"
-"time"
+	"context"
+	"net/url"
+	"strconv"
+	"time"
 
-"github.com/huysamen/paystack-go/net"
-"github.com/huysamen/paystack-go/types"
+	"github.com/huysamen/paystack-go/net"
+	"github.com/huysamen/paystack-go/types"
 )
 
 // ExportDisputesRequest represents the request to export disputes
@@ -87,7 +86,7 @@ func (b *ExportDisputesBuilder) Build() *ExportDisputesRequest {
 // Export exports disputes available on your integration
 func (c *Client) Export(ctx context.Context, builder *ExportDisputesBuilder) (*types.Response[ExportData], error) {
 	if builder == nil {
-		return nil, errors.New(ErrBuilderRequired)
+		return nil, ErrBuilderRequired
 	}
 
 	endpoint := c.baseURL + disputesBasePath + "/export"

@@ -2,9 +2,9 @@ package bulkcharges
 
 import (
 	"context"
-	"errors"
 
 	"github.com/huysamen/paystack-go/net"
+	"github.com/huysamen/paystack-go/types"
 )
 
 // InitiateBulkChargeRequest represents the request to initiate a bulk charge
@@ -43,27 +43,15 @@ func (b *InitiateBulkChargeRequestBuilder) Build() *InitiateBulkChargeRequest {
 	return b.req
 }
 
-// InitiateBulkChargeResponse represents the response from initiating a bulk charge
-type InitiateBulkChargeResponse struct {
-	Status  bool            `json:"status"`
-	Message string          `json:"message"`
-	Data    BulkChargeBatch `json:"data"`
-}
-
 // Initiate sends an array of objects with authorization codes and amounts for batch processing
-func (c *Client) Initiate(ctx context.Context, builder *InitiateBulkChargeRequestBuilder) (*InitiateBulkChargeResponse, error) {
+func (c *Client) Initiate(ctx context.Context, builder *InitiateBulkChargeRequestBuilder) (*types.Response[BulkChargeBatch], error) {
 	if builder == nil {
-		return nil, errors.New("builder cannot be nil")
+		return nil, ErrBuilderRequired
 	}
 
 	req := builder.Build()
 
-	resp, err := net.Post[InitiateBulkChargeRequest, InitiateBulkChargeResponse](
+	return net.Post[InitiateBulkChargeRequest, BulkChargeBatch](
 		ctx, c.client, c.secret, bulkChargesBasePath, req, c.baseURL,
 	)
-	if err != nil {
-		return nil, err
-	}
-
-	return &resp.Data, nil
 }

@@ -2,29 +2,53 @@ package subscriptions
 
 import (
 	"context"
-	"errors"
 
 	"github.com/huysamen/paystack-go/net"
 	"github.com/huysamen/paystack-go/types"
 )
 
+// SubscriptionDisableRequest represents the request to disable a subscription
 type SubscriptionDisableRequest struct {
 	Code  string `json:"code"`  // Subscription code
 	Token string `json:"token"` // Email token
 }
 
-type SubscriptionDisableResponse struct {
-	Message string `json:"message"`
+// SubscriptionDisableRequestBuilder provides a fluent interface for building SubscriptionDisableRequest
+type SubscriptionDisableRequestBuilder struct {
+	req *SubscriptionDisableRequest
 }
 
-func (c *Client) Disable(ctx context.Context, req *SubscriptionDisableRequest) (*types.Response[SubscriptionDisableResponse], error) {
-	if req == nil {
-		return nil, errors.New("request cannot be nil")
+// NewSubscriptionDisableRequest creates a new builder for SubscriptionDisableRequest
+func NewSubscriptionDisableRequest(code, token string) *SubscriptionDisableRequestBuilder {
+	return &SubscriptionDisableRequestBuilder{
+		req: &SubscriptionDisableRequest{
+			Code:  code,
+			Token: token,
+		},
+	}
+}
+
+// Build returns the constructed SubscriptionDisableRequest
+func (b *SubscriptionDisableRequestBuilder) Build() *SubscriptionDisableRequest {
+	return b.req
+}
+
+// SubscriptionDisableResponse represents the response from disabling a subscription.
+type SubscriptionDisableResponse types.Response[struct {
+	Message string `json:"message"`
+}]
+
+func (c *Client) Disable(ctx context.Context, builder *SubscriptionDisableRequestBuilder) (*SubscriptionDisableResponse, error) {
+	if builder == nil {
+		return nil, ErrBuilderRequired
 	}
 
+	req := builder.Build()
 	path := subscriptionBasePath + "/disable"
 
-	return net.Post[SubscriptionDisableRequest, SubscriptionDisableResponse](
+	resp, err := net.Post[SubscriptionDisableRequest, struct {
+		Message string `json:"message"`
+	}](
 		ctx,
 		c.client,
 		c.secret,
@@ -32,4 +56,10 @@ func (c *Client) Disable(ctx context.Context, req *SubscriptionDisableRequest) (
 		req,
 		c.baseURL,
 	)
+	if err != nil {
+		return nil, err
+	}
+
+	response := SubscriptionDisableResponse(*resp)
+	return &response, nil
 }

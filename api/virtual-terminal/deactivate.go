@@ -2,6 +2,7 @@ package virtualterminal
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"github.com/huysamen/paystack-go/net"
@@ -10,16 +11,12 @@ import (
 
 // Deactivate deactivates a virtual terminal
 func (c *Client) Deactivate(ctx context.Context, code string) (*types.Response[any], error) {
-	if err := validateCode(code); err != nil {
-		return nil, err
+	if code == "" {
+		return nil, errors.New("virtual terminal code is required")
 	}
 
 	endpoint := fmt.Sprintf("%s/%s/deactivate", virtualTerminalBasePath, code)
-	resp, err := net.Put[any, any](
+	return net.Put[any, any](
 		ctx, c.client, c.secret, endpoint, nil, c.baseURL,
 	)
-	if err != nil {
-		return nil, err
-	}
-	return resp, nil
 }

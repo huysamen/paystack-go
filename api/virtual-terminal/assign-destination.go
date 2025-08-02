@@ -2,26 +2,25 @@ package virtualterminal
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"github.com/huysamen/paystack-go/net"
+	"github.com/huysamen/paystack-go/types"
 )
 
 // AssignDestination assigns destinations to a virtual terminal
-func (c *Client) AssignDestination(ctx context.Context, code string, req *AssignDestinationRequest) (*[]VirtualTerminalDestination, error) {
-	if err := validateCode(code); err != nil {
-		return nil, err
+func (c *Client) AssignDestination(ctx context.Context, code string, builder *AssignDestinationRequestBuilder) (*types.Response[[]VirtualTerminalDestination], error) {
+	if code == "" {
+		return nil, errors.New("virtual terminal code is required")
 	}
-	if err := validateAssignDestinationRequest(req); err != nil {
-		return nil, err
+	if builder == nil {
+		return nil, ErrBuilderRequired
 	}
 
+	req := builder.Build()
 	endpoint := fmt.Sprintf("%s/%s/destination/assign", virtualTerminalBasePath, code)
-	resp, err := net.Post[AssignDestinationRequest, []VirtualTerminalDestination](
+	return net.Post[AssignDestinationRequest, []VirtualTerminalDestination](
 		ctx, c.client, c.secret, endpoint, req, c.baseURL,
 	)
-	if err != nil {
-		return nil, err
-	}
-	return &resp.Data, nil
 }

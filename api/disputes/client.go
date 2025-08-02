@@ -1,13 +1,16 @@
 package disputes
 
 import (
+	"errors"
 	"net/http"
 )
 
 const disputesBasePath = "/dispute"
 
-// ErrBuilderRequired is returned when a builder is required but not provided
-const ErrBuilderRequired = "builder is required"
+var (
+	// ErrBuilderRequired is returned when a required builder is nil
+	ErrBuilderRequired = errors.New("builder cannot be nil")
+)
 
 // Client represents the disputes API client
 type Client struct {

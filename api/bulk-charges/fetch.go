@@ -2,25 +2,19 @@ package bulkcharges
 
 import (
 	"context"
+	"errors"
 
 	"github.com/huysamen/paystack-go/net"
+	"github.com/huysamen/paystack-go/types"
 )
 
-// FetchBulkChargeBatchResponse represents the response from fetching a bulk charge batch
-type FetchBulkChargeBatchResponse struct {
-	Status  bool            `json:"status"`
-	Message string          `json:"message"`
-	Data    BulkChargeBatch `json:"data"`
-}
-
 // Fetch retrieves a specific bulk charge batch by ID or batch code
-func (c *Client) Fetch(ctx context.Context, idOrCode string) (*FetchBulkChargeBatchResponse, error) {
-	resp, err := net.Get[FetchBulkChargeBatchResponse](
-		ctx, c.client, c.secret, bulkChargesBasePath+"/"+idOrCode, c.baseURL,
-	)
-	if err != nil {
-		return nil, err
+func (c *Client) Fetch(ctx context.Context, idOrCode string) (*types.Response[BulkChargeBatch], error) {
+	if idOrCode == "" {
+		return nil, errors.New("bulk charge batch ID or code is required")
 	}
 
-	return &resp.Data, nil
+	return net.Get[BulkChargeBatch](
+		ctx, c.client, c.secret, bulkChargesBasePath+"/"+idOrCode, c.baseURL,
+	)
 }

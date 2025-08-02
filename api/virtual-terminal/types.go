@@ -96,9 +96,65 @@ type UpdateVirtualTerminalRequest struct {
 	Name string `json:"name"`
 }
 
+// UpdateVirtualTerminalRequestBuilder provides a fluent interface for building UpdateVirtualTerminalRequest
+type UpdateVirtualTerminalRequestBuilder struct {
+	name string
+}
+
+// NewUpdateVirtualTerminalRequest creates a new builder for updating a virtual terminal
+func NewUpdateVirtualTerminalRequest(name string) *UpdateVirtualTerminalRequestBuilder {
+	return &UpdateVirtualTerminalRequestBuilder{
+		name: name,
+	}
+}
+
+// Name sets the name of the virtual terminal
+func (b *UpdateVirtualTerminalRequestBuilder) Name(name string) *UpdateVirtualTerminalRequestBuilder {
+	b.name = name
+	return b
+}
+
+// Build creates the UpdateVirtualTerminalRequest
+func (b *UpdateVirtualTerminalRequestBuilder) Build() *UpdateVirtualTerminalRequest {
+	return &UpdateVirtualTerminalRequest{
+		Name: b.name,
+	}
+}
+
 // AssignDestinationRequest represents the request to assign destinations to a virtual terminal
 type AssignDestinationRequest struct {
 	Destinations []VirtualTerminalDestination `json:"destinations"`
+}
+
+// AssignDestinationRequestBuilder provides a fluent interface for building AssignDestinationRequest
+type AssignDestinationRequestBuilder struct {
+	destinations []VirtualTerminalDestination
+}
+
+// NewAssignDestinationRequest creates a new builder for assigning destinations
+func NewAssignDestinationRequest() *AssignDestinationRequestBuilder {
+	return &AssignDestinationRequestBuilder{
+		destinations: make([]VirtualTerminalDestination, 0),
+	}
+}
+
+// AddDestination adds a destination to the assignment request
+func (b *AssignDestinationRequestBuilder) AddDestination(destination VirtualTerminalDestination) *AssignDestinationRequestBuilder {
+	b.destinations = append(b.destinations, destination)
+	return b
+}
+
+// Destinations sets all destinations at once
+func (b *AssignDestinationRequestBuilder) Destinations(destinations []VirtualTerminalDestination) *AssignDestinationRequestBuilder {
+	b.destinations = destinations
+	return b
+}
+
+// Build creates the AssignDestinationRequest
+func (b *AssignDestinationRequestBuilder) Build() *AssignDestinationRequest {
+	return &AssignDestinationRequest{
+		Destinations: b.destinations,
+	}
 }
 
 // UnassignDestinationRequest represents the request to unassign destinations from a virtual terminal
@@ -106,14 +162,95 @@ type UnassignDestinationRequest struct {
 	Targets []string `json:"targets"`
 }
 
+// UnassignDestinationRequestBuilder provides a fluent interface for building UnassignDestinationRequest
+type UnassignDestinationRequestBuilder struct {
+	targets []string
+}
+
+// NewUnassignDestinationRequest creates a new builder for unassigning destinations
+func NewUnassignDestinationRequest() *UnassignDestinationRequestBuilder {
+	return &UnassignDestinationRequestBuilder{
+		targets: make([]string, 0),
+	}
+}
+
+// AddTarget adds a target to the unassignment request
+func (b *UnassignDestinationRequestBuilder) AddTarget(target string) *UnassignDestinationRequestBuilder {
+	b.targets = append(b.targets, target)
+	return b
+}
+
+// Targets sets all targets at once
+func (b *UnassignDestinationRequestBuilder) Targets(targets []string) *UnassignDestinationRequestBuilder {
+	b.targets = targets
+	return b
+}
+
+// Build creates the UnassignDestinationRequest
+func (b *UnassignDestinationRequestBuilder) Build() *UnassignDestinationRequest {
+	return &UnassignDestinationRequest{
+		Targets: b.targets,
+	}
+}
+
 // AddSplitCodeRequest represents the request to add a split code to a virtual terminal
 type AddSplitCodeRequest struct {
 	SplitCode string `json:"split_code"`
 }
 
+// AddSplitCodeRequestBuilder provides a fluent interface for building AddSplitCodeRequest
+type AddSplitCodeRequestBuilder struct {
+	splitCode string
+}
+
+// NewAddSplitCodeRequest creates a new builder for adding a split code
+func NewAddSplitCodeRequest(splitCode string) *AddSplitCodeRequestBuilder {
+	return &AddSplitCodeRequestBuilder{
+		splitCode: splitCode,
+	}
+}
+
+// SplitCode sets the split code
+func (b *AddSplitCodeRequestBuilder) SplitCode(splitCode string) *AddSplitCodeRequestBuilder {
+	b.splitCode = splitCode
+	return b
+}
+
+// Build creates the AddSplitCodeRequest
+func (b *AddSplitCodeRequestBuilder) Build() *AddSplitCodeRequest {
+	return &AddSplitCodeRequest{
+		SplitCode: b.splitCode,
+	}
+}
+
 // RemoveSplitCodeRequest represents the request to remove a split code from a virtual terminal
 type RemoveSplitCodeRequest struct {
 	SplitCode string `json:"split_code"`
+}
+
+// RemoveSplitCodeRequestBuilder provides a fluent interface for building RemoveSplitCodeRequest
+type RemoveSplitCodeRequestBuilder struct {
+	splitCode string
+}
+
+// NewRemoveSplitCodeRequest creates a new builder for removing a split code
+func NewRemoveSplitCodeRequest(splitCode string) *RemoveSplitCodeRequestBuilder {
+	return &RemoveSplitCodeRequestBuilder{
+		splitCode: splitCode,
+	}
+}
+
+// SplitCode sets the split code to remove
+func (b *RemoveSplitCodeRequestBuilder) SplitCode(splitCode string) *RemoveSplitCodeRequestBuilder {
+	b.splitCode = splitCode
+	return b
+}
+
+// Build creates the RemoveSplitCodeRequest
+func (b *RemoveSplitCodeRequestBuilder) Build() *RemoveSplitCodeRequest {
+	return &RemoveSplitCodeRequest{
+		SplitCode: b.splitCode,
+	}
 }
 
 // FetchVirtualTerminalResponse represents the response from fetching a virtual terminal

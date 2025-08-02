@@ -2,6 +2,7 @@ package virtualterminal
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"github.com/huysamen/paystack-go/net"
@@ -9,20 +10,17 @@ import (
 )
 
 // UnassignDestination unassigns destinations from a virtual terminal
-func (c *Client) UnassignDestination(ctx context.Context, code string, req *UnassignDestinationRequest) (*types.Response[any], error) {
-	if err := validateCode(code); err != nil {
-		return nil, err
+func (c *Client) UnassignDestination(ctx context.Context, code string, builder *UnassignDestinationRequestBuilder) (*types.Response[any], error) {
+	if code == "" {
+		return nil, errors.New("virtual terminal code is required")
 	}
-	if err := validateUnassignDestinationRequest(req); err != nil {
-		return nil, err
+	if builder == nil {
+		return nil, ErrBuilderRequired
 	}
 
+	req := builder.Build()
 	endpoint := fmt.Sprintf("%s/%s/destination/unassign", virtualTerminalBasePath, code)
-	resp, err := net.Post[UnassignDestinationRequest, any](
+	return net.Post[UnassignDestinationRequest, any](
 		ctx, c.client, c.secret, endpoint, req, c.baseURL,
 	)
-	if err != nil {
-		return nil, err
-	}
-	return resp, nil
 }
