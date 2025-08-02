@@ -7,7 +7,6 @@ import (
 	"strconv"
 
 	"github.com/huysamen/paystack-go/net"
-	"github.com/huysamen/paystack-go/types"
 )
 
 // ListProductsRequest represents the request to list products
@@ -65,9 +64,6 @@ func (b *ListProductsRequestBuilder) DateRange(from, to string) *ListProductsReq
 func (b *ListProductsRequestBuilder) Build() *ListProductsRequest {
 	return b.req
 }
-
-// ListProductsResponse represents the response from listing products
-type ListProductsResponse = types.Response[[]Product]
 
 // List retrieves products available on your integration using a builder
 func (c *Client) List(ctx context.Context, builder *ListProductsRequestBuilder) (*ListProductsResponse, error) {

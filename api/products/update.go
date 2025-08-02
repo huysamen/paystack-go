@@ -78,9 +78,6 @@ func (b *UpdateProductRequestBuilder) Build() *UpdateProductRequest {
 	return b.req
 }
 
-// UpdateProductResponse represents the response from updating a product
-type UpdateProductResponse = types.Response[Product]
-
 // Update modifies a product details on your integration
 func (c *Client) Update(ctx context.Context, productID string, builder *UpdateProductRequestBuilder) (*UpdateProductResponse, error) {
 	return net.Put[UpdateProductRequest, Product](ctx, c.Client, c.Secret, fmt.Sprintf("%s/%s", basePath, productID), builder.Build(), c.BaseURL)

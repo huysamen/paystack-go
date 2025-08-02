@@ -17,35 +17,35 @@ type Tax struct {
 
 // PaymentRequest represents a payment request
 type PaymentRequest struct {
-	ID                 int                  `json:"id"`
-	Domain             string               `json:"domain"`
-	Amount             int                  `json:"amount"`
-	Currency           string               `json:"currency"`
-	DueDate            string               `json:"due_date"`
-	HasInvoice         bool                 `json:"has_invoice"`
-	InvoiceNumber      *int                 `json:"invoice_number"`
-	Description        string               `json:"description"`
-	LineItems          []LineItem           `json:"line_items"`
-	Tax                []Tax                `json:"tax"`
-	RequestCode        string               `json:"request_code"`
-	Status             string               `json:"status"`
-	Paid               bool                 `json:"paid"`
-	PaidAt             *types.DateTime      `json:"paid_at"`
-	Metadata           types.Metadata       `json:"metadata"`
-	Notifications      []Notification       `json:"notifications"`
-	OfflineReference   string               `json:"offline_reference"`
-	Customer           types.Customer       `json:"customer"`
-	CreatedAt          types.DateTime       `json:"created_at"`
-	UpdatedAt          types.DateTime       `json:"updated_at"`
-	PendingAmount      int                  `json:"pending_amount"`
-	Split              *types.Split         `json:"split"`
-	Integration        int                  `json:"integration"`
-	SplitCode          string               `json:"split_code"`
-	Archived           bool                 `json:"archived"`
-	Source             *types.Source        `json:"source"`
-	Invoice            *types.Invoice       `json:"invoice"`
-	Plan               *types.Plan          `json:"plan"`
-	Transaction        *types.Transaction   `json:"transaction"`
+	ID               int                `json:"id"`
+	Domain           string             `json:"domain"`
+	Amount           int                `json:"amount"`
+	Currency         string             `json:"currency"`
+	DueDate          string             `json:"due_date"`
+	HasInvoice       bool               `json:"has_invoice"`
+	InvoiceNumber    *int               `json:"invoice_number"`
+	Description      string             `json:"description"`
+	LineItems        []LineItem         `json:"line_items"`
+	Tax              []Tax              `json:"tax"`
+	RequestCode      string             `json:"request_code"`
+	Status           string             `json:"status"`
+	Paid             bool               `json:"paid"`
+	PaidAt           *types.DateTime    `json:"paid_at"`
+	Metadata         types.Metadata     `json:"metadata"`
+	Notifications    []Notification     `json:"notifications"`
+	OfflineReference string             `json:"offline_reference"`
+	Customer         types.Customer     `json:"customer"`
+	CreatedAt        types.DateTime     `json:"created_at"`
+	UpdatedAt        types.DateTime     `json:"updated_at"`
+	PendingAmount    int                `json:"pending_amount"`
+	Split            *types.Split       `json:"split"`
+	Integration      int                `json:"integration"`
+	SplitCode        string             `json:"split_code"`
+	Archived         bool               `json:"archived"`
+	Source           *types.Source      `json:"source"`
+	Invoice          *types.Invoice     `json:"invoice"`
+	Plan             *types.Plan        `json:"plan"`
+	Transaction      *types.Transaction `json:"transaction"`
 }
 
 // Notification represents a notification for a payment request

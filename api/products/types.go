@@ -32,3 +32,9 @@ type Product struct {
 	Files          any             `json:"files,omitempty"`
 	ShippingFields map[string]any  `json:"shipping_fields,omitempty"`
 }
+
+// Response type aliases
+type CreateProductResponse = types.Response[Product]
+type ListProductsResponse = types.Response[[]Product]
+type FetchProductResponse = types.Response[Product]
+type UpdateProductResponse = types.Response[Product]

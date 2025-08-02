@@ -58,10 +58,7 @@ func (b *CreateProductRequestBuilder) Build() *CreateProductRequest {
 	return b.req
 }
 
-// CreateProductResponse represents the response from creating a product
-type CreateProductResponse = types.Response[Product]
-
-// Create creates a product on your integration
+// Create creates a new product
 func (c *Client) Create(ctx context.Context, builder *CreateProductRequestBuilder) (*CreateProductResponse, error) {
 	return net.Post[CreateProductRequest, Product](ctx, c.Client, c.Secret, basePath, builder.Build(), c.BaseURL)
 }

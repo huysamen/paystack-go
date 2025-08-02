@@ -69,37 +69,30 @@ type TerminalSendEventRequest struct {
 	Data   TerminalEventData   `json:"data"`   // Event data payload
 }
 
-// TerminalSendEventResponse represents the response from sending an event
-type TerminalSendEventResponse struct {
-	Status  bool   `json:"status"`
-	Message string `json:"message"`
-	Data    struct {
-		ID string `json:"id"` // Event ID
-	} `json:"data"`
+// TerminalEventResult represents the result of sending an event
+type TerminalEventResult struct {
+	ID string `json:"id"` // Event ID
 }
 
-// Terminal Event Status
+// TerminalEventStatus represents the status of a terminal event
+type TerminalEventStatus struct {
+	Delivered bool `json:"delivered"` // Whether event was delivered to terminal
+}
+
+// TerminalPresenceStatus represents the presence status of a terminal
+type TerminalPresenceStatus struct {
+	Online    bool `json:"online"`    // Whether terminal is online
+	Available bool `json:"available"` // Whether terminal is available for events
+}
+
+// TerminalSendEventResponse represents the response from sending an event
+type TerminalSendEventResponse = types.Response[TerminalEventResult]
 
 // TerminalEventStatusResponse represents the response from fetching event status
-type TerminalEventStatusResponse struct {
-	Status  bool   `json:"status"`
-	Message string `json:"message"`
-	Data    struct {
-		Delivered bool `json:"delivered"` // Whether event was delivered to terminal
-	} `json:"data"`
-}
-
-// Terminal Presence/Status
+type TerminalEventStatusResponse = types.Response[TerminalEventStatus]
 
 // TerminalPresenceResponse represents the response from checking terminal presence
-type TerminalPresenceResponse struct {
-	Status  bool   `json:"status"`
-	Message string `json:"message"`
-	Data    struct {
-		Online    bool `json:"online"`    // Whether terminal is online
-		Available bool `json:"available"` // Whether terminal is available for events
-	} `json:"data"`
-}
+type TerminalPresenceResponse = types.Response[TerminalPresenceStatus]
 
 // Terminal List
 
@@ -191,10 +184,7 @@ func (b *TerminalUpdateRequestBuilder) Build() *TerminalUpdateRequest {
 }
 
 // TerminalUpdateResponse represents the response from updating a terminal
-type TerminalUpdateResponse struct {
-	Status  bool   `json:"status"`
-	Message string `json:"message"`
-}
+type TerminalUpdateResponse = types.Response[any]
 
 // Terminal Commission
 
@@ -204,10 +194,7 @@ type TerminalCommissionRequest struct {
 }
 
 // TerminalCommissionResponse represents the response from commissioning a terminal
-type TerminalCommissionResponse struct {
-	Status  bool   `json:"status"`
-	Message string `json:"message"`
-}
+type TerminalCommissionResponse = types.Response[any]
 
 // Terminal Decommission
 
@@ -217,7 +204,4 @@ type TerminalDecommissionRequest struct {
 }
 
 // TerminalDecommissionResponse represents the response from decommissioning a terminal
-type TerminalDecommissionResponse struct {
-	Status  bool   `json:"status"`
-	Message string `json:"message"`
-}
+type TerminalDecommissionResponse = types.Response[any]
