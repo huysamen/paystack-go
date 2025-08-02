@@ -13,8 +13,3 @@ const (
 )
 
 type Client api.API
-
-func NewClient(c api.API) *Client {
-	client := Client(c)
-	return &client
-}
