@@ -9,12 +9,5 @@ import (
 
 // Create creates a new virtual terminal
 func (c *Client) Create(ctx context.Context, builder *CreateVirtualTerminalRequestBuilder) (*types.Response[VirtualTerminal], error) {
-	if builder == nil {
-		return nil, ErrBuilderRequired
-	}
-
-	req := builder.Build()
-	return net.Post[CreateVirtualTerminalRequest, VirtualTerminal](
-		ctx, c.client, c.secret, virtualTerminalBasePath, req, c.baseURL,
-	)
+	return net.Post[CreateVirtualTerminalRequest, VirtualTerminal](ctx, c.Client, c.Secret, basePath, builder.Build(), c.BaseURL)
 }

@@ -32,10 +32,10 @@ func (c *Client) List(ctx context.Context, builder *ListVirtualTerminalsRequestB
 		}
 	}
 
-	endpoint := virtualTerminalBasePath
+	endpoint := basePath
 	if params.Encode() != "" {
 		endpoint += "?" + params.Encode()
 	}
 
-	return net.Get[[]VirtualTerminal](ctx, c.client, c.secret, endpoint, c.baseURL)
+	return net.Get[[]VirtualTerminal](ctx, c.Client, c.Secret, endpoint, c.BaseURL)
 }

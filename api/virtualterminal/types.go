@@ -254,47 +254,26 @@ func (b *RemoveSplitCodeRequestBuilder) Build() *RemoveSplitCodeRequest {
 }
 
 // FetchVirtualTerminalResponse represents the response from fetching a virtual terminal
-type FetchVirtualTerminalResponse struct {
-	Status  bool            `json:"status"`
-	Message string          `json:"message"`
-	Data    VirtualTerminal `json:"data"`
-}
+type FetchVirtualTerminalResponse = types.Response[VirtualTerminal]
 
 // UpdateVirtualTerminalResponse represents the response from updating a virtual terminal
-type UpdateVirtualTerminalResponse struct {
-	Status  bool            `json:"status"`
-	Message string          `json:"message"`
-	Data    VirtualTerminal `json:"data"`
-}
+type UpdateVirtualTerminalResponse = types.Response[VirtualTerminal]
 
 // DeactivateVirtualTerminalResponse represents the response from deactivating a virtual terminal
-type DeactivateVirtualTerminalResponse struct {
-	Status  bool   `json:"status"`
-	Message string `json:"message"`
-}
+type DeactivateVirtualTerminalResponse = types.Response[any]
 
 // AssignDestinationResponse represents the response from assigning destinations
-type AssignDestinationResponse struct {
-	Status  bool                         `json:"status"`
-	Message string                       `json:"message"`
-	Data    []VirtualTerminalDestination `json:"data"`
-}
+type AssignDestinationResponse = types.Response[[]VirtualTerminalDestination]
 
 // UnassignDestinationResponse represents the response from unassigning destinations
-type UnassignDestinationResponse struct {
-	Status  bool   `json:"status"`
-	Message string `json:"message"`
-}
+type UnassignDestinationResponse = types.Response[any]
 
 // AddSplitCodeResponse represents the response from adding a split code
-type AddSplitCodeResponse struct {
-	Status  bool   `json:"status"`
-	Message string `json:"message"`
-	Data    any    `json:"data"` // Using any as the split response structure can vary
-}
+type AddSplitCodeResponse = types.Response[any]
 
 // RemoveSplitCodeResponse represents the response from removing a split code
-type RemoveSplitCodeResponse struct {
-	Status  bool   `json:"status"`
-	Message string `json:"message"`
-}
+type RemoveSplitCodeResponse = types.Response[any]
+
+// Response type aliases for backwards compatibility
+type CreateVirtualTerminalResponse = types.Response[VirtualTerminal]
+type ListVirtualTerminalsResponse = types.Response[[]VirtualTerminal]

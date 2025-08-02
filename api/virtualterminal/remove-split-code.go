@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"net/http"
 
@@ -14,18 +13,11 @@ import (
 // RemoveSplitCode removes a split code from a virtual terminal
 // Note: This uses a custom implementation because the Paystack API requires DELETE with body
 func (c *Client) RemoveSplitCode(ctx context.Context, code string, builder *RemoveSplitCodeRequestBuilder) (*types.Response[any], error) {
-	if code == "" {
-		return nil, errors.New("virtual terminal code is required")
-	}
-	if builder == nil {
-		return nil, ErrBuilderRequired
-	}
-
 	req := builder.Build()
 
 	// Construct the full URL
-	endpoint := fmt.Sprintf("%s/%s/split_code", virtualTerminalBasePath, code)
-	baseURL := c.baseURL
+	endpoint := fmt.Sprintf("%s/%s/split_code", basePath, code)
+	baseURL := c.BaseURL
 	if baseURL == "" {
 		baseURL = "https://api.paystack.co"
 	}
@@ -44,11 +36,11 @@ func (c *Client) RemoveSplitCode(ctx context.Context, code string, builder *Remo
 	}
 
 	// Set headers
-	httpReq.Header.Set("Authorization", "Bearer "+c.secret)
+	httpReq.Header.Set("Authorization", "Bearer "+c.Secret)
 	httpReq.Header.Set("Content-Type", "application/json")
 
 	// Execute the request
-	resp, err := c.client.Do(httpReq)
+	resp, err := c.Client.Do(httpReq)
 	if err != nil {
 		return nil, err
 	}
