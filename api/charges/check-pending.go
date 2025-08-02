@@ -4,26 +4,36 @@ import (
 	"context"
 
 	"github.com/huysamen/paystack-go/net"
+	"github.com/huysamen/paystack-go/types"
 )
 
-// CheckPendingChargeResponse represents the response from checking a pending charge
-type CheckPendingChargeResponse struct {
-	Status  bool       `json:"status"`
-	Message string     `json:"message"`
-	Data    ChargeData `json:"data"`
+// CheckPendingChargeRequest represents the request to check a pending charge
+type CheckPendingChargeRequest struct {
+	Reference string `json:"reference"`
+}
+
+// CheckPendingChargeRequestBuilder provides a fluent interface for building CheckPendingChargeRequest
+type CheckPendingChargeRequestBuilder struct {
+	req *CheckPendingChargeRequest
+}
+
+// NewCheckPendingChargeRequest creates a new builder for CheckPendingChargeRequest
+func NewCheckPendingChargeRequest(reference string) *CheckPendingChargeRequestBuilder {
+	return &CheckPendingChargeRequestBuilder{
+		req: &CheckPendingChargeRequest{
+			Reference: reference,
+		},
+	}
+}
+
+// Build returns the constructed CheckPendingChargeRequest
+func (b *CheckPendingChargeRequestBuilder) Build() *CheckPendingChargeRequest {
+	return b.req
 }
 
 // CheckPending checks the status of a pending charge
-func (c *Client) CheckPending(ctx context.Context, reference string) (*CheckPendingChargeResponse, error) {
-	if reference == "" {
-		return nil, ErrBuilderRequired // Reusing the error for consistency
-	}
-
-	url := c.baseURL + chargesBasePath + "/" + reference
-	resp, err := net.Get[CheckPendingChargeResponse](ctx, c.client, c.secret, url)
-	if err != nil {
-		return nil, err
-	}
-
-	return &resp.Data, nil
+func (c *Client) CheckPending(ctx context.Context, builder *CheckPendingChargeRequestBuilder) (*types.Response[ChargeData], error) {
+	return net.Post[CheckPendingChargeRequest, ChargeData](
+		ctx, c.Client, c.Secret, checkPendingPath, builder.Build(), c.BaseURL,
+	)
 }

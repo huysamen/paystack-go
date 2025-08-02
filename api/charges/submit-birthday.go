@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/huysamen/paystack-go/net"
+	"github.com/huysamen/paystack-go/types"
 )
 
 // SubmitBirthdayRequest represents the request to submit birthday for a charge
@@ -32,25 +33,7 @@ func (b *SubmitBirthdayRequestBuilder) Build() *SubmitBirthdayRequest {
 	return b.req
 }
 
-// SubmitBirthdayResponse represents the response from submitting birthday
-type SubmitBirthdayResponse struct {
-	Status  bool       `json:"status"`
-	Message string     `json:"message"`
-	Data    ChargeData `json:"data"`
-}
-
-// SubmitBirthday submits birthday when requested
-func (c *Client) SubmitBirthday(ctx context.Context, builder *SubmitBirthdayRequestBuilder) (*SubmitBirthdayResponse, error) {
-	if builder == nil {
-		return nil, ErrBuilderRequired
-	}
-
-	req := builder.Build()
-	url := c.baseURL + chargesBasePath + "/submit_birthday"
-	resp, err := net.Post[SubmitBirthdayRequest, SubmitBirthdayResponse](ctx, c.client, c.secret, url, req)
-	if err != nil {
-		return nil, err
-	}
-
-	return &resp.Data, nil
+// SubmitBirthday submits birthday when requested for verification
+func (c *Client) SubmitBirthday(ctx context.Context, builder *SubmitBirthdayRequestBuilder) (*types.Response[ChargeData], error) {
+	return net.Post[SubmitBirthdayRequest, ChargeData](ctx, c.Client, c.Secret, submitBirthdayPath, builder.Build(), c.BaseURL)
 }

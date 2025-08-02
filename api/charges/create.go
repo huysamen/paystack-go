@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/huysamen/paystack-go/net"
+	"github.com/huysamen/paystack-go/types"
 )
 
 // CreateChargeRequest represents the request to create a charge
@@ -165,26 +166,7 @@ type QRDetails struct {
 	Provider string `json:"provider"`
 }
 
-// CreateChargeResponse represents the response from creating a charge
-type CreateChargeResponse struct {
-	Status  bool       `json:"status"`
-	Message string     `json:"message"`
-	Data    ChargeData `json:"data"`
-}
-
 // Create initiates a payment by integrating multiple payment channels
-func (c *Client) Create(ctx context.Context, builder *CreateChargeRequestBuilder) (*CreateChargeResponse, error) {
-	if builder == nil {
-		return nil, ErrBuilderRequired
-	}
-
-	req := builder.Build()
-	resp, err := net.Post[CreateChargeRequest, CreateChargeResponse](
-		ctx, c.client, c.secret, chargesBasePath, req, c.baseURL,
-	)
-	if err != nil {
-		return nil, err
-	}
-
-	return &resp.Data, nil
+func (c *Client) Create(ctx context.Context, builder *CreateChargeRequestBuilder) (*types.Response[ChargeData], error) {
+	return net.Post[CreateChargeRequest, ChargeData](ctx, c.Client, c.Secret, basePath, builder.Build(), c.BaseURL)
 }

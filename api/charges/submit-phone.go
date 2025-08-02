@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/huysamen/paystack-go/net"
+	"github.com/huysamen/paystack-go/types"
 )
 
 // SubmitPhoneRequest represents the request to submit phone number for a charge
@@ -32,25 +33,7 @@ func (b *SubmitPhoneRequestBuilder) Build() *SubmitPhoneRequest {
 	return b.req
 }
 
-// SubmitPhoneResponse represents the response from submitting phone
-type SubmitPhoneResponse struct {
-	Status  bool       `json:"status"`
-	Message string     `json:"message"`
-	Data    ChargeData `json:"data"`
-}
-
 // SubmitPhone submits phone number when requested
-func (c *Client) SubmitPhone(ctx context.Context, builder *SubmitPhoneRequestBuilder) (*SubmitPhoneResponse, error) {
-	if builder == nil {
-		return nil, ErrBuilderRequired
-	}
-
-	req := builder.Build()
-	url := c.baseURL + chargesBasePath + "/submit_phone"
-	resp, err := net.Post[SubmitPhoneRequest, SubmitPhoneResponse](ctx, c.client, c.secret, url, req)
-	if err != nil {
-		return nil, err
-	}
-
-	return &resp.Data, nil
+func (c *Client) SubmitPhone(ctx context.Context, builder *SubmitPhoneRequestBuilder) (*types.Response[ChargeData], error) {
+	return net.Post[SubmitPhoneRequest, ChargeData](ctx, c.Client, c.Secret, submitPhonePath, builder.Build(), c.BaseURL)
 }

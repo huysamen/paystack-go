@@ -1,29 +1,29 @@
 package charges
 
 import (
-	"errors"
 	"net/http"
+
+	"github.com/huysamen/paystack-go/api"
 )
 
-const chargesBasePath = "/charge"
-
-var (
-	// ErrBuilderRequired is returned when a required builder is nil
-	ErrBuilderRequired = errors.New("builder cannot be nil")
+const (
+	basePath           = "/charge"
+	submitPinPath      = basePath + "/submit_pin"
+	submitOtpPath      = basePath + "/submit_otp"
+	submitPhonePath    = basePath + "/submit_phone"
+	submitBirthdayPath = basePath + "/submit_birthday"
+	submitAddressPath  = basePath + "/submit_address"
+	checkPendingPath   = basePath + "/check_pending"
 )
 
 // Client is the Charges API client
-type Client struct {
-	client  *http.Client
-	secret  string
-	baseURL string
-}
+type Client api.API
 
 // NewClient creates a new Charges API client
 func NewClient(httpClient *http.Client, secret, baseURL string) *Client {
 	return &Client{
-		client:  httpClient,
-		secret:  secret,
-		baseURL: baseURL,
+		Client:  httpClient,
+		Secret:  secret,
+		BaseURL: baseURL,
 	}
 }

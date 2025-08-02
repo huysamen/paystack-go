@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/huysamen/paystack-go/net"
+	"github.com/huysamen/paystack-go/types"
 )
 
 // SubmitOTPRequest represents the request to submit OTP for a charge
@@ -32,25 +33,7 @@ func (b *SubmitOTPRequestBuilder) Build() *SubmitOTPRequest {
 	return b.req
 }
 
-// SubmitOTPResponse represents the response from submitting OTP
-type SubmitOTPResponse struct {
-	Status  bool       `json:"status"`
-	Message string     `json:"message"`
-	Data    ChargeData `json:"data"`
-}
-
 // SubmitOTP submits OTP to complete a charge
-func (c *Client) SubmitOTP(ctx context.Context, builder *SubmitOTPRequestBuilder) (*SubmitOTPResponse, error) {
-	if builder == nil {
-		return nil, ErrBuilderRequired
-	}
-
-	req := builder.Build()
-	url := c.baseURL + chargesBasePath + "/submit_otp"
-	resp, err := net.Post[SubmitOTPRequest, SubmitOTPResponse](ctx, c.client, c.secret, url, req)
-	if err != nil {
-		return nil, err
-	}
-
-	return &resp.Data, nil
+func (c *Client) SubmitOTP(ctx context.Context, builder *SubmitOTPRequestBuilder) (*types.Response[ChargeData], error) {
+	return net.Post[SubmitOTPRequest, ChargeData](ctx, c.Client, c.Secret, submitOtpPath, builder.Build(), c.BaseURL)
 }
