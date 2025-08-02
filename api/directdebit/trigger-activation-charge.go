@@ -49,17 +49,5 @@ func (b *TriggerActivationChargeBuilder) Build() *TriggerActivationChargeRequest
 
 // TriggerActivationCharge triggers an activation charge on pending mandates
 func (c *Client) TriggerActivationCharge(ctx context.Context, builder *TriggerActivationChargeBuilder) (*types.Response[any], error) {
-	if builder == nil {
-		return nil, ErrBuilderRequired
-	}
-
-	req := builder.Build()
-	endpoint := directDebitBasePath + "/activation-charge"
-	resp, err := net.Put[TriggerActivationChargeRequest, any](
-		ctx, c.client, c.secret, endpoint, req, c.baseURL,
-	)
-	if err != nil {
-		return nil, err
-	}
-	return resp, nil
+	return net.Put[TriggerActivationChargeRequest, any](ctx, c.Client, c.Secret, basePath+"/activation-charge", builder.Build(), c.BaseURL)
 }

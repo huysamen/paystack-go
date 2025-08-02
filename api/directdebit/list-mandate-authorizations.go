@@ -61,7 +61,7 @@ func (b *ListMandateAuthorizationsBuilder) Build() *ListMandateAuthorizationsReq
 
 // ListMandateAuthorizations retrieves a list of direct debit mandate authorizations
 func (c *Client) ListMandateAuthorizations(ctx context.Context, builder *ListMandateAuthorizationsBuilder) (*types.Response[[]MandateAuthorization], error) {
-	endpoint := directDebitBasePath + "/mandate-authorizations"
+	endpoint := basePath + "/mandate-authorizations"
 
 	if builder != nil {
 		req := builder.Build()
@@ -81,11 +81,5 @@ func (c *Client) ListMandateAuthorizations(ctx context.Context, builder *ListMan
 		}
 	}
 
-	resp, err := net.Get[[]MandateAuthorization](
-		ctx, c.client, c.secret, endpoint, c.baseURL,
-	)
-	if err != nil {
-		return nil, err
-	}
-	return resp, nil
+	return net.Get[[]MandateAuthorization](ctx, c.Client, c.Secret, endpoint, c.BaseURL)
 }
