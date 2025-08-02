@@ -43,27 +43,11 @@ func (b *StateListRequestBuilder) Build() *StateListRequest {
 type StateListResponse = types.Response[[]State]
 
 // ListStates retrieves a list of states for a country (for address verification)
-func (c *Client) ListStates(ctx context.Context, builder *StateListRequestBuilder) (*StateListResponse, error) {
-	if builder == nil {
-		return nil, ErrBuilderRequired
-	}
-
+func (c *Client) ListStates(ctx context.Context, builder *StateListRequestBuilder) (*types.Response[[]State], error) {
 	req := builder.Build()
 	params := url.Values{}
 	params.Set("country", req.Country)
 
-	endpoint := statesBasePath + "?" + params.Encode()
-
-	resp, err := net.Get[[]State](
-		ctx,
-		c.client,
-		c.secret,
-		endpoint,
-		c.baseURL,
-	)
-	if err != nil {
-		return nil, err
-	}
-
-	return resp, nil
+	endpoint := statesPath + "?" + params.Encode()
+	return net.Get[[]State](ctx, c.Client, c.Secret, endpoint, c.BaseURL)
 }

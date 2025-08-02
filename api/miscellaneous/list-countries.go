@@ -34,17 +34,6 @@ type CountryRelationshipData struct {
 type CountryListResponse = types.Response[[]Country]
 
 // ListCountries retrieves a list of countries supported by Paystack
-func (c *Client) ListCountries(ctx context.Context) (*CountryListResponse, error) {
-	resp, err := net.Get[[]Country](
-		ctx,
-		c.client,
-		c.secret,
-		countryBasePath,
-		c.baseURL,
-	)
-	if err != nil {
-		return nil, err
-	}
-
-	return resp, nil
+func (c *Client) ListCountries(ctx context.Context) (*types.Response[[]Country], error) {
+	return net.Get[[]Country](ctx, c.Client, c.Secret, countryPath, c.BaseURL)
 }

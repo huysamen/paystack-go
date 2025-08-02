@@ -142,7 +142,7 @@ type BankListResponse struct {
 }
 
 // ListBanks retrieves a list of banks using the builder pattern
-func (c *Client) ListBanks(ctx context.Context, builder *BankListRequestBuilder) (*BankListResponse, error) {
+func (c *Client) ListBanks(ctx context.Context, builder *BankListRequestBuilder) (*types.Response[BankListResponse], error) {
 	params := url.Values{}
 
 	if builder != nil {
@@ -185,21 +185,10 @@ func (c *Client) ListBanks(ctx context.Context, builder *BankListRequestBuilder)
 		}
 	}
 
-	endpoint := bankBasePath
+	endpoint := bankPath
 	if len(params) > 0 {
 		endpoint += "?" + params.Encode()
 	}
 
-	resp, err := net.Get[BankListResponse](
-		ctx,
-		c.client,
-		c.secret,
-		endpoint,
-		c.baseURL,
-	)
-	if err != nil {
-		return nil, err
-	}
-
-	return &resp.Data, nil
+	return net.Get[BankListResponse](ctx, c.Client, c.Secret, endpoint, c.BaseURL)
 }
