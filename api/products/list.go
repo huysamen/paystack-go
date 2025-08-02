@@ -67,51 +67,32 @@ func (b *ListProductsRequestBuilder) Build() *ListProductsRequest {
 }
 
 // ListProductsResponse represents the response from listing products
-type ListProductsResponse struct {
-	Status  bool        `json:"status"`
-	Message string      `json:"message"`
-	Data    []Product   `json:"data"`
-	Meta    *types.Meta `json:"meta,omitempty"`
-}
+type ListProductsResponse = types.Response[[]Product]
 
 // List retrieves products available on your integration using a builder
 func (c *Client) List(ctx context.Context, builder *ListProductsRequestBuilder) (*ListProductsResponse, error) {
-	if builder == nil {
-		return nil, ErrBuilderRequired
-	}
-
-	req := builder.Build()
-
 	// Build query parameters
 	params := url.Values{}
-	if req.PerPage != nil {
-		params.Set("perPage", strconv.Itoa(*req.PerPage))
-	}
-	if req.Page != nil {
-		params.Set("page", strconv.Itoa(*req.Page))
-	}
-	if req.From != nil {
-		params.Set("from", *req.From)
-	}
-	if req.To != nil {
-		params.Set("to", *req.To)
+	if builder != nil {
+		req := builder.Build()
+		if req.PerPage != nil {
+			params.Set("perPage", strconv.Itoa(*req.PerPage))
+		}
+		if req.Page != nil {
+			params.Set("page", strconv.Itoa(*req.Page))
+		}
+		if req.From != nil {
+			params.Set("from", *req.From)
+		}
+		if req.To != nil {
+			params.Set("to", *req.To)
+		}
 	}
 
-	path := productsBasePath
+	path := basePath
 	if len(params) > 0 {
-		path = fmt.Sprintf("%s?%s", productsBasePath, params.Encode())
+		path = fmt.Sprintf("%s?%s", basePath, params.Encode())
 	}
 
-	resp, err := net.Get[ListProductsResponse](
-		ctx,
-		c.client,
-		c.secret,
-		path,
-		c.baseURL,
-	)
-	if err != nil {
-		return nil, err
-	}
-
-	return &resp.Data, nil
+	return net.Get[[]Product](ctx, c.Client, c.Secret, path, c.BaseURL)
 }

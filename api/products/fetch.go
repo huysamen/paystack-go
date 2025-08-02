@@ -5,26 +5,13 @@ import (
 	"fmt"
 
 	"github.com/huysamen/paystack-go/net"
+	"github.com/huysamen/paystack-go/types"
 )
 
+// FetchProductResponse represents the response from fetching a product
+type FetchProductResponse = types.Response[Product]
+
 // Fetch gets details of a product on your integration
-func (c *Client) Fetch(ctx context.Context, productID string) (*Product, error) {
-	if productID == "" {
-		return nil, fmt.Errorf("productID is required")
-	}
-
-	path := fmt.Sprintf("%s/%s", productsBasePath, productID)
-
-	resp, err := net.Get[Product](
-		ctx,
-		c.client,
-		c.secret,
-		path,
-		c.baseURL,
-	)
-	if err != nil {
-		return nil, err
-	}
-
-	return &resp.Data, nil
+func (c *Client) Fetch(ctx context.Context, productID string) (*FetchProductResponse, error) {
+	return net.Get[Product](ctx, c.Client, c.Secret, fmt.Sprintf("%s/%s", basePath, productID), c.BaseURL)
 }
