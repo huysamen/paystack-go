@@ -2,6 +2,8 @@ package applepay
 
 import (
 	"context"
+	"net/url"
+	"strconv"
 
 	"github.com/huysamen/paystack-go/net"
 	"github.com/huysamen/paystack-go/types"
@@ -56,5 +58,23 @@ type ListDomainsResponseData struct {
 
 // ListDomains lists all registered domains on your integration
 func (c *Client) ListDomains(ctx context.Context, builder *ListDomainsRequestBuilder) (*types.Response[ListDomainsResponseData], error) {
-	return net.Get[ListDomainsResponseData](ctx, c.Client, c.Secret, listPath, c.BaseURL)
+	req := builder.Build()
+
+	params := url.Values{}
+	if req.UseCursor != nil {
+		params.Set("use_cursor", strconv.FormatBool(*req.UseCursor))
+	}
+	if req.Next != nil {
+		params.Set("next", *req.Next)
+	}
+	if req.Previous != nil {
+		params.Set("previous", *req.Previous)
+	}
+
+	path := listPath
+	if len(params) > 0 {
+		path += "?" + params.Encode()
+	}
+
+	return net.Get[ListDomainsResponseData](ctx, c.Client, c.Secret, path, c.BaseURL)
 }

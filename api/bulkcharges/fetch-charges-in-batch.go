@@ -72,49 +72,31 @@ func (b *FetchChargesInBatchRequestBuilder) Build() *FetchChargesInBatchRequest 
 	return b.req
 }
 
-// FetchChargesInBatchResponse represents the response from fetching charges in a batch
-type FetchChargesInBatchResponse struct {
-	Status  bool               `json:"status"`
-	Message string             `json:"message"`
-	Data    []BulkChargeCharge `json:"data"`
-	Meta    *types.Meta        `json:"meta,omitempty"`
-}
-
 // FetchChargesInBatch retrieves the charges associated with a specified batch code using a builder
-func (c *Client) FetchChargesInBatch(ctx context.Context, idOrCode string, builder *FetchChargesInBatchRequestBuilder) (*FetchChargesInBatchResponse, error) {
-	var req *FetchChargesInBatchRequest
-	if builder != nil {
-		req = builder.Build()
-	}
+func (c *Client) FetchChargesInBatch(ctx context.Context, idOrCode string, builder *FetchChargesInBatchRequestBuilder) (*types.Response[[]BulkChargeCharge], error) {
+	req := builder.Build()
 
 	params := url.Values{}
-	if req != nil {
-		if req.Status != nil {
-			params.Set("status", *req.Status)
-		}
-		if req.PerPage != nil {
-			params.Set("perPage", strconv.Itoa(*req.PerPage))
-		}
-		if req.Page != nil {
-			params.Set("page", strconv.Itoa(*req.Page))
-		}
-		if req.From != nil {
-			params.Set("from", *req.From)
-		}
-		if req.To != nil {
-			params.Set("to", *req.To)
-		}
+	if req.Status != nil {
+		params.Set("status", *req.Status)
+	}
+	if req.PerPage != nil {
+		params.Set("perPage", strconv.Itoa(*req.PerPage))
+	}
+	if req.Page != nil {
+		params.Set("page", strconv.Itoa(*req.Page))
+	}
+	if req.From != nil {
+		params.Set("from", *req.From)
+	}
+	if req.To != nil {
+		params.Set("to", *req.To)
 	}
 
-	path := bulkChargesBasePath + "/" + idOrCode + "/charges"
+	path := basePath + "/" + idOrCode + fetchChargesPath
 	if len(params) > 0 {
 		path += "?" + params.Encode()
 	}
 
-	resp, err := net.Get[FetchChargesInBatchResponse](ctx, c.client, c.secret, path, c.baseURL)
-	if err != nil {
-		return nil, err
-	}
-
-	return &resp.Data, nil
+	return net.Get[[]BulkChargeCharge](ctx, c.Client, c.Secret, path, c.BaseURL)
 }

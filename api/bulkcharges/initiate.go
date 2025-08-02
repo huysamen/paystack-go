@@ -45,13 +45,5 @@ func (b *InitiateBulkChargeRequestBuilder) Build() *InitiateBulkChargeRequest {
 
 // Initiate sends an array of objects with authorization codes and amounts for batch processing
 func (c *Client) Initiate(ctx context.Context, builder *InitiateBulkChargeRequestBuilder) (*types.Response[BulkChargeBatch], error) {
-	if builder == nil {
-		return nil, ErrBuilderRequired
-	}
-
-	req := builder.Build()
-
-	return net.Post[InitiateBulkChargeRequest, BulkChargeBatch](
-		ctx, c.client, c.secret, bulkChargesBasePath, req, c.baseURL,
-	)
+	return net.Post[InitiateBulkChargeRequest, BulkChargeBatch](ctx, c.Client, c.Secret, basePath, builder.Build(), c.BaseURL)
 }
