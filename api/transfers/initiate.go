@@ -2,7 +2,6 @@ package transfers
 
 import (
 	"context"
-	"errors"
 
 	"github.com/huysamen/paystack-go/net"
 	"github.com/huysamen/paystack-go/types"
@@ -19,16 +18,5 @@ type TransferInitiateRequest struct {
 }
 
 func (c *Client) Initiate(ctx context.Context, req *TransferInitiateRequest) (*types.Response[Transfer], error) {
-	if req == nil {
-		return nil, errors.New("request cannot be nil")
-	}
-
-	return net.Post[TransferInitiateRequest, Transfer](
-		ctx,
-		c.client,
-		c.secret,
-		transferBasePath,
-		req,
-		c.baseURL,
-	)
+	return net.Post[TransferInitiateRequest, Transfer](ctx, c.Client, c.Secret, basePath, req, c.BaseURL)
 }

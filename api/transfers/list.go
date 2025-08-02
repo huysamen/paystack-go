@@ -102,21 +102,11 @@ type TransferListResponse struct {
 }
 
 // List lists transfers using a builder (fluent interface)
-func (c *Client) List(ctx context.Context, builder *TransferListRequestBuilder) (*types.Response[TransferListResponse], error) {
+func (c *Client) List(ctx context.Context, builder *TransferListRequestBuilder) (*types.Response[[]Transfer], error) {
 	req := builder.Build()
-	path := transferBasePath
-
+	query := ""
 	if req != nil {
-		if query := req.toQuery(); query != "" {
-			path += "?" + query
-		}
+		query = req.toQuery()
 	}
-
-	return net.Get[TransferListResponse](
-		ctx,
-		c.client,
-		c.secret,
-		path,
-		c.baseURL,
-	)
+	return net.Get[[]Transfer](ctx, c.Client, c.Secret, basePath, query, c.BaseURL)
 }

@@ -2,7 +2,6 @@ package transfers
 
 import (
 	"context"
-	"errors"
 	"fmt"
 
 	"github.com/huysamen/paystack-go/net"
@@ -10,17 +9,5 @@ import (
 )
 
 func (c *Client) Verify(ctx context.Context, reference string) (*types.Response[Transfer], error) {
-	if reference == "" {
-		return nil, errors.New("transfer reference is required")
-	}
-
-	path := fmt.Sprintf("%s/verify/%s", transferBasePath, reference)
-
-	return net.Get[Transfer](
-		ctx,
-		c.client,
-		c.secret,
-		path,
-		c.baseURL,
-	)
+	return net.Get[Transfer](ctx, c.Client, c.Secret, fmt.Sprintf("%s/verify/%s", basePath, reference), "", c.BaseURL)
 }

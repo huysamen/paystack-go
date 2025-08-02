@@ -2,7 +2,6 @@ package transfers
 
 import (
 	"context"
-	"errors"
 	"fmt"
 
 	"github.com/huysamen/paystack-go/net"
@@ -10,17 +9,5 @@ import (
 )
 
 func (c *Client) Fetch(ctx context.Context, idOrCode string) (*types.Response[Transfer], error) {
-	if idOrCode == "" {
-		return nil, errors.New("transfer ID or code is required")
-	}
-
-	path := fmt.Sprintf("%s/%s", transferBasePath, idOrCode)
-
-	return net.Get[Transfer](
-		ctx,
-		c.client,
-		c.secret,
-		path,
-		c.baseURL,
-	)
+	return net.Get[Transfer](ctx, c.Client, c.Secret, fmt.Sprintf("%s/%s", basePath, idOrCode), "", c.BaseURL)
 }

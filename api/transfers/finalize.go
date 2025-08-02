@@ -2,7 +2,6 @@ package transfers
 
 import (
 	"context"
-	"errors"
 
 	"github.com/huysamen/paystack-go/net"
 	"github.com/huysamen/paystack-go/types"
@@ -14,18 +13,5 @@ type TransferFinalizeRequest struct {
 }
 
 func (c *Client) Finalize(ctx context.Context, req *TransferFinalizeRequest) (*types.Response[Transfer], error) {
-	if req == nil {
-		return nil, errors.New("request cannot be nil")
-	}
-
-	path := transferBasePath + "/finalize_transfer"
-
-	return net.Post[TransferFinalizeRequest, Transfer](
-		ctx,
-		c.client,
-		c.secret,
-		path,
-		req,
-		c.baseURL,
-	)
+	return net.Post[TransferFinalizeRequest, Transfer](ctx, c.Client, c.Secret, basePath+"/finalize_transfer", req, c.BaseURL)
 }
