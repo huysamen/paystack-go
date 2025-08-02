@@ -127,17 +127,8 @@ func (b *TransactionInitializeRequestBuilder) Build() *TransactionInitializeRequ
 }
 
 func (c *Client) Initialize(ctx context.Context, builder *TransactionInitializeRequestBuilder) (*types.Response[TransactionInitializeResponse], error) {
-	if builder == nil {
-		return nil, ErrBuilderRequired
-	}
-
 	req := builder.Build()
 	return net.Post[TransactionInitializeRequest, TransactionInitializeResponse](
-		ctx,
-		c.client,
-		c.secret,
-		fmt.Sprintf("%s%s", transactionBasePath, transactionInitializePath),
-		req,
-		c.baseURL,
+		ctx, c.Client, c.Secret, fmt.Sprintf("%s%s", basePath, transactionInitializePath), req, c.BaseURL,
 	)
 }

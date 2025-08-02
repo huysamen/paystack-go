@@ -131,19 +131,9 @@ type TransactionListResponse []types.Transaction
 // List lists transactions using a builder (fluent interface)
 func (c *Client) List(ctx context.Context, builder *TransactionListRequestBuilder) (*types.Response[TransactionListResponse], error) {
 	req := builder.Build()
-	path := transactionBasePath
-
+	query := ""
 	if req != nil {
-		if query := req.toQuery(); query != "" {
-			path += "?" + query
-		}
+		query = req.toQuery()
 	}
-
-	return net.Get[TransactionListResponse](
-		ctx,
-		c.client,
-		c.secret,
-		path,
-		c.baseURL,
-	)
+	return net.Get[TransactionListResponse](ctx, c.Client, c.Secret, basePath, query, c.BaseURL)
 }

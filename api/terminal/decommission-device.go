@@ -2,7 +2,6 @@ package terminal
 
 import (
 	"context"
-	"errors"
 	"fmt"
 
 	"github.com/huysamen/paystack-go/net"
@@ -11,12 +10,8 @@ import (
 
 // DecommissionDevice unlinks a debug device from your integration
 func (c *Client) DecommissionDevice(ctx context.Context, req *TerminalDecommissionRequest) (*types.Response[any], error) {
-	if req == nil {
-		return nil, errors.New("request cannot be nil")
-	}
-
-	endpoint := fmt.Sprintf("%s/decommission_device", terminalBasePath)
+	endpoint := fmt.Sprintf("%s/decommission_device", basePath)
 	return net.Post[TerminalDecommissionRequest, any](
-		ctx, c.client, c.secret, endpoint, req, c.baseURL,
+		ctx, c.Client, c.Secret, endpoint, req, c.BaseURL,
 	)
 }

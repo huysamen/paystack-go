@@ -44,10 +44,6 @@ type TransactionVerifyResponse struct {
 
 func (c *Client) Verify(ctx context.Context, reference string) (*types.Response[TransactionVerifyResponse], error) {
 	return net.Get[TransactionVerifyResponse](
-		ctx,
-		c.client,
-		c.secret,
-		fmt.Sprintf("%s%s/%s", transactionBasePath, transactionVerifyPath, reference),
-		c.baseURL,
+		ctx, c.Client, c.Secret, fmt.Sprintf("%s%s/%s", basePath, transactionVerifyPath, reference), "", c.BaseURL,
 	)
 }

@@ -6,11 +6,10 @@ import (
 	"strconv"
 
 	"github.com/huysamen/paystack-go/net"
-	"github.com/huysamen/paystack-go/types"
 )
 
 // List retrieves a list of terminals
-func (c *Client) List(ctx context.Context, builder *TerminalListRequestBuilder) (*types.Response[[]Terminal], error) {
+func (c *Client) List(ctx context.Context, builder *TerminalListRequestBuilder) (*TerminalListResponse, error) {
 	params := url.Values{}
 
 	if builder != nil {
@@ -26,10 +25,10 @@ func (c *Client) List(ctx context.Context, builder *TerminalListRequestBuilder) 
 		}
 	}
 
-	endpoint := terminalBasePath
+	endpoint := basePath
 	if len(params) > 0 {
 		endpoint += "?" + params.Encode()
 	}
 
-	return net.Get[[]Terminal](ctx, c.client, c.secret, endpoint, c.baseURL)
+	return net.Get[[]Terminal](ctx, c.Client, c.Secret, endpoint, c.BaseURL)
 }

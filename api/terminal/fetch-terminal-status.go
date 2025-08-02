@@ -2,7 +2,6 @@ package terminal
 
 import (
 	"context"
-	"errors"
 	"fmt"
 
 	"github.com/huysamen/paystack-go/net"
@@ -17,10 +16,6 @@ type TerminalPresence struct {
 
 // FetchTerminalStatus fetches the status of a terminal
 func (c *Client) FetchTerminalStatus(ctx context.Context, terminalID string) (*types.Response[TerminalPresence], error) {
-	if terminalID == "" {
-		return nil, errors.New("terminal ID is required")
-	}
-
-	endpoint := fmt.Sprintf("%s/%s/presence", terminalBasePath, terminalID)
-	return net.Get[TerminalPresence](ctx, c.client, c.secret, endpoint, "", c.baseURL)
+	endpoint := fmt.Sprintf("%s/%s/presence", basePath, terminalID)
+	return net.Get[TerminalPresence](ctx, c.Client, c.Secret, endpoint, "", c.BaseURL)
 }

@@ -94,17 +94,8 @@ func (b *TransactionPartialDebitRequestBuilder) Build() *TransactionPartialDebit
 }
 
 func (c *Client) PartialDebit(ctx context.Context, builder *TransactionPartialDebitRequestBuilder) (*types.Response[TransactionPartialDebitResponse], error) {
-	if builder == nil {
-		return nil, ErrBuilderRequired
-	}
-
 	req := builder.Build()
 	return net.Post[TransactionPartialDebitRequest, TransactionPartialDebitResponse](
-		ctx,
-		c.client,
-		c.secret,
-		fmt.Sprintf("%s%s", transactionBasePath, transactionPartialDebitPath),
-		req,
-		c.baseURL,
+		ctx, c.Client, c.Secret, fmt.Sprintf("%s%s", basePath, transactionPartialDebitPath), req, c.BaseURL,
 	)
 }

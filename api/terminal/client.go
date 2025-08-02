@@ -1,28 +1,10 @@
 package terminal
 
 import (
-	"errors"
-	"net/http"
+	"github.com/huysamen/paystack-go/api"
 )
 
-const terminalBasePath = "/terminal"
+const basePath = "/terminal"
 
-var (
-	// ErrBuilderRequired is returned when a required builder is nil
-	ErrBuilderRequired = errors.New("builder cannot be nil")
-)
-
-type Client struct {
-	client  *http.Client
-	secret  string
-	baseURL string
-}
-
-// NewClient creates a new terminal client
-func NewClient(httpClient *http.Client, secret, baseURL string) *Client {
-	return &Client{
-		client:  httpClient,
-		secret:  secret,
-		baseURL: baseURL,
-	}
-}
+// Client represents the terminal API client
+type Client api.API

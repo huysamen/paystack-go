@@ -2,7 +2,6 @@ package terminal
 
 import (
 	"context"
-	"errors"
 	"fmt"
 
 	"github.com/huysamen/paystack-go/net"
@@ -16,13 +15,6 @@ type EventStatus struct {
 
 // FetchEventStatus fetches the status of a terminal event
 func (c *Client) FetchEventStatus(ctx context.Context, terminalID, eventID string) (*types.Response[EventStatus], error) {
-	if terminalID == "" {
-		return nil, errors.New("terminal ID is required")
-	}
-	if eventID == "" {
-		return nil, errors.New("event ID is required")
-	}
-
-	endpoint := fmt.Sprintf("%s/%s/events/%s", terminalBasePath, terminalID, eventID)
-	return net.Get[EventStatus](ctx, c.client, c.secret, endpoint, "", c.baseURL)
+	endpoint := fmt.Sprintf("%s/%s/events/%s", basePath, terminalID, eventID)
+	return net.Get[EventStatus](ctx, c.Client, c.Secret, endpoint, "", c.BaseURL)
 }

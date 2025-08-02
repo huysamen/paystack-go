@@ -105,19 +105,9 @@ type TransactionTotalsResponse struct {
 // Totals gets transaction totals using a builder (fluent interface)
 func (c *Client) Totals(ctx context.Context, builder *TransactionTotalsRequestBuilder) (*types.Response[TransactionTotalsResponse], error) {
 	req := builder.Build()
-	path := fmt.Sprintf("%s/totals", transactionBasePath)
-
+	query := ""
 	if req != nil {
-		if query := req.toQuery(); query != "" {
-			path += "?" + query
-		}
+		query = req.toQuery()
 	}
-
-	return net.Get[TransactionTotalsResponse](
-		ctx,
-		c.client,
-		c.secret,
-		path,
-		c.baseURL,
-	)
+	return net.Get[TransactionTotalsResponse](ctx, c.Client, c.Secret, fmt.Sprintf("%s/totals", basePath), query, c.BaseURL)
 }

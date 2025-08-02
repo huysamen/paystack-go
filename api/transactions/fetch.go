@@ -9,11 +9,5 @@ import (
 )
 
 func (c *Client) Fetch(ctx context.Context, id uint64) (*types.Response[types.Transaction], error) {
-	return net.Get[types.Transaction](
-		ctx,
-		c.client,
-		c.secret,
-		fmt.Sprintf("%s/%d", transactionBasePath, id),
-		c.baseURL,
-	)
+	return net.Get[types.Transaction](ctx, c.Client, c.Secret, fmt.Sprintf("%s/%d", basePath, id), "", c.BaseURL)
 }

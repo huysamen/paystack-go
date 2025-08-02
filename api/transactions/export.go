@@ -165,19 +165,9 @@ type TransactionExportResponse struct {
 // Export exports transactions using a builder (fluent interface)
 func (c *Client) Export(ctx context.Context, builder *TransactionExportRequestBuilder) (*types.Response[TransactionExportResponse], error) {
 	req := builder.Build()
-	path := fmt.Sprintf("%s%s", transactionBasePath, transactionExportPath)
-
+	query := ""
 	if req != nil {
-		if query := req.toQuery(); query != "" {
-			path += "?" + query
-		}
+		query = req.toQuery()
 	}
-
-	return net.Get[TransactionExportResponse](
-		ctx,
-		c.client,
-		c.secret,
-		path,
-		c.baseURL,
-	)
+	return net.Get[TransactionExportResponse](ctx, c.Client, c.Secret, fmt.Sprintf("%s%s", basePath, transactionExportPath), query, c.BaseURL)
 }

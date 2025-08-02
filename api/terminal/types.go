@@ -1,5 +1,9 @@
 package terminal
 
+import (
+	"github.com/huysamen/paystack-go/types"
+)
+
 // TerminalEventType represents the type of event to send to terminal
 type TerminalEventType string
 
@@ -142,25 +146,12 @@ func (b *TerminalListRequestBuilder) Build() *TerminalListRequest {
 }
 
 // TerminalListResponse represents the response from listing terminals
-type TerminalListResponse struct {
-	Status  bool       `json:"status"`
-	Message string     `json:"message"`
-	Data    []Terminal `json:"data"`
-	Meta    struct {
-		Next     *string `json:"next"`     // Cursor for next page
-		Previous *string `json:"previous"` // Cursor for previous page
-		PerPage  int     `json:"perPage"`  // Records per page
-	} `json:"meta"`
-}
+type TerminalListResponse = types.Response[[]Terminal]
 
 // Terminal Fetch
 
 // TerminalFetchResponse represents the response from fetching a terminal
-type TerminalFetchResponse struct {
-	Status  bool     `json:"status"`
-	Message string   `json:"message"`
-	Data    Terminal `json:"data"`
-}
+type TerminalFetchResponse = types.Response[Terminal]
 
 // Terminal Update
 

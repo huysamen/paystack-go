@@ -128,17 +128,8 @@ func (b *TransactionChargeAuthorizationRequestBuilder) Build() *TransactionCharg
 }
 
 func (c *Client) ChargeAuthorization(ctx context.Context, builder *TransactionChargeAuthorizationRequestBuilder) (*types.Response[TransactionChargeAuthorizationResponse], error) {
-	if builder == nil {
-		return nil, ErrBuilderRequired
-	}
-
 	req := builder.Build()
 	return net.Post[TransactionChargeAuthorizationRequest, TransactionChargeAuthorizationResponse](
-		ctx,
-		c.client,
-		c.secret,
-		fmt.Sprintf("%s%s", transactionBasePath, transactionChargeAuthorizationPath),
-		req,
-		c.baseURL,
+		ctx, c.Client, c.Secret, fmt.Sprintf("%s%s", basePath, transactionChargeAuthorizationPath), req, c.BaseURL,
 	)
 }
