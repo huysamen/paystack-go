@@ -109,11 +109,7 @@ func (b *TransferRecipientCreateRequestBuilder) Build() *TransferRecipientCreate
 }
 
 // TransferRecipientCreateResponse represents the response from creating a transfer recipient
-type TransferRecipientCreateResponse struct {
-	Status  bool              `json:"status"`
-	Message string            `json:"message"`
-	Data    TransferRecipient `json:"data"`
-}
+type TransferRecipientCreateResponse = types.Response[TransferRecipient]
 
 // Transfer Recipient Bulk Create
 
@@ -147,11 +143,7 @@ type BulkCreateResult struct {
 }
 
 // BulkCreateTransferRecipientResponse represents the response from bulk creating transfer recipients
-type BulkCreateTransferRecipientResponse struct {
-	Status  bool             `json:"status"`
-	Message string           `json:"message"`
-	Data    BulkCreateResult `json:"data"`
-}
+type BulkCreateTransferRecipientResponse = types.Response[BulkCreateResult]
 
 // Transfer Recipient List
 
@@ -212,21 +204,12 @@ func (b *TransferRecipientListRequestBuilder) Build() *TransferRecipientListRequ
 }
 
 // TransferRecipientListResponse represents the response from listing transfer recipients
-type TransferRecipientListResponse struct {
-	Status  bool                `json:"status"`
-	Message string              `json:"message"`
-	Data    []TransferRecipient `json:"data"`
-	Meta    types.Meta          `json:"meta"`
-}
+type TransferRecipientListResponse = types.Response[[]TransferRecipient]
 
 // Transfer Recipient Fetch
 
 // TransferRecipientFetchResponse represents the response from fetching a transfer recipient
-type TransferRecipientFetchResponse struct {
-	Status  bool              `json:"status"`
-	Message string            `json:"message"`
-	Data    TransferRecipient `json:"data"`
-}
+type TransferRecipientFetchResponse = types.Response[TransferRecipient]
 
 // Transfer Recipient Update
 
@@ -262,19 +245,12 @@ func (b *TransferRecipientUpdateRequestBuilder) Build() *TransferRecipientUpdate
 }
 
 // TransferRecipientUpdateResponse represents the response from updating a transfer recipient
-type TransferRecipientUpdateResponse struct {
-	Status  bool              `json:"status"`
-	Message string            `json:"message"`
-	Data    TransferRecipient `json:"data"`
-}
+type TransferRecipientUpdateResponse = types.Response[TransferRecipient]
 
 // Transfer Recipient Delete
 
 // TransferRecipientDeleteResponse represents the response from deleting a transfer recipient
-type TransferRecipientDeleteResponse struct {
-	Status  bool   `json:"status"`
-	Message string `json:"message"`
-}
+type TransferRecipientDeleteResponse = types.Response[any]
 
 // BulkCreateTransferRecipientRequestBuilder builds a BulkCreateTransferRecipientRequest
 type BulkCreateTransferRecipientRequestBuilder struct {

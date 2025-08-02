@@ -9,12 +9,6 @@ import (
 
 // Create creates a new transfer recipient
 func (c *Client) Create(ctx context.Context, builder *TransferRecipientCreateRequestBuilder) (*types.Response[TransferRecipient], error) {
-	if builder == nil {
-		return nil, ErrBuilderRequired
-	}
-
 	req := builder.Build()
-	return net.Post[TransferRecipientCreateRequest, TransferRecipient](
-		ctx, c.client, c.secret, transferRecipientBasePath, req, c.baseURL,
-	)
+	return net.Post[TransferRecipientCreateRequest, TransferRecipient](ctx, c.Client, c.Secret, basePath, req, c.BaseURL)
 }

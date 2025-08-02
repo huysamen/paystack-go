@@ -9,12 +9,6 @@ import (
 
 // BulkCreate creates multiple transfer recipients in a single request
 func (c *Client) BulkCreate(ctx context.Context, builder *BulkCreateTransferRecipientRequestBuilder) (*types.Response[BulkCreateResult], error) {
-	if builder == nil {
-		return nil, ErrBuilderRequired
-	}
-
 	req := builder.Build()
-	return net.Post[BulkCreateTransferRecipientRequest, BulkCreateResult](
-		ctx, c.client, c.secret, transferRecipientBasePath+"/bulk", req, c.baseURL,
-	)
+	return net.Post[BulkCreateTransferRecipientRequest, BulkCreateResult](ctx, c.Client, c.Secret, basePath+"/bulk", req, c.BaseURL)
 }

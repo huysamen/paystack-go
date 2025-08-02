@@ -12,10 +12,6 @@ import (
 
 // List retrieves a list of transfer recipients
 func (c *Client) List(ctx context.Context, builder *TransferRecipientListRequestBuilder) (*types.Response[[]TransferRecipient], error) {
-	if builder == nil {
-		return nil, ErrBuilderRequired
-	}
-
 	req := builder.Build()
 	params := url.Values{}
 
@@ -39,5 +35,5 @@ func (c *Client) List(ctx context.Context, builder *TransferRecipientListRequest
 		queryParams = params.Encode()
 	}
 
-	return net.Get[[]TransferRecipient](ctx, c.client, c.secret, transferRecipientBasePath, queryParams, c.baseURL)
+	return net.Get[[]TransferRecipient](ctx, c.Client, c.Secret, basePath, queryParams, c.BaseURL)
 }
