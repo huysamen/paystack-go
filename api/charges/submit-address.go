@@ -39,9 +39,9 @@ func (b *SubmitAddressRequestBuilder) Build() *SubmitAddressRequest {
 	return b.req
 }
 
-type SubmitAddressResponse = types.Response[ChargeData]
+type SubmitAddressResponse = types.Response[types.ChargeData]
 
 // SubmitAddress submits address when requested for verification
 func (c *Client) SubmitAddress(ctx context.Context, builder *SubmitAddressRequestBuilder) (*SubmitAddressResponse, error) {
-	return net.Post[SubmitAddressRequest, ChargeData](ctx, c.Client, c.Secret, submitAddressPath, builder.Build(), c.BaseURL)
+	return net.Post[SubmitAddressRequest, types.ChargeData](ctx, c.Client, c.Secret, submitAddressPath, builder.Build(), c.BaseURL)
 }

@@ -166,9 +166,9 @@ type QRDetails struct {
 	Provider string `json:"provider"`
 }
 
-type CreateChargeResponse = types.Response[ChargeData]
+type CreateChargeResponse = types.Response[types.ChargeData]
 
 // Create initiates a payment by integrating multiple payment channels
 func (c *Client) Create(ctx context.Context, builder *CreateChargeRequestBuilder) (*CreateChargeResponse, error) {
-	return net.Post[CreateChargeRequest, ChargeData](ctx, c.Client, c.Secret, basePath, builder.Build(), c.BaseURL)
+	return net.Post[CreateChargeRequest, types.ChargeData](ctx, c.Client, c.Secret, basePath, builder.Build(), c.BaseURL)
 }

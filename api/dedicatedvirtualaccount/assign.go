@@ -23,8 +23,6 @@ type AssignDedicatedVirtualAccountRequest struct {
 	MiddleName    string `json:"middle_name,omitempty"`
 }
 
-type AssignDedicatedVirtualAccountResponse = types.Response[any]
-
 // AssignDedicatedVirtualAccountBuilder builds requests for assigning dedicated virtual accounts
 type AssignDedicatedVirtualAccountBuilder struct {
 	request *AssignDedicatedVirtualAccountRequest
@@ -113,6 +111,8 @@ func (b *AssignDedicatedVirtualAccountBuilder) MiddleName(middleName string) *As
 func (b *AssignDedicatedVirtualAccountBuilder) Build() *AssignDedicatedVirtualAccountRequest {
 	return b.request
 }
+
+type AssignDedicatedVirtualAccountResponse = types.Response[any]
 
 // Assign creates a customer, validates the customer, and assigns a dedicated virtual account
 func (c *Client) Assign(ctx context.Context, builder *AssignDedicatedVirtualAccountBuilder) (*AssignDedicatedVirtualAccountResponse, error) {

@@ -18,7 +18,7 @@ type ListDedicatedVirtualAccountsRequest struct {
 	Customer     string `json:"customer,omitempty"`
 }
 
-type ListDedicatedVirtualAccountsResponse = types.Response[[]DedicatedVirtualAccount]
+type ListDedicatedVirtualAccountsResponse = types.Response[[]types.DedicatedVirtualAccount]
 
 // ListDedicatedVirtualAccountsBuilder builds requests for listing dedicated virtual accounts
 type ListDedicatedVirtualAccountsBuilder struct {
@@ -95,5 +95,5 @@ func (c *Client) List(ctx context.Context, builder *ListDedicatedVirtualAccounts
 		}
 	}
 
-	return net.Get[[]DedicatedVirtualAccount](ctx, c.Client, c.Secret, endpoint, c.BaseURL)
+	return net.Get[[]types.DedicatedVirtualAccount](ctx, c.Client, c.Secret, endpoint, c.BaseURL)
 }

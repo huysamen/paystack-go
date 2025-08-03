@@ -33,9 +33,9 @@ func (b *SubmitOTPRequestBuilder) Build() *SubmitOTPRequest {
 	return b.req
 }
 
-type SubmitOTPResponse = types.Response[ChargeData]
+type SubmitOTPResponse = types.Response[types.ChargeData]
 
 // SubmitOTP submits OTP to complete a charge
 func (c *Client) SubmitOTP(ctx context.Context, builder *SubmitOTPRequestBuilder) (*SubmitOTPResponse, error) {
-	return net.Post[SubmitOTPRequest, ChargeData](ctx, c.Client, c.Secret, submitOtpPath, builder.Build(), c.BaseURL)
+	return net.Post[SubmitOTPRequest, types.ChargeData](ctx, c.Client, c.Secret, submitOtpPath, builder.Build(), c.BaseURL)
 }

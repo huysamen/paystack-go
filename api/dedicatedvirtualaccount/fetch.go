@@ -8,11 +8,11 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type FetchDedicatedVirtualAccountResponse = types.Response[DedicatedVirtualAccount]
+type FetchDedicatedVirtualAccountResponse = types.Response[types.DedicatedVirtualAccount]
 
 // Fetch gets details of a dedicated virtual account on your integration
 func (c *Client) Fetch(ctx context.Context, dedicatedAccountID string) (*FetchDedicatedVirtualAccountResponse, error) {
 	endpoint := fmt.Sprintf("%s/%s", basePath, dedicatedAccountID)
 
-	return net.Get[DedicatedVirtualAccount](ctx, c.Client, c.Secret, endpoint, c.BaseURL)
+	return net.Get[types.DedicatedVirtualAccount](ctx, c.Client, c.Secret, endpoint, c.BaseURL)
 }

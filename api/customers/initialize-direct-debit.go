@@ -27,14 +27,6 @@ type DirectDebitInitializeRequest struct {
 	Address Address `json:"address"`
 }
 
-type DirectDebitInitializeResponse struct {
-	RedirectURL string `json:"redirect_url"`
-	AccessCode  string `json:"access_code"`
-	Reference   string `json:"reference"`
-}
-
-type InitializeDirectDebitResponse = types.Response[DirectDebitInitializeResponse]
-
 // Builder for DirectDebitInitializeRequest
 type DirectDebitInitializeRequestBuilder struct {
 	account Account
@@ -64,8 +56,16 @@ func (b *DirectDebitInitializeRequestBuilder) Build() *DirectDebitInitializeRequ
 	}
 }
 
+type InitializeDirectDebitResponseData struct {
+	RedirectURL string `json:"redirect_url"`
+	AccessCode  string `json:"access_code"`
+	Reference   string `json:"reference"`
+}
+
+type InitializeDirectDebitResponse = types.Response[InitializeDirectDebitResponseData]
+
 // InitializeDirectDebit initializes direct debit for a customer
 func (c *Client) InitializeDirectDebit(ctx context.Context, customerID string, builder *DirectDebitInitializeRequestBuilder) (*InitializeDirectDebitResponse, error) {
 	path := fmt.Sprintf("%s/%s/initialize-direct-debit", basePath, customerID)
-	return net.Post[DirectDebitInitializeRequest, DirectDebitInitializeResponse](ctx, c.Client, c.Secret, path, builder.Build(), c.BaseURL)
+	return net.Post[DirectDebitInitializeRequest, InitializeDirectDebitResponseData](ctx, c.Client, c.Secret, path, builder.Build(), c.BaseURL)
 }

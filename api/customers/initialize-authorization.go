@@ -16,14 +16,6 @@ type AuthorizationInitializeRequest struct {
 	Address     *Address `json:"address,omitempty"`
 }
 
-type AuthorizationInitializeResponse struct {
-	RedirectURL string `json:"redirect_url"`
-	AccessCode  string `json:"access_code"`
-	Reference   string `json:"reference"`
-}
-
-type InitializeAuthorizationResponse = types.Response[AuthorizationInitializeResponse]
-
 // Builder for AuthorizationInitializeRequest
 type AuthorizationInitializeRequestBuilder struct {
 	email       string
@@ -77,7 +69,15 @@ func (b *AuthorizationInitializeRequestBuilder) Build() *AuthorizationInitialize
 	}
 }
 
+type InitializeAuthorizationResponseData struct {
+	RedirectURL string `json:"redirect_url"`
+	AccessCode  string `json:"access_code"`
+	Reference   string `json:"reference"`
+}
+
+type InitializeAuthorizationResponse = types.Response[InitializeAuthorizationResponseData]
+
 // InitializeAuthorization initializes authorization for a customer
 func (c *Client) InitializeAuthorization(ctx context.Context, builder *AuthorizationInitializeRequestBuilder) (*InitializeAuthorizationResponse, error) {
-	return net.Post[AuthorizationInitializeRequest, AuthorizationInitializeResponse](ctx, c.Client, c.Secret, basePath+"/authorization/initialize", builder.Build(), c.BaseURL)
+	return net.Post[AuthorizationInitializeRequest, InitializeAuthorizationResponseData](ctx, c.Client, c.Secret, basePath+"/authorization/initialize", builder.Build(), c.BaseURL)
 }

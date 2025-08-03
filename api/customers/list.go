@@ -86,15 +86,15 @@ func (r *CustomerListRequest) toQuery() string {
 	return params.Encode()
 }
 
-type CustomerListResponse struct {
+type CustomerListResponseData struct {
 	Data []types.Customer `json:"data"`
 	Meta types.Meta       `json:"meta"`
 }
 
-type ListCustomersResponse = types.Response[CustomerListResponse]
+type CustomerListResponse = types.Response[CustomerListResponseData]
 
 // List lists customers using a builder (fluent interface)
-func (c *Client) List(ctx context.Context, builder *CustomerListRequestBuilder) (*ListCustomersResponse, error) {
+func (c *Client) List(ctx context.Context, builder *CustomerListRequestBuilder) (*CustomerListResponse, error) {
 	req := builder.Build()
 	path := basePath
 
@@ -104,5 +104,5 @@ func (c *Client) List(ctx context.Context, builder *CustomerListRequestBuilder) 
 		}
 	}
 
-	return net.Get[CustomerListResponse](ctx, c.Client, c.Secret, path, c.BaseURL)
+	return net.Get[CustomerListResponseData](ctx, c.Client, c.Secret, path, c.BaseURL)
 }

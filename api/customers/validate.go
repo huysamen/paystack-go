@@ -21,12 +21,6 @@ type CustomerValidateRequest struct {
 	MiddleName    *string `json:"middle_name,omitempty"`
 }
 
-type CustomerValidateResponse struct {
-	Message string `json:"message"`
-}
-
-type CustomerValidateResponseType = types.Response[CustomerValidateResponse]
-
 // Builder for CustomerValidateRequest
 type CustomerValidateRequestBuilder struct {
 	firstName     string
@@ -85,8 +79,10 @@ func (b *CustomerValidateRequestBuilder) Build() *CustomerValidateRequest {
 	}
 }
 
+type CustomerValidateResponseType = types.Response[any]
+
 // Validate validates a customer with the provided builder
 func (c *Client) Validate(ctx context.Context, customerCode string, builder *CustomerValidateRequestBuilder) (*CustomerValidateResponseType, error) {
 	path := fmt.Sprintf("%s/%s/identification", basePath, customerCode)
-	return net.Post[CustomerValidateRequest, CustomerValidateResponse](ctx, c.Client, c.Secret, path, builder.Build(), c.BaseURL)
+	return net.Post[CustomerValidateRequest, any](ctx, c.Client, c.Secret, path, builder.Build(), c.BaseURL)
 }

@@ -7,9 +7,9 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type FetchBankProvidersResponse = types.Response[[]BankProvider]
+type FetchBankProvidersResponse = types.Response[[]types.BankProvider]
 
 // FetchBankProviders gets available bank providers for a dedicated virtual account
 func (c *Client) FetchBankProviders(ctx context.Context) (*FetchBankProvidersResponse, error) {
-	return net.Get[[]BankProvider](ctx, c.Client, c.Secret, basePath+"/available_providers", c.BaseURL)
+	return net.Get[[]types.BankProvider](ctx, c.Client, c.Secret, basePath+"/available_providers", c.BaseURL)
 }

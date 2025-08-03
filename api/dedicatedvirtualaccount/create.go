@@ -18,7 +18,7 @@ type CreateDedicatedVirtualAccountRequest struct {
 	Phone         string `json:"phone,omitempty"`
 }
 
-type CreateDedicatedVirtualAccountResponse = types.Response[DedicatedVirtualAccount]
+type CreateDedicatedVirtualAccountResponse = types.Response[types.DedicatedVirtualAccount]
 
 // CreateDedicatedVirtualAccountBuilder builds requests for creating dedicated virtual accounts
 type CreateDedicatedVirtualAccountBuilder struct {
@@ -81,5 +81,5 @@ func (b *CreateDedicatedVirtualAccountBuilder) Build() *CreateDedicatedVirtualAc
 
 // Create creates a dedicated virtual account for an existing customer
 func (c *Client) Create(ctx context.Context, builder *CreateDedicatedVirtualAccountBuilder) (*CreateDedicatedVirtualAccountResponse, error) {
-	return net.Post[CreateDedicatedVirtualAccountRequest, DedicatedVirtualAccount](ctx, c.Client, c.Secret, basePath, builder.Build(), c.BaseURL)
+	return net.Post[CreateDedicatedVirtualAccountRequest, types.DedicatedVirtualAccount](ctx, c.Client, c.Secret, basePath, builder.Build(), c.BaseURL)
 }
