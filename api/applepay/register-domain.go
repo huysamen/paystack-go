@@ -31,7 +31,9 @@ func (b *RegisterDomainRequestBuilder) Build() *RegisterDomainRequest {
 	return b.req
 }
 
+type RegisterDomainResponse = types.Response[any]
+
 // RegisterDomain registers a top-level domain or subdomain for Apple Pay integration
-func (c *Client) RegisterDomain(ctx context.Context, builder RegisterDomainRequestBuilder) (*types.Response[any], error) {
+func (c *Client) RegisterDomain(ctx context.Context, builder RegisterDomainRequestBuilder) (*RegisterDomainResponse, error) {
 	return net.Post[RegisterDomainRequest, any](ctx, c.Client, c.Secret, registerPath, builder.Build(), c.BaseURL)
 }

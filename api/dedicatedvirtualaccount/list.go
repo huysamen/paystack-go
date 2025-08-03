@@ -18,13 +18,7 @@ type ListDedicatedVirtualAccountsRequest struct {
 	Customer     string `json:"customer,omitempty"`
 }
 
-// ListDedicatedVirtualAccountsResponse represents the response from listing dedicated virtual accounts
-type ListDedicatedVirtualAccountsResponse struct {
-	Status  bool                      `json:"status"`
-	Message string                    `json:"message"`
-	Data    []DedicatedVirtualAccount `json:"data"`
-	Meta    *types.Meta               `json:"meta,omitempty"`
-}
+type ListDedicatedVirtualAccountsResponse = types.Response[[]DedicatedVirtualAccount]
 
 // ListDedicatedVirtualAccountsBuilder builds requests for listing dedicated virtual accounts
 type ListDedicatedVirtualAccountsBuilder struct {
@@ -74,7 +68,7 @@ func (b *ListDedicatedVirtualAccountsBuilder) Build() *ListDedicatedVirtualAccou
 }
 
 // List retrieves dedicated virtual accounts available on your integration
-func (c *Client) List(ctx context.Context, builder *ListDedicatedVirtualAccountsBuilder) (*types.Response[[]DedicatedVirtualAccount], error) {
+func (c *Client) List(ctx context.Context, builder *ListDedicatedVirtualAccountsBuilder) (*ListDedicatedVirtualAccountsResponse, error) {
 	endpoint := basePath
 
 	if builder != nil {

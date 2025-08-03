@@ -133,16 +133,10 @@ func (b *BankListRequestBuilder) Build() *BankListRequest {
 	return b.req
 }
 
-// BankListResponse represents the response from listing banks
-type BankListResponse struct {
-	Status  bool        `json:"status"`
-	Message string      `json:"message"`
-	Data    []Bank      `json:"data"`
-	Meta    *types.Meta `json:"meta,omitempty"`
-}
+type BankListResponse = types.Response[[]Bank]
 
 // ListBanks retrieves a list of banks using the builder pattern
-func (c *Client) ListBanks(ctx context.Context, builder *BankListRequestBuilder) (*types.Response[BankListResponse], error) {
+func (c *Client) ListBanks(ctx context.Context, builder *BankListRequestBuilder) (*BankListResponse, error) {
 	params := url.Values{}
 
 	if builder != nil {
@@ -190,5 +184,5 @@ func (c *Client) ListBanks(ctx context.Context, builder *BankListRequestBuilder)
 		endpoint += "?" + params.Encode()
 	}
 
-	return net.Get[BankListResponse](ctx, c.Client, c.Secret, endpoint, c.BaseURL)
+	return net.Get[[]Bank](ctx, c.Client, c.Secret, endpoint, c.BaseURL)
 }

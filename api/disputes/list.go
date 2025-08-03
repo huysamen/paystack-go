@@ -84,7 +84,7 @@ func (b *ListDisputesBuilder) Build() *ListDisputesRequest {
 }
 
 // List retrieves disputes filed against your integration
-func (c *Client) List(ctx context.Context, builder *ListDisputesBuilder) (*types.Response[[]Dispute], error) {
+func (c *Client) List(ctx context.Context, builder *ListDisputesBuilder) (*ListDisputesResponse, error) {
 	endpoint := basePath
 	req := builder.Build()
 

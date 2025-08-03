@@ -46,6 +46,6 @@ func (b *ResolveDisputeBuilder) Build() *ResolveDisputeRequest {
 }
 
 // Resolve resolves a dispute on your integration
-func (c *Client) Resolve(ctx context.Context, disputeID string, builder *ResolveDisputeBuilder) (*types.Response[Dispute], error) {
+func (c *Client) Resolve(ctx context.Context, disputeID string, builder *ResolveDisputeBuilder) (*ResolveDisputeResponse, error) {
 	return net.Put[ResolveDisputeRequest, Dispute](ctx, c.Client, c.Secret, basePath+"/"+disputeID+"/resolve", builder.Build(), c.BaseURL)
 }

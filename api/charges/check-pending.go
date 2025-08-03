@@ -31,8 +31,10 @@ func (b *CheckPendingChargeRequestBuilder) Build() *CheckPendingChargeRequest {
 	return b.req
 }
 
+type CheckPendingChargeResponse = types.Response[ChargeData]
+
 // CheckPending checks the status of a pending charge
-func (c *Client) CheckPending(ctx context.Context, builder *CheckPendingChargeRequestBuilder) (*types.Response[ChargeData], error) {
+func (c *Client) CheckPending(ctx context.Context, builder *CheckPendingChargeRequestBuilder) (*CheckPendingChargeResponse, error) {
 	return net.Post[CheckPendingChargeRequest, ChargeData](
 		ctx, c.Client, c.Secret, checkPendingPath, builder.Build(), c.BaseURL,
 	)

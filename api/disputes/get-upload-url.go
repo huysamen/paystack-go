@@ -34,7 +34,7 @@ func (b *GetUploadURLBuilder) Build() *GetUploadURLRequest {
 }
 
 // GetUploadURL gets a signed URL for uploading dispute evidence files
-func (c *Client) GetUploadURL(ctx context.Context, disputeID string, builder *GetUploadURLBuilder) (*types.Response[UploadURLData], error) {
+func (c *Client) GetUploadURL(ctx context.Context, disputeID string, builder *GetUploadURLBuilder) (*GetUploadURLResponse, error) {
 	req := builder.Build()
 
 	// Build query parameters

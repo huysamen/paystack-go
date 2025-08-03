@@ -43,7 +43,9 @@ func (b *InitiateBulkChargeRequestBuilder) Build() *InitiateBulkChargeRequest {
 	return b.req
 }
 
+type InitiateBulkChargeResponse = types.Response[BulkChargeBatch]
+
 // Initiate sends an array of objects with authorization codes and amounts for batch processing
-func (c *Client) Initiate(ctx context.Context, builder *InitiateBulkChargeRequestBuilder) (*types.Response[BulkChargeBatch], error) {
+func (c *Client) Initiate(ctx context.Context, builder *InitiateBulkChargeRequestBuilder) (*InitiateBulkChargeResponse, error) {
 	return net.Post[InitiateBulkChargeRequest, BulkChargeBatch](ctx, c.Client, c.Secret, basePath, builder.Build(), c.BaseURL)
 }

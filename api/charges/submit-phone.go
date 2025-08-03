@@ -33,7 +33,9 @@ func (b *SubmitPhoneRequestBuilder) Build() *SubmitPhoneRequest {
 	return b.req
 }
 
+type SubmitPhoneResponse = types.Response[ChargeData]
+
 // SubmitPhone submits phone number when requested
-func (c *Client) SubmitPhone(ctx context.Context, builder *SubmitPhoneRequestBuilder) (*types.Response[ChargeData], error) {
+func (c *Client) SubmitPhone(ctx context.Context, builder *SubmitPhoneRequestBuilder) (*SubmitPhoneResponse, error) {
 	return net.Post[SubmitPhoneRequest, ChargeData](ctx, c.Client, c.Secret, submitPhonePath, builder.Build(), c.BaseURL)
 }

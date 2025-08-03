@@ -8,6 +8,9 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-func (c *Client) Fetch(ctx context.Context, id uint64) (*types.Response[types.Transaction], error) {
+// Response type alias
+type TransactionFetchResponse = types.Response[types.Transaction]
+
+func (c *Client) Fetch(ctx context.Context, id uint64) (*TransactionFetchResponse, error) {
 	return net.Get[types.Transaction](ctx, c.Client, c.Secret, fmt.Sprintf("%s/%d", basePath, id), "", c.BaseURL)
 }

@@ -33,7 +33,9 @@ func (b *SubmitBirthdayRequestBuilder) Build() *SubmitBirthdayRequest {
 	return b.req
 }
 
+type SubmitBirthdayResponse = types.Response[ChargeData]
+
 // SubmitBirthday submits birthday when requested for verification
-func (c *Client) SubmitBirthday(ctx context.Context, builder *SubmitBirthdayRequestBuilder) (*types.Response[ChargeData], error) {
+func (c *Client) SubmitBirthday(ctx context.Context, builder *SubmitBirthdayRequestBuilder) (*SubmitBirthdayResponse, error) {
 	return net.Post[SubmitBirthdayRequest, ChargeData](ctx, c.Client, c.Secret, submitBirthdayPath, builder.Build(), c.BaseURL)
 }

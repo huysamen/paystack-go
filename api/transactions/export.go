@@ -162,8 +162,11 @@ type TransactionExportResponse struct {
 	ExpiresAt types.DateTime `json:"expiresAt"`
 }
 
+// Response type alias
+type TransactionExportApiResponse = types.Response[TransactionExportResponse]
+
 // Export exports transactions using a builder (fluent interface)
-func (c *Client) Export(ctx context.Context, builder *TransactionExportRequestBuilder) (*types.Response[TransactionExportResponse], error) {
+func (c *Client) Export(ctx context.Context, builder *TransactionExportRequestBuilder) (*TransactionExportApiResponse, error) {
 	req := builder.Build()
 	query := ""
 	if req != nil {

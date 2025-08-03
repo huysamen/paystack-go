@@ -44,6 +44,6 @@ func (b *UpdateDisputeBuilder) Build() *UpdateDisputeRequest {
 }
 
 // Update updates the details of a dispute on your integration
-func (c *Client) Update(ctx context.Context, disputeID string, builder *UpdateDisputeBuilder) (*types.Response[Dispute], error) {
+func (c *Client) Update(ctx context.Context, disputeID string, builder *UpdateDisputeBuilder) (*UpdateDisputeResponse, error) {
 	return net.Put[UpdateDisputeRequest, Dispute](ctx, c.Client, c.Secret, basePath+"/"+disputeID, builder.Build(), c.BaseURL)
 }

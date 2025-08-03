@@ -22,12 +22,11 @@ type MandateAuthorization struct {
 	Customer          CustomerReference `json:"customer"`
 }
 
-// FetchMandateAuthorizationsResponse represents the list of mandate authorizations
-type FetchMandateAuthorizationsResponse []MandateAuthorization
+type FetchMandateAuthorizationsResponse = types.Response[[]MandateAuthorization]
 
 // FetchMandateAuthorizations fetches mandate authorizations for a customer
-func (c *Client) FetchMandateAuthorizations(ctx context.Context, customerID string) (*types.Response[FetchMandateAuthorizationsResponse], error) {
+func (c *Client) FetchMandateAuthorizations(ctx context.Context, customerID string) (*FetchMandateAuthorizationsResponse, error) {
 	path := fmt.Sprintf("%s/%s/directdebit-mandate-authorizations", basePath, customerID)
 
-	return net.Get[FetchMandateAuthorizationsResponse](ctx, c.Client, c.Secret, path, c.BaseURL)
+	return net.Get[[]MandateAuthorization](ctx, c.Client, c.Secret, path, c.BaseURL)
 }

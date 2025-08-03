@@ -7,7 +7,9 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
+type FetchBulkChargeBatch = types.Response[BulkChargeBatch]
+
 // Fetch retrieves a specific bulk charge batch by ID or batch code
-func (c *Client) Fetch(ctx context.Context, idOrCode string) (*types.Response[BulkChargeBatch], error) {
+func (c *Client) Fetch(ctx context.Context, idOrCode string) (*FetchBulkChargeBatch, error) {
 	return net.Get[BulkChargeBatch](ctx, c.Client, c.Secret, basePath+"/"+idOrCode, c.BaseURL)
 }

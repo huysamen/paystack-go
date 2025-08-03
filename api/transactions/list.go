@@ -128,8 +128,11 @@ func (r *TransactionListRequest) toQuery() string {
 
 type TransactionListResponse []types.Transaction
 
+// Response type alias
+type TransactionListApiResponse = types.Response[TransactionListResponse]
+
 // List lists transactions using a builder (fluent interface)
-func (c *Client) List(ctx context.Context, builder *TransactionListRequestBuilder) (*types.Response[TransactionListResponse], error) {
+func (c *Client) List(ctx context.Context, builder *TransactionListRequestBuilder) (*TransactionListApiResponse, error) {
 	req := builder.Build()
 	query := ""
 	if req != nil {

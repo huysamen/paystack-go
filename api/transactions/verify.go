@@ -42,7 +42,10 @@ type TransactionVerifyResponse struct {
 	Subaccount         types.Subaccount    `json:"subaccount"`
 }
 
-func (c *Client) Verify(ctx context.Context, reference string) (*types.Response[TransactionVerifyResponse], error) {
+// Response type alias
+type TransactionVerifyApiResponse = types.Response[TransactionVerifyResponse]
+
+func (c *Client) Verify(ctx context.Context, reference string) (*TransactionVerifyApiResponse, error) {
 	return net.Get[TransactionVerifyResponse](
 		ctx, c.Client, c.Secret, fmt.Sprintf("%s%s/%s", basePath, transactionVerifyPath, reference), "", c.BaseURL,
 	)

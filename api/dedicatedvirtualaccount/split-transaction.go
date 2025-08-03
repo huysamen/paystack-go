@@ -15,12 +15,7 @@ type SplitDedicatedAccountTransactionRequest struct {
 	PreferredBank string `json:"preferred_bank,omitempty"`
 }
 
-// SplitDedicatedAccountTransactionResponse represents the response from adding split to dedicated account
-type SplitDedicatedAccountTransactionResponse struct {
-	Status  bool                     `json:"status"`
-	Message string                   `json:"message"`
-	Data    *DedicatedVirtualAccount `json:"data"`
-}
+type SplitDedicatedAccountTransactionResponse = types.Response[DedicatedVirtualAccount]
 
 // SplitDedicatedAccountTransactionBuilder builds requests for splitting dedicated account transactions
 type SplitDedicatedAccountTransactionBuilder struct {
@@ -64,6 +59,6 @@ func (b *SplitDedicatedAccountTransactionBuilder) Build() *SplitDedicatedAccount
 }
 
 // SplitTransaction splits a dedicated virtual account transaction with one or more accounts
-func (c *Client) SplitTransaction(ctx context.Context, builder *SplitDedicatedAccountTransactionBuilder) (*types.Response[SplitDedicatedAccountTransactionResponse], error) {
-	return net.Post[SplitDedicatedAccountTransactionRequest, SplitDedicatedAccountTransactionResponse](ctx, c.Client, c.Secret, basePath+"/split", builder.Build(), c.BaseURL)
+func (c *Client) SplitTransaction(ctx context.Context, builder *SplitDedicatedAccountTransactionBuilder) (*SplitDedicatedAccountTransactionResponse, error) {
+	return net.Post[SplitDedicatedAccountTransactionRequest, DedicatedVirtualAccount](ctx, c.Client, c.Secret, basePath+"/split", builder.Build(), c.BaseURL)
 }

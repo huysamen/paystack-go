@@ -48,7 +48,9 @@ func (b *CustomerRiskActionRequestBuilder) Build() *CustomerRiskActionRequest {
 	}
 }
 
+type SetRiskActionResponse = types.Response[types.Customer]
+
 // SetRiskAction sets the risk action for a customer
-func (c *Client) SetRiskAction(ctx context.Context, builder *CustomerRiskActionRequestBuilder) (*types.Response[types.Customer], error) {
+func (c *Client) SetRiskAction(ctx context.Context, builder *CustomerRiskActionRequestBuilder) (*SetRiskActionResponse, error) {
 	return net.Post[CustomerRiskActionRequest, types.Customer](ctx, c.Client, c.Secret, basePath+"/set_risk_action", builder.Build(), c.BaseURL)
 }

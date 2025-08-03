@@ -31,7 +31,9 @@ func (b *UnregisterDomainRequestBuilder) Build() *UnregisterDomainRequest {
 	return b.req
 }
 
+type UnregisterDomainResponse = types.Response[any]
+
 // UnregisterDomain unregisters a top-level domain or subdomain previously used for Apple Pay integration
-func (c *Client) UnregisterDomain(ctx context.Context, builder UnregisterDomainRequestBuilder) (*types.Response[any], error) {
+func (c *Client) UnregisterDomain(ctx context.Context, builder UnregisterDomainRequestBuilder) (*UnregisterDomainResponse, error) {
 	return net.DeleteWithBody[UnregisterDomainRequest, any](ctx, c.Client, c.Secret, unregisterPath, builder.Build(), c.BaseURL)
 }

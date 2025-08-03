@@ -22,6 +22,8 @@ type AuthorizationInitializeResponse struct {
 	Reference   string `json:"reference"`
 }
 
+type InitializeAuthorizationResponse = types.Response[AuthorizationInitializeResponse]
+
 // Builder for AuthorizationInitializeRequest
 type AuthorizationInitializeRequestBuilder struct {
 	email       string
@@ -76,6 +78,6 @@ func (b *AuthorizationInitializeRequestBuilder) Build() *AuthorizationInitialize
 }
 
 // InitializeAuthorization initializes authorization for a customer
-func (c *Client) InitializeAuthorization(ctx context.Context, builder *AuthorizationInitializeRequestBuilder) (*types.Response[AuthorizationInitializeResponse], error) {
+func (c *Client) InitializeAuthorization(ctx context.Context, builder *AuthorizationInitializeRequestBuilder) (*InitializeAuthorizationResponse, error) {
 	return net.Post[AuthorizationInitializeRequest, AuthorizationInitializeResponse](ctx, c.Client, c.Secret, basePath+"/authorization/initialize", builder.Build(), c.BaseURL)
 }

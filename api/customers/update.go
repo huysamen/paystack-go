@@ -63,8 +63,10 @@ func (b *CustomerUpdateRequestBuilder) Build() *CustomerUpdateRequest {
 	}
 }
 
+type UpdateCustomerResponse = types.Response[types.Customer]
+
 // Update updates a customer with the provided builder
-func (c *Client) Update(ctx context.Context, customerCode string, builder *CustomerUpdateRequestBuilder) (*types.Response[types.Customer], error) {
+func (c *Client) Update(ctx context.Context, customerCode string, builder *CustomerUpdateRequestBuilder) (*UpdateCustomerResponse, error) {
 	path := fmt.Sprintf("%s/%s", basePath, customerCode)
 
 	return net.Put[CustomerUpdateRequest, types.Customer](ctx, c.Client, c.Secret, path, builder.Build(), c.BaseURL)

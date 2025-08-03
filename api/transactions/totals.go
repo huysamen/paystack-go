@@ -102,8 +102,11 @@ type TransactionTotalsResponse struct {
 	UnsettledTransactionVolumeByCurrency []CurrencyTotal `json:"unsettled_transaction_volume_by_currency"`
 }
 
+// Response type alias
+type TransactionTotalsApiResponse = types.Response[TransactionTotalsResponse]
+
 // Totals gets transaction totals using a builder (fluent interface)
-func (c *Client) Totals(ctx context.Context, builder *TransactionTotalsRequestBuilder) (*types.Response[TransactionTotalsResponse], error) {
+func (c *Client) Totals(ctx context.Context, builder *TransactionTotalsRequestBuilder) (*TransactionTotalsApiResponse, error) {
 	req := builder.Build()
 	query := ""
 	if req != nil {

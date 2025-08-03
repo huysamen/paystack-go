@@ -33,6 +33,9 @@ type TransactionInitializeResponse struct {
 	Reference        string `json:"reference"`
 }
 
+// Response type alias
+type TransactionInitializeApiResponse = types.Response[TransactionInitializeResponse]
+
 // TransactionInitializeRequestBuilder builds a TransactionInitializeRequest
 type TransactionInitializeRequestBuilder struct {
 	request TransactionInitializeRequest
@@ -126,7 +129,7 @@ func (b *TransactionInitializeRequestBuilder) Build() *TransactionInitializeRequ
 	return &b.request
 }
 
-func (c *Client) Initialize(ctx context.Context, builder *TransactionInitializeRequestBuilder) (*types.Response[TransactionInitializeResponse], error) {
+func (c *Client) Initialize(ctx context.Context, builder *TransactionInitializeRequestBuilder) (*TransactionInitializeApiResponse, error) {
 	req := builder.Build()
 	return net.Post[TransactionInitializeRequest, TransactionInitializeResponse](
 		ctx, c.Client, c.Secret, fmt.Sprintf("%s%s", basePath, transactionInitializePath), req, c.BaseURL,

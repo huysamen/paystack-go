@@ -84,7 +84,7 @@ func (b *ExportDisputesBuilder) Build() *ExportDisputesRequest {
 }
 
 // Export exports disputes available on your integration
-func (c *Client) Export(ctx context.Context, builder *ExportDisputesBuilder) (*types.Response[ExportData], error) {
+func (c *Client) Export(ctx context.Context, builder *ExportDisputesBuilder) (*ExportDisputesResponse, error) {
 	endpoint := basePath + "/export"
 	req := builder.Build()
 

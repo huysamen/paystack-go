@@ -16,13 +16,7 @@ type ListMandateAuthorizationsRequest struct {
 	PerPage int                        `json:"per_page,omitempty"`
 }
 
-// ListMandateAuthorizationsResponse represents the response from listing mandate authorizations
-type ListMandateAuthorizationsResponse struct {
-	Status  bool                   `json:"status"`
-	Message string                 `json:"message"`
-	Data    []MandateAuthorization `json:"data"`
-	Meta    *types.Meta            `json:"meta,omitempty"`
-}
+type ListMandateAuthorizationsResponse = types.Response[[]MandateAuthorization]
 
 // ListMandateAuthorizationsBuilder builds requests for listing mandate authorizations
 type ListMandateAuthorizationsBuilder struct {
@@ -60,7 +54,7 @@ func (b *ListMandateAuthorizationsBuilder) Build() *ListMandateAuthorizationsReq
 }
 
 // ListMandateAuthorizations retrieves a list of direct debit mandate authorizations
-func (c *Client) ListMandateAuthorizations(ctx context.Context, builder *ListMandateAuthorizationsBuilder) (*types.Response[[]MandateAuthorization], error) {
+func (c *Client) ListMandateAuthorizations(ctx context.Context, builder *ListMandateAuthorizationsBuilder) (*ListMandateAuthorizationsResponse, error) {
 	endpoint := basePath + "/mandate-authorizations"
 
 	if builder != nil {

@@ -16,6 +16,6 @@ type FetchTimeoutData struct {
 }
 
 // FetchTimeout retrieves the payment session timeout on your integration
-func (c *Client) FetchTimeout(ctx context.Context) (*types.Response[FetchTimeoutData], error) {
+func (c *Client) FetchTimeout(ctx context.Context) (*FetchTimeoutResponse, error) {
 	return net.Get[FetchTimeoutData](ctx, c.Client, c.Secret, basePath+"/payment_session_timeout", c.BaseURL)
 }

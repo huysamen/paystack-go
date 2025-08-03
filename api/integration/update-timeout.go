@@ -40,6 +40,6 @@ type UpdateTimeoutData struct {
 }
 
 // UpdateTimeout updates the payment session timeout on your integration
-func (c *Client) UpdateTimeout(ctx context.Context, builder *UpdateTimeoutRequestBuilder) (*types.Response[UpdateTimeoutData], error) {
+func (c *Client) UpdateTimeout(ctx context.Context, builder *UpdateTimeoutRequestBuilder) (*UpdateTimeoutResponse, error) {
 	return net.Put[UpdateTimeoutRequest, UpdateTimeoutData](ctx, c.Client, c.Secret, basePath+"/payment_session_timeout", builder.Build(), c.BaseURL)
 }

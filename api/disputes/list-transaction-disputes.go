@@ -12,7 +12,7 @@ import (
 type ListTransactionDisputesResponse = types.Response[TransactionDisputeData]
 
 // ListTransactionDisputes retrieves disputes for a transaction
-func (c *Client) ListTransactionDisputes(ctx context.Context, transactionID string) (*types.Response[TransactionDisputeData], error) {
+func (c *Client) ListTransactionDisputes(ctx context.Context, transactionID string) (*ListTransactionDisputesResponse, error) {
 	if transactionID == "" {
 		return nil, errors.New("transaction ID is required")
 	}

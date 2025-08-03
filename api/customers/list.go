@@ -91,8 +91,10 @@ type CustomerListResponse struct {
 	Meta types.Meta       `json:"meta"`
 }
 
+type ListCustomersResponse = types.Response[CustomerListResponse]
+
 // List lists customers using a builder (fluent interface)
-func (c *Client) List(ctx context.Context, builder *CustomerListRequestBuilder) (*types.Response[CustomerListResponse], error) {
+func (c *Client) List(ctx context.Context, builder *CustomerListRequestBuilder) (*ListCustomersResponse, error) {
 	req := builder.Build()
 	path := basePath
 

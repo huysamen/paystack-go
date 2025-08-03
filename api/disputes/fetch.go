@@ -11,6 +11,6 @@ import (
 type FetchDisputeResponse = types.Response[Dispute]
 
 // Fetch retrieves details of a specific dispute
-func (c *Client) Fetch(ctx context.Context, disputeID string) (*types.Response[Dispute], error) {
+func (c *Client) Fetch(ctx context.Context, disputeID string) (*FetchDisputeResponse, error) {
 	return net.Get[Dispute](ctx, c.Client, c.Secret, basePath+"/"+disputeID, c.BaseURL)
 }

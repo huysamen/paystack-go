@@ -12,11 +12,7 @@ type TriggerActivationChargeRequest struct {
 	CustomerIDs []uint64 `json:"customer_ids"`
 }
 
-// TriggerActivationChargeResponse represents the response from triggering activation charge
-type TriggerActivationChargeResponse struct {
-	Status  bool   `json:"status"`
-	Message string `json:"message"`
-}
+type TriggerActivationChargeResponse = types.Response[any]
 
 // TriggerActivationChargeBuilder builds requests for triggering activation charges
 type TriggerActivationChargeBuilder struct {
@@ -48,6 +44,6 @@ func (b *TriggerActivationChargeBuilder) Build() *TriggerActivationChargeRequest
 }
 
 // TriggerActivationCharge triggers an activation charge on pending mandates
-func (c *Client) TriggerActivationCharge(ctx context.Context, builder *TriggerActivationChargeBuilder) (*types.Response[any], error) {
+func (c *Client) TriggerActivationCharge(ctx context.Context, builder *TriggerActivationChargeBuilder) (*TriggerActivationChargeResponse, error) {
 	return net.Put[TriggerActivationChargeRequest, any](ctx, c.Client, c.Secret, basePath+"/activation-charge", builder.Build(), c.BaseURL)
 }

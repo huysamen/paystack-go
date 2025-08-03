@@ -184,7 +184,7 @@ func (b *TerminalUpdateRequestBuilder) Build() *TerminalUpdateRequest {
 }
 
 // TerminalUpdateResponse represents the response from updating a terminal
-type TerminalUpdateResponse = types.Response[any]
+type TerminalUpdateResponse = types.Response[Terminal]
 
 // Terminal Commission
 
@@ -194,7 +194,7 @@ type TerminalCommissionRequest struct {
 }
 
 // TerminalCommissionResponse represents the response from commissioning a terminal
-type TerminalCommissionResponse = types.Response[any]
+type TerminalCommissionResponse = types.Response[Terminal]
 
 // Terminal Decommission
 

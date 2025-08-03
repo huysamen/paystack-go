@@ -13,10 +13,6 @@ type DirectDebitActivationChargeRequest struct {
 	AuthorizationID int `json:"authorization_id"`
 }
 
-type DirectDebitActivationChargeResponse struct {
-	Message string `json:"message"`
-}
-
 // Builder for DirectDebitActivationChargeRequest
 type DirectDebitActivationChargeRequestBuilder struct {
 	authorizationID int
@@ -36,8 +32,11 @@ func (b *DirectDebitActivationChargeRequestBuilder) Build() *DirectDebitActivati
 	}
 }
 
+type DirectDebitActivationChargeResponse = types.Response[any]
+
 // DirectDebitActivationCharge creates an activation charge for a direct debit authorization
-func (c *Client) DirectDebitActivationCharge(ctx context.Context, customerID string, builder *DirectDebitActivationChargeRequestBuilder) (*types.Response[DirectDebitActivationChargeResponse], error) {
+func (c *Client) DirectDebitActivationCharge(ctx context.Context, customerID string, builder *DirectDebitActivationChargeRequestBuilder) (*DirectDebitActivationChargeResponse, error) {
 	path := fmt.Sprintf("%s/%s/directdebit-activation-charge", basePath, customerID)
-	return net.Put[DirectDebitActivationChargeRequest, DirectDebitActivationChargeResponse](ctx, c.Client, c.Secret, path, builder.Build(), c.BaseURL)
+
+	return net.Put[DirectDebitActivationChargeRequest, any](ctx, c.Client, c.Secret, path, builder.Build(), c.BaseURL)
 }

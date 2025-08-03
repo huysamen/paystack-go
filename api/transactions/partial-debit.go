@@ -93,7 +93,10 @@ func (b *TransactionPartialDebitRequestBuilder) Build() *TransactionPartialDebit
 	return &b.request
 }
 
-func (c *Client) PartialDebit(ctx context.Context, builder *TransactionPartialDebitRequestBuilder) (*types.Response[TransactionPartialDebitResponse], error) {
+// Response type alias
+type TransactionPartialDebitApiResponse = types.Response[TransactionPartialDebitResponse]
+
+func (c *Client) PartialDebit(ctx context.Context, builder *TransactionPartialDebitRequestBuilder) (*TransactionPartialDebitApiResponse, error) {
 	req := builder.Build()
 	return net.Post[TransactionPartialDebitRequest, TransactionPartialDebitResponse](
 		ctx, c.Client, c.Secret, fmt.Sprintf("%s%s", basePath, transactionPartialDebitPath), req, c.BaseURL,

@@ -23,11 +23,7 @@ type AssignDedicatedVirtualAccountRequest struct {
 	MiddleName    string `json:"middle_name,omitempty"`
 }
 
-// AssignDedicatedVirtualAccountResponse represents the response from assigning a dedicated virtual account
-type AssignDedicatedVirtualAccountResponse struct {
-	Status  bool   `json:"status"`
-	Message string `json:"message"`
-}
+type AssignDedicatedVirtualAccountResponse = types.Response[any]
 
 // AssignDedicatedVirtualAccountBuilder builds requests for assigning dedicated virtual accounts
 type AssignDedicatedVirtualAccountBuilder struct {
@@ -119,7 +115,7 @@ func (b *AssignDedicatedVirtualAccountBuilder) Build() *AssignDedicatedVirtualAc
 }
 
 // Assign creates a customer, validates the customer, and assigns a dedicated virtual account
-func (c *Client) Assign(ctx context.Context, builder *AssignDedicatedVirtualAccountBuilder) (*types.Response[any], error) {
+func (c *Client) Assign(ctx context.Context, builder *AssignDedicatedVirtualAccountBuilder) (*AssignDedicatedVirtualAccountResponse, error) {
 	return net.Post[AssignDedicatedVirtualAccountRequest, any](
 		ctx, c.Client, c.Secret, basePath+"/assign", builder.Build(), c.BaseURL,
 	)

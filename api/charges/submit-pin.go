@@ -33,7 +33,9 @@ func (b *SubmitPINRequestBuilder) Build() *SubmitPINRequest {
 	return b.req
 }
 
+type SubmitPINResponse = types.Response[ChargeData]
+
 // SubmitPIN submits PIN to continue a charge
-func (c *Client) SubmitPIN(ctx context.Context, builder *SubmitPINRequestBuilder) (*types.Response[ChargeData], error) {
+func (c *Client) SubmitPIN(ctx context.Context, builder *SubmitPINRequestBuilder) (*SubmitPINResponse, error) {
 	return net.Post[SubmitPINRequest, ChargeData](ctx, c.Client, c.Secret, submitPinPath, builder.Build(), c.BaseURL)
 }

@@ -56,8 +56,10 @@ type ListDomainsResponseData struct {
 	DomainNames []string `json:"domainNames"`
 }
 
+type ListDomainsResponse = types.Response[ListDomainsResponseData]
+
 // ListDomains lists all registered domains on your integration
-func (c *Client) ListDomains(ctx context.Context, builder *ListDomainsRequestBuilder) (*types.Response[ListDomainsResponseData], error) {
+func (c *Client) ListDomains(ctx context.Context, builder *ListDomainsRequestBuilder) (*ListDomainsResponse, error) {
 	req := builder.Build()
 
 	params := url.Values{}

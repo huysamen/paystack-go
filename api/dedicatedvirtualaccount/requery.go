@@ -15,11 +15,7 @@ type RequeryDedicatedAccountRequest struct {
 	Date          string `json:"date,omitempty"`
 }
 
-// RequeryDedicatedAccountResponse represents the response from requerying a dedicated account
-type RequeryDedicatedAccountResponse struct {
-	Status  bool   `json:"status"`
-	Message string `json:"message"`
-}
+type RequeryResponse = types.Response[any]
 
 // RequeryDedicatedAccountBuilder builds requests for requerying dedicated accounts
 type RequeryDedicatedAccountBuilder struct {
@@ -57,7 +53,7 @@ func (b *RequeryDedicatedAccountBuilder) Build() *RequeryDedicatedAccountRequest
 }
 
 // Requery requerying dedicated virtual account for new transactions
-func (c *Client) Requery(ctx context.Context, builder *RequeryDedicatedAccountBuilder) (*types.Response[any], error) {
+func (c *Client) Requery(ctx context.Context, builder *RequeryDedicatedAccountBuilder) (*RequeryResponse, error) {
 	req := builder.Build()
 	params := url.Values{}
 	params.Set("account_number", req.AccountNumber)

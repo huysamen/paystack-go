@@ -12,10 +12,6 @@ type DeactivateAuthorizationRequest struct {
 	AuthorizationCode string `json:"authorization_code"`
 }
 
-type DeactivateAuthorizationResponse struct {
-	Message string `json:"message"`
-}
-
 // Builder for DeactivateAuthorizationRequest
 type DeactivateAuthorizationRequestBuilder struct {
 	authorizationCode string
@@ -35,7 +31,9 @@ func (b *DeactivateAuthorizationRequestBuilder) Build() *DeactivateAuthorization
 	}
 }
 
+type DeactivateAuthorizationResponse = types.Response[any]
+
 // DeactivateAuthorization deactivates an authorization with the provided builder
-func (c *Client) DeactivateAuthorization(ctx context.Context, builder *DeactivateAuthorizationRequestBuilder) (*types.Response[DeactivateAuthorizationResponse], error) {
-	return net.Post[DeactivateAuthorizationRequest, DeactivateAuthorizationResponse](ctx, c.Client, c.Secret, basePath+"/authorization/deactivate", builder.Build(), c.BaseURL)
+func (c *Client) DeactivateAuthorization(ctx context.Context, builder *DeactivateAuthorizationRequestBuilder) (*DeactivateAuthorizationResponse, error) {
+	return net.Post[DeactivateAuthorizationRequest, any](ctx, c.Client, c.Secret, basePath+"/authorization/deactivate", builder.Build(), c.BaseURL)
 }

@@ -5,11 +5,10 @@ import (
 	"fmt"
 
 	"github.com/huysamen/paystack-go/net"
-	"github.com/huysamen/paystack-go/types"
 )
 
 // Update updates a terminal's details
-func (c *Client) Update(ctx context.Context, terminalID string, builder *TerminalUpdateRequestBuilder) (*types.Response[Terminal], error) {
+func (c *Client) Update(ctx context.Context, terminalID string, builder *TerminalUpdateRequestBuilder) (*TerminalUpdateResponse, error) {
 	req := builder.Build()
 	endpoint := fmt.Sprintf("%s/%s", basePath, terminalID)
 	return net.Put[TerminalUpdateRequest, Terminal](

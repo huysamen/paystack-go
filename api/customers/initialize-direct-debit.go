@@ -33,6 +33,8 @@ type DirectDebitInitializeResponse struct {
 	Reference   string `json:"reference"`
 }
 
+type InitializeDirectDebitResponse = types.Response[DirectDebitInitializeResponse]
+
 // Builder for DirectDebitInitializeRequest
 type DirectDebitInitializeRequestBuilder struct {
 	account Account
@@ -63,7 +65,7 @@ func (b *DirectDebitInitializeRequestBuilder) Build() *DirectDebitInitializeRequ
 }
 
 // InitializeDirectDebit initializes direct debit for a customer
-func (c *Client) InitializeDirectDebit(ctx context.Context, customerID string, builder *DirectDebitInitializeRequestBuilder) (*types.Response[DirectDebitInitializeResponse], error) {
+func (c *Client) InitializeDirectDebit(ctx context.Context, customerID string, builder *DirectDebitInitializeRequestBuilder) (*InitializeDirectDebitResponse, error) {
 	path := fmt.Sprintf("%s/%s/initialize-direct-debit", basePath, customerID)
 	return net.Post[DirectDebitInitializeRequest, DirectDebitInitializeResponse](ctx, c.Client, c.Secret, path, builder.Build(), c.BaseURL)
 }

@@ -56,6 +56,6 @@ func (b *AddEvidenceBuilder) Build() *AddEvidenceRequest {
 }
 
 // AddEvidence provides evidence for a dispute
-func (c *Client) AddEvidence(ctx context.Context, disputeID string, builder *AddEvidenceBuilder) (*types.Response[Evidence], error) {
+func (c *Client) AddEvidence(ctx context.Context, disputeID string, builder *AddEvidenceBuilder) (*AddEvidenceResponse, error) {
 	return net.Post[AddEvidenceRequest, Evidence](ctx, c.Client, c.Secret, basePath+"/"+disputeID+"/evidence", builder.Build(), c.BaseURL)
 }

@@ -127,7 +127,10 @@ func (b *TransactionChargeAuthorizationRequestBuilder) Build() *TransactionCharg
 	return &b.request
 }
 
-func (c *Client) ChargeAuthorization(ctx context.Context, builder *TransactionChargeAuthorizationRequestBuilder) (*types.Response[TransactionChargeAuthorizationResponse], error) {
+// Response type alias
+type TransactionChargeAuthorizationApiResponse = types.Response[TransactionChargeAuthorizationResponse]
+
+func (c *Client) ChargeAuthorization(ctx context.Context, builder *TransactionChargeAuthorizationRequestBuilder) (*TransactionChargeAuthorizationApiResponse, error) {
 	req := builder.Build()
 	return net.Post[TransactionChargeAuthorizationRequest, TransactionChargeAuthorizationResponse](
 		ctx, c.Client, c.Secret, fmt.Sprintf("%s%s", basePath, transactionChargeAuthorizationPath), req, c.BaseURL,
