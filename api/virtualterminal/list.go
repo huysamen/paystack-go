@@ -9,8 +9,37 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
+// ListVirtualTerminalsRequest represents the request to list virtual terminals
+type ListVirtualTerminalsRequest struct {
+	Status   string `json:"status,omitempty"`
+	PerPage  int    `json:"perPage,omitempty"`
+	Search   string `json:"search,omitempty"`
+	Next     string `json:"next,omitempty"`
+	Previous string `json:"previous,omitempty"`
+}
+
+// ListVirtualTerminalsRequestBuilder provides a fluent interface for building ListVirtualTerminalsRequest
+type ListVirtualTerminalsRequestBuilder struct {
+	req *ListVirtualTerminalsRequest
+}
+
+// NewListVirtualTerminalsRequest creates a new builder for ListVirtualTerminalsRequest
+func NewListVirtualTerminalsRequest() *ListVirtualTerminalsRequestBuilder {
+	return &ListVirtualTerminalsRequestBuilder{
+		req: &ListVirtualTerminalsRequest{},
+	}
+}
+
+// Build returns the constructed ListVirtualTerminalsRequest
+func (b *ListVirtualTerminalsRequestBuilder) Build() *ListVirtualTerminalsRequest {
+	return b.req
+}
+
+// ListVirtualTerminalsResponse represents the response from listing virtual terminals
+type ListVirtualTerminalsResponse = types.Response[[]types.VirtualTerminal]
+
 // List lists virtual terminals using the builder pattern
-func (c *Client) List(ctx context.Context, builder *ListVirtualTerminalsRequestBuilder) (*types.Response[[]VirtualTerminal], error) {
+func (c *Client) List(ctx context.Context, builder *ListVirtualTerminalsRequestBuilder) (*types.Response[[]types.VirtualTerminal], error) {
 	params := url.Values{}
 
 	if builder != nil {
@@ -37,5 +66,5 @@ func (c *Client) List(ctx context.Context, builder *ListVirtualTerminalsRequestB
 		endpoint += "?" + params.Encode()
 	}
 
-	return net.Get[[]VirtualTerminal](ctx, c.Client, c.Secret, endpoint, c.BaseURL)
+	return net.Get[[]types.VirtualTerminal](ctx, c.Client, c.Secret, endpoint, c.BaseURL)
 }
