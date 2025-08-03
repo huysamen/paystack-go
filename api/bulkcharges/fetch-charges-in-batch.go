@@ -72,7 +72,7 @@ func (b *FetchChargesInBatchRequestBuilder) Build() *FetchChargesInBatchRequest 
 	return b.req
 }
 
-type FetchChargesInBatchResponse = types.Response[[]BulkChargeCharge]
+type FetchChargesInBatchResponse = types.Response[[]types.BulkCharge]
 
 // FetchChargesInBatch retrieves the charges associated with a specified batch code using a builder
 func (c *Client) FetchChargesInBatch(ctx context.Context, idOrCode string, builder *FetchChargesInBatchRequestBuilder) (*FetchChargesInBatchResponse, error) {
@@ -100,5 +100,5 @@ func (c *Client) FetchChargesInBatch(ctx context.Context, idOrCode string, build
 		path += "?" + params.Encode()
 	}
 
-	return net.Get[[]BulkChargeCharge](ctx, c.Client, c.Secret, path, c.BaseURL)
+	return net.Get[[]types.BulkCharge](ctx, c.Client, c.Secret, path, c.BaseURL)
 }

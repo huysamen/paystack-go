@@ -6,49 +6,6 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-// SettlementSchedule represents the settlement schedule for a subaccount
-type SettlementSchedule string
-
-const (
-	SettlementScheduleAuto    SettlementSchedule = "auto"    // T+1 settlement
-	SettlementScheduleWeekly  SettlementSchedule = "weekly"  // Weekly settlement
-	SettlementScheduleMonthly SettlementSchedule = "monthly" // Monthly settlement
-	SettlementScheduleManual  SettlementSchedule = "manual"  // Manual settlement only
-)
-
-// String returns the string representation of SettlementSchedule
-func (s SettlementSchedule) String() string {
-	return string(s)
-}
-
-// Subaccount represents a subaccount
-type Subaccount struct {
-	ID                   uint64         `json:"id"`
-	SubaccountCode       string         `json:"subaccount_code"`
-	BusinessName         string         `json:"business_name"`
-	Description          *string        `json:"description"`
-	PrimaryContactName   *string        `json:"primary_contact_name"`
-	PrimaryContactEmail  *string        `json:"primary_contact_email"`
-	PrimaryContactPhone  *string        `json:"primary_contact_phone"`
-	Metadata             map[string]any `json:"metadata"`
-	PercentageCharge     float64        `json:"percentage_charge"`
-	IsVerified           bool           `json:"is_verified"`
-	SettlementBank       string         `json:"settlement_bank"`
-	AccountNumber        string         `json:"account_number"`
-	AccountName          *string        `json:"account_name"`
-	SettlementSchedule   *string        `json:"settlement_schedule"`
-	Active               bool           `json:"active"`
-	Currency             string         `json:"currency"`
-	Domain               string         `json:"domain"`
-	Integration          uint64         `json:"integration"`
-	BankID               uint64         `json:"bank_id"`
-	Bank                 uint64         `json:"bank"`
-	ManagedByIntegration uint64         `json:"managed_by_integration"`
-	Product              string         `json:"product"`
-	CreatedAt            time.Time      `json:"createdAt"`
-	UpdatedAt            time.Time      `json:"updatedAt"`
-}
-
 // SubaccountCreateRequest represents the request to create a subaccount
 type SubaccountCreateRequest struct {
 	BusinessName        string         `json:"business_name"`                   // Required: Name of business
@@ -63,7 +20,7 @@ type SubaccountCreateRequest struct {
 }
 
 // SubaccountCreateResponse represents the response from creating a subaccount
-type SubaccountCreateResponse = types.Response[Subaccount]
+type SubaccountCreateResponse = types.Response[types.Subaccount]
 
 // Subaccount List
 
@@ -76,12 +33,12 @@ type SubaccountListRequest struct {
 }
 
 // SubaccountListResponse represents the response from listing subaccounts
-type SubaccountListResponse = types.Response[[]Subaccount]
+type SubaccountListResponse = types.Response[[]types.Subaccount]
 
 // Subaccount Fetch
 
 // SubaccountFetchResponse represents the response from fetching a subaccount
-type SubaccountFetchResponse = types.Response[Subaccount]
+type SubaccountFetchResponse = types.Response[types.Subaccount]
 
 // Subaccount Update
 
@@ -100,4 +57,4 @@ type SubaccountUpdateRequest struct {
 }
 
 // SubaccountUpdateResponse represents the response from updating a subaccount
-type SubaccountUpdateResponse = types.Response[Subaccount]
+type SubaccountUpdateResponse = types.Response[types.Subaccount]

@@ -12,16 +12,16 @@ import (
 
 // ListDisputesRequest represents the request to list disputes
 type ListDisputesRequest struct {
-	From        *time.Time     `json:"from,omitempty"`
-	To          *time.Time     `json:"to,omitempty"`
-	PerPage     *int           `json:"per_page,omitempty"`
-	Page        *int           `json:"page,omitempty"`
-	Transaction *string        `json:"transaction,omitempty"`
-	Status      *DisputeStatus `json:"status,omitempty"`
+	From        *time.Time           `json:"from,omitempty"`
+	To          *time.Time           `json:"to,omitempty"`
+	PerPage     *int                 `json:"per_page,omitempty"`
+	Page        *int                 `json:"page,omitempty"`
+	Transaction *string              `json:"transaction,omitempty"`
+	Status      *types.DisputeStatus `json:"status,omitempty"`
 }
 
 // ListDisputesResponse represents the response from listing disputes
-type ListDisputesResponse = types.Response[[]Dispute]
+type ListDisputesResponse = types.Response[[]types.Dispute]
 
 // ListDisputesBuilder builds requests for listing disputes
 type ListDisputesBuilder struct {

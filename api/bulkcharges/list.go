@@ -65,7 +65,7 @@ func (b *ListBulkChargeBatchesRequestBuilder) Build() *ListBulkChargeBatchesRequ
 	return b.req
 }
 
-type ListBulkChargeBatchesResponse = types.Response[[]BulkChargeBatch]
+type ListBulkChargeBatchesResponse = types.Response[[]types.BulkChargeBatch]
 
 // List retrieves all bulk charge batches created by the integration using a builder
 func (c *Client) List(ctx context.Context, builder *ListBulkChargeBatchesRequestBuilder) (*ListBulkChargeBatchesResponse, error) {
@@ -90,5 +90,5 @@ func (c *Client) List(ctx context.Context, builder *ListBulkChargeBatchesRequest
 		path += "?" + params.Encode()
 	}
 
-	return net.Get[[]BulkChargeBatch](ctx, c.Client, c.Secret, path, c.BaseURL)
+	return net.Get[[]types.BulkChargeBatch](ctx, c.Client, c.Secret, path, c.BaseURL)
 }
