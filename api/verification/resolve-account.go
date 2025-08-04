@@ -27,12 +27,14 @@ func NewAccountResolveRequestBuilder() *AccountResolveRequestBuilder {
 // AccountNumber sets the account number
 func (b *AccountResolveRequestBuilder) AccountNumber(accountNumber string) *AccountResolveRequestBuilder {
 	b.request.AccountNumber = accountNumber
+
 	return b
 }
 
 // BankCode sets the bank code
 func (b *AccountResolveRequestBuilder) BankCode(bankCode string) *AccountResolveRequestBuilder {
 	b.request.BankCode = bankCode
+
 	return b
 }
 
@@ -45,7 +47,7 @@ func (b *AccountResolveRequestBuilder) Build() *AccountResolveRequest {
 type AccountResolveResponse = types.Response[types.AccountResolution]
 
 // ResolveAccount resolves a bank account number to get account details
-func (c *Client) ResolveAccount(ctx context.Context, builder *AccountResolveRequestBuilder) (*types.Response[types.AccountResolution], error) {
+func (c *Client) ResolveAccount(ctx context.Context, builder *AccountResolveRequestBuilder) (*AccountResolveResponse, error) {
 	req := builder.Build()
 	endpoint := fmt.Sprintf("%s?account_number=%s&bank_code=%s", accountResolveBasePath, req.AccountNumber, req.BankCode)
 	return net.Get[types.AccountResolution](ctx, c.Client, c.Secret, endpoint, "", c.BaseURL)

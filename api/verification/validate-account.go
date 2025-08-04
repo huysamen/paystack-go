@@ -40,6 +40,7 @@ func NewAccountValidateRequest(accountName, accountNumber, accountType, bankCode
 // DocumentNumber sets the optional document number
 func (b *AccountValidateRequestBuilder) DocumentNumber(documentNumber string) *AccountValidateRequestBuilder {
 	b.req.DocumentNumber = &documentNumber
+
 	return b
 }
 
@@ -53,6 +54,5 @@ type AccountValidateResponse = types.Response[types.AccountValidation]
 
 // ValidateAccount validates an account using additional verification data
 func (c *Client) ValidateAccount(ctx context.Context, builder *AccountValidateRequestBuilder) (*types.Response[types.AccountValidation], error) {
-	req := builder.Build()
-	return net.Post[AccountValidateRequest, types.AccountValidation](ctx, c.Client, c.Secret, accountValidateBasePath, req, c.BaseURL)
+	return net.Post[AccountValidateRequest, types.AccountValidation](ctx, c.Client, c.Secret, accountValidateBasePath, builder.Build(), c.BaseURL)
 }
