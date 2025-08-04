@@ -27,6 +27,7 @@ func NewFinalizePaymentRequestRequest() *FinalizePaymentRequestRequestBuilder {
 // SendNotification sets whether to send notification
 func (b *FinalizePaymentRequestRequestBuilder) SendNotification(sendNotification bool) *FinalizePaymentRequestRequestBuilder {
 	b.req.SendNotification = &sendNotification
+
 	return b
 }
 
@@ -36,7 +37,7 @@ func (b *FinalizePaymentRequestRequestBuilder) Build() *FinalizePaymentRequestRe
 }
 
 // FinalizePaymentRequestResponse represents the response from finalizing a payment request
-type FinalizePaymentRequestResponse = types.Response[PaymentRequest]
+type FinalizePaymentRequestResponse = types.Response[types.PaymentRequest]
 
 // Finalize finalizes a draft payment request
 func (c *Client) Finalize(ctx context.Context, code string, builder *FinalizePaymentRequestRequestBuilder) (*FinalizePaymentRequestResponse, error) {
@@ -47,5 +48,5 @@ func (c *Client) Finalize(ctx context.Context, code string, builder *FinalizePay
 		req = &FinalizePaymentRequestRequest{}
 	}
 
-	return net.Post[FinalizePaymentRequestRequest, PaymentRequest](ctx, c.Client, c.Secret, basePath+"/finalize/"+code, req, c.BaseURL)
+	return net.Post[FinalizePaymentRequestRequest, types.PaymentRequest](ctx, c.Client, c.Secret, basePath+"/finalize/"+code, req, c.BaseURL)
 }

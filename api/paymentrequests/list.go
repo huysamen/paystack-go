@@ -36,48 +36,56 @@ func NewListPaymentRequestsRequest() *ListPaymentRequestsRequestBuilder {
 // PerPage sets the number of payment requests per page
 func (b *ListPaymentRequestsRequestBuilder) PerPage(perPage int) *ListPaymentRequestsRequestBuilder {
 	b.req.PerPage = perPage
+
 	return b
 }
 
 // Page sets the page number
 func (b *ListPaymentRequestsRequestBuilder) Page(page int) *ListPaymentRequestsRequestBuilder {
 	b.req.Page = page
+
 	return b
 }
 
 // Customer sets the customer filter
 func (b *ListPaymentRequestsRequestBuilder) Customer(customer string) *ListPaymentRequestsRequestBuilder {
 	b.req.Customer = customer
+
 	return b
 }
 
 // Status sets the status filter
 func (b *ListPaymentRequestsRequestBuilder) Status(status string) *ListPaymentRequestsRequestBuilder {
 	b.req.Status = status
+
 	return b
 }
 
 // Currency sets the currency filter
 func (b *ListPaymentRequestsRequestBuilder) Currency(currency string) *ListPaymentRequestsRequestBuilder {
 	b.req.Currency = currency
+
 	return b
 }
 
 // IncludeArchive sets whether to include archived requests
 func (b *ListPaymentRequestsRequestBuilder) IncludeArchive(includeArchive string) *ListPaymentRequestsRequestBuilder {
 	b.req.IncludeArchive = includeArchive
+
 	return b
 }
 
 // From sets the start date filter
 func (b *ListPaymentRequestsRequestBuilder) From(from string) *ListPaymentRequestsRequestBuilder {
 	b.req.From = from
+
 	return b
 }
 
 // To sets the end date filter
 func (b *ListPaymentRequestsRequestBuilder) To(to string) *ListPaymentRequestsRequestBuilder {
 	b.req.To = to
+
 	return b
 }
 
@@ -85,6 +93,7 @@ func (b *ListPaymentRequestsRequestBuilder) To(to string) *ListPaymentRequestsRe
 func (b *ListPaymentRequestsRequestBuilder) DateRange(from, to string) *ListPaymentRequestsRequestBuilder {
 	b.req.From = from
 	b.req.To = to
+
 	return b
 }
 
@@ -94,7 +103,7 @@ func (b *ListPaymentRequestsRequestBuilder) Build() *ListPaymentRequestsRequest 
 }
 
 // ListPaymentRequestsResponse represents the response from listing payment requests
-type ListPaymentRequestsResponse = types.Response[[]PaymentRequest]
+type ListPaymentRequestsResponse = types.Response[[]types.PaymentRequest]
 
 // List retrieves payment requests available on your integration
 func (c *Client) List(ctx context.Context, builder *ListPaymentRequestsRequestBuilder) (*ListPaymentRequestsResponse, error) {
@@ -133,5 +142,5 @@ func (c *Client) List(ctx context.Context, builder *ListPaymentRequestsRequestBu
 		endpoint += "?" + params.Encode()
 	}
 
-	return net.Get[[]PaymentRequest](ctx, c.Client, c.Secret, endpoint, c.BaseURL)
+	return net.Get[[]types.PaymentRequest](ctx, c.Client, c.Secret, endpoint, c.BaseURL)
 }

@@ -8,9 +8,9 @@ import (
 )
 
 // VerifyPaymentRequestResponse represents the response from verifying a payment request
-type VerifyPaymentRequestResponse = types.Response[PaymentRequest]
+type VerifyPaymentRequestResponse = types.Response[types.PaymentRequest]
 
 // Verify verifies details of a payment request on your integration
 func (c *Client) Verify(ctx context.Context, code string) (*VerifyPaymentRequestResponse, error) {
-	return net.Get[PaymentRequest](ctx, c.Client, c.Secret, basePath+"/verify/"+code, c.BaseURL)
+	return net.Get[types.PaymentRequest](ctx, c.Client, c.Secret, basePath+"/verify/"+code, c.BaseURL)
 }
