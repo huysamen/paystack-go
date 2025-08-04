@@ -7,8 +7,9 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type ArchivePaymentRequestResponse = types.Response[any]
+type ArchiveResponseData = any
+type ArchiveResponse = types.Response[ArchiveResponseData]
 
-func (c *Client) Archive(ctx context.Context, code string) (*ArchivePaymentRequestResponse, error) {
-	return net.Post[any, any](ctx, c.Client, c.Secret, basePath+"/archive/"+code, nil, c.BaseURL)
+func (c *Client) Archive(ctx context.Context, code string) (*ArchiveResponse, error) {
+	return net.Post[any, ArchiveResponseData](ctx, c.Client, c.Secret, basePath+"/archive/"+code, nil, c.BaseURL)
 }

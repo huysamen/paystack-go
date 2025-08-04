@@ -7,8 +7,9 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type PaymentRequestTotalsResponse = types.Response[types.PaymentRequestTotals]
+type TotalsResponseData = types.PaymentRequestTotals
+type TotalsResponse = types.Response[TotalsResponseData]
 
-func (c *Client) GetTotals(ctx context.Context) (*PaymentRequestTotalsResponse, error) {
-	return net.Get[types.PaymentRequestTotals](ctx, c.Client, c.Secret, basePath+"/totals", c.BaseURL)
+func (c *Client) GetTotals(ctx context.Context) (*TotalsResponse, error) {
+	return net.Get[TotalsResponseData](ctx, c.Client, c.Secret, basePath+"/totals", c.BaseURL)
 }

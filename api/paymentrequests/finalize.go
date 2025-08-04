@@ -7,39 +7,33 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type FinalizePaymentRequestRequest struct {
+type finalizeRequest struct {
 	SendNotification *bool `json:"send_notification,omitempty"`
 }
 
-type FinalizePaymentRequestRequestBuilder struct {
-	req *FinalizePaymentRequestRequest
+type FinalizeRequestBuilder struct {
+	req *finalizeRequest
 }
 
-func NewFinalizePaymentRequestRequest() *FinalizePaymentRequestRequestBuilder {
-	return &FinalizePaymentRequestRequestBuilder{
-		req: &FinalizePaymentRequestRequest{},
+func NewFinalizeRequestBuilder() *FinalizeRequestBuilder {
+	return &FinalizeRequestBuilder{
+		req: &finalizeRequest{},
 	}
 }
 
-func (b *FinalizePaymentRequestRequestBuilder) SendNotification(sendNotification bool) *FinalizePaymentRequestRequestBuilder {
+func (b *FinalizeRequestBuilder) SendNotification(sendNotification bool) *FinalizeRequestBuilder {
 	b.req.SendNotification = &sendNotification
 
 	return b
 }
 
-func (b *FinalizePaymentRequestRequestBuilder) Build() *FinalizePaymentRequestRequest {
+func (b *FinalizeRequestBuilder) Build() *finalizeRequest {
 	return b.req
 }
 
-type FinalizePaymentRequestResponse = types.Response[types.PaymentRequest]
+type FinalizeResponseData = types.PaymentRequest
+type FinalizeResponse = types.Response[FinalizeResponseData]
 
-func (c *Client) Finalize(ctx context.Context, code string, builder *FinalizePaymentRequestRequestBuilder) (*FinalizePaymentRequestResponse, error) {
-	var req *FinalizePaymentRequestRequest
-	if builder != nil {
-		req = builder.Build()
-	} else {
-		req = &FinalizePaymentRequestRequest{}
-	}
-
-	return net.Post[FinalizePaymentRequestRequest, types.PaymentRequest](ctx, c.Client, c.Secret, basePath+"/finalize/"+code, req, c.BaseURL)
+func (c *Client) Finalize(ctx context.Context, code string, builder FinalizeRequestBuilder) (*FinalizeResponse, error) {
+	return net.Post[finalizeRequest, FinalizeResponseData](ctx, c.Client, c.Secret, basePath+"/finalize/"+code, builder.Build(), c.BaseURL)
 }

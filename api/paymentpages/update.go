@@ -55,6 +55,6 @@ func (b *UpdateRequestBuilder) Build() *updateRequest {
 type UpdateResponseData = types.PaymentPage
 type UpdateResponse = types.Response[UpdateResponseData]
 
-func (c *Client) Update(ctx context.Context, idOrSlug string, builder *UpdateRequestBuilder) (*UpdateResponse, error) {
+func (c *Client) Update(ctx context.Context, idOrSlug string, builder UpdateRequestBuilder) (*UpdateResponse, error) {
 	return net.Put[updateRequest, UpdateResponseData](ctx, c.Client, c.Secret, basePath+"/"+idOrSlug, builder.Build(), c.BaseURL)
 }
