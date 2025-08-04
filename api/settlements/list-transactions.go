@@ -9,60 +9,61 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type SettlementTransactionListRequest struct {
+type listTransactionsRequest struct {
 	PerPage *int       `json:"perPage,omitempty"` // Optional: records per page (default: 50)
 	Page    *int       `json:"page,omitempty"`    // Optional: page number (default: 1)
 	From    *time.Time `json:"from,omitempty"`    // Optional: start date filter
 	To      *time.Time `json:"to,omitempty"`      // Optional: end date filter
 }
 
-type ListSettlementTransactionsRequestBuilder struct {
-	req *SettlementTransactionListRequest
+type ListTransactionsRequestBuilder struct {
+	req *listTransactionsRequest
 }
 
-func NewSettlementTransactionListRequest() *ListSettlementTransactionsRequestBuilder {
-	return &ListSettlementTransactionsRequestBuilder{
-		req: &SettlementTransactionListRequest{},
+func NewListTransactionsRequestBuilder() *ListTransactionsRequestBuilder {
+	return &ListTransactionsRequestBuilder{
+		req: &listTransactionsRequest{},
 	}
 }
 
-func (b *ListSettlementTransactionsRequestBuilder) PerPage(perPage int) *ListSettlementTransactionsRequestBuilder {
+func (b *ListTransactionsRequestBuilder) PerPage(perPage int) *ListTransactionsRequestBuilder {
 	b.req.PerPage = &perPage
 
 	return b
 }
 
-func (b *ListSettlementTransactionsRequestBuilder) Page(page int) *ListSettlementTransactionsRequestBuilder {
+func (b *ListTransactionsRequestBuilder) Page(page int) *ListTransactionsRequestBuilder {
 	b.req.Page = &page
 
 	return b
 }
 
-func (b *ListSettlementTransactionsRequestBuilder) DateRange(from, to time.Time) *ListSettlementTransactionsRequestBuilder {
+func (b *ListTransactionsRequestBuilder) DateRange(from, to time.Time) *ListTransactionsRequestBuilder {
 	b.req.From = &from
 	b.req.To = &to
 
 	return b
 }
 
-func (b *ListSettlementTransactionsRequestBuilder) From(from time.Time) *ListSettlementTransactionsRequestBuilder {
+func (b *ListTransactionsRequestBuilder) From(from time.Time) *ListTransactionsRequestBuilder {
 	b.req.From = &from
 
 	return b
 }
 
-func (b *ListSettlementTransactionsRequestBuilder) To(to time.Time) *ListSettlementTransactionsRequestBuilder {
+func (b *ListTransactionsRequestBuilder) To(to time.Time) *ListTransactionsRequestBuilder {
 	b.req.To = &to
 
 	return b
 }
 
-func (b *ListSettlementTransactionsRequestBuilder) Build() *SettlementTransactionListRequest {
+func (b *ListTransactionsRequestBuilder) Build() *listTransactionsRequest {
 	return b.req
 }
 
-type ListSettlementTransactionsResponse = types.Response[[]types.SettlementTransaction]
+type ListTransactionsResponseData = []types.SettlementTransaction
+type ListTransactionsResponse = types.Response[ListTransactionsResponseData]
 
-func (c *Client) ListTransactions(ctx context.Context, settlementID string, builder *ListSettlementTransactionsRequestBuilder) (*ListSettlementTransactionsResponse, error) {
-	return net.Get[[]types.SettlementTransaction](ctx, c.Client, c.Secret, fmt.Sprintf("%s/%s/transactions", basePath, settlementID), c.BaseURL)
+func (c *Client) ListTransactions(ctx context.Context, settlementID string, builder ListTransactionsRequestBuilder) (*ListTransactionsResponse, error) {
+	return net.Get[ListTransactionsResponseData](ctx, c.Client, c.Secret, fmt.Sprintf("%s/%s/transactions", basePath, settlementID), c.BaseURL)
 }

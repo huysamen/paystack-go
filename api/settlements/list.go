@@ -8,7 +8,7 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type SettlementListRequest struct {
+type listRequest struct {
 	PerPage    *int                    `json:"perPage,omitempty"`    // Optional: records per page (default: 50)
 	Page       *int                    `json:"page,omitempty"`       // Optional: page number (default: 1)
 	Status     *types.SettlementStatus `json:"status,omitempty"`     // Optional: filter by status
@@ -17,72 +17,73 @@ type SettlementListRequest struct {
 	To         *time.Time              `json:"to,omitempty"`         // Optional: end date filter
 }
 
-type SettlementListRequestBuilder struct {
-	req *SettlementListRequest
+type ListRequestBuilder struct {
+	req *listRequest
 }
 
-func NewSettlementListRequest() *SettlementListRequestBuilder {
-	return &SettlementListRequestBuilder{
-		req: &SettlementListRequest{},
+func NewListRequestBuilder() *ListRequestBuilder {
+	return &ListRequestBuilder{
+		req: &listRequest{},
 	}
 }
 
-func (b *SettlementListRequestBuilder) PerPage(perPage int) *SettlementListRequestBuilder {
+func (b *ListRequestBuilder) PerPage(perPage int) *ListRequestBuilder {
 	b.req.PerPage = &perPage
 
 	return b
 }
 
-func (b *SettlementListRequestBuilder) Page(page int) *SettlementListRequestBuilder {
+func (b *ListRequestBuilder) Page(page int) *ListRequestBuilder {
 	b.req.Page = &page
 
 	return b
 }
 
-func (b *SettlementListRequestBuilder) Status(status types.SettlementStatus) *SettlementListRequestBuilder {
+func (b *ListRequestBuilder) Status(status types.SettlementStatus) *ListRequestBuilder {
 	b.req.Status = &status
 
 	return b
 }
 
-func (b *SettlementListRequestBuilder) Subaccount(subaccount string) *SettlementListRequestBuilder {
+func (b *ListRequestBuilder) Subaccount(subaccount string) *ListRequestBuilder {
 	b.req.Subaccount = &subaccount
 
 	return b
 }
 
-func (b *SettlementListRequestBuilder) MainAccountOnly() *SettlementListRequestBuilder {
+func (b *ListRequestBuilder) MainAccountOnly() *ListRequestBuilder {
 	none := "none"
 	b.req.Subaccount = &none
 
 	return b
 }
 
-func (b *SettlementListRequestBuilder) DateRange(from, to time.Time) *SettlementListRequestBuilder {
+func (b *ListRequestBuilder) DateRange(from, to time.Time) *ListRequestBuilder {
 	b.req.From = &from
 	b.req.To = &to
 
 	return b
 }
 
-func (b *SettlementListRequestBuilder) From(from time.Time) *SettlementListRequestBuilder {
+func (b *ListRequestBuilder) From(from time.Time) *ListRequestBuilder {
 	b.req.From = &from
 
 	return b
 }
 
-func (b *SettlementListRequestBuilder) To(to time.Time) *SettlementListRequestBuilder {
+func (b *ListRequestBuilder) To(to time.Time) *ListRequestBuilder {
 	b.req.To = &to
 
 	return b
 }
 
-func (b *SettlementListRequestBuilder) Build() *SettlementListRequest {
+func (b *ListRequestBuilder) Build() *listRequest {
 	return b.req
 }
 
-type SettlementListResponse = types.Response[[]types.Settlement]
+type ListResponseData = []types.Settlement
+type ListResponse = types.Response[ListResponseData]
 
-func (c *Client) List(ctx context.Context, builder *SettlementListRequestBuilder) (*SettlementListResponse, error) {
-	return net.Get[[]types.Settlement](ctx, c.Client, c.Secret, basePath, c.BaseURL)
+func (c *Client) List(ctx context.Context, builder ListRequestBuilder) (*ListResponse, error) {
+	return net.Get[ListResponseData](ctx, c.Client, c.Secret, basePath, c.BaseURL)
 }
