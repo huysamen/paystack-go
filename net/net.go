@@ -87,12 +87,14 @@ func Get[O any](ctx context.Context, client *http.Client, secret, path string, b
 // Post makes a POST request with context support
 func Post[I any, O any](ctx context.Context, client *http.Client, secret, path string, payload *I, baseURL ...string) (*types.Response[O], error) {
 	url := getBaseURL(baseURL...)
+
 	return putOrPost[I, O](ctx, client, http.MethodPost, secret, url+path, payload)
 }
 
 // Put makes a PUT request with context support
 func Put[I any, O any](ctx context.Context, client *http.Client, secret, path string, payload *I, baseURL ...string) (*types.Response[O], error) {
 	url := getBaseURL(baseURL...)
+
 	return putOrPost[I, O](ctx, client, http.MethodPut, secret, url+path, payload)
 }
 

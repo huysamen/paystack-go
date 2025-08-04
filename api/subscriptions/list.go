@@ -33,24 +33,28 @@ func NewSubscriptionListRequest() *SubscriptionListRequestBuilder {
 // PerPage sets the number of records per page
 func (b *SubscriptionListRequestBuilder) PerPage(perPage int) *SubscriptionListRequestBuilder {
 	b.req.PerPage = optional.Int(perPage)
+
 	return b
 }
 
 // Page sets the page number
 func (b *SubscriptionListRequestBuilder) Page(page int) *SubscriptionListRequestBuilder {
 	b.req.Page = optional.Int(page)
+
 	return b
 }
 
 // Customer filters by customer ID
 func (b *SubscriptionListRequestBuilder) Customer(customer int) *SubscriptionListRequestBuilder {
 	b.req.Customer = optional.Int(customer)
+
 	return b
 }
 
 // Plan filters by plan ID
 func (b *SubscriptionListRequestBuilder) Plan(plan int) *SubscriptionListRequestBuilder {
 	b.req.Plan = optional.Int(plan)
+
 	return b
 }
 
@@ -79,7 +83,7 @@ func (r *SubscriptionListRequest) toQuery() string {
 }
 
 // SubscriptionListResponse represents the response from listing subscriptions
-type SubscriptionListResponse = types.Response[[]Subscription]
+type SubscriptionListResponse = types.Response[[]types.Subscription]
 
 // List lists subscriptions using a builder (fluent interface)
 func (c *Client) List(ctx context.Context, builder *SubscriptionListRequestBuilder) (*SubscriptionListResponse, error) {
@@ -92,5 +96,5 @@ func (c *Client) List(ctx context.Context, builder *SubscriptionListRequestBuild
 		}
 	}
 
-	return net.Get[[]Subscription](ctx, c.Client, c.Secret, path, c.BaseURL)
+	return net.Get[[]types.Subscription](ctx, c.Client, c.Secret, path, c.BaseURL)
 }

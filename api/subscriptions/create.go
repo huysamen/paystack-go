@@ -34,12 +34,14 @@ func NewSubscriptionCreateRequest(customer, plan string) *SubscriptionCreateRequ
 // Authorization sets the authorization code
 func (b *SubscriptionCreateRequestBuilder) Authorization(authorization string) *SubscriptionCreateRequestBuilder {
 	b.req.Authorization = &authorization
+
 	return b
 }
 
 // StartDate sets the start date
 func (b *SubscriptionCreateRequestBuilder) StartDate(startDate time.Time) *SubscriptionCreateRequestBuilder {
 	b.req.StartDate = &startDate
+
 	return b
 }
 
@@ -49,8 +51,8 @@ func (b *SubscriptionCreateRequestBuilder) Build() *SubscriptionCreateRequest {
 }
 
 // SubscriptionCreateResponse represents the response from creating a subscription.
-type SubscriptionCreateResponse = types.Response[Subscription]
+type SubscriptionCreateResponse = types.Response[types.Subscription]
 
 func (c *Client) Create(ctx context.Context, builder *SubscriptionCreateRequestBuilder) (*SubscriptionCreateResponse, error) {
-	return net.Post[SubscriptionCreateRequest, Subscription](ctx, c.Client, c.Secret, basePath, builder.Build(), c.BaseURL)
+	return net.Post[SubscriptionCreateRequest, types.Subscription](ctx, c.Client, c.Secret, basePath, builder.Build(), c.BaseURL)
 }

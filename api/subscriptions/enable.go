@@ -34,12 +34,8 @@ func (b *SubscriptionEnableRequestBuilder) Build() *SubscriptionEnableRequest {
 }
 
 // SubscriptionEnableResponse represents the response from enabling a subscription.
-type SubscriptionEnableResponse = types.Response[struct {
-	Message string `json:"message"`
-}]
+type SubscriptionEnableResponse = types.Response[any]
 
 func (c *Client) Enable(ctx context.Context, builder *SubscriptionEnableRequestBuilder) (*SubscriptionEnableResponse, error) {
-	return net.Post[SubscriptionEnableRequest, struct {
-		Message string `json:"message"`
-	}](ctx, c.Client, c.Secret, basePath+"/enable", builder.Build(), c.BaseURL)
+	return net.Post[SubscriptionEnableRequest, any](ctx, c.Client, c.Secret, basePath+"/enable", builder.Build(), c.BaseURL)
 }

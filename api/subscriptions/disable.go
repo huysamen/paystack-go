@@ -34,12 +34,8 @@ func (b *SubscriptionDisableRequestBuilder) Build() *SubscriptionDisableRequest 
 }
 
 // SubscriptionDisableResponse represents the response from disabling a subscription.
-type SubscriptionDisableResponse = types.Response[struct {
-	Message string `json:"message"`
-}]
+type SubscriptionDisableResponse = types.Response[any]
 
 func (c *Client) Disable(ctx context.Context, builder *SubscriptionDisableRequestBuilder) (*SubscriptionDisableResponse, error) {
-	return net.Post[SubscriptionDisableRequest, struct {
-		Message string `json:"message"`
-	}](ctx, c.Client, c.Secret, basePath+"/disable", builder.Build(), c.BaseURL)
+	return net.Post[SubscriptionDisableRequest, any](ctx, c.Client, c.Secret, basePath+"/disable", builder.Build(), c.BaseURL)
 }
