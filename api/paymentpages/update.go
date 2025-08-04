@@ -7,53 +7,54 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type UpdatePaymentPageRequest struct {
+type updateRequest struct {
 	Name        string `json:"name,omitempty"`
 	Description string `json:"description,omitempty"`
 	Amount      *int   `json:"amount,omitempty"`
 	Active      *bool  `json:"active,omitempty"`
 }
 
-type UpdatePaymentPageRequestBuilder struct {
-	req *UpdatePaymentPageRequest
+type UpdateRequestBuilder struct {
+	req *updateRequest
 }
 
-func NewUpdatePaymentPageRequest() *UpdatePaymentPageRequestBuilder {
-	return &UpdatePaymentPageRequestBuilder{
-		req: &UpdatePaymentPageRequest{},
+func NewUpdateRequestBuilder() *UpdateRequestBuilder {
+	return &UpdateRequestBuilder{
+		req: &updateRequest{},
 	}
 }
 
-func (b *UpdatePaymentPageRequestBuilder) Name(name string) *UpdatePaymentPageRequestBuilder {
+func (b *UpdateRequestBuilder) Name(name string) *UpdateRequestBuilder {
 	b.req.Name = name
 
 	return b
 }
 
-func (b *UpdatePaymentPageRequestBuilder) Description(description string) *UpdatePaymentPageRequestBuilder {
+func (b *UpdateRequestBuilder) Description(description string) *UpdateRequestBuilder {
 	b.req.Description = description
 
 	return b
 }
 
-func (b *UpdatePaymentPageRequestBuilder) Amount(amount int) *UpdatePaymentPageRequestBuilder {
+func (b *UpdateRequestBuilder) Amount(amount int) *UpdateRequestBuilder {
 	b.req.Amount = &amount
 
 	return b
 }
 
-func (b *UpdatePaymentPageRequestBuilder) Active(active bool) *UpdatePaymentPageRequestBuilder {
+func (b *UpdateRequestBuilder) Active(active bool) *UpdateRequestBuilder {
 	b.req.Active = &active
 
 	return b
 }
 
-func (b *UpdatePaymentPageRequestBuilder) Build() *UpdatePaymentPageRequest {
+func (b *UpdateRequestBuilder) Build() *updateRequest {
 	return b.req
 }
 
-type UpdatePaymentPageResponse = types.Response[types.PaymentPage]
+type UpdateResponseData = types.PaymentPage
+type UpdateResponse = types.Response[UpdateResponseData]
 
-func (c *Client) Update(ctx context.Context, idOrSlug string, builder *UpdatePaymentPageRequestBuilder) (*UpdatePaymentPageResponse, error) {
-	return net.Put[UpdatePaymentPageRequest, types.PaymentPage](ctx, c.Client, c.Secret, basePath+"/"+idOrSlug, builder.Build(), c.BaseURL)
+func (c *Client) Update(ctx context.Context, idOrSlug string, builder *UpdateRequestBuilder) (*UpdateResponse, error) {
+	return net.Put[updateRequest, UpdateResponseData](ctx, c.Client, c.Secret, basePath+"/"+idOrSlug, builder.Build(), c.BaseURL)
 }

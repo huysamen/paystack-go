@@ -13,7 +13,7 @@ type CustomField struct {
 	Required     bool   `json:"required"`
 }
 
-type CreatePaymentPageRequest struct {
+type createRequest struct {
 	Name              string          `json:"name"`
 	Description       string          `json:"description,omitempty"`
 	Amount            *int            `json:"amount,omitempty"`
@@ -31,103 +31,103 @@ type CreatePaymentPageRequest struct {
 	CustomFields      []CustomField   `json:"custom_fields,omitempty"`
 }
 
-type CreatePaymentPageRequestBuilder struct {
-	req *CreatePaymentPageRequest
+type CreateRequestBuilder struct {
+	req *createRequest
 }
 
-func NewCreatePaymentPageRequest(name string) *CreatePaymentPageRequestBuilder {
-	return &CreatePaymentPageRequestBuilder{
-		req: &CreatePaymentPageRequest{
+func NewCreateRequestBuilder(name string) *CreateRequestBuilder {
+	return &CreateRequestBuilder{
+		req: &createRequest{
 			Name: name,
 		},
 	}
 }
 
-func (b *CreatePaymentPageRequestBuilder) Description(description string) *CreatePaymentPageRequestBuilder {
+func (b *CreateRequestBuilder) Description(description string) *CreateRequestBuilder {
 	b.req.Description = description
 
 	return b
 }
 
-func (b *CreatePaymentPageRequestBuilder) Amount(amount int) *CreatePaymentPageRequestBuilder {
+func (b *CreateRequestBuilder) Amount(amount int) *CreateRequestBuilder {
 	b.req.Amount = &amount
 
 	return b
 }
 
-func (b *CreatePaymentPageRequestBuilder) Currency(currency string) *CreatePaymentPageRequestBuilder {
+func (b *CreateRequestBuilder) Currency(currency string) *CreateRequestBuilder {
 	b.req.Currency = currency
 
 	return b
 }
 
-func (b *CreatePaymentPageRequestBuilder) Slug(slug string) *CreatePaymentPageRequestBuilder {
+func (b *CreateRequestBuilder) Slug(slug string) *CreateRequestBuilder {
 	b.req.Slug = slug
 
 	return b
 }
 
-func (b *CreatePaymentPageRequestBuilder) Type(pageType string) *CreatePaymentPageRequestBuilder {
+func (b *CreateRequestBuilder) Type(pageType string) *CreateRequestBuilder {
 	b.req.Type = pageType
 
 	return b
 }
 
-func (b *CreatePaymentPageRequestBuilder) Plan(plan string) *CreatePaymentPageRequestBuilder {
+func (b *CreateRequestBuilder) Plan(plan string) *CreateRequestBuilder {
 	b.req.Plan = plan
 
 	return b
 }
 
-func (b *CreatePaymentPageRequestBuilder) FixedAmount(fixed bool) *CreatePaymentPageRequestBuilder {
+func (b *CreateRequestBuilder) FixedAmount(fixed bool) *CreateRequestBuilder {
 	b.req.FixedAmount = &fixed
 
 	return b
 }
 
-func (b *CreatePaymentPageRequestBuilder) SplitCode(splitCode string) *CreatePaymentPageRequestBuilder {
+func (b *CreateRequestBuilder) SplitCode(splitCode string) *CreateRequestBuilder {
 	b.req.SplitCode = splitCode
 
 	return b
 }
 
-func (b *CreatePaymentPageRequestBuilder) Metadata(metadata *types.Metadata) *CreatePaymentPageRequestBuilder {
+func (b *CreateRequestBuilder) Metadata(metadata *types.Metadata) *CreateRequestBuilder {
 	b.req.Metadata = metadata
 
 	return b
 }
 
-func (b *CreatePaymentPageRequestBuilder) RedirectURL(url string) *CreatePaymentPageRequestBuilder {
+func (b *CreateRequestBuilder) RedirectURL(url string) *CreateRequestBuilder {
 	b.req.RedirectURL = url
 
 	return b
 }
 
-func (b *CreatePaymentPageRequestBuilder) SuccessMessage(message string) *CreatePaymentPageRequestBuilder {
+func (b *CreateRequestBuilder) SuccessMessage(message string) *CreateRequestBuilder {
 	b.req.SuccessMessage = message
 
 	return b
 }
 
-func (b *CreatePaymentPageRequestBuilder) NotificationEmail(email string) *CreatePaymentPageRequestBuilder {
+func (b *CreateRequestBuilder) NotificationEmail(email string) *CreateRequestBuilder {
 	b.req.NotificationEmail = email
 
 	return b
 }
 
-func (b *CreatePaymentPageRequestBuilder) CollectPhone(collect bool) *CreatePaymentPageRequestBuilder {
+func (b *CreateRequestBuilder) CollectPhone(collect bool) *CreateRequestBuilder {
 	b.req.CollectPhone = &collect
 
 	return b
 }
 
-func (b *CreatePaymentPageRequestBuilder) CustomFields(fields []CustomField) *CreatePaymentPageRequestBuilder {
+func (b *CreateRequestBuilder) CustomFields(fields []CustomField) *CreateRequestBuilder {
 	b.req.CustomFields = fields
 
 	return b
 }
 
-func (b *CreatePaymentPageRequestBuilder) AddCustomField(displayName, variableName string, required bool) *CreatePaymentPageRequestBuilder {
+func (b *CreateRequestBuilder) AddCustomField(displayName, variableName string, required bool) *CreateRequestBuilder {
 	if b.req.CustomFields == nil {
 		b.req.CustomFields = []CustomField{}
 	}
@@ -141,12 +141,13 @@ func (b *CreatePaymentPageRequestBuilder) AddCustomField(displayName, variableNa
 	return b
 }
 
-func (b *CreatePaymentPageRequestBuilder) Build() *CreatePaymentPageRequest {
+func (b *CreateRequestBuilder) Build() *createRequest {
 	return b.req
 }
 
-type CreatePaymentPageResponse = types.Response[types.PaymentPage]
+type CreateResponseData = types.PaymentPage
+type CreateResponse = types.Response[CreateResponseData]
 
-func (c *Client) Create(ctx context.Context, builder *CreatePaymentPageRequestBuilder) (*CreatePaymentPageResponse, error) {
-	return net.Post[CreatePaymentPageRequest, types.PaymentPage](ctx, c.Client, c.Secret, basePath, builder.Build(), c.BaseURL)
+func (c *Client) Create(ctx context.Context, builder CreateRequestBuilder) (*CreateResponse, error) {
+	return net.Post[createRequest, CreateResponseData](ctx, c.Client, c.Secret, basePath, builder.Build(), c.BaseURL)
 }

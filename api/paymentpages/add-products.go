@@ -8,40 +8,41 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type AddProductsToPageRequest struct {
+type addProductsRequest struct {
 	Product []int `json:"product"`
 }
 
-type AddProductsToPageRequestBuilder struct {
-	req *AddProductsToPageRequest
+type AddProductsRequestBuilder struct {
+	req *addProductsRequest
 }
 
-func NewAddProductsToPageRequest() *AddProductsToPageRequestBuilder {
-	return &AddProductsToPageRequestBuilder{
-		req: &AddProductsToPageRequest{
+func NewAddProductsRequestBuilder() *AddProductsRequestBuilder {
+	return &AddProductsRequestBuilder{
+		req: &addProductsRequest{
 			Product: []int{},
 		},
 	}
 }
 
-func (b *AddProductsToPageRequestBuilder) Products(productIDs []int) *AddProductsToPageRequestBuilder {
+func (b *AddProductsRequestBuilder) Products(productIDs []int) *AddProductsRequestBuilder {
 	b.req.Product = productIDs
 
 	return b
 }
 
-func (b *AddProductsToPageRequestBuilder) AddProduct(productID int) *AddProductsToPageRequestBuilder {
+func (b *AddProductsRequestBuilder) AddProduct(productID int) *AddProductsRequestBuilder {
 	b.req.Product = append(b.req.Product, productID)
 
 	return b
 }
 
-func (b *AddProductsToPageRequestBuilder) Build() *AddProductsToPageRequest {
+func (b *AddProductsRequestBuilder) Build() *addProductsRequest {
 	return b.req
 }
 
-type AddProductsToPageResponse = types.Response[types.PaymentPage]
+type AddProductsResponseData = types.PaymentPage
+type AddProductsResponse = types.Response[AddProductsResponseData]
 
-func (c *Client) AddProducts(ctx context.Context, pageID int, builder *AddProductsToPageRequestBuilder) (*AddProductsToPageResponse, error) {
-	return net.Post[AddProductsToPageRequest, types.PaymentPage](ctx, c.Client, c.Secret, basePath+"/"+strconv.Itoa(pageID)+"/product", builder.Build(), c.BaseURL)
+func (c *Client) AddProducts(ctx context.Context, pageID int, builder AddProductsRequestBuilder) (*AddProductsResponse, error) {
+	return net.Post[addProductsRequest, AddProductsResponseData](ctx, c.Client, c.Secret, basePath+"/"+strconv.Itoa(pageID)+"/product", builder.Build(), c.BaseURL)
 }

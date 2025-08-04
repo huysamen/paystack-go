@@ -7,8 +7,9 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type FetchPaymentPageResponse = types.Response[types.PaymentPage]
+type FetchResponseData = types.PaymentPage
+type FetchResponse = types.Response[FetchResponseData]
 
-func (c *Client) Fetch(ctx context.Context, idOrSlug string) (*FetchPaymentPageResponse, error) {
-	return net.Get[types.PaymentPage](ctx, c.Client, c.Secret, basePath+"/"+idOrSlug, c.BaseURL)
+func (c *Client) Fetch(ctx context.Context, idOrSlug string) (*FetchResponse, error) {
+	return net.Get[FetchResponseData](ctx, c.Client, c.Secret, basePath+"/"+idOrSlug, c.BaseURL)
 }

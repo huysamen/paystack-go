@@ -7,8 +7,9 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type CheckSlugAvailabilityResponse = types.Response[any]
+type CheckSlugAvailabilityResponseData = any
+type CheckSlugAvailabilityResponse = types.Response[CheckSlugAvailabilityResponseData]
 
 func (c *Client) CheckSlugAvailability(ctx context.Context, slug string) (*CheckSlugAvailabilityResponse, error) {
-	return net.Get[any](ctx, c.Client, c.Secret, basePath+"/check_slug_availability/"+slug, c.BaseURL)
+	return net.Get[CheckSlugAvailabilityResponseData](ctx, c.Client, c.Secret, basePath+"/check_slug_availability/"+slug, c.BaseURL)
 }

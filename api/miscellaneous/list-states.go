@@ -38,7 +38,7 @@ func (r *listStatesRequest) toQuery() string {
 type ListStatesResponseData = []types.State
 type ListStatesResponse = types.Response[ListStatesResponseData]
 
-func (c *Client) ListStates(ctx context.Context, builder *ListStatesRequestBuilder) (*ListStatesResponse, error) {
+func (c *Client) ListStates(ctx context.Context, builder ListStatesRequestBuilder) (*ListStatesResponse, error) {
 	req := builder.Build()
 	path := statesPath
 
