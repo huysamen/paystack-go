@@ -16,42 +16,46 @@ type ListMandateAuthorizationsRequest struct {
 	PerPage int                        `json:"per_page,omitempty"`
 }
 
-type ListMandateAuthorizationsResponse = types.Response[[]MandateAuthorization]
-
 // ListMandateAuthorizationsBuilder builds requests for listing mandate authorizations
 type ListMandateAuthorizationsBuilder struct {
-	request *ListMandateAuthorizationsRequest
+	req *ListMandateAuthorizationsRequest
 }
 
 // NewListMandateAuthorizationsBuilder creates a new builder for listing mandate authorizations
 func NewListMandateAuthorizationsBuilder() *ListMandateAuthorizationsBuilder {
 	return &ListMandateAuthorizationsBuilder{
-		request: &ListMandateAuthorizationsRequest{},
+		req: &ListMandateAuthorizationsRequest{},
 	}
 }
 
 // Cursor sets the cursor for pagination
 func (b *ListMandateAuthorizationsBuilder) Cursor(cursor string) *ListMandateAuthorizationsBuilder {
-	b.request.Cursor = cursor
+	b.req.Cursor = cursor
+
 	return b
 }
 
 // Status sets the status filter for mandate authorizations
 func (b *ListMandateAuthorizationsBuilder) Status(status MandateAuthorizationStatus) *ListMandateAuthorizationsBuilder {
-	b.request.Status = status
+	b.req.Status = status
+
 	return b
 }
 
 // PerPage sets the number of items per page
 func (b *ListMandateAuthorizationsBuilder) PerPage(perPage int) *ListMandateAuthorizationsBuilder {
-	b.request.PerPage = perPage
+	b.req.PerPage = perPage
+
 	return b
 }
 
 // Build returns the built request
 func (b *ListMandateAuthorizationsBuilder) Build() *ListMandateAuthorizationsRequest {
-	return b.request
+	return b.req
 }
+
+// MandateAuthorization represents a direct debit mandate authorization
+type ListMandateAuthorizationsResponse = types.Response[[]MandateAuthorization]
 
 // ListMandateAuthorizations retrieves a list of direct debit mandate authorizations
 func (c *Client) ListMandateAuthorizations(ctx context.Context, builder *ListMandateAuthorizationsBuilder) (*ListMandateAuthorizationsResponse, error) {
