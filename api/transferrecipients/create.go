@@ -39,24 +39,28 @@ func NewTransferRecipientCreateRequest(recipientType types.TransferRecipientType
 // Description sets the recipient description
 func (b *TransferRecipientCreateRequestBuilder) Description(description string) *TransferRecipientCreateRequestBuilder {
 	b.req.Description = &description
+
 	return b
 }
 
 // Currency sets the currency
 func (b *TransferRecipientCreateRequestBuilder) Currency(currency string) *TransferRecipientCreateRequestBuilder {
 	b.req.Currency = &currency
+
 	return b
 }
 
 // AuthorizationCode sets the authorization code
 func (b *TransferRecipientCreateRequestBuilder) AuthorizationCode(authCode string) *TransferRecipientCreateRequestBuilder {
 	b.req.AuthorizationCode = &authCode
+
 	return b
 }
 
 // Metadata sets the recipient metadata
 func (b *TransferRecipientCreateRequestBuilder) Metadata(metadata map[string]any) *TransferRecipientCreateRequestBuilder {
 	b.req.Metadata = metadata
+
 	return b
 }
 

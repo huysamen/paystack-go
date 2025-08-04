@@ -31,6 +31,7 @@ func NewTransferRecipientUpdateRequest(name string) *TransferRecipientUpdateRequ
 // Email sets the recipient email
 func (b *TransferRecipientUpdateRequestBuilder) Email(email string) *TransferRecipientUpdateRequestBuilder {
 	b.req.Email = &email
+
 	return b
 }
 

@@ -33,24 +33,28 @@ func NewTransferRecipientListRequest() *TransferRecipientListRequestBuilder {
 // PerPage sets the number of recipients per page
 func (b *TransferRecipientListRequestBuilder) PerPage(perPage int) *TransferRecipientListRequestBuilder {
 	b.req.PerPage = &perPage
+
 	return b
 }
 
 // Page sets the page number
 func (b *TransferRecipientListRequestBuilder) Page(page int) *TransferRecipientListRequestBuilder {
 	b.req.Page = &page
+
 	return b
 }
 
 // From sets the start date filter
 func (b *TransferRecipientListRequestBuilder) From(from time.Time) *TransferRecipientListRequestBuilder {
 	b.req.From = &from
+
 	return b
 }
 
 // To sets the end date filter
 func (b *TransferRecipientListRequestBuilder) To(to time.Time) *TransferRecipientListRequestBuilder {
 	b.req.To = &to
+
 	return b
 }
 
@@ -58,6 +62,7 @@ func (b *TransferRecipientListRequestBuilder) To(to time.Time) *TransferRecipien
 func (b *TransferRecipientListRequestBuilder) DateRange(from, to time.Time) *TransferRecipientListRequestBuilder {
 	b.req.From = &from
 	b.req.To = &to
+
 	return b
 }
 
