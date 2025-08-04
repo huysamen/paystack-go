@@ -9,14 +9,14 @@ import (
 
 // TransferRecipientCreateRequest represents the request to create a transfer recipient
 type TransferRecipientCreateRequest struct {
-	Type              types.RecipientType `json:"type"`                         // Required: nuban, ghipss, mobile_money, basa
-	Name              string              `json:"name"`                         // Required: recipient's name
-	AccountNumber     string              `json:"account_number"`               // Required for all types except authorization
-	BankCode          string              `json:"bank_code"`                    // Required for all types except authorization
-	Description       *string             `json:"description,omitempty"`        // Optional: description
-	Currency          *string             `json:"currency,omitempty"`           // Optional: currency
-	AuthorizationCode *string             `json:"authorization_code,omitempty"` // Optional: authorization code
-	Metadata          map[string]any      `json:"metadata,omitempty"`           // Optional: additional data
+	Type              types.TransferRecipientType `json:"type"`                         // Required: nuban, ghipss, mobile_money, basa
+	Name              string                      `json:"name"`                         // Required: recipient's name
+	AccountNumber     string                      `json:"account_number"`               // Required for all types except authorization
+	BankCode          string                      `json:"bank_code"`                    // Required for all types except authorization
+	Description       *string                     `json:"description,omitempty"`        // Optional: description
+	Currency          *string                     `json:"currency,omitempty"`           // Optional: currency
+	AuthorizationCode *string                     `json:"authorization_code,omitempty"` // Optional: authorization code
+	Metadata          map[string]any              `json:"metadata,omitempty"`           // Optional: additional data
 }
 
 // TransferRecipientCreateRequestBuilder provides a fluent interface for building TransferRecipientCreateRequest
@@ -25,7 +25,7 @@ type TransferRecipientCreateRequestBuilder struct {
 }
 
 // NewTransferRecipientCreateRequest creates a new builder for TransferRecipientCreateRequest
-func NewTransferRecipientCreateRequest(recipientType types.RecipientType, name, accountNumber, bankCode string) *TransferRecipientCreateRequestBuilder {
+func NewTransferRecipientCreateRequest(recipientType types.TransferRecipientType, name, accountNumber, bankCode string) *TransferRecipientCreateRequestBuilder {
 	return &TransferRecipientCreateRequestBuilder{
 		req: &TransferRecipientCreateRequest{
 			Type:          recipientType,

@@ -1,10 +1,6 @@
 package types
 
-import (
-	"time"
-
-	"github.com/huysamen/paystack-go/types"
-)
+import "time"
 
 // TransactionSplitType represents the type of transaction split
 type TransactionSplitType string
@@ -45,7 +41,7 @@ type TransactionSplit struct {
 	ID               uint64                       `json:"id"`
 	Name             string                       `json:"name"`
 	Type             TransactionSplitType         `json:"type"`
-	Currency         types.Currency               `json:"currency"`
+	Currency         Currency                     `json:"currency"`
 	Integration      uint64                       `json:"integration"`
 	Domain           string                       `json:"domain"`
 	SplitCode        string                       `json:"split_code"`

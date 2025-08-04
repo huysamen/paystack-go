@@ -7,7 +7,10 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
+// CheckBalanceResponse represents the response from checking balance
+type CheckBalanceResponse = types.Response[[]types.Balance]
+
 // CheckBalance fetches the available balance on your integration
-func (c *Client) CheckBalance(ctx context.Context) (*types.Response[[]Balance], error) {
-	return net.Get[[]Balance](ctx, c.Client, c.Secret, basePath, "", c.BaseURL)
+func (c *Client) CheckBalance(ctx context.Context) (*CheckBalanceResponse, error) {
+	return net.Get[[]types.Balance](ctx, c.Client, c.Secret, basePath, "", c.BaseURL)
 }

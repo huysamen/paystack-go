@@ -7,8 +7,11 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
+// DisableOTPResponse represents the response from disabling OTP
+type DisableOTPResponse = types.Response[any]
+
 // DisableOTP is used in the event that you want to be able to complete transfers programmatically without use of OTPs
 // No arguments required. You will get an OTP to complete the request.
-func (c *Client) DisableOTP(ctx context.Context) (*types.Response[any], error) {
+func (c *Client) DisableOTP(ctx context.Context) (*DisableOTPResponse, error) {
 	return net.Post[any, any](ctx, c.Client, c.Secret, "/transfer/disable_otp", nil, c.BaseURL)
 }
