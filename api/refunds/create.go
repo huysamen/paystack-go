@@ -4,7 +4,17 @@ import (
 	"context"
 
 	"github.com/huysamen/paystack-go/net"
+	"github.com/huysamen/paystack-go/types"
 )
+
+// RefundCreateRequest represents the request payload for creating a refund
+type RefundCreateRequest struct {
+	Transaction  string  `json:"transaction"`
+	Amount       *int    `json:"amount,omitempty"`
+	Currency     *string `json:"currency,omitempty"`
+	CustomerNote *string `json:"customer_note,omitempty"`
+	MerchantNote *string `json:"merchant_note,omitempty"`
+}
 
 // RefundCreateRequestBuilder provides a fluent interface for building RefundCreateRequest
 type RefundCreateRequestBuilder struct {
@@ -49,7 +59,21 @@ func (b *RefundCreateRequestBuilder) Build() *RefundCreateRequest {
 	return b.req
 }
 
+// fixme: this is not correct
+// RefundCreateResponseData represents the data returned when creating a refund
+type RefundCreateResponseData struct {
+	Transaction *types.Transaction `json:"transaction"`
+	Amount      int                `json:"amount"`
+	Currency    string             `json:"currency"`
+	RefundedBy  string             `json:"refunded_by"`
+	RefundedAt  *types.DateTime    `json:"refunded_at"`
+	CreatedAt   *types.DateTime    `json:"created_at"`
+}
+
+// RefundCreateRequest represents the request to create a refund
+type RefundCreateResponse = types.Response[RefundCreateResponseData]
+
 // Create initiates a refund on a transaction using a builder
 func (c *Client) Create(ctx context.Context, builder *RefundCreateRequestBuilder) (*RefundCreateResponse, error) {
-	return net.Post[RefundCreateRequest, RefundCreateData](ctx, c.Client, c.Secret, basePath, builder.Build(), c.BaseURL)
+	return net.Post[RefundCreateRequest, RefundCreateResponseData](ctx, c.Client, c.Secret, basePath, builder.Build(), c.BaseURL)
 }
