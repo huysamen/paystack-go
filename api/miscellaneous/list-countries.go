@@ -7,8 +7,9 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type CountryListResponse = types.Response[[]types.Country]
+type ListCountriesResponseData = []types.Country
+type ListCountriesResponse = types.Response[ListCountriesResponseData]
 
-func (c *Client) ListCountries(ctx context.Context) (*CountryListResponse, error) {
-	return net.Get[[]types.Country](ctx, c.Client, c.Secret, countryPath, c.BaseURL)
+func (c *Client) ListCountries(ctx context.Context) (*ListCountriesResponse, error) {
+	return net.Get[ListCountriesResponseData](ctx, c.Client, c.Secret, countryPath, c.BaseURL)
 }

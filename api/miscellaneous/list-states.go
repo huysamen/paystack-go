@@ -8,33 +8,45 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type StateListRequest struct {
+type listStatesRequest struct {
 	Country string `json:"country"` // Required: country code
 }
 
-type StateListRequestBuilder struct {
-	req *StateListRequest
+type ListStatesRequestBuilder struct {
+	req *listStatesRequest
 }
 
-func NewStateListRequest(country string) *StateListRequestBuilder {
-	return &StateListRequestBuilder{
-		req: &StateListRequest{
+func NewListStatesRequestBuilder(country string) *ListStatesRequestBuilder {
+	return &ListStatesRequestBuilder{
+		req: &listStatesRequest{
 			Country: country,
 		},
 	}
 }
 
-func (b *StateListRequestBuilder) Build() *StateListRequest {
+func (b *ListStatesRequestBuilder) Build() *listStatesRequest {
 	return b.req
 }
 
-type StateListResponse = types.Response[[]types.State]
-
-func (c *Client) ListStates(ctx context.Context, builder *StateListRequestBuilder) (*StateListResponse, error) {
-	req := builder.Build()
+func (r *listStatesRequest) toQuery() string {
 	params := url.Values{}
-	params.Set("country", req.Country)
+	params.Set("country", r.Country)
 
-	endpoint := statesPath + "?" + params.Encode()
-	return net.Get[[]types.State](ctx, c.Client, c.Secret, endpoint, c.BaseURL)
+	return params.Encode()
+}
+
+type ListStatesResponseData = []types.State
+type ListStatesResponse = types.Response[ListStatesResponseData]
+
+func (c *Client) ListStates(ctx context.Context, builder *ListStatesRequestBuilder) (*ListStatesResponse, error) {
+	req := builder.Build()
+	path := statesPath
+
+	if req != nil {
+		if query := req.toQuery(); query != "" {
+			path += "?" + query
+		}
+	}
+
+	return net.Get[ListStatesResponseData](ctx, c.Client, c.Secret, path, c.BaseURL)
 }

@@ -9,7 +9,7 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type BankListRequest struct {
+type listBanksRequest struct {
 	Country                *string `json:"country,omitempty"`                  // Optional: country filter (ghana, kenya, nigeria, south africa)
 	UseCursor              *bool   `json:"use_cursor,omitempty"`               // Optional: enable cursor pagination
 	PerPage                *int    `json:"perPage,omitempty"`                  // Optional: records per page (default: 50, max: 100)
@@ -24,141 +24,146 @@ type BankListRequest struct {
 	IncludeNIPSortCode     *bool   `json:"include_nip_sort_code,omitempty"`    // Optional: include NIP institution codes
 }
 
-type BankListRequestBuilder struct {
-	req *BankListRequest
+type ListBanksRequestBuilder struct {
+	req *listBanksRequest
 }
 
-func NewBankListRequest() *BankListRequestBuilder {
-	return &BankListRequestBuilder{
-		req: &BankListRequest{},
+func NewListBanksRequestBuilder() *ListBanksRequestBuilder {
+	return &ListBanksRequestBuilder{
+		req: &listBanksRequest{},
 	}
 }
 
-func (b *BankListRequestBuilder) Country(country string) *BankListRequestBuilder {
+func (b *ListBanksRequestBuilder) Country(country string) *ListBanksRequestBuilder {
 	b.req.Country = &country
 
 	return b
 }
 
-func (b *BankListRequestBuilder) UseCursor(useCursor bool) *BankListRequestBuilder {
+func (b *ListBanksRequestBuilder) UseCursor(useCursor bool) *ListBanksRequestBuilder {
 	b.req.UseCursor = &useCursor
 
 	return b
 }
 
-func (b *BankListRequestBuilder) PerPage(perPage int) *BankListRequestBuilder {
+func (b *ListBanksRequestBuilder) PerPage(perPage int) *ListBanksRequestBuilder {
 	b.req.PerPage = &perPage
 
 	return b
 }
 
-func (b *BankListRequestBuilder) PayWithBankTransfer(payWithBankTransfer bool) *BankListRequestBuilder {
+func (b *ListBanksRequestBuilder) PayWithBankTransfer(payWithBankTransfer bool) *ListBanksRequestBuilder {
 	b.req.PayWithBankTransfer = &payWithBankTransfer
 
 	return b
 }
 
-func (b *BankListRequestBuilder) PayWithBank(payWithBank bool) *BankListRequestBuilder {
+func (b *ListBanksRequestBuilder) PayWithBank(payWithBank bool) *ListBanksRequestBuilder {
 	b.req.PayWithBank = &payWithBank
 
 	return b
 }
 
-func (b *BankListRequestBuilder) EnabledForVerification(enabled bool) *BankListRequestBuilder {
+func (b *ListBanksRequestBuilder) EnabledForVerification(enabled bool) *ListBanksRequestBuilder {
 	b.req.EnabledForVerification = &enabled
 
 	return b
 }
 
-func (b *BankListRequestBuilder) Next(next string) *BankListRequestBuilder {
+func (b *ListBanksRequestBuilder) Next(next string) *ListBanksRequestBuilder {
 	b.req.Next = &next
 
 	return b
 }
 
-func (b *BankListRequestBuilder) Previous(previous string) *BankListRequestBuilder {
+func (b *ListBanksRequestBuilder) Previous(previous string) *ListBanksRequestBuilder {
 	b.req.Previous = &previous
 
 	return b
 }
 
-func (b *BankListRequestBuilder) Gateway(gateway string) *BankListRequestBuilder {
+func (b *ListBanksRequestBuilder) Gateway(gateway string) *ListBanksRequestBuilder {
 	b.req.Gateway = &gateway
 
 	return b
 }
 
-func (b *BankListRequestBuilder) Type(channelType string) *BankListRequestBuilder {
+func (b *ListBanksRequestBuilder) Type(channelType string) *ListBanksRequestBuilder {
 	b.req.Type = &channelType
 
 	return b
 }
 
-func (b *BankListRequestBuilder) Currency(currency string) *BankListRequestBuilder {
+func (b *ListBanksRequestBuilder) Currency(currency string) *ListBanksRequestBuilder {
 	b.req.Currency = &currency
 
 	return b
 }
 
-func (b *BankListRequestBuilder) IncludeNIPSortCode(include bool) *BankListRequestBuilder {
+func (b *ListBanksRequestBuilder) IncludeNIPSortCode(include bool) *ListBanksRequestBuilder {
 	b.req.IncludeNIPSortCode = &include
 
 	return b
 }
 
-func (b *BankListRequestBuilder) Build() *BankListRequest {
+func (b *ListBanksRequestBuilder) Build() *listBanksRequest {
 	return b.req
 }
 
-type BankListResponse = types.Response[[]types.Bank]
-
-func (c *Client) ListBanks(ctx context.Context, builder *BankListRequestBuilder) (*BankListResponse, error) {
+func (r *listBanksRequest) toQuery() string {
 	params := url.Values{}
+	if r.Country != nil {
+		params.Set("country", *r.Country)
+	}
+	if r.UseCursor != nil {
+		params.Set("use_cursor", strconv.FormatBool(*r.UseCursor))
+	}
+	if r.PerPage != nil {
+		params.Set("perPage", strconv.Itoa(*r.PerPage))
+	}
+	if r.PayWithBankTransfer != nil {
+		params.Set("pay_with_bank_transfer", strconv.FormatBool(*r.PayWithBankTransfer))
+	}
+	if r.PayWithBank != nil {
+		params.Set("pay_with_bank", strconv.FormatBool(*r.PayWithBank))
+	}
+	if r.EnabledForVerification != nil {
+		params.Set("enabled_for_verification", strconv.FormatBool(*r.EnabledForVerification))
+	}
+	if r.Next != nil {
+		params.Set("next", *r.Next)
+	}
+	if r.Previous != nil {
+		params.Set("previous", *r.Previous)
+	}
+	if r.Gateway != nil {
+		params.Set("gateway", *r.Gateway)
+	}
+	if r.Type != nil {
+		params.Set("type", *r.Type)
+	}
+	if r.Currency != nil {
+		params.Set("currency", *r.Currency)
+	}
+	if r.IncludeNIPSortCode != nil {
+		params.Set("include_nip_sort_code", strconv.FormatBool(*r.IncludeNIPSortCode))
+	}
 
-	if builder != nil {
-		req := builder.Build()
-		if req.Country != nil {
-			params.Set("country", *req.Country)
-		}
-		if req.UseCursor != nil {
-			params.Set("use_cursor", strconv.FormatBool(*req.UseCursor))
-		}
-		if req.PerPage != nil {
-			params.Set("perPage", strconv.Itoa(*req.PerPage))
-		}
-		if req.PayWithBankTransfer != nil {
-			params.Set("pay_with_bank_transfer", strconv.FormatBool(*req.PayWithBankTransfer))
-		}
-		if req.PayWithBank != nil {
-			params.Set("pay_with_bank", strconv.FormatBool(*req.PayWithBank))
-		}
-		if req.EnabledForVerification != nil {
-			params.Set("enabled_for_verification", strconv.FormatBool(*req.EnabledForVerification))
-		}
-		if req.Next != nil {
-			params.Set("next", *req.Next)
-		}
-		if req.Previous != nil {
-			params.Set("previous", *req.Previous)
-		}
-		if req.Gateway != nil {
-			params.Set("gateway", *req.Gateway)
-		}
-		if req.Type != nil {
-			params.Set("type", *req.Type)
-		}
-		if req.Currency != nil {
-			params.Set("currency", *req.Currency)
-		}
-		if req.IncludeNIPSortCode != nil {
-			params.Set("include_nip_sort_code", strconv.FormatBool(*req.IncludeNIPSortCode))
+	return params.Encode()
+}
+
+type ListBanksResponseData = []types.Bank
+type ListBanksResponse = types.Response[ListBanksResponseData]
+
+func (c *Client) ListBanks(ctx context.Context, builder ListBanksRequestBuilder) (*ListBanksResponse, error) {
+	path := bankPath
+
+	req := builder.Build()
+	if req != nil {
+		if query := req.toQuery(); query != "" {
+			path += "?" + query
 		}
 	}
 
-	endpoint := bankPath
-	if len(params) > 0 {
-		endpoint += "?" + params.Encode()
-	}
-
-	return net.Get[[]types.Bank](ctx, c.Client, c.Secret, endpoint, c.BaseURL)
+	return net.Get[ListBanksResponseData](ctx, c.Client, c.Secret, path, c.BaseURL)
 }
