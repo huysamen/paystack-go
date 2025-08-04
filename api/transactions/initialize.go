@@ -8,7 +8,7 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type TransactionInitializeRequest struct {
+type initializeRequest struct {
 	Amount int    `json:"amount"`
 	Email  string `json:"email"`
 
@@ -25,93 +25,93 @@ type TransactionInitializeRequest struct {
 	Bearer            types.Bearer    `json:"bearer,omitempty"`
 }
 
-type TransactionInitializeRequestBuilder struct {
-	request TransactionInitializeRequest
+type InitializeRequestBuilder struct {
+	request initializeRequest
 }
 
-func NewTransactionInitializeRequestBuilder() *TransactionInitializeRequestBuilder {
-	return &TransactionInitializeRequestBuilder{}
+func NewInitializeRequestBuilder() *InitializeRequestBuilder {
+	return &InitializeRequestBuilder{}
 }
 
-func (b *TransactionInitializeRequestBuilder) Amount(amount int) *TransactionInitializeRequestBuilder {
+func (b *InitializeRequestBuilder) Amount(amount int) *InitializeRequestBuilder {
 	b.request.Amount = amount
 
 	return b
 }
 
-func (b *TransactionInitializeRequestBuilder) Email(email string) *TransactionInitializeRequestBuilder {
+func (b *InitializeRequestBuilder) Email(email string) *InitializeRequestBuilder {
 	b.request.Email = email
 
 	return b
 }
 
-func (b *TransactionInitializeRequestBuilder) Currency(currency types.Currency) *TransactionInitializeRequestBuilder {
+func (b *InitializeRequestBuilder) Currency(currency types.Currency) *InitializeRequestBuilder {
 	b.request.Currency = currency
 
 	return b
 }
 
-func (b *TransactionInitializeRequestBuilder) Reference(reference string) *TransactionInitializeRequestBuilder {
+func (b *InitializeRequestBuilder) Reference(reference string) *InitializeRequestBuilder {
 	b.request.Reference = reference
 
 	return b
 }
 
-func (b *TransactionInitializeRequestBuilder) CallbackURL(callbackURL string) *TransactionInitializeRequestBuilder {
+func (b *InitializeRequestBuilder) CallbackURL(callbackURL string) *InitializeRequestBuilder {
 	b.request.CallbackURL = callbackURL
 
 	return b
 }
 
-func (b *TransactionInitializeRequestBuilder) Plan(plan string) *TransactionInitializeRequestBuilder {
+func (b *InitializeRequestBuilder) Plan(plan string) *InitializeRequestBuilder {
 	b.request.Plan = plan
 
 	return b
 }
 
-func (b *TransactionInitializeRequestBuilder) InvoiceLimit(invoiceLimit int) *TransactionInitializeRequestBuilder {
+func (b *InitializeRequestBuilder) InvoiceLimit(invoiceLimit int) *InitializeRequestBuilder {
 	b.request.InvoiceLimit = invoiceLimit
 
 	return b
 }
 
-func (b *TransactionInitializeRequestBuilder) Metadata(metadata types.Metadata) *TransactionInitializeRequestBuilder {
+func (b *InitializeRequestBuilder) Metadata(metadata types.Metadata) *InitializeRequestBuilder {
 	b.request.Metadata = metadata
 
 	return b
 }
 
-func (b *TransactionInitializeRequestBuilder) Channels(channels []types.Channel) *TransactionInitializeRequestBuilder {
+func (b *InitializeRequestBuilder) Channels(channels []types.Channel) *InitializeRequestBuilder {
 	b.request.Channels = channels
 
 	return b
 }
 
-func (b *TransactionInitializeRequestBuilder) SplitCode(splitCode []string) *TransactionInitializeRequestBuilder {
+func (b *InitializeRequestBuilder) SplitCode(splitCode []string) *InitializeRequestBuilder {
 	b.request.SplitCode = splitCode
 
 	return b
 }
 
-func (b *TransactionInitializeRequestBuilder) Subaccount(subaccount string) *TransactionInitializeRequestBuilder {
+func (b *InitializeRequestBuilder) Subaccount(subaccount string) *InitializeRequestBuilder {
 	b.request.Subaccount = subaccount
 
 	return b
 }
 
-func (b *TransactionInitializeRequestBuilder) TransactionCharge(transactionCharge int) *TransactionInitializeRequestBuilder {
+func (b *InitializeRequestBuilder) TransactionCharge(transactionCharge int) *InitializeRequestBuilder {
 	b.request.TransactionCharge = transactionCharge
 
 	return b
 }
 
-func (b *TransactionInitializeRequestBuilder) Bearer(bearer types.Bearer) *TransactionInitializeRequestBuilder {
+func (b *InitializeRequestBuilder) Bearer(bearer types.Bearer) *InitializeRequestBuilder {
 	b.request.Bearer = bearer
 
 	return b
 }
 
-func (b *TransactionInitializeRequestBuilder) Build() *TransactionInitializeRequest {
+func (b *InitializeRequestBuilder) Build() *initializeRequest {
 	return &b.request
 }
 
@@ -123,9 +123,6 @@ type InitializeResponseData struct {
 
 type InitializeResponse = types.Response[InitializeResponseData]
 
-func (c *Client) Initialize(ctx context.Context, builder *TransactionInitializeRequestBuilder) (*InitializeResponse, error) {
-	req := builder.Build()
-	return net.Post[TransactionInitializeRequest, InitializeResponseData](
-		ctx, c.Client, c.Secret, fmt.Sprintf("%s%s", basePath, transactionInitializePath), req, c.BaseURL,
-	)
+func (c *Client) Initialize(ctx context.Context, builder InitializeRequestBuilder) (*InitializeResponse, error) {
+	return net.Post[initializeRequest, InitializeResponseData](ctx, c.Client, c.Secret, fmt.Sprintf("%s%s", basePath, transactionInitializePath), builder.Build(), c.BaseURL)
 }

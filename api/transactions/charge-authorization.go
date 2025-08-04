@@ -8,7 +8,7 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type TransactionChargeAuthorizationRequest struct {
+type chargeAuthorizationRequest struct {
 	Amount            int    `json:"amount"`
 	Email             string `json:"email"`
 	AuthorizationCode string `json:"authorization_code"`
@@ -23,86 +23,87 @@ type TransactionChargeAuthorizationRequest struct {
 	Queue             bool            `json:"queue,omitempty"`
 }
 
-type TransactionChargeAuthorizationRequestBuilder struct {
-	request TransactionChargeAuthorizationRequest
+type ChargeAuthorizationRequestBuilder struct {
+	request chargeAuthorizationRequest
 }
 
-func NewTransactionChargeAuthorizationRequestBuilder() *TransactionChargeAuthorizationRequestBuilder {
-	return &TransactionChargeAuthorizationRequestBuilder{}
+func NewChargeAuthorizationRequestBuilder() *ChargeAuthorizationRequestBuilder {
+	return &ChargeAuthorizationRequestBuilder{}
 }
 
-func (b *TransactionChargeAuthorizationRequestBuilder) Amount(amount int) *TransactionChargeAuthorizationRequestBuilder {
+func (b *ChargeAuthorizationRequestBuilder) Amount(amount int) *ChargeAuthorizationRequestBuilder {
 	b.request.Amount = amount
 
 	return b
 }
 
-func (b *TransactionChargeAuthorizationRequestBuilder) Email(email string) *TransactionChargeAuthorizationRequestBuilder {
+func (b *ChargeAuthorizationRequestBuilder) Email(email string) *ChargeAuthorizationRequestBuilder {
 	b.request.Email = email
 
 	return b
 }
 
-func (b *TransactionChargeAuthorizationRequestBuilder) AuthorizationCode(authorizationCode string) *TransactionChargeAuthorizationRequestBuilder {
+func (b *ChargeAuthorizationRequestBuilder) AuthorizationCode(authorizationCode string) *ChargeAuthorizationRequestBuilder {
 	b.request.AuthorizationCode = authorizationCode
 
 	return b
 }
 
-func (b *TransactionChargeAuthorizationRequestBuilder) Reference(reference string) *TransactionChargeAuthorizationRequestBuilder {
+func (b *ChargeAuthorizationRequestBuilder) Reference(reference string) *ChargeAuthorizationRequestBuilder {
 	b.request.Reference = reference
 
 	return b
 }
 
-func (b *TransactionChargeAuthorizationRequestBuilder) Currency(currency types.Currency) *TransactionChargeAuthorizationRequestBuilder {
+func (b *ChargeAuthorizationRequestBuilder) Currency(currency types.Currency) *ChargeAuthorizationRequestBuilder {
 	b.request.Currency = currency
 
 	return b
 }
 
-func (b *TransactionChargeAuthorizationRequestBuilder) Metadata(metadata types.Metadata) *TransactionChargeAuthorizationRequestBuilder {
+func (b *ChargeAuthorizationRequestBuilder) Metadata(metadata types.Metadata) *ChargeAuthorizationRequestBuilder {
 	b.request.Metadata = metadata
 
 	return b
 }
 
-func (b *TransactionChargeAuthorizationRequestBuilder) Channels(channels []types.Channel) *TransactionChargeAuthorizationRequestBuilder {
+func (b *ChargeAuthorizationRequestBuilder) Channels(channels []types.Channel) *ChargeAuthorizationRequestBuilder {
 	b.request.Channels = channels
 
 	return b
 }
 
-func (b *TransactionChargeAuthorizationRequestBuilder) Subaccount(subaccount string) *TransactionChargeAuthorizationRequestBuilder {
+func (b *ChargeAuthorizationRequestBuilder) Subaccount(subaccount string) *ChargeAuthorizationRequestBuilder {
 	b.request.Subaccount = subaccount
 
 	return b
 }
 
-func (b *TransactionChargeAuthorizationRequestBuilder) TransactionCharge(transactionCharge int) *TransactionChargeAuthorizationRequestBuilder {
+func (b *ChargeAuthorizationRequestBuilder) TransactionCharge(transactionCharge int) *ChargeAuthorizationRequestBuilder {
 	b.request.TransactionCharge = transactionCharge
 
 	return b
 }
 
-func (b *TransactionChargeAuthorizationRequestBuilder) Bearer(bearer types.Bearer) *TransactionChargeAuthorizationRequestBuilder {
+func (b *ChargeAuthorizationRequestBuilder) Bearer(bearer types.Bearer) *ChargeAuthorizationRequestBuilder {
 	b.request.Bearer = bearer
 
 	return b
 }
 
-func (b *TransactionChargeAuthorizationRequestBuilder) Queue(queue bool) *TransactionChargeAuthorizationRequestBuilder {
+func (b *ChargeAuthorizationRequestBuilder) Queue(queue bool) *ChargeAuthorizationRequestBuilder {
 	b.request.Queue = queue
 
 	return b
 }
 
-func (b *TransactionChargeAuthorizationRequestBuilder) Build() *TransactionChargeAuthorizationRequest {
+func (b *ChargeAuthorizationRequestBuilder) Build() *chargeAuthorizationRequest {
 	return &b.request
 }
 
-type ChargeAuthorizationResponse = types.Response[types.Transaction]
+type ChargeAuthorizationResponseData = types.Transaction
+type ChargeAuthorizationResponse = types.Response[ChargeAuthorizationResponseData]
 
-func (c *Client) ChargeAuthorization(ctx context.Context, builder *TransactionChargeAuthorizationRequestBuilder) (*ChargeAuthorizationResponse, error) {
-	return net.Post[TransactionChargeAuthorizationRequest, types.Transaction](ctx, c.Client, c.Secret, fmt.Sprintf("%s%s", basePath, transactionChargeAuthorizationPath), builder.Build(), c.BaseURL)
+func (c *Client) ChargeAuthorization(ctx context.Context, builder ChargeAuthorizationRequestBuilder) (*ChargeAuthorizationResponse, error) {
+	return net.Post[chargeAuthorizationRequest, ChargeAuthorizationResponseData](ctx, c.Client, c.Secret, fmt.Sprintf("%s%s", basePath, transactionChargeAuthorizationPath), builder.Build(), c.BaseURL)
 }

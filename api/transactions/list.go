@@ -11,7 +11,7 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type TransactionListRequest struct {
+type listRequest struct {
 	PerPage    *int
 	Page       *int
 	Customer   *uint64
@@ -22,76 +22,76 @@ type TransactionListRequest struct {
 	Amount     *int
 }
 
-type TransactionListRequestBuilder struct {
-	req *TransactionListRequest
+type ListRequestBuilder struct {
+	req *listRequest
 }
 
-func NewTransactionListRequest() *TransactionListRequestBuilder {
-	return &TransactionListRequestBuilder{
-		req: &TransactionListRequest{},
+func NewListRequestBuilder() *ListRequestBuilder {
+	return &ListRequestBuilder{
+		req: &listRequest{},
 	}
 }
 
-func (b *TransactionListRequestBuilder) PerPage(perPage int) *TransactionListRequestBuilder {
+func (b *ListRequestBuilder) PerPage(perPage int) *ListRequestBuilder {
 	b.req.PerPage = optional.Int(perPage)
 
 	return b
 }
 
-func (b *TransactionListRequestBuilder) Page(page int) *TransactionListRequestBuilder {
+func (b *ListRequestBuilder) Page(page int) *ListRequestBuilder {
 	b.req.Page = optional.Int(page)
 
 	return b
 }
 
-func (b *TransactionListRequestBuilder) Customer(customer uint64) *TransactionListRequestBuilder {
+func (b *ListRequestBuilder) Customer(customer uint64) *ListRequestBuilder {
 	b.req.Customer = optional.Uint64(customer)
 
 	return b
 }
 
-func (b *TransactionListRequestBuilder) TerminalID(terminalID string) *TransactionListRequestBuilder {
+func (b *ListRequestBuilder) TerminalID(terminalID string) *ListRequestBuilder {
 	b.req.TerminalID = optional.String(terminalID)
 
 	return b
 }
 
-func (b *TransactionListRequestBuilder) Status(status string) *TransactionListRequestBuilder {
+func (b *ListRequestBuilder) Status(status string) *ListRequestBuilder {
 	b.req.Status = optional.String(status)
 
 	return b
 }
 
-func (b *TransactionListRequestBuilder) DateRange(from, to time.Time) *TransactionListRequestBuilder {
+func (b *ListRequestBuilder) DateRange(from, to time.Time) *ListRequestBuilder {
 	b.req.From = optional.Time(from)
 	b.req.To = optional.Time(to)
 
 	return b
 }
 
-func (b *TransactionListRequestBuilder) From(from time.Time) *TransactionListRequestBuilder {
+func (b *ListRequestBuilder) From(from time.Time) *ListRequestBuilder {
 	b.req.From = optional.Time(from)
 
 	return b
 }
 
-func (b *TransactionListRequestBuilder) To(to time.Time) *TransactionListRequestBuilder {
+func (b *ListRequestBuilder) To(to time.Time) *ListRequestBuilder {
 	b.req.To = optional.Time(to)
 
 	return b
 }
 
-func (b *TransactionListRequestBuilder) Amount(amount int) *TransactionListRequestBuilder {
+func (b *ListRequestBuilder) Amount(amount int) *ListRequestBuilder {
 	b.req.Amount = optional.Int(amount)
 
 	return b
 }
 
-func (b *TransactionListRequestBuilder) Build() *TransactionListRequest {
+func (b *ListRequestBuilder) Build() *listRequest {
 	return b.req
 }
 
-func (r *TransactionListRequest) toQuery() string {
+func (r *listRequest) toQuery() string {
 	params := url.Values{}
 
 	if r.PerPage != nil {
@@ -122,13 +122,16 @@ func (r *TransactionListRequest) toQuery() string {
 	return params.Encode()
 }
 
-type ListResponse = types.Response[[]types.Transaction]
+type ListResponseData = []types.Transaction
+type ListResponse = types.Response[ListResponseData]
 
-func (c *Client) List(ctx context.Context, builder *TransactionListRequestBuilder) (*ListResponse, error) {
+func (c *Client) List(ctx context.Context, builder *ListRequestBuilder) (*ListResponse, error) {
 	req := builder.Build()
 	query := ""
+
 	if req != nil {
 		query = req.toQuery()
 	}
-	return net.Get[[]types.Transaction](ctx, c.Client, c.Secret, basePath, query, c.BaseURL)
+
+	return net.Get[ListResponseData](ctx, c.Client, c.Secret, basePath, query, c.BaseURL)
 }

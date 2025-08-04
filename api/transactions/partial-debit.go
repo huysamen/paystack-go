@@ -8,7 +8,7 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type TransactionPartialDebitRequest struct {
+type partialDebitRequest struct {
 	AuthorizationCode string         `json:"authorization_code"`
 	Currency          types.Currency `json:"currency"`
 	Amount            int            `json:"amount"`
@@ -18,50 +18,51 @@ type TransactionPartialDebitRequest struct {
 	AtLeast   string `json:"at_least,omitempty"`
 }
 
-type TransactionPartialDebitRequestBuilder struct {
-	request TransactionPartialDebitRequest
+type PartialDebitRequestBuilder struct {
+	request partialDebitRequest
 }
 
-func NewTransactionPartialDebitRequestBuilder() *TransactionPartialDebitRequestBuilder {
-	return &TransactionPartialDebitRequestBuilder{}
+func NewPartialDebitRequestBuilder() *PartialDebitRequestBuilder {
+	return &PartialDebitRequestBuilder{}
 }
 
-func (b *TransactionPartialDebitRequestBuilder) AuthorizationCode(authorizationCode string) *TransactionPartialDebitRequestBuilder {
+func (b *PartialDebitRequestBuilder) AuthorizationCode(authorizationCode string) *PartialDebitRequestBuilder {
 	b.request.AuthorizationCode = authorizationCode
 	return b
 }
 
-func (b *TransactionPartialDebitRequestBuilder) Currency(currency types.Currency) *TransactionPartialDebitRequestBuilder {
+func (b *PartialDebitRequestBuilder) Currency(currency types.Currency) *PartialDebitRequestBuilder {
 	b.request.Currency = currency
 	return b
 }
 
-func (b *TransactionPartialDebitRequestBuilder) Amount(amount int) *TransactionPartialDebitRequestBuilder {
+func (b *PartialDebitRequestBuilder) Amount(amount int) *PartialDebitRequestBuilder {
 	b.request.Amount = amount
 	return b
 }
 
-func (b *TransactionPartialDebitRequestBuilder) Email(email string) *TransactionPartialDebitRequestBuilder {
+func (b *PartialDebitRequestBuilder) Email(email string) *PartialDebitRequestBuilder {
 	b.request.Email = email
 	return b
 }
 
-func (b *TransactionPartialDebitRequestBuilder) Reference(reference string) *TransactionPartialDebitRequestBuilder {
+func (b *PartialDebitRequestBuilder) Reference(reference string) *PartialDebitRequestBuilder {
 	b.request.Reference = reference
 	return b
 }
 
-func (b *TransactionPartialDebitRequestBuilder) AtLeast(atLeast string) *TransactionPartialDebitRequestBuilder {
+func (b *PartialDebitRequestBuilder) AtLeast(atLeast string) *PartialDebitRequestBuilder {
 	b.request.AtLeast = atLeast
 	return b
 }
 
-func (b *TransactionPartialDebitRequestBuilder) Build() *TransactionPartialDebitRequest {
+func (b *PartialDebitRequestBuilder) Build() *partialDebitRequest {
 	return &b.request
 }
 
-type PartialDebitResponse = types.Response[types.Transaction]
+type PartialDebitResponseData = types.Transaction
+type PartialDebitResponse = types.Response[PartialDebitResponseData]
 
-func (c *Client) PartialDebit(ctx context.Context, builder *TransactionPartialDebitRequestBuilder) (*PartialDebitResponse, error) {
-	return net.Post[TransactionPartialDebitRequest, types.Transaction](ctx, c.Client, c.Secret, fmt.Sprintf("%s%s", basePath, transactionPartialDebitPath), builder.Build(), c.BaseURL)
+func (c *Client) PartialDebit(ctx context.Context, builder PartialDebitRequestBuilder) (*PartialDebitResponse, error) {
+	return net.Post[partialDebitRequest, PartialDebitResponseData](ctx, c.Client, c.Secret, fmt.Sprintf("%s%s", basePath, transactionPartialDebitPath), builder.Build(), c.BaseURL)
 }

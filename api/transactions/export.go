@@ -12,7 +12,7 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type TransactionExportRequest struct {
+type exportRequest struct {
 	PerPage     *int
 	Page        *int
 	From        *time.Time
@@ -26,94 +26,94 @@ type TransactionExportRequest struct {
 	PaymentPage *uint64
 }
 
-type TransactionExportRequestBuilder struct {
-	req *TransactionExportRequest
+type ExportRequestBuilder struct {
+	req *exportRequest
 }
 
-func NewTransactionExportRequest() *TransactionExportRequestBuilder {
-	return &TransactionExportRequestBuilder{
-		req: &TransactionExportRequest{},
+func NewExportRequestBuilder() *ExportRequestBuilder {
+	return &ExportRequestBuilder{
+		req: &exportRequest{},
 	}
 }
 
-func (b *TransactionExportRequestBuilder) PerPage(perPage int) *TransactionExportRequestBuilder {
+func (b *ExportRequestBuilder) PerPage(perPage int) *ExportRequestBuilder {
 	b.req.PerPage = optional.Int(perPage)
 
 	return b
 }
 
-func (b *TransactionExportRequestBuilder) Page(page int) *TransactionExportRequestBuilder {
+func (b *ExportRequestBuilder) Page(page int) *ExportRequestBuilder {
 	b.req.Page = optional.Int(page)
 
 	return b
 }
 
-func (b *TransactionExportRequestBuilder) DateRange(from, to time.Time) *TransactionExportRequestBuilder {
+func (b *ExportRequestBuilder) DateRange(from, to time.Time) *ExportRequestBuilder {
 	b.req.From = optional.Time(from)
 	b.req.To = optional.Time(to)
 
 	return b
 }
 
-func (b *TransactionExportRequestBuilder) From(from time.Time) *TransactionExportRequestBuilder {
+func (b *ExportRequestBuilder) From(from time.Time) *ExportRequestBuilder {
 	b.req.From = optional.Time(from)
 
 	return b
 }
 
-func (b *TransactionExportRequestBuilder) To(to time.Time) *TransactionExportRequestBuilder {
+func (b *ExportRequestBuilder) To(to time.Time) *ExportRequestBuilder {
 	b.req.To = optional.Time(to)
 
 	return b
 }
 
-func (b *TransactionExportRequestBuilder) Customer(customer uint64) *TransactionExportRequestBuilder {
+func (b *ExportRequestBuilder) Customer(customer uint64) *ExportRequestBuilder {
 	b.req.Customer = optional.Uint64(customer)
 
 	return b
 }
 
-func (b *TransactionExportRequestBuilder) Status(status string) *TransactionExportRequestBuilder {
+func (b *ExportRequestBuilder) Status(status string) *ExportRequestBuilder {
 	b.req.Status = optional.String(status)
 
 	return b
 }
 
-func (b *TransactionExportRequestBuilder) Currency(currency types.Currency) *TransactionExportRequestBuilder {
+func (b *ExportRequestBuilder) Currency(currency types.Currency) *ExportRequestBuilder {
 	b.req.Currency = &currency
 
 	return b
 }
 
-func (b *TransactionExportRequestBuilder) Amount(amount int) *TransactionExportRequestBuilder {
+func (b *ExportRequestBuilder) Amount(amount int) *ExportRequestBuilder {
 	b.req.Amount = optional.Int(amount)
 
 	return b
 }
 
-func (b *TransactionExportRequestBuilder) Settled(settled bool) *TransactionExportRequestBuilder {
+func (b *ExportRequestBuilder) Settled(settled bool) *ExportRequestBuilder {
 	b.req.Settled = optional.Bool(settled)
 
 	return b
 }
 
-func (b *TransactionExportRequestBuilder) Settlement(settlement uint64) *TransactionExportRequestBuilder {
+func (b *ExportRequestBuilder) Settlement(settlement uint64) *ExportRequestBuilder {
 	b.req.Settlement = optional.Uint64(settlement)
 
 	return b
 }
 
-func (b *TransactionExportRequestBuilder) PaymentPage(paymentPage uint64) *TransactionExportRequestBuilder {
+func (b *ExportRequestBuilder) PaymentPage(paymentPage uint64) *ExportRequestBuilder {
 	b.req.PaymentPage = optional.Uint64(paymentPage)
 
 	return b
 }
 
-func (b *TransactionExportRequestBuilder) Build() *TransactionExportRequest {
+func (b *ExportRequestBuilder) Build() *exportRequest {
 	return b.req
 }
 
-func (r *TransactionExportRequest) toQuery() string {
+func (r *exportRequest) toQuery() string {
 	params := url.Values{}
 
 	if r.PerPage != nil {
@@ -160,11 +160,13 @@ type ExportResponseData struct {
 
 type ExportResponse = types.Response[ExportResponseData]
 
-func (c *Client) Export(ctx context.Context, builder *TransactionExportRequestBuilder) (*ExportResponse, error) {
+func (c *Client) Export(ctx context.Context, builder ExportRequestBuilder) (*ExportResponse, error) {
 	req := builder.Build()
 	query := ""
+
 	if req != nil {
 		query = req.toQuery()
 	}
+
 	return net.Get[ExportResponseData](ctx, c.Client, c.Secret, fmt.Sprintf("%s%s", basePath, transactionExportPath), query, c.BaseURL)
 }

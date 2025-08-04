@@ -11,59 +11,59 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type TransactionTotalsRequest struct {
+type totalsRequest struct {
 	PerPage *int
 	Page    *int
 	From    *time.Time
 	To      *time.Time
 }
 
-type TransactionTotalsRequestBuilder struct {
-	req *TransactionTotalsRequest
+type TotalsRequestBuilder struct {
+	req *totalsRequest
 }
 
-func NewTransactionTotalsRequest() *TransactionTotalsRequestBuilder {
-	return &TransactionTotalsRequestBuilder{
-		req: &TransactionTotalsRequest{},
+func NewTotalsRequestBuilder() *TotalsRequestBuilder {
+	return &TotalsRequestBuilder{
+		req: &totalsRequest{},
 	}
 }
 
-func (b *TransactionTotalsRequestBuilder) PerPage(perPage int) *TransactionTotalsRequestBuilder {
+func (b *TotalsRequestBuilder) PerPage(perPage int) *TotalsRequestBuilder {
 	b.req.PerPage = optional.Int(perPage)
 
 	return b
 }
 
-func (b *TransactionTotalsRequestBuilder) Page(page int) *TransactionTotalsRequestBuilder {
+func (b *TotalsRequestBuilder) Page(page int) *TotalsRequestBuilder {
 	b.req.Page = optional.Int(page)
 
 	return b
 }
 
-func (b *TransactionTotalsRequestBuilder) DateRange(from, to time.Time) *TransactionTotalsRequestBuilder {
+func (b *TotalsRequestBuilder) DateRange(from, to time.Time) *TotalsRequestBuilder {
 	b.req.From = optional.Time(from)
 	b.req.To = optional.Time(to)
 
 	return b
 }
 
-func (b *TransactionTotalsRequestBuilder) From(from time.Time) *TransactionTotalsRequestBuilder {
+func (b *TotalsRequestBuilder) From(from time.Time) *TotalsRequestBuilder {
 	b.req.From = optional.Time(from)
 
 	return b
 }
 
-func (b *TransactionTotalsRequestBuilder) To(to time.Time) *TransactionTotalsRequestBuilder {
+func (b *TotalsRequestBuilder) To(to time.Time) *TotalsRequestBuilder {
 	b.req.To = optional.Time(to)
 
 	return b
 }
 
-func (b *TransactionTotalsRequestBuilder) Build() *TransactionTotalsRequest {
+func (b *TotalsRequestBuilder) Build() *totalsRequest {
 	return b.req
 }
 
-func (r *TransactionTotalsRequest) toQuery() string {
+func (r *totalsRequest) toQuery() string {
 	params := url.Values{}
 
 	if r.PerPage != nil {
@@ -100,7 +100,7 @@ type TotalsResponseData struct {
 
 type TotalsResponse = types.Response[TotalsResponseData]
 
-func (c *Client) Totals(ctx context.Context, builder *TransactionTotalsRequestBuilder) (*TotalsResponse, error) {
+func (c *Client) Totals(ctx context.Context, builder TotalsRequestBuilder) (*TotalsResponse, error) {
 	req := builder.Build()
 	query := ""
 
