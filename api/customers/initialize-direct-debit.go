@@ -19,18 +19,18 @@ type Address struct {
 	State  string `json:"state"`
 }
 
-type DirectDebitInitializeRequest struct {
+type InitializeDirectDebitRequest struct {
 	Account Account `json:"account"`
 	Address Address `json:"address"`
 }
 
-type DirectDebitInitializeRequestBuilder struct {
-	req *DirectDebitInitializeRequest
+type InitializeDirectDebitRequestBuilder struct {
+	req *InitializeDirectDebitRequest
 }
 
-func NewInitializeDirectDebitRequest(accountNumber, bankCode, street, city, state string) *DirectDebitInitializeRequestBuilder {
-	return &DirectDebitInitializeRequestBuilder{
-		req: &DirectDebitInitializeRequest{
+func NewInitializeDirectDebitRequest(accountNumber, bankCode, street, city, state string) *InitializeDirectDebitRequestBuilder {
+	return &InitializeDirectDebitRequestBuilder{
+		req: &InitializeDirectDebitRequest{
 			Account: Account{
 				Number:   accountNumber,
 				BankCode: bankCode,
@@ -44,7 +44,7 @@ func NewInitializeDirectDebitRequest(accountNumber, bankCode, street, city, stat
 	}
 }
 
-func (b *DirectDebitInitializeRequestBuilder) Build() *DirectDebitInitializeRequest {
+func (b *InitializeDirectDebitRequestBuilder) Build() *InitializeDirectDebitRequest {
 	return b.req
 }
 
@@ -56,7 +56,7 @@ type InitializeDirectDebitResponseData struct {
 
 type InitializeDirectDebitResponse = types.Response[InitializeDirectDebitResponseData]
 
-func (c *Client) InitializeDirectDebit(ctx context.Context, customerID string, builder *DirectDebitInitializeRequestBuilder) (*InitializeDirectDebitResponse, error) {
+func (c *Client) InitializeDirectDebit(ctx context.Context, customerID string, builder InitializeDirectDebitRequestBuilder) (*InitializeDirectDebitResponse, error) {
 	path := fmt.Sprintf("%s/%s/initialize-direct-debit", basePath, customerID)
-	return net.Post[DirectDebitInitializeRequest, InitializeDirectDebitResponseData](ctx, c.Client, c.Secret, path, builder.Build(), c.BaseURL)
+	return net.Post[InitializeDirectDebitRequest, InitializeDirectDebitResponseData](ctx, c.Client, c.Secret, path, builder.Build(), c.BaseURL)
 }

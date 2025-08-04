@@ -8,55 +8,56 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type CustomerUpdateRequest struct {
+type UpdateRequest struct {
 	FirstName *string        `json:"first_name,omitempty"`
 	LastName  *string        `json:"last_name,omitempty"`
 	Phone     *string        `json:"phone,omitempty"`
 	Metadata  map[string]any `json:"metadata,omitempty"`
 }
 
-type CustomerUpdateRequestBuilder struct {
-	req *CustomerUpdateRequest
+type UpdateRequestBuilder struct {
+	req *UpdateRequest
 }
 
-func NewUpdateCustomerRequest() *CustomerUpdateRequestBuilder {
-	return &CustomerUpdateRequestBuilder{
-		req: &CustomerUpdateRequest{},
+func NewUpdateRequest() *UpdateRequestBuilder {
+	return &UpdateRequestBuilder{
+		req: &UpdateRequest{},
 	}
 }
 
-func (b *CustomerUpdateRequestBuilder) FirstName(firstName string) *CustomerUpdateRequestBuilder {
+func (b *UpdateRequestBuilder) FirstName(firstName string) *UpdateRequestBuilder {
 	b.req.FirstName = &firstName
 
 	return b
 }
 
-func (b *CustomerUpdateRequestBuilder) LastName(lastName string) *CustomerUpdateRequestBuilder {
+func (b *UpdateRequestBuilder) LastName(lastName string) *UpdateRequestBuilder {
 	b.req.LastName = &lastName
 
 	return b
 }
 
-func (b *CustomerUpdateRequestBuilder) Phone(phone string) *CustomerUpdateRequestBuilder {
+func (b *UpdateRequestBuilder) Phone(phone string) *UpdateRequestBuilder {
 	b.req.Phone = &phone
 
 	return b
 }
 
-func (b *CustomerUpdateRequestBuilder) Metadata(metadata map[string]any) *CustomerUpdateRequestBuilder {
+func (b *UpdateRequestBuilder) Metadata(metadata map[string]any) *UpdateRequestBuilder {
 	b.req.Metadata = metadata
 
 	return b
 }
 
-func (b *CustomerUpdateRequestBuilder) Build() *CustomerUpdateRequest {
+func (b *UpdateRequestBuilder) Build() *UpdateRequest {
 	return b.req
 }
 
-type UpdateCustomerResponse = types.Response[types.Customer]
+type UpdateResponseData = types.Customer
+type UpdateResponse = types.Response[UpdateResponseData]
 
-func (c *Client) Update(ctx context.Context, customerCode string, builder *CustomerUpdateRequestBuilder) (*UpdateCustomerResponse, error) {
+func (c *Client) Update(ctx context.Context, customerCode string, builder UpdateRequestBuilder) (*UpdateResponse, error) {
 	path := fmt.Sprintf("%s/%s", basePath, customerCode)
 
-	return net.Put[CustomerUpdateRequest, types.Customer](ctx, c.Client, c.Secret, path, builder.Build(), c.BaseURL)
+	return net.Put[UpdateRequest, UpdateResponseData](ctx, c.Client, c.Secret, path, builder.Build(), c.BaseURL)
 }

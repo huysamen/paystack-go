@@ -7,7 +7,7 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type CustomerCreateRequest struct {
+type CreateRequest struct {
 	Email     string         `json:"email"`
 	FirstName *string        `json:"first_name,omitempty"`
 	LastName  *string        `json:"last_name,omitempty"`
@@ -15,48 +15,49 @@ type CustomerCreateRequest struct {
 	Metadata  map[string]any `json:"metadata,omitempty"`
 }
 
-type CustomerCreateRequestBuilder struct {
-	req *CustomerCreateRequest
+type CreateRequestBuilder struct {
+	req *CreateRequest
 }
 
-func NewCreateCustomerRequest(email string) *CustomerCreateRequestBuilder {
-	return &CustomerCreateRequestBuilder{
-		req: &CustomerCreateRequest{
+func NewCreateRequest(email string) *CreateRequestBuilder {
+	return &CreateRequestBuilder{
+		req: &CreateRequest{
 			Email: email,
 		},
 	}
 }
 
-func (b *CustomerCreateRequestBuilder) FirstName(firstName string) *CustomerCreateRequestBuilder {
+func (b *CreateRequestBuilder) FirstName(firstName string) *CreateRequestBuilder {
 	b.req.FirstName = &firstName
 
 	return b
 }
 
-func (b *CustomerCreateRequestBuilder) LastName(lastName string) *CustomerCreateRequestBuilder {
+func (b *CreateRequestBuilder) LastName(lastName string) *CreateRequestBuilder {
 	b.req.LastName = &lastName
 
 	return b
 }
 
-func (b *CustomerCreateRequestBuilder) Phone(phone string) *CustomerCreateRequestBuilder {
+func (b *CreateRequestBuilder) Phone(phone string) *CreateRequestBuilder {
 	b.req.Phone = &phone
 
 	return b
 }
 
-func (b *CustomerCreateRequestBuilder) Metadata(metadata map[string]any) *CustomerCreateRequestBuilder {
+func (b *CreateRequestBuilder) Metadata(metadata map[string]any) *CreateRequestBuilder {
 	b.req.Metadata = metadata
 
 	return b
 }
 
-func (b *CustomerCreateRequestBuilder) Build() *CustomerCreateRequest {
+func (b *CreateRequestBuilder) Build() *CreateRequest {
 	return b.req
 }
 
-type CustomerCreateResponse = types.Response[types.Customer]
+type CreateResponseData = types.Customer
+type CreateResponse = types.Response[CreateResponseData]
 
-func (c *Client) Create(ctx context.Context, builder *CustomerCreateRequestBuilder) (*CustomerCreateResponse, error) {
-	return net.Post[CustomerCreateRequest, types.Customer](ctx, c.Client, c.Secret, basePath, builder.Build(), c.BaseURL)
+func (c *Client) Create(ctx context.Context, builder CreateRequestBuilder) (*CreateResponse, error) {
+	return net.Post[CreateRequest, CreateResponseData](ctx, c.Client, c.Secret, basePath, builder.Build(), c.BaseURL)
 }

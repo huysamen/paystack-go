@@ -11,59 +11,59 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type CustomerListRequest struct {
+type ListRequest struct {
 	PerPage *int
 	Page    *int
 	From    *time.Time
 	To      *time.Time
 }
 
-type CustomerListRequestBuilder struct {
-	req *CustomerListRequest
+type ListRequestBuilder struct {
+	req *ListRequest
 }
 
-func NewCustomerListRequest() *CustomerListRequestBuilder {
-	return &CustomerListRequestBuilder{
-		req: &CustomerListRequest{},
+func NewListRequest() *ListRequestBuilder {
+	return &ListRequestBuilder{
+		req: &ListRequest{},
 	}
 }
 
-func (b *CustomerListRequestBuilder) PerPage(perPage int) *CustomerListRequestBuilder {
+func (b *ListRequestBuilder) PerPage(perPage int) *ListRequestBuilder {
 	b.req.PerPage = optional.Int(perPage)
 
 	return b
 }
 
-func (b *CustomerListRequestBuilder) Page(page int) *CustomerListRequestBuilder {
+func (b *ListRequestBuilder) Page(page int) *ListRequestBuilder {
 	b.req.Page = optional.Int(page)
 
 	return b
 }
 
-func (b *CustomerListRequestBuilder) DateRange(from, to time.Time) *CustomerListRequestBuilder {
+func (b *ListRequestBuilder) DateRange(from, to time.Time) *ListRequestBuilder {
 	b.req.From = optional.Time(from)
 	b.req.To = optional.Time(to)
 
 	return b
 }
 
-func (b *CustomerListRequestBuilder) From(from time.Time) *CustomerListRequestBuilder {
+func (b *ListRequestBuilder) From(from time.Time) *ListRequestBuilder {
 	b.req.From = optional.Time(from)
 
 	return b
 }
 
-func (b *CustomerListRequestBuilder) To(to time.Time) *CustomerListRequestBuilder {
+func (b *ListRequestBuilder) To(to time.Time) *ListRequestBuilder {
 	b.req.To = optional.Time(to)
 
 	return b
 }
 
-func (b *CustomerListRequestBuilder) Build() *CustomerListRequest {
+func (b *ListRequestBuilder) Build() *ListRequest {
 	return b.req
 }
 
-func (r *CustomerListRequest) toQuery() string {
+func (r *ListRequest) toQuery() string {
 	params := url.Values{}
 
 	if r.PerPage != nil {
@@ -85,14 +85,10 @@ func (r *CustomerListRequest) toQuery() string {
 	return params.Encode()
 }
 
-type CustomerListResponseData struct {
-	Data []types.Customer `json:"data"`
-	Meta types.Meta       `json:"meta"`
-}
+type ListResponseData = []types.Customer
+type ListResponse = types.Response[ListResponseData]
 
-type CustomerListResponse = types.Response[CustomerListResponseData]
-
-func (c *Client) List(ctx context.Context, builder *CustomerListRequestBuilder) (*CustomerListResponse, error) {
+func (c *Client) List(ctx context.Context, builder ListRequestBuilder) (*ListResponse, error) {
 	req := builder.Build()
 	path := basePath
 
@@ -102,5 +98,5 @@ func (c *Client) List(ctx context.Context, builder *CustomerListRequestBuilder) 
 		}
 	}
 
-	return net.Get[CustomerListResponseData](ctx, c.Client, c.Secret, path, c.BaseURL)
+	return net.Get[ListResponseData](ctx, c.Client, c.Secret, path, c.BaseURL)
 }

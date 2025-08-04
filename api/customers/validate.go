@@ -8,7 +8,7 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type CustomerValidateRequest struct {
+type ValidateRequest struct {
 	FirstName     string  `json:"first_name"`
 	LastName      string  `json:"last_name"`
 	Type          string  `json:"type"` // Only "bank_account" is supported
@@ -20,13 +20,13 @@ type CustomerValidateRequest struct {
 	MiddleName    *string `json:"middle_name,omitempty"`
 }
 
-type CustomerValidateRequestBuilder struct {
-	req *CustomerValidateRequest
+type ValidateRequestBuilder struct {
+	req *ValidateRequest
 }
 
-func NewValidateCustomerRequest(firstName, lastName, type_, value, country, bvn string) *CustomerValidateRequestBuilder {
-	return &CustomerValidateRequestBuilder{
-		req: &CustomerValidateRequest{
+func NewValidateRequest(firstName, lastName, type_, value, country, bvn string) *ValidateRequestBuilder {
+	return &ValidateRequestBuilder{
+		req: &ValidateRequest{
 			FirstName: firstName,
 			LastName:  lastName,
 			Type:      type_,
@@ -37,31 +37,33 @@ func NewValidateCustomerRequest(firstName, lastName, type_, value, country, bvn 
 	}
 }
 
-func (b *CustomerValidateRequestBuilder) BankCode(bankCode string) *CustomerValidateRequestBuilder {
+func (b *ValidateRequestBuilder) BankCode(bankCode string) *ValidateRequestBuilder {
 	b.req.BankCode = bankCode
 
 	return b
 }
 
-func (b *CustomerValidateRequestBuilder) AccountNumber(accountNumber string) *CustomerValidateRequestBuilder {
+func (b *ValidateRequestBuilder) AccountNumber(accountNumber string) *ValidateRequestBuilder {
 	b.req.AccountNumber = accountNumber
 
 	return b
 }
 
-func (b *CustomerValidateRequestBuilder) MiddleName(middleName string) *CustomerValidateRequestBuilder {
+func (b *ValidateRequestBuilder) MiddleName(middleName string) *ValidateRequestBuilder {
 	b.req.MiddleName = &middleName
 
 	return b
 }
 
-func (b *CustomerValidateRequestBuilder) Build() *CustomerValidateRequest {
+func (b *ValidateRequestBuilder) Build() *ValidateRequest {
 	return b.req
 }
 
-type CustomerValidateResponse = types.Response[any]
+type ValidateResponseData = any
+type CustomerValidateResponse = types.Response[ValidateResponseData]
 
-func (c *Client) Validate(ctx context.Context, customerCode string, builder *CustomerValidateRequestBuilder) (*CustomerValidateResponse, error) {
+func (c *Client) Validate(ctx context.Context, customerCode string, builder ValidateRequestBuilder) (*CustomerValidateResponse, error) {
 	path := fmt.Sprintf("%s/%s/identification", basePath, customerCode)
-	return net.Post[CustomerValidateRequest, any](ctx, c.Client, c.Secret, path, builder.Build(), c.BaseURL)
+
+	return net.Post[ValidateRequest, ValidateResponseData](ctx, c.Client, c.Secret, path, builder.Build(), c.BaseURL)
 }

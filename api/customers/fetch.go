@@ -15,10 +15,11 @@ type CustomerWithRelations struct {
 	Transactions   []types.Transaction   `json:"transactions"`
 }
 
-type FetchCustomerResponse = types.Response[CustomerWithRelations]
+type FetchCustomerResponseData = CustomerWithRelations
+type FetchCustomerResponse = types.Response[FetchCustomerResponseData]
 
 func (c *Client) Fetch(ctx context.Context, emailOrCode string) (*FetchCustomerResponse, error) {
 	path := fmt.Sprintf("%s/%s", basePath, emailOrCode)
 
-	return net.Get[CustomerWithRelations](ctx, c.Client, c.Secret, path, c.BaseURL)
+	return net.Get[FetchCustomerResponseData](ctx, c.Client, c.Secret, path, c.BaseURL)
 }

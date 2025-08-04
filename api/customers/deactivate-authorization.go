@@ -27,8 +27,9 @@ func (b *DeactivateAuthorizationRequestBuilder) Build() *DeactivateAuthorization
 	return b.req
 }
 
-type DeactivateAuthorizationResponse = types.Response[any]
+type DeactivateAuthorizationResponseData = any
+type DeactivateAuthorizationResponse = types.Response[DeactivateAuthorizationResponseData]
 
-func (c *Client) DeactivateAuthorization(ctx context.Context, builder *DeactivateAuthorizationRequestBuilder) (*DeactivateAuthorizationResponse, error) {
-	return net.Post[DeactivateAuthorizationRequest, any](ctx, c.Client, c.Secret, basePath+"/authorization/deactivate", builder.Build(), c.BaseURL)
+func (c *Client) DeactivateAuthorization(ctx context.Context, builder DeactivateAuthorizationRequestBuilder) (*DeactivateAuthorizationResponse, error) {
+	return net.Post[DeactivateAuthorizationRequest, DeactivateAuthorizationResponseData](ctx, c.Client, c.Secret, basePath+"/authorization/deactivate", builder.Build(), c.BaseURL)
 }

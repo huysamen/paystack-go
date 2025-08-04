@@ -28,10 +28,11 @@ func (b *DirectDebitActivationChargeRequestBuilder) Build() *DirectDebitActivati
 	return b.req
 }
 
-type DirectDebitActivationChargeResponse = types.Response[any]
+type DirectDebitActivationChargeResponseData = any
+type DirectDebitActivationChargeResponse = types.Response[DirectDebitActivationChargeResponseData]
 
-func (c *Client) DirectDebitActivationCharge(ctx context.Context, customerID string, builder *DirectDebitActivationChargeRequestBuilder) (*DirectDebitActivationChargeResponse, error) {
+func (c *Client) DirectDebitActivationCharge(ctx context.Context, customerID string, builder DirectDebitActivationChargeRequestBuilder) (*DirectDebitActivationChargeResponse, error) {
 	path := fmt.Sprintf("%s/%s/directdebit-activation-charge", basePath, customerID)
 
-	return net.Put[DirectDebitActivationChargeRequest, any](ctx, c.Client, c.Secret, path, builder.Build(), c.BaseURL)
+	return net.Put[DirectDebitActivationChargeRequest, DirectDebitActivationChargeResponseData](ctx, c.Client, c.Secret, path, builder.Build(), c.BaseURL)
 }

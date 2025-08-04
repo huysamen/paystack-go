@@ -15,34 +15,35 @@ const (
 	RiskActionDeny    RiskAction = "deny"
 )
 
-type CustomerRiskActionRequest struct {
+type RiskActionRequest struct {
 	Customer   string      `json:"customer"`    // Customer code or email
 	RiskAction *RiskAction `json:"risk_action"` // Optional, defaults to default
 }
 
-type CustomerRiskActionRequestBuilder struct {
-	req *CustomerRiskActionRequest
+type RiskActionRequestBuilder struct {
+	req *RiskActionRequest
 }
 
-func NewSetRiskActionRequest(customer string) *CustomerRiskActionRequestBuilder {
-	return &CustomerRiskActionRequestBuilder{
-		req: &CustomerRiskActionRequest{
+func NewRiskActionRequest(customer string) *RiskActionRequestBuilder {
+	return &RiskActionRequestBuilder{
+		req: &RiskActionRequest{
 			Customer: customer,
 		},
 	}
 }
 
-func (b *CustomerRiskActionRequestBuilder) RiskAction(riskAction RiskAction) *CustomerRiskActionRequestBuilder {
+func (b *RiskActionRequestBuilder) RiskAction(riskAction RiskAction) *RiskActionRequestBuilder {
 	b.req.RiskAction = &riskAction
 	return b
 }
 
-func (b *CustomerRiskActionRequestBuilder) Build() *CustomerRiskActionRequest {
+func (b *RiskActionRequestBuilder) Build() *RiskActionRequest {
 	return b.req
 }
 
-type SetRiskActionResponse = types.Response[types.Customer]
+type RiskActionResponseData = types.Customer
+type RiskActionResponse = types.Response[RiskActionResponseData]
 
-func (c *Client) SetRiskAction(ctx context.Context, builder *CustomerRiskActionRequestBuilder) (*SetRiskActionResponse, error) {
-	return net.Post[CustomerRiskActionRequest, types.Customer](ctx, c.Client, c.Secret, basePath+"/set_risk_action", builder.Build(), c.BaseURL)
+func (c *Client) SetRiskAction(ctx context.Context, builder RiskActionRequestBuilder) (*RiskActionResponse, error) {
+	return net.Post[RiskActionRequest, RiskActionResponseData](ctx, c.Client, c.Secret, basePath+"/set_risk_action", builder.Build(), c.BaseURL)
 }

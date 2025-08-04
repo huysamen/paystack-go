@@ -7,7 +7,7 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type AuthorizationInitializeRequest struct {
+type InitializeAuthorizationRequest struct {
 	Email       string   `json:"email"`
 	Channel     string   `json:"channel"` // "direct_debit" is the only supported option
 	CallbackURL *string  `json:"callback_url,omitempty"`
@@ -15,26 +15,26 @@ type AuthorizationInitializeRequest struct {
 	Address     *Address `json:"address,omitempty"`
 }
 
-type AuthorizationInitializeRequestBuilder struct {
-	req *AuthorizationInitializeRequest
+type InitializeAuthorizationRequestBuilder struct {
+	req *InitializeAuthorizationRequest
 }
 
-func NewInitializeAuthorizationRequest(email, channel string) *AuthorizationInitializeRequestBuilder {
-	return &AuthorizationInitializeRequestBuilder{
-		req: &AuthorizationInitializeRequest{
+func NewInitializeAuthorizationRequest(email, channel string) *InitializeAuthorizationRequestBuilder {
+	return &InitializeAuthorizationRequestBuilder{
+		req: &InitializeAuthorizationRequest{
 			Email:   email,
 			Channel: channel,
 		},
 	}
 }
 
-func (b *AuthorizationInitializeRequestBuilder) CallbackURL(callbackURL string) *AuthorizationInitializeRequestBuilder {
+func (b *InitializeAuthorizationRequestBuilder) CallbackURL(callbackURL string) *InitializeAuthorizationRequestBuilder {
 	b.req.CallbackURL = &callbackURL
 
 	return b
 }
 
-func (b *AuthorizationInitializeRequestBuilder) Account(number, bankCode string) *AuthorizationInitializeRequestBuilder {
+func (b *InitializeAuthorizationRequestBuilder) Account(number, bankCode string) *InitializeAuthorizationRequestBuilder {
 	b.req.Account = &Account{
 		Number:   number,
 		BankCode: bankCode,
@@ -43,7 +43,7 @@ func (b *AuthorizationInitializeRequestBuilder) Account(number, bankCode string)
 	return b
 }
 
-func (b *AuthorizationInitializeRequestBuilder) Address(street, city, state string) *AuthorizationInitializeRequestBuilder {
+func (b *InitializeAuthorizationRequestBuilder) Address(street, city, state string) *InitializeAuthorizationRequestBuilder {
 	b.req.Address = &Address{
 		Street: street,
 		City:   city,
@@ -53,7 +53,7 @@ func (b *AuthorizationInitializeRequestBuilder) Address(street, city, state stri
 	return b
 }
 
-func (b *AuthorizationInitializeRequestBuilder) Build() *AuthorizationInitializeRequest {
+func (b *InitializeAuthorizationRequestBuilder) Build() *InitializeAuthorizationRequest {
 	return b.req
 }
 
@@ -65,6 +65,6 @@ type InitializeAuthorizationResponseData struct {
 
 type InitializeAuthorizationResponse = types.Response[InitializeAuthorizationResponseData]
 
-func (c *Client) InitializeAuthorization(ctx context.Context, builder *AuthorizationInitializeRequestBuilder) (*InitializeAuthorizationResponse, error) {
-	return net.Post[AuthorizationInitializeRequest, InitializeAuthorizationResponseData](ctx, c.Client, c.Secret, basePath+"/authorization/initialize", builder.Build(), c.BaseURL)
+func (c *Client) InitializeAuthorization(ctx context.Context, builder InitializeAuthorizationRequestBuilder) (*InitializeAuthorizationResponse, error) {
+	return net.Post[InitializeAuthorizationRequest, InitializeAuthorizationResponseData](ctx, c.Client, c.Secret, basePath+"/authorization/initialize", builder.Build(), c.BaseURL)
 }
