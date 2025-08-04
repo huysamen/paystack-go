@@ -10,6 +10,14 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
+// SubaccountListRequest represents the request to list subaccounts
+type SubaccountListRequest struct {
+	PerPage *int       `json:"perPage,omitempty"` // Optional: records per page (default: 50)
+	Page    *int       `json:"page,omitempty"`    // Optional: page number (default: 1)
+	From    *time.Time `json:"from,omitempty"`    // Optional: start date filter
+	To      *time.Time `json:"to,omitempty"`      // Optional: end date filter
+}
+
 // SubaccountListRequestBuilder provides a fluent interface for building SubaccountListRequest
 type SubaccountListRequestBuilder struct {
 	req *SubaccountListRequest
@@ -25,24 +33,28 @@ func NewSubaccountListRequest() *SubaccountListRequestBuilder {
 // PerPage sets the number of subaccounts per page
 func (b *SubaccountListRequestBuilder) PerPage(perPage int) *SubaccountListRequestBuilder {
 	b.req.PerPage = &perPage
+
 	return b
 }
 
 // Page sets the page number
 func (b *SubaccountListRequestBuilder) Page(page int) *SubaccountListRequestBuilder {
 	b.req.Page = &page
+
 	return b
 }
 
 // From sets the start date filter
 func (b *SubaccountListRequestBuilder) From(from time.Time) *SubaccountListRequestBuilder {
 	b.req.From = &from
+
 	return b
 }
 
 // To sets the end date filter
 func (b *SubaccountListRequestBuilder) To(to time.Time) *SubaccountListRequestBuilder {
 	b.req.To = &to
+
 	return b
 }
 
@@ -50,6 +62,7 @@ func (b *SubaccountListRequestBuilder) To(to time.Time) *SubaccountListRequestBu
 func (b *SubaccountListRequestBuilder) DateRange(from, to time.Time) *SubaccountListRequestBuilder {
 	b.req.From = &from
 	b.req.To = &to
+
 	return b
 }
 
@@ -57,6 +70,9 @@ func (b *SubaccountListRequestBuilder) DateRange(from, to time.Time) *Subaccount
 func (b *SubaccountListRequestBuilder) Build() *SubaccountListRequest {
 	return b.req
 }
+
+// SubaccountListResponse represents the response from listing subaccounts
+type SubaccountListResponse = types.Response[[]types.Subaccount]
 
 // List retrieves a list of subaccounts using the builder pattern
 func (c *Client) List(ctx context.Context, builder *SubaccountListRequestBuilder) (*SubaccountListResponse, error) {
