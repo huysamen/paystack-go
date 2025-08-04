@@ -11,34 +11,35 @@ type TriggerActivationChargeRequest struct {
 	CustomerIDs []uint64 `json:"customer_ids"`
 }
 
-type TriggerActivationChargeBuilder struct {
+type TriggerActivationChargeRequestBuilder struct {
 	req *TriggerActivationChargeRequest
 }
 
-func NewTriggerActivationChargeBuilder() *TriggerActivationChargeBuilder {
-	return &TriggerActivationChargeBuilder{
+func NewTriggerActivationChargeRequestBuilder() *TriggerActivationChargeRequestBuilder {
+	return &TriggerActivationChargeRequestBuilder{
 		req: &TriggerActivationChargeRequest{},
 	}
 }
 
-func (b *TriggerActivationChargeBuilder) CustomerIDs(customerIDs []uint64) *TriggerActivationChargeBuilder {
+func (b *TriggerActivationChargeRequestBuilder) CustomerIDs(customerIDs []uint64) *TriggerActivationChargeRequestBuilder {
 	b.req.CustomerIDs = customerIDs
 
 	return b
 }
 
-func (b *TriggerActivationChargeBuilder) CustomerID(customerID uint64) *TriggerActivationChargeBuilder {
+func (b *TriggerActivationChargeRequestBuilder) CustomerID(customerID uint64) *TriggerActivationChargeRequestBuilder {
 	b.req.CustomerIDs = append(b.req.CustomerIDs, customerID)
 
 	return b
 }
 
-func (b *TriggerActivationChargeBuilder) Build() *TriggerActivationChargeRequest {
+func (b *TriggerActivationChargeRequestBuilder) Build() *TriggerActivationChargeRequest {
 	return b.req
 }
 
-type TriggerActivationChargeResponse = types.Response[any]
+type TriggerActivationChargeResponseData = any
+type TriggerActivationChargeResponse = types.Response[TriggerActivationChargeResponseData]
 
-func (c *Client) TriggerActivationCharge(ctx context.Context, builder *TriggerActivationChargeBuilder) (*TriggerActivationChargeResponse, error) {
-	return net.Put[TriggerActivationChargeRequest, any](ctx, c.Client, c.Secret, basePath+"/activation-charge", builder.Build(), c.BaseURL)
+func (c *Client) TriggerActivationCharge(ctx context.Context, builder *TriggerActivationChargeRequestBuilder) (*TriggerActivationChargeResponse, error) {
+	return net.Put[TriggerActivationChargeRequest, TriggerActivationChargeResponseData](ctx, c.Client, c.Secret, basePath+"/activation-charge", builder.Build(), c.BaseURL)
 }

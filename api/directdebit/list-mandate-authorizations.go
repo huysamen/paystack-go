@@ -10,65 +10,73 @@ import (
 )
 
 type ListMandateAuthorizationsRequest struct {
-	Cursor  string                     `json:"cursor,omitempty"`
-	Status  MandateAuthorizationStatus `json:"status,omitempty"`
-	PerPage int                        `json:"per_page,omitempty"`
+	Cursor  string                           `json:"cursor,omitempty"`
+	Status  types.MandateAuthorizationStatus `json:"status,omitempty"`
+	PerPage int                              `json:"per_page,omitempty"`
 }
 
-type ListMandateAuthorizationsBuilder struct {
+type ListMandateAuthorizationsRequestBuilder struct {
 	req *ListMandateAuthorizationsRequest
 }
 
-func NewListMandateAuthorizationsBuilder() *ListMandateAuthorizationsBuilder {
-	return &ListMandateAuthorizationsBuilder{
+func NewListMandateAuthorizationsRequestBuilder() *ListMandateAuthorizationsRequestBuilder {
+	return &ListMandateAuthorizationsRequestBuilder{
 		req: &ListMandateAuthorizationsRequest{},
 	}
 }
 
-func (b *ListMandateAuthorizationsBuilder) Cursor(cursor string) *ListMandateAuthorizationsBuilder {
+func (b *ListMandateAuthorizationsRequestBuilder) Cursor(cursor string) *ListMandateAuthorizationsRequestBuilder {
 	b.req.Cursor = cursor
 
 	return b
 }
 
-func (b *ListMandateAuthorizationsBuilder) Status(status MandateAuthorizationStatus) *ListMandateAuthorizationsBuilder {
+func (b *ListMandateAuthorizationsRequestBuilder) Status(status MandateAuthorizationStatus) *ListMandateAuthorizationsRequestBuilder {
 	b.req.Status = status
 
 	return b
 }
 
-func (b *ListMandateAuthorizationsBuilder) PerPage(perPage int) *ListMandateAuthorizationsBuilder {
+func (b *ListMandateAuthorizationsRequestBuilder) PerPage(perPage int) *ListMandateAuthorizationsRequestBuilder {
 	b.req.PerPage = perPage
 
 	return b
 }
 
-func (b *ListMandateAuthorizationsBuilder) Build() *ListMandateAuthorizationsRequest {
+func (b *ListMandateAuthorizationsRequestBuilder) Build() *ListMandateAuthorizationsRequest {
 	return b.req
 }
 
-type ListMandateAuthorizationsResponse = types.Response[[]MandateAuthorization]
+func (r *ListMandateAuthorizationsRequest) toQuery() string {
+	params := url.Values{}
 
-func (c *Client) ListMandateAuthorizations(ctx context.Context, builder *ListMandateAuthorizationsBuilder) (*ListMandateAuthorizationsResponse, error) {
-	endpoint := basePath + "/mandate-authorizations"
+	if r.Cursor != "" {
+		params.Set("cursor", r.Cursor)
+	}
 
-	if builder != nil {
-		req := builder.Build()
-		params := url.Values{}
-		if req.Cursor != "" {
-			params.Set("cursor", req.Cursor)
-		}
-		if req.Status != "" {
-			params.Set("status", string(req.Status))
-		}
-		if req.PerPage > 0 {
-			params.Set("per_page", fmt.Sprintf("%d", req.PerPage))
-		}
+	if r.Status != "" {
+		params.Set("status", string(r.Status))
+	}
 
-		if len(params) > 0 {
-			endpoint += "?" + params.Encode()
+	if r.PerPage > 0 {
+		params.Set("per_page", fmt.Sprintf("%d", r.PerPage))
+	}
+
+	return params.Encode()
+}
+
+type ListMandateAuthorizationsResponseData = []types.MandateAuthorization
+type ListMandateAuthorizationsResponse = types.Response[ListMandateAuthorizationsResponseData]
+
+func (c *Client) ListMandateAuthorizations(ctx context.Context, builder ListMandateAuthorizationsRequestBuilder) (*ListMandateAuthorizationsResponse, error) {
+	req := builder.Build()
+	path := basePath + "/mandate-authorizations"
+
+	if req != nil {
+		if query := req.toQuery(); query != "" {
+			path += "?" + query
 		}
 	}
 
-	return net.Get[[]MandateAuthorization](ctx, c.Client, c.Secret, endpoint, c.BaseURL)
+	return net.Get[ListMandateAuthorizationsResponseData](ctx, c.Client, c.Secret, path, c.BaseURL)
 }
