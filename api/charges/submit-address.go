@@ -35,8 +35,9 @@ func (b *SubmitAddressRequestBuilder) Build() *SubmitAddressRequest {
 	return b.req
 }
 
-type SubmitAddressResponse = types.Response[types.ChargeData]
+type SubmitAddressResponseData = types.ChargeData
+type SubmitAddressResponse = types.Response[SubmitAddressResponseData]
 
-func (c *Client) SubmitAddress(ctx context.Context, builder *SubmitAddressRequestBuilder) (*SubmitAddressResponse, error) {
-	return net.Post[SubmitAddressRequest, types.ChargeData](ctx, c.Client, c.Secret, submitAddressPath, builder.Build(), c.BaseURL)
+func (c *Client) SubmitAddress(ctx context.Context, builder SubmitAddressRequestBuilder) (*SubmitAddressResponse, error) {
+	return net.Post[SubmitAddressRequest, SubmitAddressResponseData](ctx, c.Client, c.Secret, submitAddressPath, builder.Build(), c.BaseURL)
 }

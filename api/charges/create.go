@@ -8,7 +8,7 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type CreateChargeRequest struct {
+type CreateRequest struct {
 	Email             string               `json:"email"`
 	Amount            string               `json:"amount"`
 	SplitCode         *string              `json:"split_code,omitempty"`
@@ -28,110 +28,110 @@ type CreateChargeRequest struct {
 	Birthday          *string              `json:"birthday,omitempty"`
 }
 
-type CreateChargeRequestBuilder struct {
-	req *CreateChargeRequest
+type CreateRequestBuilder struct {
+	req *CreateRequest
 }
 
-func NewCreateChargeRequest(email, amount string) *CreateChargeRequestBuilder {
-	return &CreateChargeRequestBuilder{
-		req: &CreateChargeRequest{
+func NewCreateRequest(email, amount string) *CreateRequestBuilder {
+	return &CreateRequestBuilder{
+		req: &CreateRequest{
 			Email:  email,
 			Amount: amount,
 		},
 	}
 }
 
-func (b *CreateChargeRequestBuilder) SplitCode(splitCode string) *CreateChargeRequestBuilder {
+func (b *CreateRequestBuilder) SplitCode(splitCode string) *CreateRequestBuilder {
 	b.req.SplitCode = &splitCode
 
 	return b
 }
 
-func (b *CreateChargeRequestBuilder) Subaccount(subaccount string) *CreateChargeRequestBuilder {
+func (b *CreateRequestBuilder) Subaccount(subaccount string) *CreateRequestBuilder {
 	b.req.Subaccount = &subaccount
 
 	return b
 }
 
-func (b *CreateChargeRequestBuilder) TransactionCharge(charge int) *CreateChargeRequestBuilder {
+func (b *CreateRequestBuilder) TransactionCharge(charge int) *CreateRequestBuilder {
 	b.req.TransactionCharge = &charge
 
 	return b
 }
 
-func (b *CreateChargeRequestBuilder) Bearer(bearer string) *CreateChargeRequestBuilder {
+func (b *CreateRequestBuilder) Bearer(bearer string) *CreateRequestBuilder {
 	b.req.Bearer = &bearer
 
 	return b
 }
 
-func (b *CreateChargeRequestBuilder) Bank(bank *BankDetails) *CreateChargeRequestBuilder {
+func (b *CreateRequestBuilder) Bank(bank *BankDetails) *CreateRequestBuilder {
 	b.req.Bank = bank
 
 	return b
 }
 
-func (b *CreateChargeRequestBuilder) BankTransfer(bankTransfer *BankTransferDetails) *CreateChargeRequestBuilder {
+func (b *CreateRequestBuilder) BankTransfer(bankTransfer *BankTransferDetails) *CreateRequestBuilder {
 	b.req.BankTransfer = bankTransfer
 
 	return b
 }
 
-func (b *CreateChargeRequestBuilder) USSD(ussd *USSDDetails) *CreateChargeRequestBuilder {
+func (b *CreateRequestBuilder) USSD(ussd *USSDDetails) *CreateRequestBuilder {
 	b.req.USSD = ussd
 
 	return b
 }
 
-func (b *CreateChargeRequestBuilder) MobileMoney(mobileMoney *MobileMoneyDetails) *CreateChargeRequestBuilder {
+func (b *CreateRequestBuilder) MobileMoney(mobileMoney *MobileMoneyDetails) *CreateRequestBuilder {
 	b.req.MobileMoney = mobileMoney
 
 	return b
 }
 
-func (b *CreateChargeRequestBuilder) QR(qr *QRDetails) *CreateChargeRequestBuilder {
+func (b *CreateRequestBuilder) QR(qr *QRDetails) *CreateRequestBuilder {
 	b.req.QR = qr
 
 	return b
 }
 
-func (b *CreateChargeRequestBuilder) AuthorizationCode(authCode string) *CreateChargeRequestBuilder {
+func (b *CreateRequestBuilder) AuthorizationCode(authCode string) *CreateRequestBuilder {
 	b.req.AuthorizationCode = &authCode
 
 	return b
 }
 
-func (b *CreateChargeRequestBuilder) PIN(pin string) *CreateChargeRequestBuilder {
+func (b *CreateRequestBuilder) PIN(pin string) *CreateRequestBuilder {
 	b.req.PIN = &pin
 
 	return b
 }
 
-func (b *CreateChargeRequestBuilder) Metadata(metadata map[string]any) *CreateChargeRequestBuilder {
+func (b *CreateRequestBuilder) Metadata(metadata map[string]any) *CreateRequestBuilder {
 	b.req.Metadata = metadata
 
 	return b
 }
 
-func (b *CreateChargeRequestBuilder) Reference(reference string) *CreateChargeRequestBuilder {
+func (b *CreateRequestBuilder) Reference(reference string) *CreateRequestBuilder {
 	b.req.Reference = &reference
 
 	return b
 }
 
-func (b *CreateChargeRequestBuilder) DeviceID(deviceID string) *CreateChargeRequestBuilder {
+func (b *CreateRequestBuilder) DeviceID(deviceID string) *CreateRequestBuilder {
 	b.req.DeviceID = &deviceID
 
 	return b
 }
 
-func (b *CreateChargeRequestBuilder) Birthday(birthday string) *CreateChargeRequestBuilder {
+func (b *CreateRequestBuilder) Birthday(birthday string) *CreateRequestBuilder {
 	b.req.Birthday = &birthday
 
 	return b
 }
 
-func (b *CreateChargeRequestBuilder) Build() *CreateChargeRequest {
+func (b *CreateRequestBuilder) Build() *CreateRequest {
 	return b.req
 }
 
@@ -157,8 +157,9 @@ type QRDetails struct {
 	Provider string `json:"provider"`
 }
 
-type CreateChargeResponse = types.Response[types.ChargeData]
+type CreateChargeResponseData = types.ChargeData
+type CreateChargeResponse = types.Response[CreateChargeResponseData]
 
-func (c *Client) Create(ctx context.Context, builder *CreateChargeRequestBuilder) (*CreateChargeResponse, error) {
-	return net.Post[CreateChargeRequest, types.ChargeData](ctx, c.Client, c.Secret, basePath, builder.Build(), c.BaseURL)
+func (c *Client) Create(ctx context.Context, builder *CreateRequestBuilder) (*CreateChargeResponse, error) {
+	return net.Post[CreateRequest, CreateChargeResponseData](ctx, c.Client, c.Secret, basePath, builder.Build(), c.BaseURL)
 }

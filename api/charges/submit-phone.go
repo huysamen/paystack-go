@@ -29,8 +29,9 @@ func (b *SubmitPhoneRequestBuilder) Build() *SubmitPhoneRequest {
 	return b.req
 }
 
-type SubmitPhoneResponse = types.Response[types.ChargeData]
+type SubmitPhoneResponseData = types.ChargeData
+type SubmitPhoneResponse = types.Response[SubmitPhoneResponseData]
 
-func (c *Client) SubmitPhone(ctx context.Context, builder *SubmitPhoneRequestBuilder) (*SubmitPhoneResponse, error) {
-	return net.Post[SubmitPhoneRequest, types.ChargeData](ctx, c.Client, c.Secret, submitPhonePath, builder.Build(), c.BaseURL)
+func (c *Client) SubmitPhone(ctx context.Context, builder SubmitPhoneRequestBuilder) (*SubmitPhoneResponse, error) {
+	return net.Post[SubmitPhoneRequest, SubmitPhoneResponseData](ctx, c.Client, c.Secret, submitPhonePath, builder.Build(), c.BaseURL)
 }

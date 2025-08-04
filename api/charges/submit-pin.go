@@ -29,8 +29,9 @@ func (b *SubmitPINRequestBuilder) Build() *SubmitPINRequest {
 	return b.req
 }
 
-type SubmitPINResponse = types.Response[types.ChargeData]
+type SubmitPINResponseData = types.ChargeData
+type SubmitPINResponse = types.Response[SubmitPINResponseData]
 
-func (c *Client) SubmitPIN(ctx context.Context, builder *SubmitPINRequestBuilder) (*SubmitPINResponse, error) {
-	return net.Post[SubmitPINRequest, types.ChargeData](ctx, c.Client, c.Secret, submitPinPath, builder.Build(), c.BaseURL)
+func (c *Client) SubmitPIN(ctx context.Context, builder SubmitPINRequestBuilder) (*SubmitPINResponse, error) {
+	return net.Post[SubmitPINRequest, SubmitPINResponseData](ctx, c.Client, c.Secret, submitPinPath, builder.Build(), c.BaseURL)
 }
