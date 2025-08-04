@@ -39,6 +39,7 @@ func (b *SubmitAddressRequestBuilder) Build() *SubmitAddressRequest {
 	return b.req
 }
 
+// SubmitAddressResponse is the API endpoint for submitting address for a charge
 type SubmitAddressResponse = types.Response[types.ChargeData]
 
 // SubmitAddress submits address when requested for verification

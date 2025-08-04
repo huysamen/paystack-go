@@ -33,6 +33,7 @@ func (b *SubmitPhoneRequestBuilder) Build() *SubmitPhoneRequest {
 	return b.req
 }
 
+// SubmitPhoneResponse represents the response from submitting phone number for a charge
 type SubmitPhoneResponse = types.Response[types.ChargeData]
 
 // SubmitPhone submits phone number when requested

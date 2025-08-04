@@ -31,18 +31,21 @@ func NewListDomainsRequest() *ListDomainsRequestBuilder {
 // UseCursor sets whether to use cursor-based pagination
 func (b *ListDomainsRequestBuilder) UseCursor(useCursor bool) *ListDomainsRequestBuilder {
 	b.req.UseCursor = &useCursor
+
 	return b
 }
 
 // Next sets the cursor for next page
 func (b *ListDomainsRequestBuilder) Next(next string) *ListDomainsRequestBuilder {
 	b.req.Next = &next
+
 	return b
 }
 
 // Previous sets the cursor for previous page
 func (b *ListDomainsRequestBuilder) Previous(previous string) *ListDomainsRequestBuilder {
 	b.req.Previous = &previous
+
 	return b
 }
 
@@ -56,6 +59,7 @@ type ListDomainsResponseData struct {
 	DomainNames []string `json:"domainNames"`
 }
 
+// ListDomainsResponse is the response type for listing Apple Pay domains
 type ListDomainsResponse = types.Response[ListDomainsResponseData]
 
 // ListDomains lists all registered domains on your integration

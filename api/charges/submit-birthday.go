@@ -33,6 +33,7 @@ func (b *SubmitBirthdayRequestBuilder) Build() *SubmitBirthdayRequest {
 	return b.req
 }
 
+// SubmitBirthdayResponse represents the response from submitting birthday for a charge
 type SubmitBirthdayResponse = types.Response[types.ChargeData]
 
 // SubmitBirthday submits birthday when requested for verification

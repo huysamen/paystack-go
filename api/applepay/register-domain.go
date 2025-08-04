@@ -31,6 +31,7 @@ func (b *RegisterDomainRequestBuilder) Build() *RegisterDomainRequest {
 	return b.req
 }
 
+// RegisterDomainResponse is the response type for registering an Apple Pay domain
 type RegisterDomainResponse = types.Response[any]
 
 // RegisterDomain registers a top-level domain or subdomain for Apple Pay integration

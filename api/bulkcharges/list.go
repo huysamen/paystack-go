@@ -32,24 +32,28 @@ func NewListBulkChargeBatchesRequest() *ListBulkChargeBatchesRequestBuilder {
 // PerPage sets the number of records per page
 func (b *ListBulkChargeBatchesRequestBuilder) PerPage(perPage int) *ListBulkChargeBatchesRequestBuilder {
 	b.req.PerPage = &perPage
+
 	return b
 }
 
 // Page sets the page number
 func (b *ListBulkChargeBatchesRequestBuilder) Page(page int) *ListBulkChargeBatchesRequestBuilder {
 	b.req.Page = &page
+
 	return b
 }
 
 // From sets the start date filter
 func (b *ListBulkChargeBatchesRequestBuilder) From(from string) *ListBulkChargeBatchesRequestBuilder {
 	b.req.From = &from
+
 	return b
 }
 
 // To sets the end date filter
 func (b *ListBulkChargeBatchesRequestBuilder) To(to string) *ListBulkChargeBatchesRequestBuilder {
 	b.req.To = &to
+
 	return b
 }
 
@@ -57,6 +61,7 @@ func (b *ListBulkChargeBatchesRequestBuilder) To(to string) *ListBulkChargeBatch
 func (b *ListBulkChargeBatchesRequestBuilder) DateRange(from, to string) *ListBulkChargeBatchesRequestBuilder {
 	b.req.From = &from
 	b.req.To = &to
+
 	return b
 }
 
@@ -65,6 +70,7 @@ func (b *ListBulkChargeBatchesRequestBuilder) Build() *ListBulkChargeBatchesRequ
 	return b.req
 }
 
+// ListBulkChargeBatchesResponse represents the response from listing bulk charge batches
 type ListBulkChargeBatchesResponse = types.Response[[]types.BulkChargeBatch]
 
 // List retrieves all bulk charge batches created by the integration using a builder

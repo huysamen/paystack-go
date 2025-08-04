@@ -7,6 +7,7 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
+// FetchBulkChargeBatch represents the response from fetching a bulk charge batch
 type FetchBulkChargeBatch = types.Response[types.BulkChargeBatch]
 
 // Fetch retrieves a specific bulk charge batch by ID or batch code

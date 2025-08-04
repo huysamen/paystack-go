@@ -31,6 +31,7 @@ func (b *UnregisterDomainRequestBuilder) Build() *UnregisterDomainRequest {
 	return b.req
 }
 
+// UnregisterDomainResponse is the response type for unregistering an Apple Pay domain
 type UnregisterDomainResponse = types.Response[any]
 
 // UnregisterDomain unregisters a top-level domain or subdomain previously used for Apple Pay integration

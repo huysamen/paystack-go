@@ -33,30 +33,35 @@ func NewFetchChargesInBatchRequest() *FetchChargesInBatchRequestBuilder {
 // Status filters by charge status
 func (b *FetchChargesInBatchRequestBuilder) Status(status string) *FetchChargesInBatchRequestBuilder {
 	b.req.Status = &status
+
 	return b
 }
 
 // PerPage sets the number of records per page
 func (b *FetchChargesInBatchRequestBuilder) PerPage(perPage int) *FetchChargesInBatchRequestBuilder {
 	b.req.PerPage = &perPage
+
 	return b
 }
 
 // Page sets the page number
 func (b *FetchChargesInBatchRequestBuilder) Page(page int) *FetchChargesInBatchRequestBuilder {
 	b.req.Page = &page
+
 	return b
 }
 
 // From sets the start date filter
 func (b *FetchChargesInBatchRequestBuilder) From(from string) *FetchChargesInBatchRequestBuilder {
 	b.req.From = &from
+
 	return b
 }
 
 // To sets the end date filter
 func (b *FetchChargesInBatchRequestBuilder) To(to string) *FetchChargesInBatchRequestBuilder {
 	b.req.To = &to
+
 	return b
 }
 
@@ -64,6 +69,7 @@ func (b *FetchChargesInBatchRequestBuilder) To(to string) *FetchChargesInBatchRe
 func (b *FetchChargesInBatchRequestBuilder) DateRange(from, to string) *FetchChargesInBatchRequestBuilder {
 	b.req.From = &from
 	b.req.To = &to
+
 	return b
 }
 
@@ -72,6 +78,7 @@ func (b *FetchChargesInBatchRequestBuilder) Build() *FetchChargesInBatchRequest 
 	return b.req
 }
 
+// FetchChargesInBatchResponse represents the response from fetching charges in a batch
 type FetchChargesInBatchResponse = types.Response[[]types.BulkCharge]
 
 // FetchChargesInBatch retrieves the charges associated with a specified batch code using a builder

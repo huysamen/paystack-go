@@ -33,6 +33,7 @@ func (b *SubmitPINRequestBuilder) Build() *SubmitPINRequest {
 	return b.req
 }
 
+// SubmitPINResponse represents the response from submitting PIN for a charge
 type SubmitPINResponse = types.Response[types.ChargeData]
 
 // SubmitPIN submits PIN to continue a charge

@@ -33,6 +33,7 @@ func (b *SubmitOTPRequestBuilder) Build() *SubmitOTPRequest {
 	return b.req
 }
 
+// SubmitOTPResponse represents the response from submitting OTP for a charge
 type SubmitOTPResponse = types.Response[types.ChargeData]
 
 // SubmitOTP submits OTP to complete a charge

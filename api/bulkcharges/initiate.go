@@ -42,6 +42,7 @@ func (b *InitiateBulkChargeRequestBuilder) AddItem(authorization string, amount 
 // AddItems adds multiple bulk charge items to the request
 func (b *InitiateBulkChargeRequestBuilder) AddItems(items []BulkChargeItem) *InitiateBulkChargeRequestBuilder {
 	*b.req = append(*b.req, items...)
+
 	return b
 }
 
@@ -50,6 +51,7 @@ func (b *InitiateBulkChargeRequestBuilder) Build() *InitiateBulkChargeRequest {
 	return b.req
 }
 
+// InitiateBulkChargeResponse represents the response from initiating a bulk charge
 type InitiateBulkChargeResponse = types.Response[types.BulkChargeBatch]
 
 // Initiate sends an array of objects with authorization codes and amounts for batch processing

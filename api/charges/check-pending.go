@@ -31,6 +31,7 @@ func (b *CheckPendingChargeRequestBuilder) Build() *CheckPendingChargeRequest {
 	return b.req
 }
 
+// checkPendingPath is the API endpoint for checking pending charges
 type CheckPendingChargeResponse = types.Response[types.ChargeData]
 
 // CheckPending checks the status of a pending charge

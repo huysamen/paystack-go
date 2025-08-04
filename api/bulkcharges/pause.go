@@ -7,6 +7,7 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
+// PauseBulkChargeRequest represents the request to pause a bulk charge batch
 type PauseBulkChargeResponse = types.Response[any]
 
 // Pause pauses processing of a bulk charge batch
