@@ -3,7 +3,6 @@ package transactions
 import (
 	"context"
 	"fmt"
-	"time"
 
 	"github.com/huysamen/paystack-go/net"
 	"github.com/huysamen/paystack-go/types"
@@ -19,27 +18,6 @@ type TransactionPartialDebitRequest struct {
 	// Optional
 	Reference string `json:"reference,omitempty"`
 	AtLeast   string `json:"at_least,omitempty"`
-}
-
-type TransactionPartialDebitResponse struct {
-	ID              uint64              `json:"id"`
-	Amount          int                 `json:"amount"`
-	Currency        types.Currency      `json:"currency"`
-	TransactionDate time.Time           `json:"transaction_date"`
-	Status          string              `json:"status"`
-	Reference       string              `json:"reference"`
-	Domain          string              `json:"domain"`
-	Metadata        types.Metadata      `json:"metadata"`
-	GatewayResponse string              `json:"gateway_response"`
-	Message         string              `json:"message"`
-	Channel         types.Channel       `json:"channel"`
-	IPAddress       string              `json:"ip_address"`
-	Log             types.Log           `json:"log"`
-	Fees            int                 `json:"fees"`
-	Authorization   types.Authorization `json:"authorization"`
-	Customer        types.Customer      `json:"customer"`
-	Plan            uint64              `json:"plan"`
-	RequestedAmount int                 `json:"requested_amount"`
 }
 
 // TransactionPartialDebitRequestBuilder builds a TransactionPartialDebitRequest
@@ -94,11 +72,8 @@ func (b *TransactionPartialDebitRequestBuilder) Build() *TransactionPartialDebit
 }
 
 // Response type alias
-type TransactionPartialDebitApiResponse = types.Response[TransactionPartialDebitResponse]
+type PartialDebitResponse = types.Response[types.Transaction]
 
-func (c *Client) PartialDebit(ctx context.Context, builder *TransactionPartialDebitRequestBuilder) (*TransactionPartialDebitApiResponse, error) {
-	req := builder.Build()
-	return net.Post[TransactionPartialDebitRequest, TransactionPartialDebitResponse](
-		ctx, c.Client, c.Secret, fmt.Sprintf("%s%s", basePath, transactionPartialDebitPath), req, c.BaseURL,
-	)
+func (c *Client) PartialDebit(ctx context.Context, builder *TransactionPartialDebitRequestBuilder) (*PartialDebitResponse, error) {
+	return net.Post[TransactionPartialDebitRequest, types.Transaction](ctx, c.Client, c.Secret, fmt.Sprintf("%s%s", basePath, transactionPartialDebitPath), builder.Build(), c.BaseURL)
 }

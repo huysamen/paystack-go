@@ -42,12 +42,14 @@ func NewTransactionExportRequest() *TransactionExportRequestBuilder {
 // PerPage sets the number of records per page
 func (b *TransactionExportRequestBuilder) PerPage(perPage int) *TransactionExportRequestBuilder {
 	b.req.PerPage = optional.Int(perPage)
+
 	return b
 }
 
 // Page sets the page number
 func (b *TransactionExportRequestBuilder) Page(page int) *TransactionExportRequestBuilder {
 	b.req.Page = optional.Int(page)
+
 	return b
 }
 
@@ -55,60 +57,70 @@ func (b *TransactionExportRequestBuilder) Page(page int) *TransactionExportReque
 func (b *TransactionExportRequestBuilder) DateRange(from, to time.Time) *TransactionExportRequestBuilder {
 	b.req.From = optional.Time(from)
 	b.req.To = optional.Time(to)
+
 	return b
 }
 
 // From sets the start date filter
 func (b *TransactionExportRequestBuilder) From(from time.Time) *TransactionExportRequestBuilder {
 	b.req.From = optional.Time(from)
+
 	return b
 }
 
 // To sets the end date filter
 func (b *TransactionExportRequestBuilder) To(to time.Time) *TransactionExportRequestBuilder {
 	b.req.To = optional.Time(to)
+
 	return b
 }
 
 // Customer filters by customer ID
 func (b *TransactionExportRequestBuilder) Customer(customer uint64) *TransactionExportRequestBuilder {
 	b.req.Customer = optional.Uint64(customer)
+
 	return b
 }
 
 // Status filters by transaction status
 func (b *TransactionExportRequestBuilder) Status(status string) *TransactionExportRequestBuilder {
 	b.req.Status = optional.String(status)
+
 	return b
 }
 
 // Currency filters by currency
 func (b *TransactionExportRequestBuilder) Currency(currency types.Currency) *TransactionExportRequestBuilder {
 	b.req.Currency = &currency
+
 	return b
 }
 
 // Amount filters by transaction amount
 func (b *TransactionExportRequestBuilder) Amount(amount int) *TransactionExportRequestBuilder {
 	b.req.Amount = optional.Int(amount)
+
 	return b
 }
 
 // Settled filters by settlement status
 func (b *TransactionExportRequestBuilder) Settled(settled bool) *TransactionExportRequestBuilder {
 	b.req.Settled = optional.Bool(settled)
+
 	return b
 }
 
 // Settlement filters by settlement ID
 func (b *TransactionExportRequestBuilder) Settlement(settlement uint64) *TransactionExportRequestBuilder {
 	b.req.Settlement = optional.Uint64(settlement)
+
 	return b
 }
 
 // PaymentPage filters by payment page ID
 func (b *TransactionExportRequestBuilder) PaymentPage(paymentPage uint64) *TransactionExportRequestBuilder {
 	b.req.PaymentPage = optional.Uint64(paymentPage)
+
 	return b
 }
 
@@ -157,20 +169,21 @@ func (r *TransactionExportRequest) toQuery() string {
 	return params.Encode()
 }
 
-type TransactionExportResponse struct {
+// TransactionExportResponse represents the response for exporting transactions
+type ExportResponseData struct {
 	Path      string         `json:"path"`
 	ExpiresAt types.DateTime `json:"expiresAt"`
 }
 
 // Response type alias
-type TransactionExportApiResponse = types.Response[TransactionExportResponse]
+type ExportResponse = types.Response[ExportResponseData]
 
 // Export exports transactions using a builder (fluent interface)
-func (c *Client) Export(ctx context.Context, builder *TransactionExportRequestBuilder) (*TransactionExportApiResponse, error) {
+func (c *Client) Export(ctx context.Context, builder *TransactionExportRequestBuilder) (*ExportResponse, error) {
 	req := builder.Build()
 	query := ""
 	if req != nil {
 		query = req.toQuery()
 	}
-	return net.Get[TransactionExportResponse](ctx, c.Client, c.Secret, fmt.Sprintf("%s%s", basePath, transactionExportPath), query, c.BaseURL)
+	return net.Get[ExportResponseData](ctx, c.Client, c.Secret, fmt.Sprintf("%s%s", basePath, transactionExportPath), query, c.BaseURL)
 }
