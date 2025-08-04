@@ -78,12 +78,15 @@ func (r *CustomerListRequest) toQuery() string {
 	if r.PerPage != nil {
 		params.Add("perPage", fmt.Sprintf("%d", *r.PerPage))
 	}
+
 	if r.Page != nil {
 		params.Add("page", fmt.Sprintf("%d", *r.Page))
 	}
+
 	if r.From != nil {
 		params.Add("from", r.From.Format("2006-01-02T15:04:05.999Z"))
 	}
+
 	if r.To != nil {
 		params.Add("to", r.To.Format("2006-01-02T15:04:05.999Z"))
 	}
