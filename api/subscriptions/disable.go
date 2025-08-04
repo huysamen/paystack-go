@@ -7,30 +7,31 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type SubscriptionDisableRequest struct {
+type disableRequest struct {
 	Code  string `json:"code"`  // Subscription code
 	Token string `json:"token"` // Email token
 }
 
-type SubscriptionDisableRequestBuilder struct {
-	req *SubscriptionDisableRequest
+type DisableRequestBuilder struct {
+	req *disableRequest
 }
 
-func NewSubscriptionDisableRequest(code, token string) *SubscriptionDisableRequestBuilder {
-	return &SubscriptionDisableRequestBuilder{
-		req: &SubscriptionDisableRequest{
+func NewDisableRequestBuilder(code, token string) *DisableRequestBuilder {
+	return &DisableRequestBuilder{
+		req: &disableRequest{
 			Code:  code,
 			Token: token,
 		},
 	}
 }
 
-func (b *SubscriptionDisableRequestBuilder) Build() *SubscriptionDisableRequest {
+func (b *DisableRequestBuilder) Build() *disableRequest {
 	return b.req
 }
 
-type SubscriptionDisableResponse = types.Response[any]
+type DisableResponseData = any
+type DisableResponse = types.Response[DisableResponseData]
 
-func (c *Client) Disable(ctx context.Context, builder *SubscriptionDisableRequestBuilder) (*SubscriptionDisableResponse, error) {
-	return net.Post[SubscriptionDisableRequest, any](ctx, c.Client, c.Secret, basePath+"/disable", builder.Build(), c.BaseURL)
+func (c *Client) Disable(ctx context.Context, builder DisableRequestBuilder) (*DisableResponse, error) {
+	return net.Post[disableRequest, DisableResponseData](ctx, c.Client, c.Secret, basePath+"/disable", builder.Build(), c.BaseURL)
 }

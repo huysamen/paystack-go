@@ -8,12 +8,12 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type GenerateUpdateLinkResponse struct {
+type GenerateUpdateLinkResponseData struct {
 	Link string `json:"link"`
 }
 
-type SubscriptionGenerateUpdateLinkResponse = types.Response[GenerateUpdateLinkResponse]
+type GenerateUpdateLinkResponse = types.Response[GenerateUpdateLinkResponseData]
 
-func (c *Client) GenerateUpdateLink(ctx context.Context, code string) (*SubscriptionGenerateUpdateLinkResponse, error) {
-	return net.Get[GenerateUpdateLinkResponse](ctx, c.Client, c.Secret, fmt.Sprintf("%s/%s/manage/link", basePath, code), c.BaseURL)
+func (c *Client) GenerateUpdateLink(ctx context.Context, code string) (*GenerateUpdateLinkResponse, error) {
+	return net.Get[GenerateUpdateLinkResponseData](ctx, c.Client, c.Secret, fmt.Sprintf("%s/%s/manage/link", basePath, code), c.BaseURL)
 }

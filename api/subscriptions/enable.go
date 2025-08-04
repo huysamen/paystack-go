@@ -7,30 +7,31 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type SubscriptionEnableRequest struct {
+type enableRequest struct {
 	Code  string `json:"code"`  // Subscription code
 	Token string `json:"token"` // Email token
 }
 
-type SubscriptionEnableRequestBuilder struct {
-	req *SubscriptionEnableRequest
+type EnableRequestBuilder struct {
+	req *enableRequest
 }
 
-func NewSubscriptionEnableRequest(code, token string) *SubscriptionEnableRequestBuilder {
-	return &SubscriptionEnableRequestBuilder{
-		req: &SubscriptionEnableRequest{
+func NewEnableRequestBuilder(code, token string) *EnableRequestBuilder {
+	return &EnableRequestBuilder{
+		req: &enableRequest{
 			Code:  code,
 			Token: token,
 		},
 	}
 }
 
-func (b *SubscriptionEnableRequestBuilder) Build() *SubscriptionEnableRequest {
+func (b *EnableRequestBuilder) Build() *enableRequest {
 	return b.req
 }
 
-type SubscriptionEnableResponse = types.Response[any]
+type EnableResponseData = any
+type EnableResponse = types.Response[EnableResponseData]
 
-func (c *Client) Enable(ctx context.Context, builder *SubscriptionEnableRequestBuilder) (*SubscriptionEnableResponse, error) {
-	return net.Post[SubscriptionEnableRequest, any](ctx, c.Client, c.Secret, basePath+"/enable", builder.Build(), c.BaseURL)
+func (c *Client) Enable(ctx context.Context, builder EnableRequestBuilder) (*EnableResponse, error) {
+	return net.Post[enableRequest, EnableResponseData](ctx, c.Client, c.Secret, basePath+"/enable", builder.Build(), c.BaseURL)
 }

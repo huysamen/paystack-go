@@ -8,8 +8,9 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type SubscriptionFetchResponse = types.Response[types.Subscription]
+type FetchResponseData = types.Subscription
+type FetchResponse = types.Response[FetchResponseData]
 
-func (c *Client) Fetch(ctx context.Context, idOrCode string) (*SubscriptionFetchResponse, error) {
-	return net.Get[types.Subscription](ctx, c.Client, c.Secret, fmt.Sprintf("%s/%s", basePath, idOrCode), c.BaseURL)
+func (c *Client) Fetch(ctx context.Context, idOrCode string) (*FetchResponse, error) {
+	return net.Get[FetchResponseData](ctx, c.Client, c.Secret, fmt.Sprintf("%s/%s", basePath, idOrCode), c.BaseURL)
 }

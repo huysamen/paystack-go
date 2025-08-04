@@ -8,44 +8,45 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type SubscriptionCreateRequest struct {
+type createRequest struct {
 	Customer      string     `json:"customer"`                // Customer email or customer code
 	Plan          string     `json:"plan"`                    // Plan code
 	Authorization *string    `json:"authorization,omitempty"` // Authorization code if customer has multiple
 	StartDate     *time.Time `json:"start_date,omitempty"`    // Date for first debit (ISO 8601)
 }
 
-type SubscriptionCreateRequestBuilder struct {
-	req *SubscriptionCreateRequest
+type CreateRequestBuilder struct {
+	req *createRequest
 }
 
-func NewSubscriptionCreateRequest(customer, plan string) *SubscriptionCreateRequestBuilder {
-	return &SubscriptionCreateRequestBuilder{
-		req: &SubscriptionCreateRequest{
+func NewCreateRequestBuilder(customer, plan string) *CreateRequestBuilder {
+	return &CreateRequestBuilder{
+		req: &createRequest{
 			Customer: customer,
 			Plan:     plan,
 		},
 	}
 }
 
-func (b *SubscriptionCreateRequestBuilder) Authorization(authorization string) *SubscriptionCreateRequestBuilder {
+func (b *CreateRequestBuilder) Authorization(authorization string) *CreateRequestBuilder {
 	b.req.Authorization = &authorization
 
 	return b
 }
 
-func (b *SubscriptionCreateRequestBuilder) StartDate(startDate time.Time) *SubscriptionCreateRequestBuilder {
+func (b *CreateRequestBuilder) StartDate(startDate time.Time) *CreateRequestBuilder {
 	b.req.StartDate = &startDate
 
 	return b
 }
 
-func (b *SubscriptionCreateRequestBuilder) Build() *SubscriptionCreateRequest {
+func (b *CreateRequestBuilder) Build() *createRequest {
 	return b.req
 }
 
-type SubscriptionCreateResponse = types.Response[types.Subscription]
+type CreateResponseData = types.Subscription
+type CreateResponse = types.Response[CreateResponseData]
 
-func (c *Client) Create(ctx context.Context, builder *SubscriptionCreateRequestBuilder) (*SubscriptionCreateResponse, error) {
-	return net.Post[SubscriptionCreateRequest, types.Subscription](ctx, c.Client, c.Secret, basePath, builder.Build(), c.BaseURL)
+func (c *Client) Create(ctx context.Context, builder CreateRequestBuilder) (*CreateResponse, error) {
+	return net.Post[createRequest, CreateResponseData](ctx, c.Client, c.Secret, basePath, builder.Build(), c.BaseURL)
 }

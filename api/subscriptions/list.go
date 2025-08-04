@@ -10,52 +10,52 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type SubscriptionListRequest struct {
+type listRequest struct {
 	PerPage  *int
 	Page     *int
 	Customer *int // Customer ID
 	Plan     *int // Plan ID
 }
 
-type SubscriptionListRequestBuilder struct {
-	req *SubscriptionListRequest
+type ListRequestBuilder struct {
+	req *listRequest
 }
 
-func NewSubscriptionListRequest() *SubscriptionListRequestBuilder {
-	return &SubscriptionListRequestBuilder{
-		req: &SubscriptionListRequest{},
+func NewListRequestBuilder() *ListRequestBuilder {
+	return &ListRequestBuilder{
+		req: &listRequest{},
 	}
 }
 
-func (b *SubscriptionListRequestBuilder) PerPage(perPage int) *SubscriptionListRequestBuilder {
+func (b *ListRequestBuilder) PerPage(perPage int) *ListRequestBuilder {
 	b.req.PerPage = optional.Int(perPage)
 
 	return b
 }
 
-func (b *SubscriptionListRequestBuilder) Page(page int) *SubscriptionListRequestBuilder {
+func (b *ListRequestBuilder) Page(page int) *ListRequestBuilder {
 	b.req.Page = optional.Int(page)
 
 	return b
 }
 
-func (b *SubscriptionListRequestBuilder) Customer(customer int) *SubscriptionListRequestBuilder {
+func (b *ListRequestBuilder) Customer(customer int) *ListRequestBuilder {
 	b.req.Customer = optional.Int(customer)
 
 	return b
 }
 
-func (b *SubscriptionListRequestBuilder) Plan(plan int) *SubscriptionListRequestBuilder {
+func (b *ListRequestBuilder) Plan(plan int) *ListRequestBuilder {
 	b.req.Plan = optional.Int(plan)
 
 	return b
 }
 
-func (b *SubscriptionListRequestBuilder) Build() *SubscriptionListRequest {
+func (b *ListRequestBuilder) Build() *listRequest {
 	return b.req
 }
 
-func (r *SubscriptionListRequest) toQuery() string {
+func (r *listRequest) toQuery() string {
 	params := url.Values{}
 
 	if r.PerPage != nil {
@@ -74,17 +74,16 @@ func (r *SubscriptionListRequest) toQuery() string {
 	return params.Encode()
 }
 
-type SubscriptionListResponse = types.Response[[]types.Subscription]
+type ListResponseData = []types.Subscription
+type ListResponse = types.Response[ListResponseData]
 
-func (c *Client) List(ctx context.Context, builder *SubscriptionListRequestBuilder) (*SubscriptionListResponse, error) {
+func (c *Client) List(ctx context.Context, builder ListRequestBuilder) (*ListResponse, error) {
 	path := basePath
 
-	if builder != nil {
-		req := builder.Build()
-		if query := req.toQuery(); query != "" {
-			path += "?" + query
-		}
+	req := builder.Build()
+	if query := req.toQuery(); query != "" {
+		path += "?" + query
 	}
 
-	return net.Get[[]types.Subscription](ctx, c.Client, c.Secret, path, c.BaseURL)
+	return net.Get[ListResponseData](ctx, c.Client, c.Secret, path, c.BaseURL)
 }

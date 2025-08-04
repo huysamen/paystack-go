@@ -8,8 +8,9 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type SendUpdateSubscriptionLinkResponse = types.Response[any]
+type SendUpdateLinkResponseData = any
+type SendUpdateLinkResponse = types.Response[SendUpdateLinkResponseData]
 
-func (c *Client) SendUpdateLink(ctx context.Context, code string) (*SendUpdateSubscriptionLinkResponse, error) {
-	return net.Post[any, any](ctx, c.Client, c.Secret, fmt.Sprintf("%s/%s/manage/email", basePath, code), nil, c.BaseURL)
+func (c *Client) SendUpdateLink(ctx context.Context, code string) (*SendUpdateLinkResponse, error) {
+	return net.Post[any, SendUpdateLinkResponseData](ctx, c.Client, c.Secret, fmt.Sprintf("%s/%s/manage/email", basePath, code), nil, c.BaseURL)
 }
