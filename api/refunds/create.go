@@ -7,7 +7,7 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type RefundCreateRequest struct {
+type createRequest struct {
 	Transaction  string  `json:"transaction"`
 	Amount       *int    `json:"amount,omitempty"`
 	Currency     *string `json:"currency,omitempty"`
@@ -15,43 +15,43 @@ type RefundCreateRequest struct {
 	MerchantNote *string `json:"merchant_note,omitempty"`
 }
 
-type RefundCreateRequestBuilder struct {
-	req *RefundCreateRequest
+type CreateRequestBuilder struct {
+	req *createRequest
 }
 
-func NewRefundCreateRequest(transaction string) *RefundCreateRequestBuilder {
-	return &RefundCreateRequestBuilder{
-		req: &RefundCreateRequest{
+func NewCreateRequestBuilder(transaction string) *CreateRequestBuilder {
+	return &CreateRequestBuilder{
+		req: &createRequest{
 			Transaction: transaction,
 		},
 	}
 }
 
-func (b *RefundCreateRequestBuilder) Amount(amount int) *RefundCreateRequestBuilder {
+func (b *CreateRequestBuilder) Amount(amount int) *CreateRequestBuilder {
 	b.req.Amount = &amount
 	return b
 }
 
-func (b *RefundCreateRequestBuilder) Currency(currency string) *RefundCreateRequestBuilder {
+func (b *CreateRequestBuilder) Currency(currency string) *CreateRequestBuilder {
 	b.req.Currency = &currency
 	return b
 }
 
-func (b *RefundCreateRequestBuilder) CustomerNote(note string) *RefundCreateRequestBuilder {
+func (b *CreateRequestBuilder) CustomerNote(note string) *CreateRequestBuilder {
 	b.req.CustomerNote = &note
 	return b
 }
 
-func (b *RefundCreateRequestBuilder) MerchantNote(note string) *RefundCreateRequestBuilder {
+func (b *CreateRequestBuilder) MerchantNote(note string) *CreateRequestBuilder {
 	b.req.MerchantNote = &note
 	return b
 }
 
-func (b *RefundCreateRequestBuilder) Build() *RefundCreateRequest {
+func (b *CreateRequestBuilder) Build() *createRequest {
 	return b.req
 }
 
-type RefundCreateResponseData struct {
+type CreateResponseData struct {
 	Transaction *types.Transaction `json:"transaction"`
 	Amount      int                `json:"amount"`
 	Currency    string             `json:"currency"`
@@ -60,8 +60,8 @@ type RefundCreateResponseData struct {
 	CreatedAt   *types.DateTime    `json:"created_at"`
 }
 
-type RefundCreateResponse = types.Response[RefundCreateResponseData]
+type CreateResponse = types.Response[CreateResponseData]
 
-func (c *Client) Create(ctx context.Context, builder *RefundCreateRequestBuilder) (*RefundCreateResponse, error) {
-	return net.Post[RefundCreateRequest, RefundCreateResponseData](ctx, c.Client, c.Secret, basePath, builder.Build(), c.BaseURL)
+func (c *Client) Create(ctx context.Context, builder CreateRequestBuilder) (*CreateResponse, error) {
+	return net.Post[createRequest, CreateResponseData](ctx, c.Client, c.Secret, basePath, builder.Build(), c.BaseURL)
 }

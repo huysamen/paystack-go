@@ -8,7 +8,7 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type RefundListRequest struct {
+type listRequest struct {
 	Transaction *string    `json:"transaction,omitempty"`
 	Currency    *string    `json:"currency,omitempty"`
 	From        *time.Time `json:"from,omitempty"`
@@ -17,65 +17,66 @@ type RefundListRequest struct {
 	Page        *int       `json:"page,omitempty"`
 }
 
-type RefundListRequestBuilder struct {
-	req *RefundListRequest
+type ListRequestBuilder struct {
+	req *listRequest
 }
 
-func NewRefundListRequest() *RefundListRequestBuilder {
-	return &RefundListRequestBuilder{
-		req: &RefundListRequest{},
+func NewListRequestBuilder() *ListRequestBuilder {
+	return &ListRequestBuilder{
+		req: &listRequest{},
 	}
 }
 
-func (b *RefundListRequestBuilder) Transaction(transaction string) *RefundListRequestBuilder {
+func (b *ListRequestBuilder) Transaction(transaction string) *ListRequestBuilder {
 	b.req.Transaction = &transaction
 
 	return b
 }
 
-func (b *RefundListRequestBuilder) Currency(currency string) *RefundListRequestBuilder {
+func (b *ListRequestBuilder) Currency(currency string) *ListRequestBuilder {
 	b.req.Currency = &currency
 
 	return b
 }
 
-func (b *RefundListRequestBuilder) DateRange(from, to time.Time) *RefundListRequestBuilder {
+func (b *ListRequestBuilder) DateRange(from, to time.Time) *ListRequestBuilder {
 	b.req.From = &from
 	b.req.To = &to
 
 	return b
 }
 
-func (b *RefundListRequestBuilder) From(from time.Time) *RefundListRequestBuilder {
+func (b *ListRequestBuilder) From(from time.Time) *ListRequestBuilder {
 	b.req.From = &from
 
 	return b
 }
 
-func (b *RefundListRequestBuilder) To(to time.Time) *RefundListRequestBuilder {
+func (b *ListRequestBuilder) To(to time.Time) *ListRequestBuilder {
 	b.req.To = &to
 
 	return b
 }
 
-func (b *RefundListRequestBuilder) PerPage(perPage int) *RefundListRequestBuilder {
+func (b *ListRequestBuilder) PerPage(perPage int) *ListRequestBuilder {
 	b.req.PerPage = &perPage
 
 	return b
 }
 
-func (b *RefundListRequestBuilder) Page(page int) *RefundListRequestBuilder {
+func (b *ListRequestBuilder) Page(page int) *ListRequestBuilder {
 	b.req.Page = &page
 
 	return b
 }
 
-func (b *RefundListRequestBuilder) Build() *RefundListRequest {
+func (b *ListRequestBuilder) Build() *listRequest {
 	return b.req
 }
 
-type RefundListResponse = types.Response[[]types.Refund]
+type ListResponseData = []types.Refund
+type ListResponse = types.Response[ListResponseData]
 
-func (c *Client) List(ctx context.Context, builder *RefundListRequestBuilder) (*RefundListResponse, error) {
-	return net.Get[[]types.Refund](ctx, c.Client, c.Secret, basePath, c.BaseURL)
+func (c *Client) List(ctx context.Context, builder ListRequestBuilder) (*ListResponse, error) {
+	return net.Get[ListResponseData](ctx, c.Client, c.Secret, basePath, c.BaseURL)
 }
