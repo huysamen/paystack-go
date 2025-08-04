@@ -15,8 +15,6 @@ type RequeryDedicatedAccountRequest struct {
 	Date          string `json:"date,omitempty"`
 }
 
-type RequeryResponse = types.Response[any]
-
 // RequeryDedicatedAccountBuilder builds requests for requerying dedicated accounts
 type RequeryDedicatedAccountBuilder struct {
 	request *RequeryDedicatedAccountRequest
@@ -32,18 +30,21 @@ func NewRequeryDedicatedAccountBuilder() *RequeryDedicatedAccountBuilder {
 // AccountNumber sets the account number for requerying the dedicated account
 func (b *RequeryDedicatedAccountBuilder) AccountNumber(accountNumber string) *RequeryDedicatedAccountBuilder {
 	b.request.AccountNumber = accountNumber
+
 	return b
 }
 
 // ProviderSlug sets the provider slug for requerying the dedicated account
 func (b *RequeryDedicatedAccountBuilder) ProviderSlug(providerSlug string) *RequeryDedicatedAccountBuilder {
 	b.request.ProviderSlug = providerSlug
+
 	return b
 }
 
 // Date sets the date for requerying the dedicated account
 func (b *RequeryDedicatedAccountBuilder) Date(date string) *RequeryDedicatedAccountBuilder {
 	b.request.Date = date
+
 	return b
 }
 
@@ -51,6 +52,9 @@ func (b *RequeryDedicatedAccountBuilder) Date(date string) *RequeryDedicatedAcco
 func (b *RequeryDedicatedAccountBuilder) Build() *RequeryDedicatedAccountRequest {
 	return b.request
 }
+
+// RequeryResponse represents the response type for requerying a dedicated account
+type RequeryResponse = types.Response[any]
 
 // Requery requerying dedicated virtual account for new transactions
 func (c *Client) Requery(ctx context.Context, builder *RequeryDedicatedAccountBuilder) (*RequeryResponse, error) {

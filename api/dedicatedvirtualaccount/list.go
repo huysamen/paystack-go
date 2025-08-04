@@ -18,8 +18,6 @@ type ListDedicatedVirtualAccountsRequest struct {
 	Customer     string `json:"customer,omitempty"`
 }
 
-type ListDedicatedVirtualAccountsResponse = types.Response[[]types.DedicatedVirtualAccount]
-
 // ListDedicatedVirtualAccountsBuilder builds requests for listing dedicated virtual accounts
 type ListDedicatedVirtualAccountsBuilder struct {
 	request *ListDedicatedVirtualAccountsRequest
@@ -35,30 +33,35 @@ func NewListDedicatedVirtualAccountsBuilder() *ListDedicatedVirtualAccountsBuild
 // Active sets the active filter for listing dedicated virtual accounts
 func (b *ListDedicatedVirtualAccountsBuilder) Active(active bool) *ListDedicatedVirtualAccountsBuilder {
 	b.request.Active = &active
+
 	return b
 }
 
 // Currency sets the currency filter for listing dedicated virtual accounts
 func (b *ListDedicatedVirtualAccountsBuilder) Currency(currency string) *ListDedicatedVirtualAccountsBuilder {
 	b.request.Currency = currency
+
 	return b
 }
 
 // ProviderSlug sets the provider slug filter for listing dedicated virtual accounts
 func (b *ListDedicatedVirtualAccountsBuilder) ProviderSlug(providerSlug string) *ListDedicatedVirtualAccountsBuilder {
 	b.request.ProviderSlug = providerSlug
+
 	return b
 }
 
 // BankID sets the bank ID filter for listing dedicated virtual accounts
 func (b *ListDedicatedVirtualAccountsBuilder) BankID(bankID string) *ListDedicatedVirtualAccountsBuilder {
 	b.request.BankID = bankID
+
 	return b
 }
 
 // Customer sets the customer filter for listing dedicated virtual accounts
 func (b *ListDedicatedVirtualAccountsBuilder) Customer(customer string) *ListDedicatedVirtualAccountsBuilder {
 	b.request.Customer = customer
+
 	return b
 }
 
@@ -66,6 +69,9 @@ func (b *ListDedicatedVirtualAccountsBuilder) Customer(customer string) *ListDed
 func (b *ListDedicatedVirtualAccountsBuilder) Build() *ListDedicatedVirtualAccountsRequest {
 	return b.request
 }
+
+// ListDedicatedVirtualAccountsResponse represents the response for listing dedicated virtual accounts
+type ListDedicatedVirtualAccountsResponse = types.Response[[]types.DedicatedVirtualAccount]
 
 // List retrieves dedicated virtual accounts available on your integration
 func (c *Client) List(ctx context.Context, builder *ListDedicatedVirtualAccountsBuilder) (*ListDedicatedVirtualAccountsResponse, error) {

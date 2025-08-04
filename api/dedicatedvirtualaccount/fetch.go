@@ -8,6 +8,7 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
+// FetchDedicatedVirtualAccountResponse is the response type for fetching a dedicated virtual account
 type FetchDedicatedVirtualAccountResponse = types.Response[types.DedicatedVirtualAccount]
 
 // Fetch gets details of a dedicated virtual account on your integration

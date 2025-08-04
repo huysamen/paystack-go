@@ -15,8 +15,6 @@ type SplitDedicatedAccountTransactionRequest struct {
 	PreferredBank string `json:"preferred_bank,omitempty"`
 }
 
-type SplitDedicatedAccountTransactionResponse = types.Response[types.DedicatedVirtualAccount]
-
 // SplitDedicatedAccountTransactionBuilder builds requests for splitting dedicated account transactions
 type SplitDedicatedAccountTransactionBuilder struct {
 	request *SplitDedicatedAccountTransactionRequest
@@ -32,24 +30,28 @@ func NewSplitDedicatedAccountTransactionBuilder() *SplitDedicatedAccountTransact
 // Customer sets the customer for splitting the dedicated account transaction
 func (b *SplitDedicatedAccountTransactionBuilder) Customer(customer string) *SplitDedicatedAccountTransactionBuilder {
 	b.request.Customer = customer
+
 	return b
 }
 
 // Subaccount sets the subaccount for splitting the dedicated account transaction
 func (b *SplitDedicatedAccountTransactionBuilder) Subaccount(subaccount string) *SplitDedicatedAccountTransactionBuilder {
 	b.request.Subaccount = subaccount
+
 	return b
 }
 
 // SplitCode sets the split code for splitting the dedicated account transaction
 func (b *SplitDedicatedAccountTransactionBuilder) SplitCode(splitCode string) *SplitDedicatedAccountTransactionBuilder {
 	b.request.SplitCode = splitCode
+
 	return b
 }
 
 // PreferredBank sets the preferred bank for splitting the dedicated account transaction
 func (b *SplitDedicatedAccountTransactionBuilder) PreferredBank(preferredBank string) *SplitDedicatedAccountTransactionBuilder {
 	b.request.PreferredBank = preferredBank
+
 	return b
 }
 
@@ -57,6 +59,9 @@ func (b *SplitDedicatedAccountTransactionBuilder) PreferredBank(preferredBank st
 func (b *SplitDedicatedAccountTransactionBuilder) Build() *SplitDedicatedAccountTransactionRequest {
 	return b.request
 }
+
+// SplitDedicatedAccountTransactionResponse represents the response type for splitting a dedicated account transaction
+type SplitDedicatedAccountTransactionResponse = types.Response[types.DedicatedVirtualAccount]
 
 // SplitTransaction splits a dedicated virtual account transaction with one or more accounts
 func (c *Client) SplitTransaction(ctx context.Context, builder *SplitDedicatedAccountTransactionBuilder) (*SplitDedicatedAccountTransactionResponse, error) {

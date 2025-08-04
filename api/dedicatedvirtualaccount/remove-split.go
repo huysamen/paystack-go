@@ -12,8 +12,6 @@ type RemoveSplitFromDedicatedAccountRequest struct {
 	AccountNumber string `json:"account_number"`
 }
 
-type RemoveSplitFromDedicatedAccountResponse = types.Response[types.DedicatedVirtualAccount]
-
 // RemoveSplitFromDedicatedAccountBuilder builds requests for removing split from dedicated accounts
 type RemoveSplitFromDedicatedAccountBuilder struct {
 	request *RemoveSplitFromDedicatedAccountRequest
@@ -29,6 +27,7 @@ func NewRemoveSplitFromDedicatedAccountBuilder() *RemoveSplitFromDedicatedAccoun
 // AccountNumber sets the account number for removing split from the dedicated account
 func (b *RemoveSplitFromDedicatedAccountBuilder) AccountNumber(accountNumber string) *RemoveSplitFromDedicatedAccountBuilder {
 	b.request.AccountNumber = accountNumber
+
 	return b
 }
 
@@ -36,6 +35,9 @@ func (b *RemoveSplitFromDedicatedAccountBuilder) AccountNumber(accountNumber str
 func (b *RemoveSplitFromDedicatedAccountBuilder) Build() *RemoveSplitFromDedicatedAccountRequest {
 	return b.request
 }
+
+// RemoveSplitFromDedicatedAccountResponse represents the response type for removing split from a dedicated account
+type RemoveSplitFromDedicatedAccountResponse = types.Response[types.DedicatedVirtualAccount]
 
 // RemoveSplit removes split payment setup from a dedicated virtual account
 func (c *Client) RemoveSplit(ctx context.Context, builder *RemoveSplitFromDedicatedAccountBuilder) (*RemoveSplitFromDedicatedAccountResponse, error) {

@@ -8,6 +8,7 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
+// DeactivateResponse is the response type for deactivating a dedicated virtual account
 type DeactivateResponse = types.Response[types.DedicatedVirtualAccount]
 
 // Deactivate deactivates a dedicated virtual account on your integration

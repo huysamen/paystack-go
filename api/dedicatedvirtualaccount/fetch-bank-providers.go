@@ -7,6 +7,7 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
+// FetchBankProvidersResponse is the response type for fetching bank providers
 type FetchBankProvidersResponse = types.Response[[]types.BankProvider]
 
 // FetchBankProviders gets available bank providers for a dedicated virtual account
