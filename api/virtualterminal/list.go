@@ -39,7 +39,7 @@ func (b *ListVirtualTerminalsRequestBuilder) Build() *ListVirtualTerminalsReques
 type ListVirtualTerminalsResponse = types.Response[[]types.VirtualTerminal]
 
 // List lists virtual terminals using the builder pattern
-func (c *Client) List(ctx context.Context, builder *ListVirtualTerminalsRequestBuilder) (*types.Response[[]types.VirtualTerminal], error) {
+func (c *Client) List(ctx context.Context, builder *ListVirtualTerminalsRequestBuilder) (*ListVirtualTerminalsResponse, error) {
 	params := url.Values{}
 
 	if builder != nil {

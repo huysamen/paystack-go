@@ -28,12 +28,14 @@ func NewAssignDestinationRequest() *AssignDestinationRequestBuilder {
 // AddDestination adds a destination to the assignment request
 func (b *AssignDestinationRequestBuilder) AddDestination(destination types.VirtualTerminalDestination) *AssignDestinationRequestBuilder {
 	b.destinations = append(b.destinations, destination)
+
 	return b
 }
 
 // Destinations sets all destinations at once
 func (b *AssignDestinationRequestBuilder) Destinations(destinations []types.VirtualTerminalDestination) *AssignDestinationRequestBuilder {
 	b.destinations = destinations
+
 	return b
 }
 
@@ -48,6 +50,6 @@ func (b *AssignDestinationRequestBuilder) Build() *AssignDestinationRequest {
 type AssignDestinationResponse = types.Response[[]types.VirtualTerminalDestination]
 
 // AssignDestination assigns destinations to a virtual terminal
-func (c *Client) AssignDestination(ctx context.Context, code string, builder *AssignDestinationRequestBuilder) (*types.Response[[]types.VirtualTerminalDestination], error) {
+func (c *Client) AssignDestination(ctx context.Context, code string, builder *AssignDestinationRequestBuilder) (*AssignDestinationResponse, error) {
 	return net.Post[AssignDestinationRequest, []types.VirtualTerminalDestination](ctx, c.Client, c.Secret, fmt.Sprintf("%s/%s/destination/assign", basePath, code), builder.Build(), c.BaseURL)
 }

@@ -12,6 +12,6 @@ import (
 type FetchVirtualTerminalResponse = types.Response[types.VirtualTerminal]
 
 // Fetch retrieves a specific virtual terminal by code
-func (c *Client) Fetch(ctx context.Context, code string) (*types.Response[types.VirtualTerminal], error) {
+func (c *Client) Fetch(ctx context.Context, code string) (*FetchVirtualTerminalResponse, error) {
 	return net.Get[types.VirtualTerminal](ctx, c.Client, c.Secret, fmt.Sprintf("%s/%s", basePath, code), c.BaseURL)
 }

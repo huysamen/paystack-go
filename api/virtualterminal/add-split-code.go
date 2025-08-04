@@ -28,6 +28,7 @@ func NewAddSplitCodeRequest(splitCode string) *AddSplitCodeRequestBuilder {
 // SplitCode sets the split code
 func (b *AddSplitCodeRequestBuilder) SplitCode(splitCode string) *AddSplitCodeRequestBuilder {
 	b.splitCode = splitCode
+
 	return b
 }
 
@@ -42,6 +43,6 @@ func (b *AddSplitCodeRequestBuilder) Build() *AddSplitCodeRequest {
 type AddSplitCodeResponse = types.Response[any]
 
 // AddSplitCode adds a split code to a virtual terminal
-func (c *Client) AddSplitCode(ctx context.Context, code string, builder *AddSplitCodeRequestBuilder) (*types.Response[any], error) {
+func (c *Client) AddSplitCode(ctx context.Context, code string, builder *AddSplitCodeRequestBuilder) (*AddSplitCodeResponse, error) {
 	return net.Put[AddSplitCodeRequest, any](ctx, c.Client, c.Secret, fmt.Sprintf("%s/%s/split_code", basePath, code), builder.Build(), c.BaseURL)
 }

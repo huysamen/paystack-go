@@ -42,6 +42,6 @@ func (b *UpdateVirtualTerminalRequestBuilder) Build() *UpdateVirtualTerminalRequ
 type UpdateVirtualTerminalResponse = types.Response[types.VirtualTerminal]
 
 // Update updates a virtual terminal
-func (c *Client) Update(ctx context.Context, code string, builder *UpdateVirtualTerminalRequestBuilder) (*types.Response[types.VirtualTerminal], error) {
+func (c *Client) Update(ctx context.Context, code string, builder *UpdateVirtualTerminalRequestBuilder) (*UpdateVirtualTerminalResponse, error) {
 	return net.Put[UpdateVirtualTerminalRequest, types.VirtualTerminal](ctx, c.Client, c.Secret, fmt.Sprintf("%s/%s", basePath, code), builder.Build(), c.BaseURL)
 }

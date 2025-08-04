@@ -39,6 +39,6 @@ func (b *CreateVirtualTerminalRequestBuilder) Build() *CreateVirtualTerminalRequ
 type CreateVirtualTerminalResponse = types.Response[types.VirtualTerminal]
 
 // Create creates a new virtual terminal
-func (c *Client) Create(ctx context.Context, builder *CreateVirtualTerminalRequestBuilder) (*types.Response[types.VirtualTerminal], error) {
+func (c *Client) Create(ctx context.Context, builder *CreateVirtualTerminalRequestBuilder) (*CreateVirtualTerminalResponse, error) {
 	return net.Post[CreateVirtualTerminalRequest, types.VirtualTerminal](ctx, c.Client, c.Secret, basePath, builder.Build(), c.BaseURL)
 }

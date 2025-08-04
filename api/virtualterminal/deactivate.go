@@ -12,6 +12,6 @@ import (
 type DeactivateVirtualTerminalResponse = types.Response[any]
 
 // Deactivate deactivates a virtual terminal
-func (c *Client) Deactivate(ctx context.Context, code string) (*types.Response[any], error) {
+func (c *Client) Deactivate(ctx context.Context, code string) (*DeactivateVirtualTerminalResponse, error) {
 	return net.Put[any, any](ctx, c.Client, c.Secret, fmt.Sprintf("%s/%s/deactivate", basePath, code), nil, c.BaseURL)
 }
