@@ -1,9 +1,7 @@
-package settlements
+package types
 
 import (
 	"time"
-
-	"github.com/huysamen/paystack-go/types"
 )
 
 // SettlementStatus represents the status of a settlement
@@ -62,31 +60,3 @@ type SettlementTransaction struct {
 	Plan            map[string]any `json:"plan"`          // Plan details if subscription
 	Subaccount      map[string]any `json:"subaccount"`    // Subaccount details if applicable
 }
-
-// Settlement List
-
-// SettlementListRequest represents the request to list settlements
-type SettlementListRequest struct {
-	PerPage    *int              `json:"perPage,omitempty"`    // Optional: records per page (default: 50)
-	Page       *int              `json:"page,omitempty"`       // Optional: page number (default: 1)
-	Status     *SettlementStatus `json:"status,omitempty"`     // Optional: filter by status
-	Subaccount *string           `json:"subaccount,omitempty"` // Optional: filter by subaccount ID (use "none" for main account only)
-	From       *time.Time        `json:"from,omitempty"`       // Optional: start date filter
-	To         *time.Time        `json:"to,omitempty"`         // Optional: end date filter
-}
-
-// SettlementListResponse represents the response from listing settlements
-type SettlementListResponse = types.Response[[]Settlement]
-
-// Settlement Transactions
-
-// SettlementTransactionListRequest represents the request to list settlement transactions
-type SettlementTransactionListRequest struct {
-	PerPage *int       `json:"perPage,omitempty"` // Optional: records per page (default: 50)
-	Page    *int       `json:"page,omitempty"`    // Optional: page number (default: 1)
-	From    *time.Time `json:"from,omitempty"`    // Optional: start date filter
-	To      *time.Time `json:"to,omitempty"`      // Optional: end date filter
-}
-
-// SettlementTransactionListResponse represents the response from listing settlement transactions
-type SettlementTransactionListResponse = types.Response[[]SettlementTransaction]
