@@ -32,24 +32,28 @@ func NewListPaymentPagesRequest() *ListPaymentPagesRequestBuilder {
 // PerPage sets the number of records per page
 func (b *ListPaymentPagesRequestBuilder) PerPage(perPage int) *ListPaymentPagesRequestBuilder {
 	b.req.PerPage = perPage
+
 	return b
 }
 
 // Page sets the page number
 func (b *ListPaymentPagesRequestBuilder) Page(page int) *ListPaymentPagesRequestBuilder {
 	b.req.Page = page
+
 	return b
 }
 
 // From sets the start date for filtering
 func (b *ListPaymentPagesRequestBuilder) From(from string) *ListPaymentPagesRequestBuilder {
 	b.req.From = from
+
 	return b
 }
 
 // To sets the end date for filtering
 func (b *ListPaymentPagesRequestBuilder) To(to string) *ListPaymentPagesRequestBuilder {
 	b.req.To = to
+
 	return b
 }
 

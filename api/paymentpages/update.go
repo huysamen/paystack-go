@@ -30,24 +30,28 @@ func NewUpdatePaymentPageRequest() *UpdatePaymentPageRequestBuilder {
 // Name sets the name for the payment page
 func (b *UpdatePaymentPageRequestBuilder) Name(name string) *UpdatePaymentPageRequestBuilder {
 	b.req.Name = name
+
 	return b
 }
 
 // Description sets the description for the payment page
 func (b *UpdatePaymentPageRequestBuilder) Description(description string) *UpdatePaymentPageRequestBuilder {
 	b.req.Description = description
+
 	return b
 }
 
 // Amount sets the amount for the payment page (in kobo/cents)
 func (b *UpdatePaymentPageRequestBuilder) Amount(amount int) *UpdatePaymentPageRequestBuilder {
 	b.req.Amount = &amount
+
 	return b
 }
 
 // Active sets whether the payment page is active
 func (b *UpdatePaymentPageRequestBuilder) Active(active bool) *UpdatePaymentPageRequestBuilder {
 	b.req.Active = &active
+
 	return b
 }
 

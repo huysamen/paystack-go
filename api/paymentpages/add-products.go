@@ -30,12 +30,14 @@ func NewAddProductsToPageRequest() *AddProductsToPageRequestBuilder {
 // Products sets the list of product IDs to add
 func (b *AddProductsToPageRequestBuilder) Products(productIDs []int) *AddProductsToPageRequestBuilder {
 	b.req.Product = productIDs
+
 	return b
 }
 
 // AddProduct adds a single product ID to the list
 func (b *AddProductsToPageRequestBuilder) AddProduct(productID int) *AddProductsToPageRequestBuilder {
 	b.req.Product = append(b.req.Product, productID)
+
 	return b
 }
 
