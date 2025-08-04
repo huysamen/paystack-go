@@ -7,30 +7,25 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-// BulkChargeItem represents a single charge in a bulk charge request
 type BulkChargeItem struct {
 	Authorization string `json:"authorization"`
 	Amount        int64  `json:"amount"`
 	Reference     string `json:"reference"`
 }
 
-// InitiateBulkChargeRequest represents the request to initiate a bulk charge
-type InitiateBulkChargeRequest []BulkChargeItem
+type InitiateRequest []BulkChargeItem
 
-// InitiateBulkChargeRequestBuilder provides a fluent interface for building InitiateBulkChargeRequest
-type InitiateBulkChargeRequestBuilder struct {
-	req *InitiateBulkChargeRequest
+type InitiateRequestBuilder struct {
+	req *InitiateRequest
 }
 
-// NewInitiateBulkChargeRequest creates a new builder for InitiateBulkChargeRequest
-func NewInitiateBulkChargeRequest() *InitiateBulkChargeRequestBuilder {
-	return &InitiateBulkChargeRequestBuilder{
-		req: &InitiateBulkChargeRequest{},
+func NewInitiateRequest() *InitiateRequestBuilder {
+	return &InitiateRequestBuilder{
+		req: &InitiateRequest{},
 	}
 }
 
-// AddItem adds a bulk charge item to the request
-func (b *InitiateBulkChargeRequestBuilder) AddItem(authorization string, amount int64, reference string) *InitiateBulkChargeRequestBuilder {
+func (b *InitiateRequestBuilder) AddItem(authorization string, amount int64, reference string) *InitiateRequestBuilder {
 	*b.req = append(*b.req, BulkChargeItem{
 		Authorization: authorization,
 		Amount:        amount,
@@ -39,22 +34,19 @@ func (b *InitiateBulkChargeRequestBuilder) AddItem(authorization string, amount 
 	return b
 }
 
-// AddItems adds multiple bulk charge items to the request
-func (b *InitiateBulkChargeRequestBuilder) AddItems(items []BulkChargeItem) *InitiateBulkChargeRequestBuilder {
+func (b *InitiateRequestBuilder) AddItems(items []BulkChargeItem) *InitiateRequestBuilder {
 	*b.req = append(*b.req, items...)
 
 	return b
 }
 
-// Build returns the constructed InitiateBulkChargeRequest
-func (b *InitiateBulkChargeRequestBuilder) Build() *InitiateBulkChargeRequest {
+func (b *InitiateRequestBuilder) Build() *InitiateRequest {
 	return b.req
 }
 
-// InitiateBulkChargeResponse represents the response from initiating a bulk charge
-type InitiateBulkChargeResponse = types.Response[types.BulkChargeBatch]
+type InitiateResponseData = types.BulkChargeBatch
+type InitiateResponse = types.Response[InitiateResponseData]
 
-// Initiate sends an array of objects with authorization codes and amounts for batch processing
-func (c *Client) Initiate(ctx context.Context, builder *InitiateBulkChargeRequestBuilder) (*InitiateBulkChargeResponse, error) {
-	return net.Post[InitiateBulkChargeRequest, types.BulkChargeBatch](ctx, c.Client, c.Secret, basePath, builder.Build(), c.BaseURL)
+func (c *Client) Initiate(ctx context.Context, builder InitiateRequestBuilder) (*InitiateResponse, error) {
+	return net.Post[InitiateRequest, InitiateResponseData](ctx, c.Client, c.Secret, basePath, builder.Build(), c.BaseURL)
 }

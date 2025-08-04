@@ -9,92 +9,92 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-// ListBulkChargeBatchesRequest represents the request to list bulk charge batches
-type ListBulkChargeBatchesRequest struct {
+type ListRequest struct {
 	PerPage *int    `json:"perPage,omitempty"`
 	Page    *int    `json:"page,omitempty"`
 	From    *string `json:"from,omitempty"`
 	To      *string `json:"to,omitempty"`
 }
 
-// ListBulkChargeBatchesRequestBuilder provides a fluent interface for building ListBulkChargeBatchesRequest
-type ListBulkChargeBatchesRequestBuilder struct {
-	req *ListBulkChargeBatchesRequest
+type ListRequestBuilder struct {
+	req *ListRequest
 }
 
-// NewListBulkChargeBatchesRequest creates a new builder for ListBulkChargeBatchesRequest
-func NewListBulkChargeBatchesRequest() *ListBulkChargeBatchesRequestBuilder {
-	return &ListBulkChargeBatchesRequestBuilder{
-		req: &ListBulkChargeBatchesRequest{},
+func NewListRequest() *ListRequestBuilder {
+	return &ListRequestBuilder{
+		req: &ListRequest{},
 	}
 }
 
-// PerPage sets the number of records per page
-func (b *ListBulkChargeBatchesRequestBuilder) PerPage(perPage int) *ListBulkChargeBatchesRequestBuilder {
+func (b *ListRequestBuilder) PerPage(perPage int) *ListRequestBuilder {
 	b.req.PerPage = &perPage
 
 	return b
 }
 
-// Page sets the page number
-func (b *ListBulkChargeBatchesRequestBuilder) Page(page int) *ListBulkChargeBatchesRequestBuilder {
+func (b *ListRequestBuilder) Page(page int) *ListRequestBuilder {
 	b.req.Page = &page
 
 	return b
 }
 
-// From sets the start date filter
-func (b *ListBulkChargeBatchesRequestBuilder) From(from string) *ListBulkChargeBatchesRequestBuilder {
+func (b *ListRequestBuilder) From(from string) *ListRequestBuilder {
 	b.req.From = &from
 
 	return b
 }
 
-// To sets the end date filter
-func (b *ListBulkChargeBatchesRequestBuilder) To(to string) *ListBulkChargeBatchesRequestBuilder {
+func (b *ListRequestBuilder) To(to string) *ListRequestBuilder {
 	b.req.To = &to
 
 	return b
 }
 
-// DateRange sets both start and end date filters
-func (b *ListBulkChargeBatchesRequestBuilder) DateRange(from, to string) *ListBulkChargeBatchesRequestBuilder {
+func (b *ListRequestBuilder) DateRange(from, to string) *ListRequestBuilder {
 	b.req.From = &from
 	b.req.To = &to
 
 	return b
 }
 
-// Build returns the constructed ListBulkChargeBatchesRequest
-func (b *ListBulkChargeBatchesRequestBuilder) Build() *ListBulkChargeBatchesRequest {
+func (b *ListRequestBuilder) Build() *ListRequest {
 	return b.req
 }
 
-// ListBulkChargeBatchesResponse represents the response from listing bulk charge batches
-type ListBulkChargeBatchesResponse = types.Response[[]types.BulkChargeBatch]
-
-// List retrieves all bulk charge batches created by the integration using a builder
-func (c *Client) List(ctx context.Context, builder *ListBulkChargeBatchesRequestBuilder) (*ListBulkChargeBatchesResponse, error) {
-	req := builder.Build()
-
+func (r *ListRequest) toQuery() string {
 	params := url.Values{}
-	if req.PerPage != nil {
-		params.Set("perPage", strconv.Itoa(*req.PerPage))
-	}
-	if req.Page != nil {
-		params.Set("page", strconv.Itoa(*req.Page))
-	}
-	if req.From != nil {
-		params.Set("from", *req.From)
-	}
-	if req.To != nil {
-		params.Set("to", *req.To)
+
+	if r.PerPage != nil {
+		params.Set("perPage", strconv.Itoa(*r.PerPage))
 	}
 
+	if r.Page != nil {
+		params.Set("page", strconv.Itoa(*r.Page))
+	}
+
+	if r.From != nil {
+		params.Set("from", *r.From)
+	}
+
+	if r.To != nil {
+		params.Set("to", *r.To)
+	}
+
+	return params.Encode()
+}
+
+type ListResponseData = []types.BulkChargeBatch
+type ListResponse = types.Response[ListResponseData]
+
+func (c *Client) List(ctx context.Context, builder ListRequestBuilder) (*ListResponse, error) {
+	req := builder.Build()
 	path := basePath
-	if len(params) > 0 {
-		path += "?" + params.Encode()
+
+	if req != nil {
+		if query := req.toQuery(); query != "" {
+			path += "?" + query
+		}
 	}
 
-	return net.Get[[]types.BulkChargeBatch](ctx, c.Client, c.Secret, path, c.BaseURL)
+	return net.Get[ListResponseData](ctx, c.Client, c.Secret, path, c.BaseURL)
 }

@@ -7,10 +7,9 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-// PauseBulkChargeRequest represents the request to pause a bulk charge batch
-type PauseBulkChargeResponse = types.Response[any]
+type PauseResponseData = any
+type PauseResponse = types.Response[PauseResponseData]
 
-// Pause pauses processing of a bulk charge batch
-func (c *Client) Pause(ctx context.Context, batchCode string) (*PauseBulkChargeResponse, error) {
-	return net.Get[any](ctx, c.Client, c.Secret, pausePath+"/"+batchCode, c.BaseURL)
+func (c *Client) Pause(ctx context.Context, batchCode string) (*PauseResponse, error) {
+	return net.Get[PauseResponseData](ctx, c.Client, c.Secret, pausePath+"/"+batchCode, c.BaseURL)
 }

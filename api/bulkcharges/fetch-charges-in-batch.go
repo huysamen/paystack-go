@@ -9,8 +9,7 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-// FetchChargesInBatchRequest represents the request to fetch charges in a batch
-type FetchChargesInBatchRequest struct {
+type FetchInBatchRequest struct {
 	Status  *string `json:"status,omitempty"`
 	PerPage *int    `json:"perPage,omitempty"`
 	Page    *int    `json:"page,omitempty"`
@@ -18,94 +17,95 @@ type FetchChargesInBatchRequest struct {
 	To      *string `json:"to,omitempty"`
 }
 
-// FetchChargesInBatchRequestBuilder provides a fluent interface for building FetchChargesInBatchRequest
-type FetchChargesInBatchRequestBuilder struct {
-	req *FetchChargesInBatchRequest
+type FetchInBatchRequestBuilder struct {
+	req *FetchInBatchRequest
 }
 
-// NewFetchChargesInBatchRequest creates a new builder for FetchChargesInBatchRequest
-func NewFetchChargesInBatchRequest() *FetchChargesInBatchRequestBuilder {
-	return &FetchChargesInBatchRequestBuilder{
-		req: &FetchChargesInBatchRequest{},
+func NewFetchInBatchRequest() *FetchInBatchRequestBuilder {
+	return &FetchInBatchRequestBuilder{
+		req: &FetchInBatchRequest{},
 	}
 }
 
-// Status filters by charge status
-func (b *FetchChargesInBatchRequestBuilder) Status(status string) *FetchChargesInBatchRequestBuilder {
+func (b *FetchInBatchRequestBuilder) Status(status string) *FetchInBatchRequestBuilder {
 	b.req.Status = &status
 
 	return b
 }
 
-// PerPage sets the number of records per page
-func (b *FetchChargesInBatchRequestBuilder) PerPage(perPage int) *FetchChargesInBatchRequestBuilder {
+func (b *FetchInBatchRequestBuilder) PerPage(perPage int) *FetchInBatchRequestBuilder {
 	b.req.PerPage = &perPage
 
 	return b
 }
 
-// Page sets the page number
-func (b *FetchChargesInBatchRequestBuilder) Page(page int) *FetchChargesInBatchRequestBuilder {
+func (b *FetchInBatchRequestBuilder) Page(page int) *FetchInBatchRequestBuilder {
 	b.req.Page = &page
 
 	return b
 }
 
-// From sets the start date filter
-func (b *FetchChargesInBatchRequestBuilder) From(from string) *FetchChargesInBatchRequestBuilder {
+func (b *FetchInBatchRequestBuilder) From(from string) *FetchInBatchRequestBuilder {
 	b.req.From = &from
 
 	return b
 }
 
-// To sets the end date filter
-func (b *FetchChargesInBatchRequestBuilder) To(to string) *FetchChargesInBatchRequestBuilder {
+func (b *FetchInBatchRequestBuilder) To(to string) *FetchInBatchRequestBuilder {
 	b.req.To = &to
 
 	return b
 }
 
-// DateRange sets both start and end date filters
-func (b *FetchChargesInBatchRequestBuilder) DateRange(from, to string) *FetchChargesInBatchRequestBuilder {
+func (b *FetchInBatchRequestBuilder) DateRange(from, to string) *FetchInBatchRequestBuilder {
 	b.req.From = &from
 	b.req.To = &to
 
 	return b
 }
 
-// Build returns the constructed FetchChargesInBatchRequest
-func (b *FetchChargesInBatchRequestBuilder) Build() *FetchChargesInBatchRequest {
+func (b *FetchInBatchRequestBuilder) Build() *FetchInBatchRequest {
 	return b.req
 }
 
-// FetchChargesInBatchResponse represents the response from fetching charges in a batch
-type FetchChargesInBatchResponse = types.Response[[]types.BulkCharge]
-
-// FetchChargesInBatch retrieves the charges associated with a specified batch code using a builder
-func (c *Client) FetchChargesInBatch(ctx context.Context, idOrCode string, builder *FetchChargesInBatchRequestBuilder) (*FetchChargesInBatchResponse, error) {
-	req := builder.Build()
-
+func (r *FetchInBatchRequest) toQuery() string {
 	params := url.Values{}
-	if req.Status != nil {
-		params.Set("status", *req.Status)
-	}
-	if req.PerPage != nil {
-		params.Set("perPage", strconv.Itoa(*req.PerPage))
-	}
-	if req.Page != nil {
-		params.Set("page", strconv.Itoa(*req.Page))
-	}
-	if req.From != nil {
-		params.Set("from", *req.From)
-	}
-	if req.To != nil {
-		params.Set("to", *req.To)
+
+	if r.Status != nil {
+		params.Set("status", *r.Status)
 	}
 
+	if r.PerPage != nil {
+		params.Set("perPage", strconv.Itoa(*r.PerPage))
+	}
+
+	if r.Page != nil {
+		params.Set("page", strconv.Itoa(*r.Page))
+	}
+
+	if r.From != nil {
+		params.Set("from", *r.From)
+	}
+
+	if r.To != nil {
+		params.Set("to", *r.To)
+	}
+
+	return params.Encode()
+}
+
+type FetchInBatchResponseData = []types.BulkCharge
+type FetchInBatchResponse = types.Response[FetchInBatchResponseData]
+
+func (c *Client) FetchChargesInBatch(ctx context.Context, idOrCode string, builder FetchInBatchRequestBuilder) (*FetchInBatchResponse, error) {
+	req := builder.Build()
 	path := basePath + "/" + idOrCode + fetchChargesPath
-	if len(params) > 0 {
-		path += "?" + params.Encode()
+
+	if req != nil {
+		if query := req.toQuery(); query != "" {
+			path += "?" + query
+		}
 	}
 
-	return net.Get[[]types.BulkCharge](ctx, c.Client, c.Secret, path, c.BaseURL)
+	return net.Get[FetchInBatchResponseData](ctx, c.Client, c.Secret, path, c.BaseURL)
 }

@@ -11,5 +11,4 @@ const (
 	unregisterPath = basePath + "/domain"
 )
 
-// Client is the Apple Pay API client
 type Client api.API

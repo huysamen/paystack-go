@@ -11,5 +11,4 @@ const (
 	fetchChargesPath = "/charges"
 )
 
-// Client is the Bulk Charges API client
 type Client api.API
