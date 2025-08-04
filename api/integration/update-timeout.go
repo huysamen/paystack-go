@@ -7,32 +7,32 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type UpdateTimeoutRequest struct {
+type updateTimeoutRequest struct {
 	Timeout int `json:"timeout"`
 }
 
 type UpdateTimeoutRequestBuilder struct {
-	req *UpdateTimeoutRequest
+	req *updateTimeoutRequest
 }
 
-func NewUpdateTimeoutRequest(timeout int) *UpdateTimeoutRequestBuilder {
+func NewUpdateTimeoutRequestBuilder(timeout int) *UpdateTimeoutRequestBuilder {
 	return &UpdateTimeoutRequestBuilder{
-		req: &UpdateTimeoutRequest{
+		req: &updateTimeoutRequest{
 			Timeout: timeout,
 		},
 	}
 }
 
-func (b *UpdateTimeoutRequestBuilder) Build() *UpdateTimeoutRequest {
+func (b *UpdateTimeoutRequestBuilder) Build() *updateTimeoutRequest {
 	return b.req
 }
 
-type UpdateTimeoutResponse = types.Response[UpdateTimeoutData]
-
-type UpdateTimeoutData struct {
+type UpdateTimeoutResponseData struct {
 	PaymentSessionTimeout int `json:"payment_session_timeout"`
 }
 
+type UpdateTimeoutResponse = types.Response[UpdateTimeoutResponseData]
+
 func (c *Client) UpdateTimeout(ctx context.Context, builder *UpdateTimeoutRequestBuilder) (*UpdateTimeoutResponse, error) {
-	return net.Put[UpdateTimeoutRequest, UpdateTimeoutData](ctx, c.Client, c.Secret, basePath+"/payment_session_timeout", builder.Build(), c.BaseURL)
+	return net.Put[updateTimeoutRequest, UpdateTimeoutResponseData](ctx, c.Client, c.Secret, basePath+"/payment_session_timeout", builder.Build(), c.BaseURL)
 }
