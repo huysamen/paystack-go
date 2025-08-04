@@ -2,7 +2,6 @@ package products
 
 import (
 	"context"
-	"fmt"
 	"net/url"
 	"strconv"
 
@@ -10,82 +9,88 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type ListProductsRequest struct {
+type listRequest struct {
 	PerPage *int    `json:"perPage,omitempty"`
 	Page    *int    `json:"page,omitempty"`
 	From    *string `json:"from,omitempty"`
 	To      *string `json:"to,omitempty"`
 }
 
-type ListProductsRequestBuilder struct {
-	req *ListProductsRequest
+type ListRequestBuilder struct {
+	req *listRequest
 }
 
-func NewListProductsRequest() *ListProductsRequestBuilder {
-	return &ListProductsRequestBuilder{
-		req: &ListProductsRequest{},
+func NewListRequestBuilder() *ListRequestBuilder {
+	return &ListRequestBuilder{
+		req: &listRequest{},
 	}
 }
 
-func (b *ListProductsRequestBuilder) PerPage(perPage int) *ListProductsRequestBuilder {
+func (b *ListRequestBuilder) PerPage(perPage int) *ListRequestBuilder {
 	b.req.PerPage = &perPage
 
 	return b
 }
 
-func (b *ListProductsRequestBuilder) Page(page int) *ListProductsRequestBuilder {
+func (b *ListRequestBuilder) Page(page int) *ListRequestBuilder {
 	b.req.Page = &page
 
 	return b
 }
 
-func (b *ListProductsRequestBuilder) From(from string) *ListProductsRequestBuilder {
+func (b *ListRequestBuilder) From(from string) *ListRequestBuilder {
 	b.req.From = &from
 
 	return b
 }
 
-func (b *ListProductsRequestBuilder) To(to string) *ListProductsRequestBuilder {
+func (b *ListRequestBuilder) To(to string) *ListRequestBuilder {
 	b.req.To = &to
 
 	return b
 }
 
-func (b *ListProductsRequestBuilder) DateRange(from, to string) *ListProductsRequestBuilder {
+func (b *ListRequestBuilder) DateRange(from, to string) *ListRequestBuilder {
 	b.req.From = &from
 	b.req.To = &to
 
 	return b
 }
 
-func (b *ListProductsRequestBuilder) Build() *ListProductsRequest {
+func (b *ListRequestBuilder) Build() *listRequest {
 	return b.req
 }
 
-type ListProductsResponse = types.Response[[]types.Product]
-
-func (c *Client) List(ctx context.Context, builder *ListProductsRequestBuilder) (*ListProductsResponse, error) {
+func (r *listRequest) toQuery() string {
 	params := url.Values{}
-	if builder != nil {
-		req := builder.Build()
-		if req.PerPage != nil {
-			params.Set("perPage", strconv.Itoa(*req.PerPage))
-		}
-		if req.Page != nil {
-			params.Set("page", strconv.Itoa(*req.Page))
-		}
-		if req.From != nil {
-			params.Set("from", *req.From)
-		}
-		if req.To != nil {
-			params.Set("to", *req.To)
-		}
+	if r.PerPage != nil {
+		params.Set("perPage", strconv.Itoa(*r.PerPage))
+	}
+	if r.Page != nil {
+		params.Set("page", strconv.Itoa(*r.Page))
+	}
+	if r.From != nil {
+		params.Set("from", *r.From)
+	}
+	if r.To != nil {
+		params.Set("to", *r.To)
 	}
 
+	return params.Encode()
+}
+
+type ListResponseData = []types.Product
+type ListResponse = types.Response[ListResponseData]
+
+func (c *Client) List(ctx context.Context, builder ListRequestBuilder) (*ListResponse, error) {
+	req := builder.Build()
 	path := basePath
-	if len(params) > 0 {
-		path = fmt.Sprintf("%s?%s", basePath, params.Encode())
+
+	if req != nil {
+		if query := req.toQuery(); query != "" {
+			path += "?" + query
+		}
 	}
 
-	return net.Get[[]types.Product](ctx, c.Client, c.Secret, path, c.BaseURL)
+	return net.Get[ListResponseData](ctx, c.Client, c.Secret, path, c.BaseURL)
 }

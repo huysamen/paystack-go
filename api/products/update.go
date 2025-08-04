@@ -8,7 +8,7 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type UpdateProductRequest struct {
+type updateRequest struct {
 	Name        *string         `json:"name,omitempty"`
 	Description *string         `json:"description,omitempty"`
 	Price       *int            `json:"price,omitempty"`
@@ -18,64 +18,65 @@ type UpdateProductRequest struct {
 	Metadata    *types.Metadata `json:"metadata,omitempty"`
 }
 
-type UpdateProductRequestBuilder struct {
-	req *UpdateProductRequest
+type UpdateRequestBuilder struct {
+	req *updateRequest
 }
 
-func NewUpdateProductRequest() *UpdateProductRequestBuilder {
-	return &UpdateProductRequestBuilder{
-		req: &UpdateProductRequest{},
+func NewUpdateRequestBuilder() *UpdateRequestBuilder {
+	return &UpdateRequestBuilder{
+		req: &updateRequest{},
 	}
 }
 
-func (b *UpdateProductRequestBuilder) Name(name string) *UpdateProductRequestBuilder {
+func (b *UpdateRequestBuilder) Name(name string) *UpdateRequestBuilder {
 	b.req.Name = &name
 
 	return b
 }
 
-func (b *UpdateProductRequestBuilder) Description(description string) *UpdateProductRequestBuilder {
+func (b *UpdateRequestBuilder) Description(description string) *UpdateRequestBuilder {
 	b.req.Description = &description
 
 	return b
 }
 
-func (b *UpdateProductRequestBuilder) Price(price int) *UpdateProductRequestBuilder {
+func (b *UpdateRequestBuilder) Price(price int) *UpdateRequestBuilder {
 	b.req.Price = &price
 
 	return b
 }
 
-func (b *UpdateProductRequestBuilder) Currency(currency string) *UpdateProductRequestBuilder {
+func (b *UpdateRequestBuilder) Currency(currency string) *UpdateRequestBuilder {
 	b.req.Currency = &currency
 
 	return b
 }
 
-func (b *UpdateProductRequestBuilder) Unlimited(unlimited bool) *UpdateProductRequestBuilder {
+func (b *UpdateRequestBuilder) Unlimited(unlimited bool) *UpdateRequestBuilder {
 	b.req.Unlimited = &unlimited
 
 	return b
 }
 
-func (b *UpdateProductRequestBuilder) Quantity(quantity int) *UpdateProductRequestBuilder {
+func (b *UpdateRequestBuilder) Quantity(quantity int) *UpdateRequestBuilder {
 	b.req.Quantity = &quantity
 
 	return b
 }
 
-func (b *UpdateProductRequestBuilder) Metadata(metadata *types.Metadata) *UpdateProductRequestBuilder {
+func (b *UpdateRequestBuilder) Metadata(metadata *types.Metadata) *UpdateRequestBuilder {
 	b.req.Metadata = metadata
 
 	return b
 }
 
-func (b *UpdateProductRequestBuilder) Build() *UpdateProductRequest {
+func (b *UpdateRequestBuilder) Build() *updateRequest {
 	return b.req
 }
 
-type UpdateProductResponse = types.Response[types.Product]
+type UpdateResponseData = types.Product
+type UpdateResponse = types.Response[UpdateResponseData]
 
-func (c *Client) Update(ctx context.Context, productID string, builder *UpdateProductRequestBuilder) (*UpdateProductResponse, error) {
-	return net.Put[UpdateProductRequest, types.Product](ctx, c.Client, c.Secret, fmt.Sprintf("%s/%s", basePath, productID), builder.Build(), c.BaseURL)
+func (c *Client) Update(ctx context.Context, productID string, builder UpdateRequestBuilder) (*UpdateResponse, error) {
+	return net.Put[updateRequest, UpdateResponseData](ctx, c.Client, c.Secret, fmt.Sprintf("%s/%s", basePath, productID), builder.Build(), c.BaseURL)
 }

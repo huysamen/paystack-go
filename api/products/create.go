@@ -7,7 +7,7 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type CreateProductRequest struct {
+type createRequest struct {
 	Name        string          `json:"name"`
 	Description string          `json:"description"`
 	Price       int             `json:"price"`
@@ -17,13 +17,13 @@ type CreateProductRequest struct {
 	Metadata    *types.Metadata `json:"metadata,omitempty"`
 }
 
-type CreateProductRequestBuilder struct {
-	req *CreateProductRequest
+type CreateRequestBuilder struct {
+	req *createRequest
 }
 
-func NewCreateProductRequest(name, description string, price int, currency string) *CreateProductRequestBuilder {
-	return &CreateProductRequestBuilder{
-		req: &CreateProductRequest{
+func NewCreateRequestBuilder(name, description string, price int, currency string) *CreateRequestBuilder {
+	return &CreateRequestBuilder{
+		req: &createRequest{
 			Name:        name,
 			Description: description,
 			Price:       price,
@@ -32,30 +32,31 @@ func NewCreateProductRequest(name, description string, price int, currency strin
 	}
 }
 
-func (b *CreateProductRequestBuilder) Unlimited(unlimited bool) *CreateProductRequestBuilder {
+func (b *CreateRequestBuilder) Unlimited(unlimited bool) *CreateRequestBuilder {
 	b.req.Unlimited = &unlimited
 
 	return b
 }
 
-func (b *CreateProductRequestBuilder) Quantity(quantity int) *CreateProductRequestBuilder {
+func (b *CreateRequestBuilder) Quantity(quantity int) *CreateRequestBuilder {
 	b.req.Quantity = &quantity
 
 	return b
 }
 
-func (b *CreateProductRequestBuilder) Metadata(metadata *types.Metadata) *CreateProductRequestBuilder {
+func (b *CreateRequestBuilder) Metadata(metadata *types.Metadata) *CreateRequestBuilder {
 	b.req.Metadata = metadata
 
 	return b
 }
 
-func (b *CreateProductRequestBuilder) Build() *CreateProductRequest {
+func (b *CreateRequestBuilder) Build() *createRequest {
 	return b.req
 }
 
-type CreateProductResponse = types.Response[types.Product]
+type CreateResponseData = types.Product
+type CreateResponse = types.Response[CreateResponseData]
 
-func (c *Client) Create(ctx context.Context, builder *CreateProductRequestBuilder) (*CreateProductResponse, error) {
-	return net.Post[CreateProductRequest, types.Product](ctx, c.Client, c.Secret, basePath, builder.Build(), c.BaseURL)
+func (c *Client) Create(ctx context.Context, builder CreateRequestBuilder) (*CreateResponse, error) {
+	return net.Post[createRequest, CreateResponseData](ctx, c.Client, c.Secret, basePath, builder.Build(), c.BaseURL)
 }
