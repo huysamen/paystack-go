@@ -11,9 +11,6 @@ type UpdateDisputeRequest struct {
 	UploadedFileName *string `json:"uploaded_filename,omitempty"`
 }
 
-// UpdateDisputeResponse represents the response from updating a dispute
-type UpdateDisputeResponse = types.Response[types.Dispute]
-
 // UpdateDisputeBuilder builds requests for updating disputes
 type UpdateDisputeBuilder struct {
 	request *UpdateDisputeRequest
@@ -29,12 +26,14 @@ func NewUpdateDisputeBuilder() *UpdateDisputeBuilder {
 // RefundAmount sets the refund amount
 func (b *UpdateDisputeBuilder) RefundAmount(amount int) *UpdateDisputeBuilder {
 	b.request.RefundAmount = &amount
+
 	return b
 }
 
 // UploadedFileName sets the uploaded file name
 func (b *UpdateDisputeBuilder) UploadedFileName(fileName string) *UpdateDisputeBuilder {
 	b.request.UploadedFileName = &fileName
+
 	return b
 }
 
@@ -42,6 +41,9 @@ func (b *UpdateDisputeBuilder) UploadedFileName(fileName string) *UpdateDisputeB
 func (b *UpdateDisputeBuilder) Build() *UpdateDisputeRequest {
 	return b.request
 }
+
+// UpdateDisputeResponse represents the response from updating a dispute
+type UpdateDisputeResponse = types.Response[types.Dispute]
 
 // Update updates the details of a dispute on your integration
 func (c *Client) Update(ctx context.Context, disputeID string, builder *UpdateDisputeBuilder) (*UpdateDisputeResponse, error) {

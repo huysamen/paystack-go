@@ -20,9 +20,6 @@ type ExportDisputesRequest struct {
 	Status      *types.DisputeStatus `json:"status,omitempty"`
 }
 
-// ExportDisputesResponse represents the response from exporting disputes
-type ExportDisputesResponse = types.Response[ExportData]
-
 // ExportDisputesBuilder builds requests for exporting disputes
 type ExportDisputesBuilder struct {
 	request *ExportDisputesRequest
@@ -38,12 +35,14 @@ func NewExportDisputesBuilder() *ExportDisputesBuilder {
 // From sets the start date filter
 func (b *ExportDisputesBuilder) From(from time.Time) *ExportDisputesBuilder {
 	b.request.From = &from
+
 	return b
 }
 
 // To sets the end date filter
 func (b *ExportDisputesBuilder) To(to time.Time) *ExportDisputesBuilder {
 	b.request.To = &to
+
 	return b
 }
 
@@ -51,30 +50,35 @@ func (b *ExportDisputesBuilder) To(to time.Time) *ExportDisputesBuilder {
 func (b *ExportDisputesBuilder) DateRange(from, to time.Time) *ExportDisputesBuilder {
 	b.request.From = &from
 	b.request.To = &to
+
 	return b
 }
 
 // PerPage sets the number of disputes per page
 func (b *ExportDisputesBuilder) PerPage(perPage int) *ExportDisputesBuilder {
 	b.request.PerPage = &perPage
+
 	return b
 }
 
 // Page sets the page number
 func (b *ExportDisputesBuilder) Page(page int) *ExportDisputesBuilder {
 	b.request.Page = &page
+
 	return b
 }
 
 // Transaction filters by transaction ID
 func (b *ExportDisputesBuilder) Transaction(transaction string) *ExportDisputesBuilder {
 	b.request.Transaction = &transaction
+
 	return b
 }
 
 // Status filters by dispute status
 func (b *ExportDisputesBuilder) Status(status types.DisputeStatus) *ExportDisputesBuilder {
 	b.request.Status = &status
+
 	return b
 }
 
@@ -82,6 +86,9 @@ func (b *ExportDisputesBuilder) Status(status types.DisputeStatus) *ExportDisput
 func (b *ExportDisputesBuilder) Build() *ExportDisputesRequest {
 	return b.request
 }
+
+// ExportDisputesResponse represents the response from exporting disputes
+type ExportDisputesResponse = types.Response[ExportData]
 
 // Export exports disputes available on your integration
 func (c *Client) Export(ctx context.Context, builder *ExportDisputesBuilder) (*ExportDisputesResponse, error) {

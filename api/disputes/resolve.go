@@ -14,18 +14,15 @@ type ResolveDisputeRequest struct {
 	Evidence         *int                    `json:"evidence,omitempty"`
 }
 
-// ResolveDisputeResponse represents the response from resolving a dispute
-type ResolveDisputeResponse = types.Response[types.Dispute]
-
 // ResolveDisputeBuilder builds requests for resolving disputes
 type ResolveDisputeBuilder struct {
-	request *ResolveDisputeRequest
+	req *ResolveDisputeRequest
 }
 
 // NewResolveDisputeBuilder creates a new builder for resolving disputes
 func NewResolveDisputeBuilder(resolution types.DisputeResolution, message string, refundAmount int, uploadedFileName string) *ResolveDisputeBuilder {
 	return &ResolveDisputeBuilder{
-		request: &ResolveDisputeRequest{
+		req: &ResolveDisputeRequest{
 			Resolution:       resolution,
 			Message:          message,
 			RefundAmount:     refundAmount,
@@ -36,14 +33,18 @@ func NewResolveDisputeBuilder(resolution types.DisputeResolution, message string
 
 // Evidence sets the evidence ID
 func (b *ResolveDisputeBuilder) Evidence(evidence int) *ResolveDisputeBuilder {
-	b.request.Evidence = &evidence
+	b.req.Evidence = &evidence
+
 	return b
 }
 
 // Build returns the built request
 func (b *ResolveDisputeBuilder) Build() *ResolveDisputeRequest {
-	return b.request
+	return b.req
 }
+
+// ResolveDisputeResponse represents the response from resolving a dispute
+type ResolveDisputeResponse = types.Response[types.Dispute]
 
 // Resolve resolves a dispute on your integration
 func (c *Client) Resolve(ctx context.Context, disputeID string, builder *ResolveDisputeBuilder) (*ResolveDisputeResponse, error) {

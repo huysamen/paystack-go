@@ -11,9 +11,6 @@ type GetUploadURLRequest struct {
 	UploadFileName string `json:"upload_filename"`
 }
 
-// GetUploadURLResponse represents the response from getting upload URL
-type GetUploadURLResponse = types.Response[UploadURLData]
-
 // GetUploadURLBuilder builds requests for getting upload URLs
 type GetUploadURLBuilder struct {
 	request *GetUploadURLRequest
@@ -32,6 +29,9 @@ func NewGetUploadURLBuilder(uploadFileName string) *GetUploadURLBuilder {
 func (b *GetUploadURLBuilder) Build() *GetUploadURLRequest {
 	return b.request
 }
+
+// GetUploadURLResponse represents the response from getting upload URL
+type GetUploadURLResponse = types.Response[UploadURLData]
 
 // GetUploadURL gets a signed URL for uploading dispute evidence files
 func (c *Client) GetUploadURL(ctx context.Context, disputeID string, builder *GetUploadURLBuilder) (*GetUploadURLResponse, error) {

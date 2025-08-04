@@ -18,18 +18,15 @@ type AddEvidenceRequest struct {
 	DeliveryDate    *time.Time `json:"delivery_date,omitempty"`
 }
 
-// AddEvidenceResponse represents the response from adding evidence to a dispute
-type AddEvidenceResponse = types.Response[types.Evidence]
-
 // AddEvidenceBuilder builds requests for adding evidence to disputes
 type AddEvidenceBuilder struct {
-	request *AddEvidenceRequest
+	req *AddEvidenceRequest
 }
 
 // NewAddEvidenceBuilder creates a new builder for adding evidence
 func NewAddEvidenceBuilder(customerEmail, customerName, customerPhone, serviceDetails string) *AddEvidenceBuilder {
 	return &AddEvidenceBuilder{
-		request: &AddEvidenceRequest{
+		req: &AddEvidenceRequest{
 			CustomerEmail:  customerEmail,
 			CustomerName:   customerName,
 			CustomerPhone:  customerPhone,
@@ -40,20 +37,25 @@ func NewAddEvidenceBuilder(customerEmail, customerName, customerPhone, serviceDe
 
 // DeliveryAddress sets the delivery address
 func (b *AddEvidenceBuilder) DeliveryAddress(address string) *AddEvidenceBuilder {
-	b.request.DeliveryAddress = &address
+	b.req.DeliveryAddress = &address
+
 	return b
 }
 
 // DeliveryDate sets the delivery date
 func (b *AddEvidenceBuilder) DeliveryDate(date time.Time) *AddEvidenceBuilder {
-	b.request.DeliveryDate = &date
+	b.req.DeliveryDate = &date
+
 	return b
 }
 
 // Build returns the built request
 func (b *AddEvidenceBuilder) Build() *AddEvidenceRequest {
-	return b.request
+	return b.req
 }
+
+// AddEvidenceResponse represents the response from adding evidence to a dispute
+type AddEvidenceResponse = types.Response[types.Evidence]
 
 // AddEvidence provides evidence for a dispute
 func (c *Client) AddEvidence(ctx context.Context, disputeID string, builder *AddEvidenceBuilder) (*AddEvidenceResponse, error) {

@@ -20,68 +20,75 @@ type ListDisputesRequest struct {
 	Status      *types.DisputeStatus `json:"status,omitempty"`
 }
 
-// ListDisputesResponse represents the response from listing disputes
-type ListDisputesResponse = types.Response[[]types.Dispute]
-
 // ListDisputesBuilder builds requests for listing disputes
 type ListDisputesBuilder struct {
-	request *ListDisputesRequest
+	req *ListDisputesRequest
 }
 
 // NewListDisputesBuilder creates a new builder for listing disputes
 func NewListDisputesBuilder() *ListDisputesBuilder {
 	return &ListDisputesBuilder{
-		request: &ListDisputesRequest{},
+		req: &ListDisputesRequest{},
 	}
 }
 
 // From sets the start date filter
 func (b *ListDisputesBuilder) From(from time.Time) *ListDisputesBuilder {
-	b.request.From = &from
+	b.req.From = &from
+
 	return b
 }
 
 // To sets the end date filter
 func (b *ListDisputesBuilder) To(to time.Time) *ListDisputesBuilder {
-	b.request.To = &to
+	b.req.To = &to
+
 	return b
 }
 
 // DateRange sets both from and to dates for convenience
 func (b *ListDisputesBuilder) DateRange(from, to time.Time) *ListDisputesBuilder {
-	b.request.From = &from
-	b.request.To = &to
+	b.req.From = &from
+	b.req.To = &to
+
 	return b
 }
 
 // PerPage sets the number of disputes per page
 func (b *ListDisputesBuilder) PerPage(perPage int) *ListDisputesBuilder {
-	b.request.PerPage = &perPage
+	b.req.PerPage = &perPage
+
 	return b
 }
 
 // Page sets the page number
 func (b *ListDisputesBuilder) Page(page int) *ListDisputesBuilder {
-	b.request.Page = &page
+	b.req.Page = &page
+
 	return b
 }
 
 // Transaction filters by transaction ID
 func (b *ListDisputesBuilder) Transaction(transaction string) *ListDisputesBuilder {
-	b.request.Transaction = &transaction
+	b.req.Transaction = &transaction
+
 	return b
 }
 
 // Status filters by dispute status
 func (b *ListDisputesBuilder) Status(status types.DisputeStatus) *ListDisputesBuilder {
-	b.request.Status = &status
+	b.req.Status = &status
+
 	return b
 }
 
 // Build returns the built request
 func (b *ListDisputesBuilder) Build() *ListDisputesRequest {
-	return b.request
+	return b.req
 }
+
+// ListDisputesResponse represents the response from listing disputes
+type ListDisputesResponse = types.Response[[]types.Dispute]
 
 // List retrieves disputes filed against your integration
 func (c *Client) List(ctx context.Context, builder *ListDisputesBuilder) (*ListDisputesResponse, error) {
