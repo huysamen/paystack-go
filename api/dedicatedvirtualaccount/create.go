@@ -7,7 +7,7 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type CreateDedicatedVirtualAccountRequest struct {
+type CreateRequest struct {
 	Customer      string `json:"customer"`
 	PreferredBank string `json:"preferred_bank,omitempty"`
 	Subaccount    string `json:"subaccount,omitempty"`
@@ -17,64 +17,65 @@ type CreateDedicatedVirtualAccountRequest struct {
 	Phone         string `json:"phone,omitempty"`
 }
 
-type CreateDedicatedVirtualAccountBuilder struct {
-	request *CreateDedicatedVirtualAccountRequest
+type CreateRequestBuilder struct {
+	request *CreateRequest
 }
 
-func NewCreateDedicatedVirtualAccountBuilder() *CreateDedicatedVirtualAccountBuilder {
-	return &CreateDedicatedVirtualAccountBuilder{
-		request: &CreateDedicatedVirtualAccountRequest{},
+func NewCreateRequestBuilder() *CreateRequestBuilder {
+	return &CreateRequestBuilder{
+		request: &CreateRequest{},
 	}
 }
 
-func (b *CreateDedicatedVirtualAccountBuilder) Customer(customer string) *CreateDedicatedVirtualAccountBuilder {
+func (b *CreateRequestBuilder) Customer(customer string) *CreateRequestBuilder {
 	b.request.Customer = customer
 
 	return b
 }
 
-func (b *CreateDedicatedVirtualAccountBuilder) PreferredBank(preferredBank string) *CreateDedicatedVirtualAccountBuilder {
+func (b *CreateRequestBuilder) PreferredBank(preferredBank string) *CreateRequestBuilder {
 	b.request.PreferredBank = preferredBank
 
 	return b
 }
 
-func (b *CreateDedicatedVirtualAccountBuilder) Subaccount(subaccount string) *CreateDedicatedVirtualAccountBuilder {
+func (b *CreateRequestBuilder) Subaccount(subaccount string) *CreateRequestBuilder {
 	b.request.Subaccount = subaccount
 
 	return b
 }
 
-func (b *CreateDedicatedVirtualAccountBuilder) SplitCode(splitCode string) *CreateDedicatedVirtualAccountBuilder {
+func (b *CreateRequestBuilder) SplitCode(splitCode string) *CreateRequestBuilder {
 	b.request.SplitCode = splitCode
 
 	return b
 }
 
-func (b *CreateDedicatedVirtualAccountBuilder) FirstName(firstName string) *CreateDedicatedVirtualAccountBuilder {
+func (b *CreateRequestBuilder) FirstName(firstName string) *CreateRequestBuilder {
 	b.request.FirstName = firstName
 
 	return b
 }
 
-func (b *CreateDedicatedVirtualAccountBuilder) LastName(lastName string) *CreateDedicatedVirtualAccountBuilder {
+func (b *CreateRequestBuilder) LastName(lastName string) *CreateRequestBuilder {
 	b.request.LastName = lastName
 
 	return b
 }
 
-func (b *CreateDedicatedVirtualAccountBuilder) Phone(phone string) *CreateDedicatedVirtualAccountBuilder {
+func (b *CreateRequestBuilder) Phone(phone string) *CreateRequestBuilder {
 	b.request.Phone = phone
 
 	return b
 }
 
-func (b *CreateDedicatedVirtualAccountBuilder) Build() *CreateDedicatedVirtualAccountRequest {
+func (b *CreateRequestBuilder) Build() *CreateRequest {
 	return b.request
 }
 
-type CreateDedicatedVirtualAccountResponse = types.Response[types.DedicatedVirtualAccount]
+type CreateResponseData = types.DedicatedVirtualAccount
+type CreateResponse = types.Response[CreateResponseData]
 
-func (c *Client) Create(ctx context.Context, builder *CreateDedicatedVirtualAccountBuilder) (*CreateDedicatedVirtualAccountResponse, error) {
-	return net.Post[CreateDedicatedVirtualAccountRequest, types.DedicatedVirtualAccount](ctx, c.Client, c.Secret, basePath, builder.Build(), c.BaseURL)
+func (c *Client) Create(ctx context.Context, builder CreateRequestBuilder) (*CreateResponse, error) {
+	return net.Post[CreateRequest, CreateResponseData](ctx, c.Client, c.Secret, basePath, builder.Build(), c.BaseURL)
 }

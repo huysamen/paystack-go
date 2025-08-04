@@ -1,7 +1,3 @@
-// Package paystack provides a Go client library for the Paystack API.
-//
-// Paystack is a payment infrastructure for businesses in Africa. This library
-// provides a simple, type-safe way to interact with the Paystack API.
 package paystack
 
 import (

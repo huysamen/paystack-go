@@ -9,7 +9,7 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type ListDedicatedVirtualAccountsRequest struct {
+type ListRequest struct {
 	Active       *bool  `json:"active,omitempty"`
 	Currency     string `json:"currency,omitempty"`
 	ProviderSlug string `json:"provider_slug,omitempty"`
@@ -17,78 +17,83 @@ type ListDedicatedVirtualAccountsRequest struct {
 	Customer     string `json:"customer,omitempty"`
 }
 
-type ListDedicatedVirtualAccountsBuilder struct {
-	request *ListDedicatedVirtualAccountsRequest
+type ListRequestBuilder struct {
+	request *ListRequest
 }
 
-func NewListDedicatedVirtualAccountsBuilder() *ListDedicatedVirtualAccountsBuilder {
-	return &ListDedicatedVirtualAccountsBuilder{
-		request: &ListDedicatedVirtualAccountsRequest{},
+func NewListRequestBuilder() *ListRequestBuilder {
+	return &ListRequestBuilder{
+		request: &ListRequest{},
 	}
 }
 
-func (b *ListDedicatedVirtualAccountsBuilder) Active(active bool) *ListDedicatedVirtualAccountsBuilder {
+func (b *ListRequestBuilder) Active(active bool) *ListRequestBuilder {
 	b.request.Active = &active
 
 	return b
 }
 
-func (b *ListDedicatedVirtualAccountsBuilder) Currency(currency string) *ListDedicatedVirtualAccountsBuilder {
+func (b *ListRequestBuilder) Currency(currency string) *ListRequestBuilder {
 	b.request.Currency = currency
 
 	return b
 }
 
-func (b *ListDedicatedVirtualAccountsBuilder) ProviderSlug(providerSlug string) *ListDedicatedVirtualAccountsBuilder {
+func (b *ListRequestBuilder) ProviderSlug(providerSlug string) *ListRequestBuilder {
 	b.request.ProviderSlug = providerSlug
 
 	return b
 }
 
-func (b *ListDedicatedVirtualAccountsBuilder) BankID(bankID string) *ListDedicatedVirtualAccountsBuilder {
+func (b *ListRequestBuilder) BankID(bankID string) *ListRequestBuilder {
 	b.request.BankID = bankID
 
 	return b
 }
 
-func (b *ListDedicatedVirtualAccountsBuilder) Customer(customer string) *ListDedicatedVirtualAccountsBuilder {
+func (b *ListRequestBuilder) Customer(customer string) *ListRequestBuilder {
 	b.request.Customer = customer
 
 	return b
 }
 
-func (b *ListDedicatedVirtualAccountsBuilder) Build() *ListDedicatedVirtualAccountsRequest {
+func (b *ListRequestBuilder) Build() *ListRequest {
 	return b.request
 }
 
-type ListDedicatedVirtualAccountsResponse = types.Response[[]types.DedicatedVirtualAccount]
+func (r *ListRequest) toQuery() string {
+	params := url.Values{}
+	if r.Active != nil {
+		params.Set("active", strconv.FormatBool(*r.Active))
+	}
+	if r.Currency != "" {
+		params.Set("currency", r.Currency)
+	}
+	if r.ProviderSlug != "" {
+		params.Set("provider_slug", r.ProviderSlug)
+	}
+	if r.BankID != "" {
+		params.Set("bank_id", r.BankID)
+	}
+	if r.Customer != "" {
+		params.Set("customer", r.Customer)
+	}
 
-func (c *Client) List(ctx context.Context, builder *ListDedicatedVirtualAccountsBuilder) (*ListDedicatedVirtualAccountsResponse, error) {
-	endpoint := basePath
+	return params.Encode()
+}
 
-	if builder != nil {
-		req := builder.Build()
-		params := url.Values{}
-		if req.Active != nil {
-			params.Set("active", strconv.FormatBool(*req.Active))
-		}
-		if req.Currency != "" {
-			params.Set("currency", req.Currency)
-		}
-		if req.ProviderSlug != "" {
-			params.Set("provider_slug", req.ProviderSlug)
-		}
-		if req.BankID != "" {
-			params.Set("bank_id", req.BankID)
-		}
-		if req.Customer != "" {
-			params.Set("customer", req.Customer)
-		}
+type ListResponseData = []types.DedicatedVirtualAccount
+type ListResponse = types.Response[ListResponseData]
 
-		if len(params) > 0 {
-			endpoint += "?" + params.Encode()
+func (c *Client) List(ctx context.Context, builder ListRequestBuilder) (*ListResponse, error) {
+	req := builder.Build()
+	path := basePath
+
+	if req != nil {
+		if query := req.toQuery(); query != "" {
+			path += "?" + query
 		}
 	}
 
-	return net.Get[[]types.DedicatedVirtualAccount](ctx, c.Client, c.Secret, endpoint, c.BaseURL)
+	return net.Get[ListResponseData](ctx, c.Client, c.Secret, path, c.BaseURL)
 }

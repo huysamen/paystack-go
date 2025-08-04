@@ -7,32 +7,33 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type RemoveSplitFromDedicatedAccountRequest struct {
+type RemoveSplitRequest struct {
 	AccountNumber string `json:"account_number"`
 }
 
-type RemoveSplitFromDedicatedAccountBuilder struct {
-	request *RemoveSplitFromDedicatedAccountRequest
+type RemoveSplitRequestBuilder struct {
+	request *RemoveSplitRequest
 }
 
-func NewRemoveSplitFromDedicatedAccountBuilder() *RemoveSplitFromDedicatedAccountBuilder {
-	return &RemoveSplitFromDedicatedAccountBuilder{
-		request: &RemoveSplitFromDedicatedAccountRequest{},
+func NewRemoveSplitRequestBuilder() *RemoveSplitRequestBuilder {
+	return &RemoveSplitRequestBuilder{
+		request: &RemoveSplitRequest{},
 	}
 }
 
-func (b *RemoveSplitFromDedicatedAccountBuilder) AccountNumber(accountNumber string) *RemoveSplitFromDedicatedAccountBuilder {
+func (b *RemoveSplitRequestBuilder) AccountNumber(accountNumber string) *RemoveSplitRequestBuilder {
 	b.request.AccountNumber = accountNumber
 
 	return b
 }
 
-func (b *RemoveSplitFromDedicatedAccountBuilder) Build() *RemoveSplitFromDedicatedAccountRequest {
+func (b *RemoveSplitRequestBuilder) Build() *RemoveSplitRequest {
 	return b.request
 }
 
-type RemoveSplitFromDedicatedAccountResponse = types.Response[types.DedicatedVirtualAccount]
+type RemoveSplitResponseData = types.DedicatedVirtualAccount
+type RemoveSplitResponse = types.Response[RemoveSplitResponseData]
 
-func (c *Client) RemoveSplit(ctx context.Context, builder *RemoveSplitFromDedicatedAccountBuilder) (*RemoveSplitFromDedicatedAccountResponse, error) {
-	return net.DeleteWithBody[RemoveSplitFromDedicatedAccountRequest, types.DedicatedVirtualAccount](ctx, c.Client, c.Secret, basePath+"/split", builder.Build(), c.BaseURL)
+func (c *Client) RemoveSplit(ctx context.Context, builder RemoveSplitRequestBuilder) (*RemoveSplitResponse, error) {
+	return net.DeleteWithBody[RemoveSplitRequest, RemoveSplitResponseData](ctx, c.Client, c.Secret, basePath+"/split", builder.Build(), c.BaseURL)
 }

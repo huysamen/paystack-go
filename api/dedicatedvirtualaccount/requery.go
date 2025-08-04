@@ -8,56 +8,69 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type RequeryDedicatedAccountRequest struct {
+type RequeryRequest struct {
 	AccountNumber string `json:"account_number"`
 	ProviderSlug  string `json:"provider_slug"`
 	Date          string `json:"date,omitempty"`
 }
 
-type RequeryDedicatedAccountBuilder struct {
-	request *RequeryDedicatedAccountRequest
+type RequeryRequestBuilder struct {
+	request *RequeryRequest
 }
 
-func NewRequeryDedicatedAccountBuilder() *RequeryDedicatedAccountBuilder {
-	return &RequeryDedicatedAccountBuilder{
-		request: &RequeryDedicatedAccountRequest{},
+func NewRequeryRequestBuilder() *RequeryRequestBuilder {
+	return &RequeryRequestBuilder{
+		request: &RequeryRequest{},
 	}
 }
 
-func (b *RequeryDedicatedAccountBuilder) AccountNumber(accountNumber string) *RequeryDedicatedAccountBuilder {
+func (b *RequeryRequestBuilder) AccountNumber(accountNumber string) *RequeryRequestBuilder {
 	b.request.AccountNumber = accountNumber
 
 	return b
 }
 
-func (b *RequeryDedicatedAccountBuilder) ProviderSlug(providerSlug string) *RequeryDedicatedAccountBuilder {
+func (b *RequeryRequestBuilder) ProviderSlug(providerSlug string) *RequeryRequestBuilder {
 	b.request.ProviderSlug = providerSlug
 
 	return b
 }
 
-func (b *RequeryDedicatedAccountBuilder) Date(date string) *RequeryDedicatedAccountBuilder {
+func (b *RequeryRequestBuilder) Date(date string) *RequeryRequestBuilder {
 	b.request.Date = date
 
 	return b
 }
 
-func (b *RequeryDedicatedAccountBuilder) Build() *RequeryDedicatedAccountRequest {
+func (b *RequeryRequestBuilder) Build() *RequeryRequest {
 	return b.request
 }
 
-type RequeryResponse = types.Response[any]
-
-func (c *Client) Requery(ctx context.Context, builder *RequeryDedicatedAccountBuilder) (*RequeryResponse, error) {
-	req := builder.Build()
+func (r *RequeryRequest) toQuery() string {
 	params := url.Values{}
-	params.Set("account_number", req.AccountNumber)
-	params.Set("provider_slug", req.ProviderSlug)
-	if req.Date != "" {
-		params.Set("date", req.Date)
+
+	params.Set("account_number", r.AccountNumber)
+	params.Set("provider_slug", r.ProviderSlug)
+
+	if r.Date != "" {
+		params.Set("date", r.Date)
 	}
 
-	endpoint := basePath + "/requery?" + params.Encode()
+	return params.Encode()
+}
 
-	return net.Get[any](ctx, c.Client, c.Secret, endpoint, c.BaseURL)
+type RequeryResponseData = any
+type RequeryResponse = types.Response[RequeryResponseData]
+
+func (c *Client) Requery(ctx context.Context, builder RequeryRequestBuilder) (*RequeryResponse, error) {
+	req := builder.Build()
+	path := basePath + "/requery"
+
+	if req != nil {
+		if query := req.toQuery(); query != "" {
+			path += "?" + query
+		}
+	}
+
+	return net.Get[RequeryResponseData](ctx, c.Client, c.Secret, path, c.BaseURL)
 }

@@ -8,10 +8,11 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type DeactivateResponse = types.Response[types.DedicatedVirtualAccount]
+type DeactivateResponseData = types.DedicatedVirtualAccount
+type DeactivateResponse = types.Response[DeactivateResponseData]
 
 func (c *Client) Deactivate(ctx context.Context, dedicatedAccountID string) (*DeactivateResponse, error) {
 	endpoint := fmt.Sprintf("%s/%s", basePath, dedicatedAccountID)
 
-	return net.Delete[types.DedicatedVirtualAccount](ctx, c.Client, c.Secret, endpoint, c.BaseURL)
+	return net.Delete[DeactivateResponseData](ctx, c.Client, c.Secret, endpoint, c.BaseURL)
 }

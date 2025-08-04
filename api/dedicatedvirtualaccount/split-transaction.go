@@ -7,53 +7,54 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type SplitDedicatedAccountTransactionRequest struct {
+type SplitTransactionRequest struct {
 	Customer      string `json:"customer"`
 	Subaccount    string `json:"subaccount,omitempty"`
 	SplitCode     string `json:"split_code,omitempty"`
 	PreferredBank string `json:"preferred_bank,omitempty"`
 }
 
-type SplitDedicatedAccountTransactionBuilder struct {
-	request *SplitDedicatedAccountTransactionRequest
+type SplitTransactioRequestnBuilder struct {
+	request *SplitTransactionRequest
 }
 
-func NewSplitDedicatedAccountTransactionBuilder() *SplitDedicatedAccountTransactionBuilder {
-	return &SplitDedicatedAccountTransactionBuilder{
-		request: &SplitDedicatedAccountTransactionRequest{},
+func NewSplitTransactionRequestBuilder() *SplitTransactioRequestnBuilder {
+	return &SplitTransactioRequestnBuilder{
+		request: &SplitTransactionRequest{},
 	}
 }
 
-func (b *SplitDedicatedAccountTransactionBuilder) Customer(customer string) *SplitDedicatedAccountTransactionBuilder {
+func (b *SplitTransactioRequestnBuilder) Customer(customer string) *SplitTransactioRequestnBuilder {
 	b.request.Customer = customer
 
 	return b
 }
 
-func (b *SplitDedicatedAccountTransactionBuilder) Subaccount(subaccount string) *SplitDedicatedAccountTransactionBuilder {
+func (b *SplitTransactioRequestnBuilder) Subaccount(subaccount string) *SplitTransactioRequestnBuilder {
 	b.request.Subaccount = subaccount
 
 	return b
 }
 
-func (b *SplitDedicatedAccountTransactionBuilder) SplitCode(splitCode string) *SplitDedicatedAccountTransactionBuilder {
+func (b *SplitTransactioRequestnBuilder) SplitCode(splitCode string) *SplitTransactioRequestnBuilder {
 	b.request.SplitCode = splitCode
 
 	return b
 }
 
-func (b *SplitDedicatedAccountTransactionBuilder) PreferredBank(preferredBank string) *SplitDedicatedAccountTransactionBuilder {
+func (b *SplitTransactioRequestnBuilder) PreferredBank(preferredBank string) *SplitTransactioRequestnBuilder {
 	b.request.PreferredBank = preferredBank
 
 	return b
 }
 
-func (b *SplitDedicatedAccountTransactionBuilder) Build() *SplitDedicatedAccountTransactionRequest {
+func (b *SplitTransactioRequestnBuilder) Build() *SplitTransactionRequest {
 	return b.request
 }
 
-type SplitDedicatedAccountTransactionResponse = types.Response[types.DedicatedVirtualAccount]
+type SplitTransactionResponseData = types.DedicatedVirtualAccount
+type SplitTransactionResponse = types.Response[SplitTransactionResponseData]
 
-func (c *Client) SplitTransaction(ctx context.Context, builder *SplitDedicatedAccountTransactionBuilder) (*SplitDedicatedAccountTransactionResponse, error) {
-	return net.Post[SplitDedicatedAccountTransactionRequest, types.DedicatedVirtualAccount](ctx, c.Client, c.Secret, basePath+"/split", builder.Build(), c.BaseURL)
+func (c *Client) SplitTransaction(ctx context.Context, builder SplitTransactioRequestnBuilder) (*SplitTransactionResponse, error) {
+	return net.Post[SplitTransactionRequest, SplitTransactionResponseData](ctx, c.Client, c.Secret, basePath+"/split", builder.Build(), c.BaseURL)
 }

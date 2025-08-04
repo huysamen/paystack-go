@@ -7,7 +7,7 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type AssignDedicatedVirtualAccountRequest struct {
+type AssignRequest struct {
 	Email         string `json:"email"`
 	FirstName     string `json:"first_name"`
 	LastName      string `json:"last_name"`
@@ -22,96 +22,95 @@ type AssignDedicatedVirtualAccountRequest struct {
 	MiddleName    string `json:"middle_name,omitempty"`
 }
 
-type AssignDedicatedVirtualAccountBuilder struct {
-	req *AssignDedicatedVirtualAccountRequest
+type AssignRequestBuilder struct {
+	req *AssignRequest
 }
 
-func NewAssignDedicatedVirtualAccountBuilder() *AssignDedicatedVirtualAccountBuilder {
-	return &AssignDedicatedVirtualAccountBuilder{
-		req: &AssignDedicatedVirtualAccountRequest{},
+func NewAssignRequestBuilder() *AssignRequestBuilder {
+	return &AssignRequestBuilder{
+		req: &AssignRequest{},
 	}
 }
 
-func (b *AssignDedicatedVirtualAccountBuilder) Email(email string) *AssignDedicatedVirtualAccountBuilder {
+func (b *AssignRequestBuilder) Email(email string) *AssignRequestBuilder {
 	b.req.Email = email
 
 	return b
 }
 
-func (b *AssignDedicatedVirtualAccountBuilder) FirstName(firstName string) *AssignDedicatedVirtualAccountBuilder {
+func (b *AssignRequestBuilder) FirstName(firstName string) *AssignRequestBuilder {
 	b.req.FirstName = firstName
 
 	return b
 }
 
-func (b *AssignDedicatedVirtualAccountBuilder) LastName(lastName string) *AssignDedicatedVirtualAccountBuilder {
+func (b *AssignRequestBuilder) LastName(lastName string) *AssignRequestBuilder {
 	b.req.LastName = lastName
 
 	return b
 }
 
-func (b *AssignDedicatedVirtualAccountBuilder) Phone(phone string) *AssignDedicatedVirtualAccountBuilder {
+func (b *AssignRequestBuilder) Phone(phone string) *AssignRequestBuilder {
 	b.req.Phone = phone
 
 	return b
 }
 
-func (b *AssignDedicatedVirtualAccountBuilder) PreferredBank(preferredBank string) *AssignDedicatedVirtualAccountBuilder {
+func (b *AssignRequestBuilder) PreferredBank(preferredBank string) *AssignRequestBuilder {
 	b.req.PreferredBank = preferredBank
 
 	return b
 }
 
-func (b *AssignDedicatedVirtualAccountBuilder) Country(country string) *AssignDedicatedVirtualAccountBuilder {
+func (b *AssignRequestBuilder) Country(country string) *AssignRequestBuilder {
 	b.req.Country = country
 
 	return b
 }
 
-func (b *AssignDedicatedVirtualAccountBuilder) AccountNumber(accountNumber string) *AssignDedicatedVirtualAccountBuilder {
+func (b *AssignRequestBuilder) AccountNumber(accountNumber string) *AssignRequestBuilder {
 	b.req.AccountNumber = accountNumber
 
 	return b
 }
 
-func (b *AssignDedicatedVirtualAccountBuilder) BVN(bvn string) *AssignDedicatedVirtualAccountBuilder {
+func (b *AssignRequestBuilder) BVN(bvn string) *AssignRequestBuilder {
 	b.req.BVN = bvn
 
 	return b
 }
 
-func (b *AssignDedicatedVirtualAccountBuilder) BankCode(bankCode string) *AssignDedicatedVirtualAccountBuilder {
+func (b *AssignRequestBuilder) BankCode(bankCode string) *AssignRequestBuilder {
 	b.req.BankCode = bankCode
 
 	return b
 }
 
-func (b *AssignDedicatedVirtualAccountBuilder) Subaccount(subaccount string) *AssignDedicatedVirtualAccountBuilder {
+func (b *AssignRequestBuilder) Subaccount(subaccount string) *AssignRequestBuilder {
 	b.req.Subaccount = subaccount
 
 	return b
 }
 
-func (b *AssignDedicatedVirtualAccountBuilder) SplitCode(splitCode string) *AssignDedicatedVirtualAccountBuilder {
+func (b *AssignRequestBuilder) SplitCode(splitCode string) *AssignRequestBuilder {
 	b.req.SplitCode = splitCode
 
 	return b
 }
 
-func (b *AssignDedicatedVirtualAccountBuilder) MiddleName(middleName string) *AssignDedicatedVirtualAccountBuilder {
+func (b *AssignRequestBuilder) MiddleName(middleName string) *AssignRequestBuilder {
 	b.req.MiddleName = middleName
 
 	return b
 }
 
-func (b *AssignDedicatedVirtualAccountBuilder) Build() *AssignDedicatedVirtualAccountRequest {
+func (b *AssignRequestBuilder) Build() *AssignRequest {
 	return b.req
 }
 
-type AssignDedicatedVirtualAccountResponse = types.Response[any]
+type AssignDedicatedVirtualAccountResponseData = any
+type AssignDedicatedVirtualAccountResponse = types.Response[AssignDedicatedVirtualAccountResponseData]
 
-func (c *Client) Assign(ctx context.Context, builder *AssignDedicatedVirtualAccountBuilder) (*AssignDedicatedVirtualAccountResponse, error) {
-	return net.Post[AssignDedicatedVirtualAccountRequest, any](
-		ctx, c.Client, c.Secret, basePath+"/assign", builder.Build(), c.BaseURL,
-	)
+func (c *Client) Assign(ctx context.Context, builder AssignRequestBuilder) (*AssignDedicatedVirtualAccountResponse, error) {
+	return net.Post[AssignRequest, AssignDedicatedVirtualAccountResponseData](ctx, c.Client, c.Secret, basePath+"/assign", builder.Build(), c.BaseURL)
 }
