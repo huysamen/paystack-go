@@ -8,13 +8,6 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-// State represents a state for address verification
-type State struct {
-	Name         string `json:"name"`
-	Slug         string `json:"slug"`
-	Abbreviation string `json:"abbreviation"`
-}
-
 // StateListRequest represents the request to list states
 type StateListRequest struct {
 	Country string `json:"country"` // Required: country code
@@ -40,7 +33,7 @@ func (b *StateListRequestBuilder) Build() *StateListRequest {
 }
 
 // StateListResponse represents the response from listing states
-type StateListResponse = types.Response[[]State]
+type StateListResponse = types.Response[[]types.State]
 
 // ListStates retrieves a list of states for a country (for address verification)
 func (c *Client) ListStates(ctx context.Context, builder *StateListRequestBuilder) (*StateListResponse, error) {
@@ -49,5 +42,5 @@ func (c *Client) ListStates(ctx context.Context, builder *StateListRequestBuilde
 	params.Set("country", req.Country)
 
 	endpoint := statesPath + "?" + params.Encode()
-	return net.Get[[]State](ctx, c.Client, c.Secret, endpoint, c.BaseURL)
+	return net.Get[[]types.State](ctx, c.Client, c.Secret, endpoint, c.BaseURL)
 }
