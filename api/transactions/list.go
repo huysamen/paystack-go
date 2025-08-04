@@ -12,7 +12,6 @@ import (
 )
 
 type TransactionListRequest struct {
-	// Optional
 	PerPage    *int
 	Page       *int
 	Customer   *uint64
@@ -23,54 +22,46 @@ type TransactionListRequest struct {
 	Amount     *int
 }
 
-// TransactionListRequestBuilder provides a fluent interface for building TransactionListRequest
 type TransactionListRequestBuilder struct {
 	req *TransactionListRequest
 }
 
-// NewTransactionListRequest creates a new builder for TransactionListRequest
 func NewTransactionListRequest() *TransactionListRequestBuilder {
 	return &TransactionListRequestBuilder{
 		req: &TransactionListRequest{},
 	}
 }
 
-// PerPage sets the number of records per page
 func (b *TransactionListRequestBuilder) PerPage(perPage int) *TransactionListRequestBuilder {
 	b.req.PerPage = optional.Int(perPage)
 
 	return b
 }
 
-// Page sets the page number
 func (b *TransactionListRequestBuilder) Page(page int) *TransactionListRequestBuilder {
 	b.req.Page = optional.Int(page)
 
 	return b
 }
 
-// Customer filters by customer ID
 func (b *TransactionListRequestBuilder) Customer(customer uint64) *TransactionListRequestBuilder {
 	b.req.Customer = optional.Uint64(customer)
 
 	return b
 }
 
-// TerminalID filters by terminal ID
 func (b *TransactionListRequestBuilder) TerminalID(terminalID string) *TransactionListRequestBuilder {
 	b.req.TerminalID = optional.String(terminalID)
 
 	return b
 }
 
-// Status filters by transaction status
 func (b *TransactionListRequestBuilder) Status(status string) *TransactionListRequestBuilder {
 	b.req.Status = optional.String(status)
 
 	return b
 }
 
-// DateRange sets both start and end date filters
 func (b *TransactionListRequestBuilder) DateRange(from, to time.Time) *TransactionListRequestBuilder {
 	b.req.From = optional.Time(from)
 	b.req.To = optional.Time(to)
@@ -78,28 +69,24 @@ func (b *TransactionListRequestBuilder) DateRange(from, to time.Time) *Transacti
 	return b
 }
 
-// From sets the start date filter
 func (b *TransactionListRequestBuilder) From(from time.Time) *TransactionListRequestBuilder {
 	b.req.From = optional.Time(from)
 
 	return b
 }
 
-// To sets the end date filter
 func (b *TransactionListRequestBuilder) To(to time.Time) *TransactionListRequestBuilder {
 	b.req.To = optional.Time(to)
 
 	return b
 }
 
-// Amount filters by transaction amount
 func (b *TransactionListRequestBuilder) Amount(amount int) *TransactionListRequestBuilder {
 	b.req.Amount = optional.Int(amount)
 
 	return b
 }
 
-// Build returns the constructed TransactionListRequest
 func (b *TransactionListRequestBuilder) Build() *TransactionListRequest {
 	return b.req
 }
@@ -135,10 +122,8 @@ func (r *TransactionListRequest) toQuery() string {
 	return params.Encode()
 }
 
-// TransactionListResponse represents the response for listing transactions
 type ListResponse = types.Response[[]types.Transaction]
 
-// List lists transactions using a builder (fluent interface)
 func (c *Client) List(ctx context.Context, builder *TransactionListRequestBuilder) (*ListResponse, error) {
 	req := builder.Build()
 	query := ""

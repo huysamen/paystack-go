@@ -6,5 +6,4 @@ import (
 
 const basePath = "/settlement"
 
-// Client represents the settlements API client
 type Client api.API

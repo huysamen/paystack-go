@@ -6,5 +6,4 @@ import (
 
 const basePath = "/paymentrequest"
 
-// Client is the API client for the Payment Requests API
 type Client api.API

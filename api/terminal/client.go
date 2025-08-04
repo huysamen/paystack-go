@@ -6,5 +6,4 @@ import (
 
 const basePath = "/terminal"
 
-// Client represents the terminal API client
 type Client api.API

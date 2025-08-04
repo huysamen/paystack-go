@@ -8,17 +8,14 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-// StateListRequest represents the request to list states
 type StateListRequest struct {
 	Country string `json:"country"` // Required: country code
 }
 
-// StateListRequestBuilder provides a fluent interface for building StateListRequest
 type StateListRequestBuilder struct {
 	req *StateListRequest
 }
 
-// NewStateListRequest creates a new builder for StateListRequest
 func NewStateListRequest(country string) *StateListRequestBuilder {
 	return &StateListRequestBuilder{
 		req: &StateListRequest{
@@ -27,15 +24,12 @@ func NewStateListRequest(country string) *StateListRequestBuilder {
 	}
 }
 
-// Build returns the constructed StateListRequest
 func (b *StateListRequestBuilder) Build() *StateListRequest {
 	return b.req
 }
 
-// StateListResponse represents the response from listing states
 type StateListResponse = types.Response[[]types.State]
 
-// ListStates retrieves a list of states for a country (for address verification)
 func (c *Client) ListStates(ctx context.Context, builder *StateListRequestBuilder) (*StateListResponse, error) {
 	req := builder.Build()
 	params := url.Values{}

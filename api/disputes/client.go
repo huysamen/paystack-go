@@ -6,5 +6,4 @@ import (
 
 const basePath = "/dispute"
 
-// Client provides disputes operations
 type Client api.API

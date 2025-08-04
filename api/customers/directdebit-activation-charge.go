@@ -8,17 +8,14 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-// Request and Response types
 type DirectDebitActivationChargeRequest struct {
 	AuthorizationID int `json:"authorization_id"`
 }
 
-// Builder for DirectDebitActivationChargeRequest
 type DirectDebitActivationChargeRequestBuilder struct {
 	req *DirectDebitActivationChargeRequest
 }
 
-// NewDirectDebitActivationChargeRequest creates a new builder for direct debit activation charge
 func NewDirectDebitActivationChargeRequest(authorizationID int) *DirectDebitActivationChargeRequestBuilder {
 	return &DirectDebitActivationChargeRequestBuilder{
 		req: &DirectDebitActivationChargeRequest{
@@ -27,15 +24,12 @@ func NewDirectDebitActivationChargeRequest(authorizationID int) *DirectDebitActi
 	}
 }
 
-// Build creates the DirectDebitActivationChargeRequest
 func (b *DirectDebitActivationChargeRequestBuilder) Build() *DirectDebitActivationChargeRequest {
 	return b.req
 }
 
-// DirectDebitActivationChargeResponse is the response type for direct debit activation charge
 type DirectDebitActivationChargeResponse = types.Response[any]
 
-// DirectDebitActivationCharge creates an activation charge for a direct debit authorization
 func (c *Client) DirectDebitActivationCharge(ctx context.Context, customerID string, builder *DirectDebitActivationChargeRequestBuilder) (*DirectDebitActivationChargeResponse, error) {
 	path := fmt.Sprintf("%s/%s/directdebit-activation-charge", basePath, customerID)
 

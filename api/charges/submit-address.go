@@ -7,7 +7,6 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-// SubmitAddressRequest represents the request to submit address for a charge
 type SubmitAddressRequest struct {
 	Address   string `json:"address"`
 	City      string `json:"city"`
@@ -16,12 +15,10 @@ type SubmitAddressRequest struct {
 	Reference string `json:"reference"`
 }
 
-// SubmitAddressRequestBuilder provides a fluent interface for building SubmitAddressRequest
 type SubmitAddressRequestBuilder struct {
 	req *SubmitAddressRequest
 }
 
-// NewSubmitAddressRequest creates a new builder for SubmitAddressRequest
 func NewSubmitAddressRequest(address, city, state, zipCode, reference string) *SubmitAddressRequestBuilder {
 	return &SubmitAddressRequestBuilder{
 		req: &SubmitAddressRequest{
@@ -34,15 +31,12 @@ func NewSubmitAddressRequest(address, city, state, zipCode, reference string) *S
 	}
 }
 
-// Build returns the constructed SubmitAddressRequest
 func (b *SubmitAddressRequestBuilder) Build() *SubmitAddressRequest {
 	return b.req
 }
 
-// SubmitAddressResponse is the API endpoint for submitting address for a charge
 type SubmitAddressResponse = types.Response[types.ChargeData]
 
-// SubmitAddress submits address when requested for verification
 func (c *Client) SubmitAddress(ctx context.Context, builder *SubmitAddressRequestBuilder) (*SubmitAddressResponse, error) {
 	return net.Post[SubmitAddressRequest, types.ChargeData](ctx, c.Client, c.Secret, submitAddressPath, builder.Build(), c.BaseURL)
 }

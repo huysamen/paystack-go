@@ -8,10 +8,8 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-// ListTransactionDisputesResponse represents the response from listing transaction disputes
 type ListTransactionDisputesResponse = types.Response[TransactionDisputeData]
 
-// ListTransactionDisputes retrieves disputes for a transaction
 func (c *Client) ListTransactionDisputes(ctx context.Context, transactionID string) (*ListTransactionDisputesResponse, error) {
 	if transactionID == "" {
 		return nil, errors.New("transaction ID is required")

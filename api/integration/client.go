@@ -6,5 +6,4 @@ import (
 
 const basePath = "/integration"
 
-// Client provides integration operations
 type Client api.API

@@ -12,7 +12,6 @@ import (
 )
 
 type TransferListRequest struct {
-	// Optional
 	PerPage   *int
 	Page      *int
 	Recipient *int       // Filter by recipient ID
@@ -20,40 +19,34 @@ type TransferListRequest struct {
 	To        *time.Time // End date filter
 }
 
-// TransferListRequestBuilder provides a fluent interface for building TransferListRequest
 type TransferListRequestBuilder struct {
 	req *TransferListRequest
 }
 
-// NewTransferListRequest creates a new builder for TransferListRequest
 func NewTransferListRequest() *TransferListRequestBuilder {
 	return &TransferListRequestBuilder{
 		req: &TransferListRequest{},
 	}
 }
 
-// PerPage sets the number of records per page
 func (b *TransferListRequestBuilder) PerPage(perPage int) *TransferListRequestBuilder {
 	b.req.PerPage = optional.Int(perPage)
 
 	return b
 }
 
-// Page sets the page number
 func (b *TransferListRequestBuilder) Page(page int) *TransferListRequestBuilder {
 	b.req.Page = optional.Int(page)
 
 	return b
 }
 
-// Recipient filters by recipient ID
 func (b *TransferListRequestBuilder) Recipient(recipient int) *TransferListRequestBuilder {
 	b.req.Recipient = optional.Int(recipient)
 
 	return b
 }
 
-// DateRange sets both start and end date filters
 func (b *TransferListRequestBuilder) DateRange(from, to time.Time) *TransferListRequestBuilder {
 	b.req.From = optional.Time(from)
 	b.req.To = optional.Time(to)
@@ -61,21 +54,18 @@ func (b *TransferListRequestBuilder) DateRange(from, to time.Time) *TransferList
 	return b
 }
 
-// From sets the start date filter
 func (b *TransferListRequestBuilder) From(from time.Time) *TransferListRequestBuilder {
 	b.req.From = optional.Time(from)
 
 	return b
 }
 
-// To sets the end date filter
 func (b *TransferListRequestBuilder) To(to time.Time) *TransferListRequestBuilder {
 	b.req.To = optional.Time(to)
 
 	return b
 }
 
-// Build returns the constructed TransferListRequest
 func (b *TransferListRequestBuilder) Build() *TransferListRequest {
 	return b.req
 }
@@ -102,10 +92,8 @@ func (r *TransferListRequest) toQuery() string {
 	return params.Encode()
 }
 
-// ListResponse represents the response for listing transfers
 type ListResponse = types.Response[[]types.Transfer]
 
-// List lists transfers using a builder (fluent interface)
 func (c *Client) List(ctx context.Context, builder *TransferListRequestBuilder) (*ListResponse, error) {
 	req := builder.Build()
 	query := ""

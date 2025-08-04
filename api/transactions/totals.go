@@ -12,40 +12,34 @@ import (
 )
 
 type TransactionTotalsRequest struct {
-	// Optional
 	PerPage *int
 	Page    *int
 	From    *time.Time
 	To      *time.Time
 }
 
-// TransactionTotalsRequestBuilder provides a fluent interface for building TransactionTotalsRequest
 type TransactionTotalsRequestBuilder struct {
 	req *TransactionTotalsRequest
 }
 
-// NewTransactionTotalsRequest creates a new builder for TransactionTotalsRequest
 func NewTransactionTotalsRequest() *TransactionTotalsRequestBuilder {
 	return &TransactionTotalsRequestBuilder{
 		req: &TransactionTotalsRequest{},
 	}
 }
 
-// PerPage sets the number of records per page
 func (b *TransactionTotalsRequestBuilder) PerPage(perPage int) *TransactionTotalsRequestBuilder {
 	b.req.PerPage = optional.Int(perPage)
 
 	return b
 }
 
-// Page sets the page number
 func (b *TransactionTotalsRequestBuilder) Page(page int) *TransactionTotalsRequestBuilder {
 	b.req.Page = optional.Int(page)
 
 	return b
 }
 
-// DateRange sets both start and end date filters
 func (b *TransactionTotalsRequestBuilder) DateRange(from, to time.Time) *TransactionTotalsRequestBuilder {
 	b.req.From = optional.Time(from)
 	b.req.To = optional.Time(to)
@@ -53,21 +47,18 @@ func (b *TransactionTotalsRequestBuilder) DateRange(from, to time.Time) *Transac
 	return b
 }
 
-// From sets the start date filter
 func (b *TransactionTotalsRequestBuilder) From(from time.Time) *TransactionTotalsRequestBuilder {
 	b.req.From = optional.Time(from)
 
 	return b
 }
 
-// To sets the end date filter
 func (b *TransactionTotalsRequestBuilder) To(to time.Time) *TransactionTotalsRequestBuilder {
 	b.req.To = optional.Time(to)
 
 	return b
 }
 
-// Build returns the constructed TransactionTotalsRequest
 func (b *TransactionTotalsRequestBuilder) Build() *TransactionTotalsRequest {
 	return b.req
 }
@@ -91,13 +82,11 @@ func (r *TransactionTotalsRequest) toQuery() string {
 	return params.Encode()
 }
 
-// CurrencyTotal represents the total amount for a specific currency
 type CurrencyTotal struct {
 	Currency types.Currency `json:"currency"`
 	Amount   int            `json:"amount"`
 }
 
-// TotalsResponseData represents the response for transaction totals
 type TotalsResponseData struct {
 	TotalTransactions                    int             `json:"total_transactions"`
 	TotalVolume                          int             `json:"total_volume"`
@@ -109,10 +98,8 @@ type TotalsResponseData struct {
 	UnsettledTransactionVolumeByCurrency []CurrencyTotal `json:"unsettled_transaction_volume_by_currency"`
 }
 
-// Response type alias
 type TotalsResponse = types.Response[TotalsResponseData]
 
-// Totals gets transaction totals using a builder (fluent interface)
 func (c *Client) Totals(ctx context.Context, builder *TransactionTotalsRequestBuilder) (*TotalsResponse, error) {
 	req := builder.Build()
 	query := ""

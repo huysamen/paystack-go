@@ -11,54 +11,46 @@ import (
 )
 
 type SubscriptionListRequest struct {
-	// Optional
 	PerPage  *int
 	Page     *int
 	Customer *int // Customer ID
 	Plan     *int // Plan ID
 }
 
-// SubscriptionListRequestBuilder provides a fluent interface for building SubscriptionListRequest
 type SubscriptionListRequestBuilder struct {
 	req *SubscriptionListRequest
 }
 
-// NewSubscriptionListRequest creates a new builder for SubscriptionListRequest
 func NewSubscriptionListRequest() *SubscriptionListRequestBuilder {
 	return &SubscriptionListRequestBuilder{
 		req: &SubscriptionListRequest{},
 	}
 }
 
-// PerPage sets the number of records per page
 func (b *SubscriptionListRequestBuilder) PerPage(perPage int) *SubscriptionListRequestBuilder {
 	b.req.PerPage = optional.Int(perPage)
 
 	return b
 }
 
-// Page sets the page number
 func (b *SubscriptionListRequestBuilder) Page(page int) *SubscriptionListRequestBuilder {
 	b.req.Page = optional.Int(page)
 
 	return b
 }
 
-// Customer filters by customer ID
 func (b *SubscriptionListRequestBuilder) Customer(customer int) *SubscriptionListRequestBuilder {
 	b.req.Customer = optional.Int(customer)
 
 	return b
 }
 
-// Plan filters by plan ID
 func (b *SubscriptionListRequestBuilder) Plan(plan int) *SubscriptionListRequestBuilder {
 	b.req.Plan = optional.Int(plan)
 
 	return b
 }
 
-// Build returns the constructed SubscriptionListRequest
 func (b *SubscriptionListRequestBuilder) Build() *SubscriptionListRequest {
 	return b.req
 }
@@ -82,10 +74,8 @@ func (r *SubscriptionListRequest) toQuery() string {
 	return params.Encode()
 }
 
-// SubscriptionListResponse represents the response from listing subscriptions
 type SubscriptionListResponse = types.Response[[]types.Subscription]
 
-// List lists subscriptions using a builder (fluent interface)
 func (c *Client) List(ctx context.Context, builder *SubscriptionListRequestBuilder) (*SubscriptionListResponse, error) {
 	path := basePath
 

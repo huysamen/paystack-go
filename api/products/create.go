@@ -7,7 +7,6 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-// CreateProductRequest represents the request to create a product
 type CreateProductRequest struct {
 	Name        string          `json:"name"`
 	Description string          `json:"description"`
@@ -18,12 +17,10 @@ type CreateProductRequest struct {
 	Metadata    *types.Metadata `json:"metadata,omitempty"`
 }
 
-// CreateProductRequestBuilder provides a fluent interface for building CreateProductRequest
 type CreateProductRequestBuilder struct {
 	req *CreateProductRequest
 }
 
-// NewCreateProductRequest creates a new builder for CreateProductRequest
 func NewCreateProductRequest(name, description string, price int, currency string) *CreateProductRequestBuilder {
 	return &CreateProductRequestBuilder{
 		req: &CreateProductRequest{
@@ -35,36 +32,30 @@ func NewCreateProductRequest(name, description string, price int, currency strin
 	}
 }
 
-// Unlimited sets whether the product has unlimited quantity
 func (b *CreateProductRequestBuilder) Unlimited(unlimited bool) *CreateProductRequestBuilder {
 	b.req.Unlimited = &unlimited
 
 	return b
 }
 
-// Quantity sets the product quantity (ignored if unlimited is true)
 func (b *CreateProductRequestBuilder) Quantity(quantity int) *CreateProductRequestBuilder {
 	b.req.Quantity = &quantity
 
 	return b
 }
 
-// Metadata sets the product metadata
 func (b *CreateProductRequestBuilder) Metadata(metadata *types.Metadata) *CreateProductRequestBuilder {
 	b.req.Metadata = metadata
 
 	return b
 }
 
-// Build returns the constructed CreateProductRequest
 func (b *CreateProductRequestBuilder) Build() *CreateProductRequest {
 	return b.req
 }
 
-// CreateProductResponse represents the response from creating a product
 type CreateProductResponse = types.Response[types.Product]
 
-// Create creates a new product
 func (c *Client) Create(ctx context.Context, builder *CreateProductRequestBuilder) (*CreateProductResponse, error) {
 	return net.Post[CreateProductRequest, types.Product](ctx, c.Client, c.Secret, basePath, builder.Build(), c.BaseURL)
 }

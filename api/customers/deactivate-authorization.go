@@ -7,17 +7,14 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-// Request and Response types
 type DeactivateAuthorizationRequest struct {
 	AuthorizationCode string `json:"authorization_code"`
 }
 
-// Builder for DeactivateAuthorizationRequest
 type DeactivateAuthorizationRequestBuilder struct {
 	req *DeactivateAuthorizationRequest
 }
 
-// NewDeactivateAuthorizationRequest creates a new builder for deactivating authorization
 func NewDeactivateAuthorizationRequest(authorizationCode string) *DeactivateAuthorizationRequestBuilder {
 	return &DeactivateAuthorizationRequestBuilder{
 		req: &DeactivateAuthorizationRequest{
@@ -26,15 +23,12 @@ func NewDeactivateAuthorizationRequest(authorizationCode string) *DeactivateAuth
 	}
 }
 
-// Build creates the DeactivateAuthorizationRequest
 func (b *DeactivateAuthorizationRequestBuilder) Build() *DeactivateAuthorizationRequest {
 	return b.req
 }
 
-// DeactivateAuthorizationResponse is the response type for deactivating an authorization
 type DeactivateAuthorizationResponse = types.Response[any]
 
-// DeactivateAuthorization deactivates an authorization with the provided builder
 func (c *Client) DeactivateAuthorization(ctx context.Context, builder *DeactivateAuthorizationRequestBuilder) (*DeactivateAuthorizationResponse, error) {
 	return net.Post[DeactivateAuthorizationRequest, any](ctx, c.Client, c.Secret, basePath+"/authorization/deactivate", builder.Build(), c.BaseURL)
 }

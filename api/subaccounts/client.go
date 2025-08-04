@@ -6,5 +6,4 @@ import (
 
 const basePath = "/subaccount"
 
-// Client represents the subaccounts API client
 type Client api.API

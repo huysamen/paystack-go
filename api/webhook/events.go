@@ -6,21 +6,18 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-// DisputeHistoryEntry represents an entry in the dispute history
 type DisputeHistoryEntry struct {
 	Status    string    `json:"status"`
 	By        string    `json:"by"`
 	CreatedAt time.Time `json:"created_at"`
 }
 
-// DisputeMessage represents a message in the dispute
 type DisputeMessage struct {
 	Sender    string    `json:"sender"`
 	Body      string    `json:"body"`
 	CreatedAt time.Time `json:"created_at"`
 }
 
-// ChargeSuccessEvent represents the data structure for charge.success webhook events
 type ChargeSuccessEvent struct {
 	ID                 int64                `json:"id"`
 	Domain             string               `json:"domain"`
@@ -51,7 +48,6 @@ type ChargeSuccessEvent struct {
 	FeesBreakdown      *any                 `json:"fees_breakdown"`
 }
 
-// ChargeDisputeEvent represents data for charge.dispute.* events (create, remind, resolve)
 type ChargeDisputeEvent struct {
 	ID                   int64                 `json:"id"`
 	RefundAmount         int64                 `json:"refund_amount"`
@@ -76,7 +72,6 @@ type ChargeDisputeEvent struct {
 	UpdatedAt            time.Time             `json:"updated_at"`
 }
 
-// DedicatedAccountEvent represents data for dedicatedaccount.* events
 type DedicatedAccountEvent struct {
 	ID            int64           `json:"id"`
 	Domain        string          `json:"domain"`
@@ -92,7 +87,6 @@ type DedicatedAccountEvent struct {
 	UpdatedAt     time.Time       `json:"updated_at"`
 }
 
-// InvoicePaymentFailedEvent represents data for invoice.payment_failed events
 type InvoicePaymentFailedEvent struct {
 	ID          int64           `json:"id"`
 	Domain      string          `json:"domain"`
@@ -109,7 +103,6 @@ type InvoicePaymentFailedEvent struct {
 	UpdatedAt   time.Time       `json:"updated_at"`
 }
 
-// InvoiceUpdateEvent represents data for invoice.update events
 type InvoiceUpdateEvent struct {
 	ID          int64           `json:"id"`
 	Domain      string          `json:"domain"`
@@ -126,7 +119,6 @@ type InvoiceUpdateEvent struct {
 	UpdatedAt   time.Time       `json:"updated_at"`
 }
 
-// PaymentRequestEvent represents data for paymentrequest.* events (pending, success)
 type PaymentRequestEvent struct {
 	ID               int64           `json:"id"`
 	Domain           string          `json:"domain"`
@@ -150,7 +142,6 @@ type PaymentRequestEvent struct {
 	CreatedAt        time.Time       `json:"created_at"`
 }
 
-// RefundFailedEvent represents data for refund.failed events
 type RefundFailedEvent struct {
 	ID             int64              `json:"id"`
 	Integration    int64              `json:"integration"`
@@ -169,7 +160,6 @@ type RefundFailedEvent struct {
 	UpdatedAt      time.Time          `json:"updated_at"`
 }
 
-// RefundPendingEvent represents data for refund.pending events
 type RefundPendingEvent struct {
 	ID             int64              `json:"id"`
 	Integration    int64              `json:"integration"`
@@ -188,7 +178,6 @@ type RefundPendingEvent struct {
 	UpdatedAt      time.Time          `json:"updated_at"`
 }
 
-// SubscriptionDisableEvent represents data for subscription.disable events
 type SubscriptionDisableEvent struct {
 	ID               int64                `json:"id"`
 	Domain           string               `json:"domain"`
@@ -207,7 +196,6 @@ type SubscriptionDisableEvent struct {
 	UpdatedAt        time.Time            `json:"updated_at"`
 }
 
-// SubscriptionNotRenewEvent represents data for subscription.not_renew events
 type SubscriptionNotRenewEvent struct {
 	ID               int64                `json:"id"`
 	Domain           string               `json:"domain"`
@@ -226,7 +214,6 @@ type SubscriptionNotRenewEvent struct {
 	UpdatedAt        time.Time            `json:"updated_at"`
 }
 
-// SubscriptionExpiringCardsEvent represents data for subscription.expiring_cards events
 type SubscriptionExpiringCardsEvent struct {
 	ID               int64                `json:"id"`
 	Domain           string               `json:"domain"`
@@ -245,7 +232,6 @@ type SubscriptionExpiringCardsEvent struct {
 	UpdatedAt        time.Time            `json:"updated_at"`
 }
 
-// CustomerIdentificationFailedEvent represents the data structure for customeridentification.failed webhook events
 type CustomerIdentificationFailedEvent struct {
 	ID             int64                  `json:"id"`
 	CustomerID     string                 `json:"customer_id"`
@@ -256,7 +242,6 @@ type CustomerIdentificationFailedEvent struct {
 	UpdatedAt      time.Time              `json:"updated_at"`
 }
 
-// CustomerIdentificationSuccessEvent represents the data structure for customeridentification.success webhook events
 type CustomerIdentificationSuccessEvent struct {
 	ID             int64                  `json:"id"`
 	CustomerID     string                 `json:"customer_id"`
@@ -267,7 +252,6 @@ type CustomerIdentificationSuccessEvent struct {
 	UpdatedAt      time.Time              `json:"updated_at"`
 }
 
-// CustomerIdentification represents customer identification data
 type CustomerIdentification struct {
 	Type          string `json:"type"`
 	Value         string `json:"value"`
@@ -277,7 +261,6 @@ type CustomerIdentification struct {
 	BankCode      string `json:"bank_code"`
 }
 
-// TransferSuccessEvent represents the data structure for transfer.success webhook events
 type TransferSuccessEvent struct {
 	Amount        int64                   `json:"amount"`
 	Currency      string                  `json:"currency"`
@@ -299,7 +282,6 @@ type TransferSuccessEvent struct {
 	UpdatedAt     time.Time               `json:"updated_at"`
 }
 
-// TransferFailedEvent represents the data structure for transfer.failed webhook events
 type TransferFailedEvent struct {
 	Amount        int64                   `json:"amount"`
 	Currency      string                  `json:"currency"`
@@ -321,7 +303,6 @@ type TransferFailedEvent struct {
 	UpdatedAt     time.Time               `json:"updated_at"`
 }
 
-// TransferReversedEvent represents the data structure for transfer.reversed webhook events
 type TransferReversedEvent struct {
 	Amount        int64                   `json:"amount"`
 	Currency      string                  `json:"currency"`
@@ -343,7 +324,6 @@ type TransferReversedEvent struct {
 	UpdatedAt     time.Time               `json:"updated_at"`
 }
 
-// SubscriptionCreateEvent represents the data structure for subscription.create webhook events
 type SubscriptionCreateEvent struct {
 	Domain           string               `json:"domain"`
 	Status           string               `json:"status"`
@@ -361,7 +341,6 @@ type SubscriptionCreateEvent struct {
 	UpdatedAt        time.Time            `json:"updated_at"`
 }
 
-// InvoiceCreateEvent represents the data structure for invoice.create webhook events
 type InvoiceCreateEvent struct {
 	Domain       string          `json:"domain"`
 	InvoiceCode  string          `json:"invoice_code"`
@@ -378,7 +357,6 @@ type InvoiceCreateEvent struct {
 	UpdatedAt    time.Time       `json:"updated_at"`
 }
 
-// RefundProcessedEvent represents the data structure for refund.processed webhook events
 type RefundProcessedEvent struct {
 	ID             int64              `json:"id"`
 	Integration    int64              `json:"integration"`

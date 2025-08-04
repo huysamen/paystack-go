@@ -6,5 +6,4 @@ import (
 
 const basePath = "/refund"
 
-// Client represents the refunds API client
 type Client api.API

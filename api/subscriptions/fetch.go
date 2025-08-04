@@ -8,7 +8,6 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-// SubscriptionFetchResponse represents the response from fetching a subscription
 type SubscriptionFetchResponse = types.Response[types.Subscription]
 
 func (c *Client) Fetch(ctx context.Context, idOrCode string) (*SubscriptionFetchResponse, error) {

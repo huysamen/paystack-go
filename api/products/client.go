@@ -6,5 +6,4 @@ import (
 
 const basePath = "/product"
 
-// Client is the Products API client
 type Client api.API

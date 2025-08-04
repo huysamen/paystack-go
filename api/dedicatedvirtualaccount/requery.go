@@ -8,55 +8,46 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-// RequeryDedicatedAccountRequest represents the request to requery a dedicated account
 type RequeryDedicatedAccountRequest struct {
 	AccountNumber string `json:"account_number"`
 	ProviderSlug  string `json:"provider_slug"`
 	Date          string `json:"date,omitempty"`
 }
 
-// RequeryDedicatedAccountBuilder builds requests for requerying dedicated accounts
 type RequeryDedicatedAccountBuilder struct {
 	request *RequeryDedicatedAccountRequest
 }
 
-// NewRequeryDedicatedAccountBuilder creates a new builder for requerying dedicated accounts
 func NewRequeryDedicatedAccountBuilder() *RequeryDedicatedAccountBuilder {
 	return &RequeryDedicatedAccountBuilder{
 		request: &RequeryDedicatedAccountRequest{},
 	}
 }
 
-// AccountNumber sets the account number for requerying the dedicated account
 func (b *RequeryDedicatedAccountBuilder) AccountNumber(accountNumber string) *RequeryDedicatedAccountBuilder {
 	b.request.AccountNumber = accountNumber
 
 	return b
 }
 
-// ProviderSlug sets the provider slug for requerying the dedicated account
 func (b *RequeryDedicatedAccountBuilder) ProviderSlug(providerSlug string) *RequeryDedicatedAccountBuilder {
 	b.request.ProviderSlug = providerSlug
 
 	return b
 }
 
-// Date sets the date for requerying the dedicated account
 func (b *RequeryDedicatedAccountBuilder) Date(date string) *RequeryDedicatedAccountBuilder {
 	b.request.Date = date
 
 	return b
 }
 
-// Build returns the built request
 func (b *RequeryDedicatedAccountBuilder) Build() *RequeryDedicatedAccountRequest {
 	return b.request
 }
 
-// RequeryResponse represents the response type for requerying a dedicated account
 type RequeryResponse = types.Response[any]
 
-// Requery requerying dedicated virtual account for new transactions
 func (c *Client) Requery(ctx context.Context, builder *RequeryDedicatedAccountBuilder) (*RequeryResponse, error) {
 	req := builder.Build()
 	params := url.Values{}

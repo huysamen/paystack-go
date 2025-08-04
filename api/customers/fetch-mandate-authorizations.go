@@ -8,7 +8,6 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-// MandateAuthorization represents a mandate authorization
 type MandateAuthorization struct {
 	ID                int               `json:"id"`
 	Status            string            `json:"status"`
@@ -22,10 +21,8 @@ type MandateAuthorization struct {
 	Customer          CustomerReference `json:"customer"`
 }
 
-// CustomerReference represents a reference to a customer
 type FetchMandateAuthorizationsResponse = types.Response[[]MandateAuthorization]
 
-// FetchMandateAuthorizations fetches mandate authorizations for a customer
 func (c *Client) FetchMandateAuthorizations(ctx context.Context, customerID string) (*FetchMandateAuthorizationsResponse, error) {
 	path := fmt.Sprintf("%s/%s/directdebit-mandate-authorizations", basePath, customerID)
 

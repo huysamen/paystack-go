@@ -6,5 +6,4 @@ import (
 
 const basePath = "/customer"
 
-// Client provides customer operations
 type Client api.API

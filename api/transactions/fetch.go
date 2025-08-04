@@ -8,7 +8,6 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-// Response type alias
 type TransactionFetchResponse = types.Response[types.Transaction]
 
 func (c *Client) Fetch(ctx context.Context, id uint64) (*TransactionFetchResponse, error) {

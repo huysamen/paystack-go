@@ -6,5 +6,4 @@ import (
 
 const basePath = "/page"
 
-// Client provides payment pages operations
 type Client api.API

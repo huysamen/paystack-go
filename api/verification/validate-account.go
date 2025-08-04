@@ -7,7 +7,6 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-// AccountValidateRequest represents the request to validate an account
 type AccountValidateRequest struct {
 	AccountName    string  `json:"account_name"`              // Required: customer's name
 	AccountNumber  string  `json:"account_number"`            // Required: account number
@@ -18,12 +17,10 @@ type AccountValidateRequest struct {
 	DocumentNumber *string `json:"document_number,omitempty"` // Optional: identity document number
 }
 
-// AccountValidateRequestBuilder provides a fluent interface for building AccountValidateRequest
 type AccountValidateRequestBuilder struct {
 	req *AccountValidateRequest
 }
 
-// NewAccountValidateRequest creates a new builder for AccountValidateRequest
 func NewAccountValidateRequest(accountName, accountNumber, accountType, bankCode, countryCode, documentType string) *AccountValidateRequestBuilder {
 	return &AccountValidateRequestBuilder{
 		req: &AccountValidateRequest{
@@ -37,22 +34,18 @@ func NewAccountValidateRequest(accountName, accountNumber, accountType, bankCode
 	}
 }
 
-// DocumentNumber sets the optional document number
 func (b *AccountValidateRequestBuilder) DocumentNumber(documentNumber string) *AccountValidateRequestBuilder {
 	b.req.DocumentNumber = &documentNumber
 
 	return b
 }
 
-// Build returns the constructed AccountValidateRequest
 func (b *AccountValidateRequestBuilder) Build() *AccountValidateRequest {
 	return b.req
 }
 
-// AccountValidateResponse represents the response from validating an account
 type AccountValidateResponse = types.Response[types.AccountValidation]
 
-// ValidateAccount validates an account using additional verification data
 func (c *Client) ValidateAccount(ctx context.Context, builder *AccountValidateRequestBuilder) (*types.Response[types.AccountValidation], error) {
 	return net.Post[AccountValidateRequest, types.AccountValidation](ctx, c.Client, c.Secret, accountValidateBasePath, builder.Build(), c.BaseURL)
 }

@@ -7,39 +7,32 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-// RemoveSplitFromDedicatedAccountRequest represents the request to remove split from dedicated account
 type RemoveSplitFromDedicatedAccountRequest struct {
 	AccountNumber string `json:"account_number"`
 }
 
-// RemoveSplitFromDedicatedAccountBuilder builds requests for removing split from dedicated accounts
 type RemoveSplitFromDedicatedAccountBuilder struct {
 	request *RemoveSplitFromDedicatedAccountRequest
 }
 
-// NewRemoveSplitFromDedicatedAccountBuilder creates a new builder for removing split from dedicated accounts
 func NewRemoveSplitFromDedicatedAccountBuilder() *RemoveSplitFromDedicatedAccountBuilder {
 	return &RemoveSplitFromDedicatedAccountBuilder{
 		request: &RemoveSplitFromDedicatedAccountRequest{},
 	}
 }
 
-// AccountNumber sets the account number for removing split from the dedicated account
 func (b *RemoveSplitFromDedicatedAccountBuilder) AccountNumber(accountNumber string) *RemoveSplitFromDedicatedAccountBuilder {
 	b.request.AccountNumber = accountNumber
 
 	return b
 }
 
-// Build returns the built request
 func (b *RemoveSplitFromDedicatedAccountBuilder) Build() *RemoveSplitFromDedicatedAccountRequest {
 	return b.request
 }
 
-// RemoveSplitFromDedicatedAccountResponse represents the response type for removing split from a dedicated account
 type RemoveSplitFromDedicatedAccountResponse = types.Response[types.DedicatedVirtualAccount]
 
-// RemoveSplit removes split payment setup from a dedicated virtual account
 func (c *Client) RemoveSplit(ctx context.Context, builder *RemoveSplitFromDedicatedAccountBuilder) (*RemoveSplitFromDedicatedAccountResponse, error) {
 	return net.DeleteWithBody[RemoveSplitFromDedicatedAccountRequest, types.DedicatedVirtualAccount](ctx, c.Client, c.Secret, basePath+"/split", builder.Build(), c.BaseURL)
 }

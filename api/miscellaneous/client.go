@@ -10,5 +10,4 @@ const (
 	statesPath  = "/address_verification/states"
 )
 
-// Client provides miscellaneous operations
 type Client api.API

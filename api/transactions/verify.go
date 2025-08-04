@@ -8,7 +8,6 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-// Response type alias
 type VerifyResponse = types.Response[types.Transaction]
 
 func (c *Client) Verify(ctx context.Context, reference string) (*VerifyResponse, error) {

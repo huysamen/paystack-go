@@ -4,7 +4,6 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-// MandateAuthorizationStatus represents the status of a mandate authorization
 type MandateAuthorizationStatus string
 
 const (
@@ -13,7 +12,6 @@ const (
 	MandateAuthorizationStatusRevoked MandateAuthorizationStatus = "revoked"
 )
 
-// MandateAuthorization represents a direct debit mandate authorization
 type MandateAuthorization struct {
 	ID                int                        `json:"id"`
 	Status            MandateAuthorizationStatus `json:"status"`

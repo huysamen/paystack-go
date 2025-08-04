@@ -12,7 +12,6 @@ type GenerateUpdateLinkResponse struct {
 	Link string `json:"link"`
 }
 
-// SubscriptionGenerateUpdateLinkResponse represents the response from generating update link
 type SubscriptionGenerateUpdateLinkResponse = types.Response[GenerateUpdateLinkResponse]
 
 func (c *Client) GenerateUpdateLink(ctx context.Context, code string) (*SubscriptionGenerateUpdateLinkResponse, error) {

@@ -14,5 +14,4 @@ const (
 	checkPendingPath   = basePath + "/check_pending"
 )
 
-// Client is the Charges API client
 type Client api.API

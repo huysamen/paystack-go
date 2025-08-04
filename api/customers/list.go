@@ -12,40 +12,34 @@ import (
 )
 
 type CustomerListRequest struct {
-	// Optional
 	PerPage *int
 	Page    *int
 	From    *time.Time
 	To      *time.Time
 }
 
-// CustomerListRequestBuilder provides a fluent interface for building CustomerListRequest
 type CustomerListRequestBuilder struct {
 	req *CustomerListRequest
 }
 
-// NewCustomerListRequest creates a new builder for CustomerListRequest
 func NewCustomerListRequest() *CustomerListRequestBuilder {
 	return &CustomerListRequestBuilder{
 		req: &CustomerListRequest{},
 	}
 }
 
-// PerPage sets the number of records per page
 func (b *CustomerListRequestBuilder) PerPage(perPage int) *CustomerListRequestBuilder {
 	b.req.PerPage = optional.Int(perPage)
 
 	return b
 }
 
-// Page sets the page number
 func (b *CustomerListRequestBuilder) Page(page int) *CustomerListRequestBuilder {
 	b.req.Page = optional.Int(page)
 
 	return b
 }
 
-// DateRange sets both start and end date filters
 func (b *CustomerListRequestBuilder) DateRange(from, to time.Time) *CustomerListRequestBuilder {
 	b.req.From = optional.Time(from)
 	b.req.To = optional.Time(to)
@@ -53,21 +47,18 @@ func (b *CustomerListRequestBuilder) DateRange(from, to time.Time) *CustomerList
 	return b
 }
 
-// From sets the start date filter
 func (b *CustomerListRequestBuilder) From(from time.Time) *CustomerListRequestBuilder {
 	b.req.From = optional.Time(from)
 
 	return b
 }
 
-// To sets the end date filter
 func (b *CustomerListRequestBuilder) To(to time.Time) *CustomerListRequestBuilder {
 	b.req.To = optional.Time(to)
 
 	return b
 }
 
-// Build returns the constructed CustomerListRequest
 func (b *CustomerListRequestBuilder) Build() *CustomerListRequest {
 	return b.req
 }
@@ -99,10 +90,8 @@ type CustomerListResponseData struct {
 	Meta types.Meta       `json:"meta"`
 }
 
-// CustomerListResponse represents the response for listing customers
 type CustomerListResponse = types.Response[CustomerListResponseData]
 
-// List lists customers using a builder (fluent interface)
 func (c *Client) List(ctx context.Context, builder *CustomerListRequestBuilder) (*CustomerListResponse, error) {
 	req := builder.Build()
 	path := basePath

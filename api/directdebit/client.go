@@ -6,5 +6,4 @@ import (
 
 const basePath = "/directdebit"
 
-// Client provides direct debit operations
 type Client api.API
