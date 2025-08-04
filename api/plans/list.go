@@ -34,30 +34,35 @@ func NewListPlansRequest() *ListPlansRequestBuilder {
 // PerPage sets the number of records per page
 func (b *ListPlansRequestBuilder) PerPage(perPage int) *ListPlansRequestBuilder {
 	b.req.PerPage = &perPage
+
 	return b
 }
 
 // Page sets the page number
 func (b *ListPlansRequestBuilder) Page(page int) *ListPlansRequestBuilder {
 	b.req.Page = &page
+
 	return b
 }
 
 // Status filters by plan status
 func (b *ListPlansRequestBuilder) Status(status string) *ListPlansRequestBuilder {
 	b.req.Status = &status
+
 	return b
 }
 
 // Interval filters by plan interval
 func (b *ListPlansRequestBuilder) Interval(interval types.Interval) *ListPlansRequestBuilder {
 	b.req.Interval = &interval
+
 	return b
 }
 
 // Amount filters by plan amount
 func (b *ListPlansRequestBuilder) Amount(amount int) *ListPlansRequestBuilder {
 	b.req.Amount = &amount
+
 	return b
 }
 

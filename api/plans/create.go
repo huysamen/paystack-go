@@ -41,30 +41,35 @@ func NewCreatePlanRequest(name string, amount int, interval types.Interval) *Cre
 // Description sets the plan description
 func (b *CreatePlanRequestBuilder) Description(description string) *CreatePlanRequestBuilder {
 	b.req.Description = description
+
 	return b
 }
 
 // SendInvoices sets whether to send invoices to subscribers
 func (b *CreatePlanRequestBuilder) SendInvoices(sendInvoices bool) *CreatePlanRequestBuilder {
 	b.req.SendInvoices = &sendInvoices
+
 	return b
 }
 
 // SendSMS sets whether to send SMS to subscribers
 func (b *CreatePlanRequestBuilder) SendSMS(sendSMS bool) *CreatePlanRequestBuilder {
 	b.req.SendSMS = &sendSMS
+
 	return b
 }
 
 // Currency sets the plan currency
 func (b *CreatePlanRequestBuilder) Currency(currency types.Currency) *CreatePlanRequestBuilder {
 	b.req.Currency = currency
+
 	return b
 }
 
 // InvoiceLimit sets the maximum number of invoices for the plan
 func (b *CreatePlanRequestBuilder) InvoiceLimit(limit int) *CreatePlanRequestBuilder {
 	b.req.InvoiceLimit = &limit
+
 	return b
 }
 
