@@ -7,17 +7,17 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type RemoveSplitRequest struct {
+type removeSplitRequest struct {
 	AccountNumber string `json:"account_number"`
 }
 
 type RemoveSplitRequestBuilder struct {
-	request *RemoveSplitRequest
+	request *removeSplitRequest
 }
 
 func NewRemoveSplitRequestBuilder() *RemoveSplitRequestBuilder {
 	return &RemoveSplitRequestBuilder{
-		request: &RemoveSplitRequest{},
+		request: &removeSplitRequest{},
 	}
 }
 
@@ -27,7 +27,7 @@ func (b *RemoveSplitRequestBuilder) AccountNumber(accountNumber string) *RemoveS
 	return b
 }
 
-func (b *RemoveSplitRequestBuilder) Build() *RemoveSplitRequest {
+func (b *RemoveSplitRequestBuilder) Build() *removeSplitRequest {
 	return b.request
 }
 
@@ -35,5 +35,5 @@ type RemoveSplitResponseData = types.DedicatedVirtualAccount
 type RemoveSplitResponse = types.Response[RemoveSplitResponseData]
 
 func (c *Client) RemoveSplit(ctx context.Context, builder RemoveSplitRequestBuilder) (*RemoveSplitResponse, error) {
-	return net.DeleteWithBody[RemoveSplitRequest, RemoveSplitResponseData](ctx, c.Client, c.Secret, basePath+"/split", builder.Build(), c.BaseURL)
+	return net.DeleteWithBody[removeSplitRequest, RemoveSplitResponseData](ctx, c.Client, c.Secret, basePath+"/split", builder.Build(), c.BaseURL)
 }

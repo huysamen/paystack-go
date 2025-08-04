@@ -9,7 +9,7 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type ListRequest struct {
+type listRequest struct {
 	PerPage *int    `json:"perPage,omitempty"`
 	Page    *int    `json:"page,omitempty"`
 	From    *string `json:"from,omitempty"`
@@ -17,12 +17,12 @@ type ListRequest struct {
 }
 
 type ListRequestBuilder struct {
-	req *ListRequest
+	req *listRequest
 }
 
-func NewListRequest() *ListRequestBuilder {
+func NewListRequestBuilder() *ListRequestBuilder {
 	return &ListRequestBuilder{
-		req: &ListRequest{},
+		req: &listRequest{},
 	}
 }
 
@@ -57,11 +57,11 @@ func (b *ListRequestBuilder) DateRange(from, to string) *ListRequestBuilder {
 	return b
 }
 
-func (b *ListRequestBuilder) Build() *ListRequest {
+func (b *ListRequestBuilder) Build() *listRequest {
 	return b.req
 }
 
-func (r *ListRequest) toQuery() string {
+func (r *listRequest) toQuery() string {
 	params := url.Values{}
 
 	if r.PerPage != nil {

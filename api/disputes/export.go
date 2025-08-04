@@ -10,7 +10,7 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type ExportDisputesRequest struct {
+type exportRequest struct {
 	From        *time.Time           `json:"from,omitempty"`
 	To          *time.Time           `json:"to,omitempty"`
 	PerPage     *int                 `json:"per_page,omitempty"`
@@ -19,66 +19,71 @@ type ExportDisputesRequest struct {
 	Status      *types.DisputeStatus `json:"status,omitempty"`
 }
 
-type ExportDisputesBuilder struct {
-	request *ExportDisputesRequest
+type ExportRequestBuilder struct {
+	request *exportRequest
 }
 
-func NewExportDisputesBuilder() *ExportDisputesBuilder {
-	return &ExportDisputesBuilder{
-		request: &ExportDisputesRequest{},
+func NewExportRequestBuilder() *ExportRequestBuilder {
+	return &ExportRequestBuilder{
+		request: &exportRequest{},
 	}
 }
 
-func (b *ExportDisputesBuilder) From(from time.Time) *ExportDisputesBuilder {
+func (b *ExportRequestBuilder) From(from time.Time) *ExportRequestBuilder {
 	b.request.From = &from
 
 	return b
 }
 
-func (b *ExportDisputesBuilder) To(to time.Time) *ExportDisputesBuilder {
+func (b *ExportRequestBuilder) To(to time.Time) *ExportRequestBuilder {
 	b.request.To = &to
 
 	return b
 }
 
-func (b *ExportDisputesBuilder) DateRange(from, to time.Time) *ExportDisputesBuilder {
+func (b *ExportRequestBuilder) DateRange(from, to time.Time) *ExportRequestBuilder {
 	b.request.From = &from
 	b.request.To = &to
 
 	return b
 }
 
-func (b *ExportDisputesBuilder) PerPage(perPage int) *ExportDisputesBuilder {
+func (b *ExportRequestBuilder) PerPage(perPage int) *ExportRequestBuilder {
 	b.request.PerPage = &perPage
 
 	return b
 }
 
-func (b *ExportDisputesBuilder) Page(page int) *ExportDisputesBuilder {
+func (b *ExportRequestBuilder) Page(page int) *ExportRequestBuilder {
 	b.request.Page = &page
 
 	return b
 }
 
-func (b *ExportDisputesBuilder) Transaction(transaction string) *ExportDisputesBuilder {
+func (b *ExportRequestBuilder) Transaction(transaction string) *ExportRequestBuilder {
 	b.request.Transaction = &transaction
 
 	return b
 }
 
-func (b *ExportDisputesBuilder) Status(status types.DisputeStatus) *ExportDisputesBuilder {
+func (b *ExportRequestBuilder) Status(status types.DisputeStatus) *ExportRequestBuilder {
 	b.request.Status = &status
 
 	return b
 }
 
-func (b *ExportDisputesBuilder) Build() *ExportDisputesRequest {
+func (b *ExportRequestBuilder) Build() *exportRequest {
 	return b.request
 }
 
-type ExportDisputesResponse = types.Response[ExportData]
+type ExportResponseData struct {
+	Path      string          `json:"path"`
+	ExpiresAt *types.DateTime `json:"expires_at,omitempty"`
+}
 
-func (c *Client) Export(ctx context.Context, builder *ExportDisputesBuilder) (*ExportDisputesResponse, error) {
+type ExportResponse = types.Response[ExportResponseData]
+
+func (c *Client) Export(ctx context.Context, builder *ExportRequestBuilder) (*ExportResponse, error) {
 	endpoint := basePath + "/export"
 	req := builder.Build()
 
@@ -106,5 +111,5 @@ func (c *Client) Export(ctx context.Context, builder *ExportDisputesBuilder) (*E
 		endpoint += "?" + params.Encode()
 	}
 
-	return net.Get[ExportData](ctx, c.Client, c.Secret, endpoint, c.BaseURL)
+	return net.Get[ExportResponseData](ctx, c.Client, c.Secret, endpoint, c.BaseURL)
 }

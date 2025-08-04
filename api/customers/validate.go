@@ -8,7 +8,7 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type ValidateRequest struct {
+type validateRequest struct {
 	FirstName     string  `json:"first_name"`
 	LastName      string  `json:"last_name"`
 	Type          string  `json:"type"` // Only "bank_account" is supported
@@ -21,12 +21,12 @@ type ValidateRequest struct {
 }
 
 type ValidateRequestBuilder struct {
-	req *ValidateRequest
+	req *validateRequest
 }
 
-func NewValidateRequest(firstName, lastName, type_, value, country, bvn string) *ValidateRequestBuilder {
+func NewValidateRequestBuilder(firstName, lastName, type_, value, country, bvn string) *ValidateRequestBuilder {
 	return &ValidateRequestBuilder{
-		req: &ValidateRequest{
+		req: &validateRequest{
 			FirstName: firstName,
 			LastName:  lastName,
 			Type:      type_,
@@ -55,7 +55,7 @@ func (b *ValidateRequestBuilder) MiddleName(middleName string) *ValidateRequestB
 	return b
 }
 
-func (b *ValidateRequestBuilder) Build() *ValidateRequest {
+func (b *ValidateRequestBuilder) Build() *validateRequest {
 	return b.req
 }
 
@@ -65,5 +65,5 @@ type CustomerValidateResponse = types.Response[ValidateResponseData]
 func (c *Client) Validate(ctx context.Context, customerCode string, builder ValidateRequestBuilder) (*CustomerValidateResponse, error) {
 	path := fmt.Sprintf("%s/%s/identification", basePath, customerCode)
 
-	return net.Post[ValidateRequest, ValidateResponseData](ctx, c.Client, c.Secret, path, builder.Build(), c.BaseURL)
+	return net.Post[validateRequest, ValidateResponseData](ctx, c.Client, c.Secret, path, builder.Build(), c.BaseURL)
 }

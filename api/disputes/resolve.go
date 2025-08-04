@@ -5,8 +5,9 @@ import (
 
 	"github.com/huysamen/paystack-go/net"
 	"github.com/huysamen/paystack-go/types"
-) // ResolveDisputeRequest represents the request to resolve a dispute
-type ResolveDisputeRequest struct {
+)
+
+type resolveRequest struct {
 	Resolution       types.DisputeResolution `json:"resolution"`
 	Message          string                  `json:"message"`
 	RefundAmount     int                     `json:"refund_amount"`
@@ -14,13 +15,13 @@ type ResolveDisputeRequest struct {
 	Evidence         *int                    `json:"evidence,omitempty"`
 }
 
-type ResolveDisputeBuilder struct {
-	req *ResolveDisputeRequest
+type ResolveRequestBuilder struct {
+	req *resolveRequest
 }
 
-func NewResolveDisputeBuilder(resolution types.DisputeResolution, message string, refundAmount int, uploadedFileName string) *ResolveDisputeBuilder {
-	return &ResolveDisputeBuilder{
-		req: &ResolveDisputeRequest{
+func NewResolveRequestBuilder(resolution types.DisputeResolution, message string, refundAmount int, uploadedFileName string) *ResolveRequestBuilder {
+	return &ResolveRequestBuilder{
+		req: &resolveRequest{
 			Resolution:       resolution,
 			Message:          message,
 			RefundAmount:     refundAmount,
@@ -29,18 +30,19 @@ func NewResolveDisputeBuilder(resolution types.DisputeResolution, message string
 	}
 }
 
-func (b *ResolveDisputeBuilder) Evidence(evidence int) *ResolveDisputeBuilder {
+func (b *ResolveRequestBuilder) Evidence(evidence int) *ResolveRequestBuilder {
 	b.req.Evidence = &evidence
 
 	return b
 }
 
-func (b *ResolveDisputeBuilder) Build() *ResolveDisputeRequest {
+func (b *ResolveRequestBuilder) Build() *resolveRequest {
 	return b.req
 }
 
-type ResolveDisputeResponse = types.Response[types.Dispute]
+type ResolveResponseData = types.Dispute
+type ResolveResponse = types.Response[ResolveResponseData]
 
-func (c *Client) Resolve(ctx context.Context, disputeID string, builder *ResolveDisputeBuilder) (*ResolveDisputeResponse, error) {
-	return net.Put[ResolveDisputeRequest, types.Dispute](ctx, c.Client, c.Secret, basePath+"/"+disputeID+"/resolve", builder.Build(), c.BaseURL)
+func (c *Client) Resolve(ctx context.Context, disputeID string, builder *ResolveRequestBuilder) (*ResolveResponse, error) {
+	return net.Put[resolveRequest, ResolveResponseData](ctx, c.Client, c.Secret, basePath+"/"+disputeID+"/resolve", builder.Build(), c.BaseURL)
 }

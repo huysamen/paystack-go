@@ -7,17 +7,17 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type TriggerActivationChargeRequest struct {
+type triggerActivationChargeRequest struct {
 	CustomerIDs []uint64 `json:"customer_ids"`
 }
 
 type TriggerActivationChargeRequestBuilder struct {
-	req *TriggerActivationChargeRequest
+	req *triggerActivationChargeRequest
 }
 
 func NewTriggerActivationChargeRequestBuilder() *TriggerActivationChargeRequestBuilder {
 	return &TriggerActivationChargeRequestBuilder{
-		req: &TriggerActivationChargeRequest{},
+		req: &triggerActivationChargeRequest{},
 	}
 }
 
@@ -33,7 +33,7 @@ func (b *TriggerActivationChargeRequestBuilder) CustomerID(customerID uint64) *T
 	return b
 }
 
-func (b *TriggerActivationChargeRequestBuilder) Build() *TriggerActivationChargeRequest {
+func (b *TriggerActivationChargeRequestBuilder) Build() *triggerActivationChargeRequest {
 	return b.req
 }
 
@@ -41,5 +41,5 @@ type TriggerActivationChargeResponseData = any
 type TriggerActivationChargeResponse = types.Response[TriggerActivationChargeResponseData]
 
 func (c *Client) TriggerActivationCharge(ctx context.Context, builder *TriggerActivationChargeRequestBuilder) (*TriggerActivationChargeResponse, error) {
-	return net.Put[TriggerActivationChargeRequest, TriggerActivationChargeResponseData](ctx, c.Client, c.Secret, basePath+"/activation-charge", builder.Build(), c.BaseURL)
+	return net.Put[triggerActivationChargeRequest, TriggerActivationChargeResponseData](ctx, c.Client, c.Secret, basePath+"/activation-charge", builder.Build(), c.BaseURL)
 }

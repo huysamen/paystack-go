@@ -7,23 +7,23 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type RegisterDomainRequest struct {
+type registerDomainRequest struct {
 	DomainName string `json:"domainName"`
 }
 
 type RegisterDomainRequestBuilder struct {
-	req *RegisterDomainRequest
+	req *registerDomainRequest
 }
 
-func NewRegisterDomainRequest(domainName string) RegisterDomainRequestBuilder {
+func NewRegisterDomainRequestBuilder(domainName string) RegisterDomainRequestBuilder {
 	return RegisterDomainRequestBuilder{
-		req: &RegisterDomainRequest{
+		req: &registerDomainRequest{
 			DomainName: domainName,
 		},
 	}
 }
 
-func (b *RegisterDomainRequestBuilder) Build() *RegisterDomainRequest {
+func (b *RegisterDomainRequestBuilder) Build() *registerDomainRequest {
 	return b.req
 }
 
@@ -31,5 +31,5 @@ type RegisterDomainResponseData = any
 type RegisterDomainResponse = types.Response[RegisterDomainResponseData]
 
 func (c *Client) RegisterDomain(ctx context.Context, builder RegisterDomainRequestBuilder) (*RegisterDomainResponse, error) {
-	return net.Post[RegisterDomainRequest, RegisterDomainResponseData](ctx, c.Client, c.Secret, registerPath, builder.Build(), c.BaseURL)
+	return net.Post[registerDomainRequest, RegisterDomainResponseData](ctx, c.Client, c.Secret, registerPath, builder.Build(), c.BaseURL)
 }

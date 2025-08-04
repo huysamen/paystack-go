@@ -8,19 +8,19 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type RequeryRequest struct {
+type requeryRequest struct {
 	AccountNumber string `json:"account_number"`
 	ProviderSlug  string `json:"provider_slug"`
 	Date          string `json:"date,omitempty"`
 }
 
 type RequeryRequestBuilder struct {
-	request *RequeryRequest
+	request *requeryRequest
 }
 
 func NewRequeryRequestBuilder() *RequeryRequestBuilder {
 	return &RequeryRequestBuilder{
-		request: &RequeryRequest{},
+		request: &requeryRequest{},
 	}
 }
 
@@ -42,11 +42,11 @@ func (b *RequeryRequestBuilder) Date(date string) *RequeryRequestBuilder {
 	return b
 }
 
-func (b *RequeryRequestBuilder) Build() *RequeryRequest {
+func (b *RequeryRequestBuilder) Build() *requeryRequest {
 	return b.request
 }
 
-func (r *RequeryRequest) toQuery() string {
+func (r *requeryRequest) toQuery() string {
 	params := url.Values{}
 
 	params.Set("account_number", r.AccountNumber)

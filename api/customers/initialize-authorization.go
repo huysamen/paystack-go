@@ -7,7 +7,7 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type InitializeAuthorizationRequest struct {
+type initializeAuthorizationRequest struct {
 	Email       string   `json:"email"`
 	Channel     string   `json:"channel"` // "direct_debit" is the only supported option
 	CallbackURL *string  `json:"callback_url,omitempty"`
@@ -16,12 +16,12 @@ type InitializeAuthorizationRequest struct {
 }
 
 type InitializeAuthorizationRequestBuilder struct {
-	req *InitializeAuthorizationRequest
+	req *initializeAuthorizationRequest
 }
 
-func NewInitializeAuthorizationRequest(email, channel string) *InitializeAuthorizationRequestBuilder {
+func NewInitializeAuthorizationRequestBuilder(email, channel string) *InitializeAuthorizationRequestBuilder {
 	return &InitializeAuthorizationRequestBuilder{
-		req: &InitializeAuthorizationRequest{
+		req: &initializeAuthorizationRequest{
 			Email:   email,
 			Channel: channel,
 		},
@@ -53,7 +53,7 @@ func (b *InitializeAuthorizationRequestBuilder) Address(street, city, state stri
 	return b
 }
 
-func (b *InitializeAuthorizationRequestBuilder) Build() *InitializeAuthorizationRequest {
+func (b *InitializeAuthorizationRequestBuilder) Build() *initializeAuthorizationRequest {
 	return b.req
 }
 
@@ -66,5 +66,5 @@ type InitializeAuthorizationResponseData struct {
 type InitializeAuthorizationResponse = types.Response[InitializeAuthorizationResponseData]
 
 func (c *Client) InitializeAuthorization(ctx context.Context, builder InitializeAuthorizationRequestBuilder) (*InitializeAuthorizationResponse, error) {
-	return net.Post[InitializeAuthorizationRequest, InitializeAuthorizationResponseData](ctx, c.Client, c.Secret, basePath+"/authorization/initialize", builder.Build(), c.BaseURL)
+	return net.Post[initializeAuthorizationRequest, InitializeAuthorizationResponseData](ctx, c.Client, c.Secret, basePath+"/authorization/initialize", builder.Build(), c.BaseURL)
 }

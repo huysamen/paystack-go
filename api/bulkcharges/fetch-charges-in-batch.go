@@ -9,7 +9,7 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type FetchInBatchRequest struct {
+type fetchInBatchRequest struct {
 	Status  *string `json:"status,omitempty"`
 	PerPage *int    `json:"perPage,omitempty"`
 	Page    *int    `json:"page,omitempty"`
@@ -18,12 +18,12 @@ type FetchInBatchRequest struct {
 }
 
 type FetchInBatchRequestBuilder struct {
-	req *FetchInBatchRequest
+	req *fetchInBatchRequest
 }
 
-func NewFetchInBatchRequest() *FetchInBatchRequestBuilder {
+func NewFetchInBatchRequestBuilder() *FetchInBatchRequestBuilder {
 	return &FetchInBatchRequestBuilder{
-		req: &FetchInBatchRequest{},
+		req: &fetchInBatchRequest{},
 	}
 }
 
@@ -64,11 +64,11 @@ func (b *FetchInBatchRequestBuilder) DateRange(from, to string) *FetchInBatchReq
 	return b
 }
 
-func (b *FetchInBatchRequestBuilder) Build() *FetchInBatchRequest {
+func (b *FetchInBatchRequestBuilder) Build() *fetchInBatchRequest {
 	return b.req
 }
 
-func (r *FetchInBatchRequest) toQuery() string {
+func (r *fetchInBatchRequest) toQuery() string {
 	params := url.Values{}
 
 	if r.Status != nil {

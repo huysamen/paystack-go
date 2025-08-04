@@ -10,7 +10,7 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type ListDisputesRequest struct {
+type listRequest struct {
 	From        *time.Time           `json:"from,omitempty"`
 	To          *time.Time           `json:"to,omitempty"`
 	PerPage     *int                 `json:"per_page,omitempty"`
@@ -19,66 +19,67 @@ type ListDisputesRequest struct {
 	Status      *types.DisputeStatus `json:"status,omitempty"`
 }
 
-type ListDisputesBuilder struct {
-	req *ListDisputesRequest
+type ListRequestBuilder struct {
+	req *listRequest
 }
 
-func NewListDisputesBuilder() *ListDisputesBuilder {
-	return &ListDisputesBuilder{
-		req: &ListDisputesRequest{},
+func NewListRequestBuilder() *ListRequestBuilder {
+	return &ListRequestBuilder{
+		req: &listRequest{},
 	}
 }
 
-func (b *ListDisputesBuilder) From(from time.Time) *ListDisputesBuilder {
+func (b *ListRequestBuilder) From(from time.Time) *ListRequestBuilder {
 	b.req.From = &from
 
 	return b
 }
 
-func (b *ListDisputesBuilder) To(to time.Time) *ListDisputesBuilder {
+func (b *ListRequestBuilder) To(to time.Time) *ListRequestBuilder {
 	b.req.To = &to
 
 	return b
 }
 
-func (b *ListDisputesBuilder) DateRange(from, to time.Time) *ListDisputesBuilder {
+func (b *ListRequestBuilder) DateRange(from, to time.Time) *ListRequestBuilder {
 	b.req.From = &from
 	b.req.To = &to
 
 	return b
 }
 
-func (b *ListDisputesBuilder) PerPage(perPage int) *ListDisputesBuilder {
+func (b *ListRequestBuilder) PerPage(perPage int) *ListRequestBuilder {
 	b.req.PerPage = &perPage
 
 	return b
 }
 
-func (b *ListDisputesBuilder) Page(page int) *ListDisputesBuilder {
+func (b *ListRequestBuilder) Page(page int) *ListRequestBuilder {
 	b.req.Page = &page
 
 	return b
 }
 
-func (b *ListDisputesBuilder) Transaction(transaction string) *ListDisputesBuilder {
+func (b *ListRequestBuilder) Transaction(transaction string) *ListRequestBuilder {
 	b.req.Transaction = &transaction
 
 	return b
 }
 
-func (b *ListDisputesBuilder) Status(status types.DisputeStatus) *ListDisputesBuilder {
+func (b *ListRequestBuilder) Status(status types.DisputeStatus) *ListRequestBuilder {
 	b.req.Status = &status
 
 	return b
 }
 
-func (b *ListDisputesBuilder) Build() *ListDisputesRequest {
+func (b *ListRequestBuilder) Build() *listRequest {
 	return b.req
 }
 
-type ListDisputesResponse = types.Response[[]types.Dispute]
+type ListResponseData = []types.Dispute
+type ListDisputesResponse = types.Response[ListResponseData]
 
-func (c *Client) List(ctx context.Context, builder *ListDisputesBuilder) (*ListDisputesResponse, error) {
+func (c *Client) List(ctx context.Context, builder *ListRequestBuilder) (*ListDisputesResponse, error) {
 	endpoint := basePath
 	req := builder.Build()
 
@@ -106,5 +107,5 @@ func (c *Client) List(ctx context.Context, builder *ListDisputesBuilder) (*ListD
 		endpoint += "?" + params.Encode()
 	}
 
-	return net.Get[[]types.Dispute](ctx, c.Client, c.Secret, endpoint, c.BaseURL)
+	return net.Get[ListResponseData](ctx, c.Client, c.Secret, endpoint, c.BaseURL)
 }

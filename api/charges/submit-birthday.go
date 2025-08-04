@@ -7,25 +7,25 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type SubmitBirthdayRequest struct {
+type submitBirthdayRequest struct {
 	Birthday  string `json:"birthday"`
 	Reference string `json:"reference"`
 }
 
 type SubmitBirthdayRequestBuilder struct {
-	req *SubmitBirthdayRequest
+	req *submitBirthdayRequest
 }
 
-func NewSubmitBirthdayRequest(birthday, reference string) *SubmitBirthdayRequestBuilder {
+func NewSubmitBirthdayRequestBuilder(birthday, reference string) *SubmitBirthdayRequestBuilder {
 	return &SubmitBirthdayRequestBuilder{
-		req: &SubmitBirthdayRequest{
+		req: &submitBirthdayRequest{
 			Birthday:  birthday,
 			Reference: reference,
 		},
 	}
 }
 
-func (b *SubmitBirthdayRequestBuilder) Build() *SubmitBirthdayRequest {
+func (b *SubmitBirthdayRequestBuilder) Build() *submitBirthdayRequest {
 	return b.req
 }
 
@@ -33,5 +33,5 @@ type SubmitBirthdayResponseData = types.ChargeData
 type SubmitBirthdayResponse = types.Response[SubmitBirthdayResponseData]
 
 func (c *Client) SubmitBirthday(ctx context.Context, builder SubmitBirthdayRequestBuilder) (*SubmitBirthdayResponse, error) {
-	return net.Post[SubmitBirthdayRequest, SubmitBirthdayResponseData](ctx, c.Client, c.Secret, submitBirthdayPath, builder.Build(), c.BaseURL)
+	return net.Post[submitBirthdayRequest, SubmitBirthdayResponseData](ctx, c.Client, c.Secret, submitBirthdayPath, builder.Build(), c.BaseURL)
 }

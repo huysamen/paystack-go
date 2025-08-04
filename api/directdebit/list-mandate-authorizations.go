@@ -9,19 +9,19 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type ListMandateAuthorizationsRequest struct {
+type listMandateAuthorizationsRequest struct {
 	Cursor  string                           `json:"cursor,omitempty"`
 	Status  types.MandateAuthorizationStatus `json:"status,omitempty"`
 	PerPage int                              `json:"per_page,omitempty"`
 }
 
 type ListMandateAuthorizationsRequestBuilder struct {
-	req *ListMandateAuthorizationsRequest
+	req *listMandateAuthorizationsRequest
 }
 
 func NewListMandateAuthorizationsRequestBuilder() *ListMandateAuthorizationsRequestBuilder {
 	return &ListMandateAuthorizationsRequestBuilder{
-		req: &ListMandateAuthorizationsRequest{},
+		req: &listMandateAuthorizationsRequest{},
 	}
 }
 
@@ -43,11 +43,11 @@ func (b *ListMandateAuthorizationsRequestBuilder) PerPage(perPage int) *ListMand
 	return b
 }
 
-func (b *ListMandateAuthorizationsRequestBuilder) Build() *ListMandateAuthorizationsRequest {
+func (b *ListMandateAuthorizationsRequestBuilder) Build() *listMandateAuthorizationsRequest {
 	return b.req
 }
 
-func (r *ListMandateAuthorizationsRequest) toQuery() string {
+func (r *listMandateAuthorizationsRequest) toQuery() string {
 	params := url.Values{}
 
 	if r.Cursor != "" {

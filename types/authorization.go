@@ -39,7 +39,7 @@ type MandateAuthorization struct {
 	AccountNumber     string                     `json:"account_number"`
 	BankCode          string                     `json:"bank_code"`
 	BankName          string                     `json:"bank_name"`
-	Customer          *types.Customer            `json:"customer"`
+	Customer          *Customer                  `json:"customer"`
 	CreatedAt         string                     `json:"created_at,omitempty"`
 	UpdatedAt         string                     `json:"updated_at,omitempty"`
 }

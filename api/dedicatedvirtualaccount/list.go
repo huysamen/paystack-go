@@ -9,7 +9,7 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type ListRequest struct {
+type listRequest struct {
 	Active       *bool  `json:"active,omitempty"`
 	Currency     string `json:"currency,omitempty"`
 	ProviderSlug string `json:"provider_slug,omitempty"`
@@ -18,12 +18,12 @@ type ListRequest struct {
 }
 
 type ListRequestBuilder struct {
-	request *ListRequest
+	request *listRequest
 }
 
 func NewListRequestBuilder() *ListRequestBuilder {
 	return &ListRequestBuilder{
-		request: &ListRequest{},
+		request: &listRequest{},
 	}
 }
 
@@ -57,11 +57,11 @@ func (b *ListRequestBuilder) Customer(customer string) *ListRequestBuilder {
 	return b
 }
 
-func (b *ListRequestBuilder) Build() *ListRequest {
+func (b *ListRequestBuilder) Build() *listRequest {
 	return b.request
 }
 
-func (r *ListRequest) toQuery() string {
+func (r *listRequest) toQuery() string {
 	params := url.Values{}
 	if r.Active != nil {
 		params.Set("active", strconv.FormatBool(*r.Active))

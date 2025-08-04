@@ -7,23 +7,23 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type CheckPendingRequest struct {
+type checkPendingRequest struct {
 	Reference string `json:"reference"`
 }
 
 type CheckPendingRequestBuilder struct {
-	req *CheckPendingRequest
+	req *checkPendingRequest
 }
 
-func NewCheckPendingChargeRequest(reference string) *CheckPendingRequestBuilder {
+func NewCheckPendingChargeRequestBuilder(reference string) *CheckPendingRequestBuilder {
 	return &CheckPendingRequestBuilder{
-		req: &CheckPendingRequest{
+		req: &checkPendingRequest{
 			Reference: reference,
 		},
 	}
 }
 
-func (b *CheckPendingRequestBuilder) Build() *CheckPendingRequest {
+func (b *CheckPendingRequestBuilder) Build() *checkPendingRequest {
 	return b.req
 }
 
@@ -31,5 +31,5 @@ type CheckPendingResponseData = types.ChargeData
 type CheckPendingResponse = types.Response[CheckPendingResponseData]
 
 func (c *Client) CheckPending(ctx context.Context, builder CheckPendingRequestBuilder) (*CheckPendingResponse, error) {
-	return net.Post[CheckPendingRequest, CheckPendingResponseData](ctx, c.Client, c.Secret, checkPendingPath, builder.Build(), c.BaseURL)
+	return net.Post[checkPendingRequest, CheckPendingResponseData](ctx, c.Client, c.Secret, checkPendingPath, builder.Build(), c.BaseURL)
 }

@@ -7,7 +7,7 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type AssignRequest struct {
+type assignRequest struct {
 	Email         string `json:"email"`
 	FirstName     string `json:"first_name"`
 	LastName      string `json:"last_name"`
@@ -23,12 +23,12 @@ type AssignRequest struct {
 }
 
 type AssignRequestBuilder struct {
-	req *AssignRequest
+	req *assignRequest
 }
 
 func NewAssignRequestBuilder() *AssignRequestBuilder {
 	return &AssignRequestBuilder{
-		req: &AssignRequest{},
+		req: &assignRequest{},
 	}
 }
 
@@ -104,7 +104,7 @@ func (b *AssignRequestBuilder) MiddleName(middleName string) *AssignRequestBuild
 	return b
 }
 
-func (b *AssignRequestBuilder) Build() *AssignRequest {
+func (b *AssignRequestBuilder) Build() *assignRequest {
 	return b.req
 }
 
@@ -112,5 +112,5 @@ type AssignDedicatedVirtualAccountResponseData = any
 type AssignDedicatedVirtualAccountResponse = types.Response[AssignDedicatedVirtualAccountResponseData]
 
 func (c *Client) Assign(ctx context.Context, builder AssignRequestBuilder) (*AssignDedicatedVirtualAccountResponse, error) {
-	return net.Post[AssignRequest, AssignDedicatedVirtualAccountResponseData](ctx, c.Client, c.Secret, basePath+"/assign", builder.Build(), c.BaseURL)
+	return net.Post[assignRequest, AssignDedicatedVirtualAccountResponseData](ctx, c.Client, c.Secret, basePath+"/assign", builder.Build(), c.BaseURL)
 }

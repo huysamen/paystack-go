@@ -24,12 +24,12 @@ type InitializeDirectDebitRequest struct {
 	Address Address `json:"address"`
 }
 
-type InitializeDirectDebitRequestBuilder struct {
+type initializeDirectDebitRequestBuilder struct {
 	req *InitializeDirectDebitRequest
 }
 
-func NewInitializeDirectDebitRequest(accountNumber, bankCode, street, city, state string) *InitializeDirectDebitRequestBuilder {
-	return &InitializeDirectDebitRequestBuilder{
+func NewInitializeDirectDebitRequestBuilder(accountNumber, bankCode, street, city, state string) *initializeDirectDebitRequestBuilder {
+	return &initializeDirectDebitRequestBuilder{
 		req: &InitializeDirectDebitRequest{
 			Account: Account{
 				Number:   accountNumber,
@@ -44,7 +44,7 @@ func NewInitializeDirectDebitRequest(accountNumber, bankCode, street, city, stat
 	}
 }
 
-func (b *InitializeDirectDebitRequestBuilder) Build() *InitializeDirectDebitRequest {
+func (b *initializeDirectDebitRequestBuilder) Build() *InitializeDirectDebitRequest {
 	return b.req
 }
 
@@ -56,7 +56,7 @@ type InitializeDirectDebitResponseData struct {
 
 type InitializeDirectDebitResponse = types.Response[InitializeDirectDebitResponseData]
 
-func (c *Client) InitializeDirectDebit(ctx context.Context, customerID string, builder InitializeDirectDebitRequestBuilder) (*InitializeDirectDebitResponse, error) {
+func (c *Client) InitializeDirectDebit(ctx context.Context, customerID string, builder initializeDirectDebitRequestBuilder) (*InitializeDirectDebitResponse, error) {
 	path := fmt.Sprintf("%s/%s/initialize-direct-debit", basePath, customerID)
 	return net.Post[InitializeDirectDebitRequest, InitializeDirectDebitResponseData](ctx, c.Client, c.Secret, path, builder.Build(), c.BaseURL)
 }

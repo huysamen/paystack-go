@@ -13,15 +13,15 @@ type BulkChargeItem struct {
 	Reference     string `json:"reference"`
 }
 
-type InitiateRequest []BulkChargeItem
+type initiateRequest []BulkChargeItem
 
 type InitiateRequestBuilder struct {
-	req *InitiateRequest
+	req *initiateRequest
 }
 
-func NewInitiateRequest() *InitiateRequestBuilder {
+func NewInitiateRequestBuilder() *InitiateRequestBuilder {
 	return &InitiateRequestBuilder{
-		req: &InitiateRequest{},
+		req: &initiateRequest{},
 	}
 }
 
@@ -40,7 +40,7 @@ func (b *InitiateRequestBuilder) AddItems(items []BulkChargeItem) *InitiateReque
 	return b
 }
 
-func (b *InitiateRequestBuilder) Build() *InitiateRequest {
+func (b *InitiateRequestBuilder) Build() *initiateRequest {
 	return b.req
 }
 
@@ -48,5 +48,5 @@ type InitiateResponseData = types.BulkChargeBatch
 type InitiateResponse = types.Response[InitiateResponseData]
 
 func (c *Client) Initiate(ctx context.Context, builder InitiateRequestBuilder) (*InitiateResponse, error) {
-	return net.Post[InitiateRequest, InitiateResponseData](ctx, c.Client, c.Secret, basePath, builder.Build(), c.BaseURL)
+	return net.Post[initiateRequest, InitiateResponseData](ctx, c.Client, c.Secret, basePath, builder.Build(), c.BaseURL)
 }

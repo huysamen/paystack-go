@@ -8,23 +8,23 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type DirectDebitActivationChargeRequest struct {
+type directDebitActivationChargeRequest struct {
 	AuthorizationID int `json:"authorization_id"`
 }
 
 type DirectDebitActivationChargeRequestBuilder struct {
-	req *DirectDebitActivationChargeRequest
+	req *directDebitActivationChargeRequest
 }
 
-func NewDirectDebitActivationChargeRequest(authorizationID int) *DirectDebitActivationChargeRequestBuilder {
+func NewDirectDebitActivationChargeRequestBuilder(authorizationID int) *DirectDebitActivationChargeRequestBuilder {
 	return &DirectDebitActivationChargeRequestBuilder{
-		req: &DirectDebitActivationChargeRequest{
+		req: &directDebitActivationChargeRequest{
 			AuthorizationID: authorizationID,
 		},
 	}
 }
 
-func (b *DirectDebitActivationChargeRequestBuilder) Build() *DirectDebitActivationChargeRequest {
+func (b *DirectDebitActivationChargeRequestBuilder) Build() *directDebitActivationChargeRequest {
 	return b.req
 }
 
@@ -34,5 +34,5 @@ type DirectDebitActivationChargeResponse = types.Response[DirectDebitActivationC
 func (c *Client) DirectDebitActivationCharge(ctx context.Context, customerID string, builder DirectDebitActivationChargeRequestBuilder) (*DirectDebitActivationChargeResponse, error) {
 	path := fmt.Sprintf("%s/%s/directdebit-activation-charge", basePath, customerID)
 
-	return net.Put[DirectDebitActivationChargeRequest, DirectDebitActivationChargeResponseData](ctx, c.Client, c.Secret, path, builder.Build(), c.BaseURL)
+	return net.Put[directDebitActivationChargeRequest, DirectDebitActivationChargeResponseData](ctx, c.Client, c.Secret, path, builder.Build(), c.BaseURL)
 }

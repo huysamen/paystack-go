@@ -7,7 +7,7 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type CreateRequest struct {
+type createRequest struct {
 	Email     string         `json:"email"`
 	FirstName *string        `json:"first_name,omitempty"`
 	LastName  *string        `json:"last_name,omitempty"`
@@ -16,12 +16,12 @@ type CreateRequest struct {
 }
 
 type CreateRequestBuilder struct {
-	req *CreateRequest
+	req *createRequest
 }
 
-func NewCreateRequest(email string) *CreateRequestBuilder {
+func NewCreateRequestBuilder(email string) *CreateRequestBuilder {
 	return &CreateRequestBuilder{
-		req: &CreateRequest{
+		req: &createRequest{
 			Email: email,
 		},
 	}
@@ -51,7 +51,7 @@ func (b *CreateRequestBuilder) Metadata(metadata map[string]any) *CreateRequestB
 	return b
 }
 
-func (b *CreateRequestBuilder) Build() *CreateRequest {
+func (b *CreateRequestBuilder) Build() *createRequest {
 	return b.req
 }
 
@@ -59,5 +59,5 @@ type CreateResponseData = types.Customer
 type CreateResponse = types.Response[CreateResponseData]
 
 func (c *Client) Create(ctx context.Context, builder CreateRequestBuilder) (*CreateResponse, error) {
-	return net.Post[CreateRequest, CreateResponseData](ctx, c.Client, c.Secret, basePath, builder.Build(), c.BaseURL)
+	return net.Post[createRequest, CreateResponseData](ctx, c.Client, c.Secret, basePath, builder.Build(), c.BaseURL)
 }

@@ -8,12 +8,18 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type ListTransactionDisputesResponse = types.Response[TransactionDisputeData]
+type ListTransactionResponseData struct {
+	History  []types.DisputeHistory `json:"history"`
+	Messages []types.DisputeMessage `json:"messages"`
+	Dispute  *types.Dispute         `json:"dispute,omitempty"`
+}
 
-func (c *Client) ListTransactionDisputes(ctx context.Context, transactionID string) (*ListTransactionDisputesResponse, error) {
+type ListTransactionResponse = types.Response[ListTransactionResponseData]
+
+func (c *Client) ListTransactionDisputes(ctx context.Context, transactionID string) (*ListTransactionResponse, error) {
 	if transactionID == "" {
 		return nil, errors.New("transaction ID is required")
 	}
 
-	return net.Get[TransactionDisputeData](ctx, c.Client, c.Secret, "/transaction/"+transactionID+"/disputes", c.BaseURL)
+	return net.Get[ListTransactionResponseData](ctx, c.Client, c.Secret, "/transaction/"+transactionID+"/disputes", c.BaseURL)
 }

@@ -13,7 +13,7 @@ type CustomerReference struct {
 	Email string `json:"email"`
 }
 
-type VerifyAuthorizationResponseData struct {
+type verifyAuthorizationResponseData struct {
 	AuthorizationCode string            `json:"authorization_code"`
 	Channel           types.Channel     `json:"channel"`
 	Bank              string            `json:"bank"`
@@ -21,10 +21,10 @@ type VerifyAuthorizationResponseData struct {
 	Customer          CustomerReference `json:"customer"`
 }
 
-type VerifyAuthorizationResponse = types.Response[VerifyAuthorizationResponseData]
+type VerifyAuthorizationResponse = types.Response[verifyAuthorizationResponseData]
 
 func (c *Client) VerifyAuthorization(ctx context.Context, reference string) (*VerifyAuthorizationResponse, error) {
 	path := fmt.Sprintf("%s/authorization/verify/%s", basePath, reference)
 
-	return net.Get[VerifyAuthorizationResponseData](ctx, c.Client, c.Secret, path, c.BaseURL)
+	return net.Get[verifyAuthorizationResponseData](ctx, c.Client, c.Secret, path, c.BaseURL)
 }

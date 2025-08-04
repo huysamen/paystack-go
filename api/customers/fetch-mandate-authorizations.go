@@ -8,20 +8,7 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type MandateAuthorization struct {
-	ID                int               `json:"id"`
-	Status            string            `json:"status"`
-	MandateID         int               `json:"mandate_id"`
-	AuthorizationID   int               `json:"authorization_id"`
-	AuthorizationCode string            `json:"authorization_code"`
-	IntegrationID     int               `json:"integration_id"`
-	AccountNumber     string            `json:"account_number"`
-	BankCode          string            `json:"bank_code"`
-	BankName          *string           `json:"bank_name"`
-	Customer          CustomerReference `json:"customer"`
-}
-
-type FetchMandateAuthorizationsResponseData = []MandateAuthorization
+type FetchMandateAuthorizationsResponseData = []types.MandateAuthorization
 type FetchMandateAuthorizationsResponse = types.Response[FetchMandateAuthorizationsResponseData]
 
 func (c *Client) FetchMandateAuthorizations(ctx context.Context, customerID string) (*FetchMandateAuthorizationsResponse, error) {

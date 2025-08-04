@@ -7,25 +7,25 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type SubmitOTPRequest struct {
+type submitOTPRequest struct {
 	OTP       string `json:"otp"`
 	Reference string `json:"reference"`
 }
 
 type SubmitOTPRequestBuilder struct {
-	req *SubmitOTPRequest
+	req *submitOTPRequest
 }
 
-func NewSubmitOTPRequest(otp, reference string) *SubmitOTPRequestBuilder {
+func NewSubmitOTPRequestBuilder(otp, reference string) *SubmitOTPRequestBuilder {
 	return &SubmitOTPRequestBuilder{
-		req: &SubmitOTPRequest{
+		req: &submitOTPRequest{
 			OTP:       otp,
 			Reference: reference,
 		},
 	}
 }
 
-func (b *SubmitOTPRequestBuilder) Build() *SubmitOTPRequest {
+func (b *SubmitOTPRequestBuilder) Build() *submitOTPRequest {
 	return b.req
 }
 
@@ -33,5 +33,5 @@ type SubmitOTPResponseData = types.ChargeData
 type SubmitOTPResponse = types.Response[SubmitOTPResponseData]
 
 func (c *Client) SubmitOTP(ctx context.Context, builder SubmitOTPRequestBuilder) (*SubmitOTPResponse, error) {
-	return net.Post[SubmitOTPRequest, SubmitOTPResponseData](ctx, c.Client, c.Secret, submitOtpPath, builder.Build(), c.BaseURL)
+	return net.Post[submitOTPRequest, SubmitOTPResponseData](ctx, c.Client, c.Secret, submitOtpPath, builder.Build(), c.BaseURL)
 }

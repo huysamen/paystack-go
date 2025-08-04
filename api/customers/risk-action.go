@@ -15,18 +15,18 @@ const (
 	RiskActionDeny    RiskAction = "deny"
 )
 
-type RiskActionRequest struct {
+type riskActionRequest struct {
 	Customer   string      `json:"customer"`    // Customer code or email
 	RiskAction *RiskAction `json:"risk_action"` // Optional, defaults to default
 }
 
 type RiskActionRequestBuilder struct {
-	req *RiskActionRequest
+	req *riskActionRequest
 }
 
-func NewRiskActionRequest(customer string) *RiskActionRequestBuilder {
+func NewRiskActionRequestBuilder(customer string) *RiskActionRequestBuilder {
 	return &RiskActionRequestBuilder{
-		req: &RiskActionRequest{
+		req: &riskActionRequest{
 			Customer: customer,
 		},
 	}
@@ -37,7 +37,7 @@ func (b *RiskActionRequestBuilder) RiskAction(riskAction RiskAction) *RiskAction
 	return b
 }
 
-func (b *RiskActionRequestBuilder) Build() *RiskActionRequest {
+func (b *RiskActionRequestBuilder) Build() *riskActionRequest {
 	return b.req
 }
 
@@ -45,5 +45,5 @@ type RiskActionResponseData = types.Customer
 type RiskActionResponse = types.Response[RiskActionResponseData]
 
 func (c *Client) SetRiskAction(ctx context.Context, builder RiskActionRequestBuilder) (*RiskActionResponse, error) {
-	return net.Post[RiskActionRequest, RiskActionResponseData](ctx, c.Client, c.Secret, basePath+"/set_risk_action", builder.Build(), c.BaseURL)
+	return net.Post[riskActionRequest, RiskActionResponseData](ctx, c.Client, c.Secret, basePath+"/set_risk_action", builder.Build(), c.BaseURL)
 }

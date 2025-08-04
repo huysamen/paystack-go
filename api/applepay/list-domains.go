@@ -9,19 +9,19 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type ListDomainsRequest struct {
+type listDomainsRequest struct {
 	UseCursor *bool   `json:"use_cursor,omitempty"`
 	Next      *string `json:"next,omitempty"`
 	Previous  *string `json:"previous,omitempty"`
 }
 
 type ListDomainsRequestBuilder struct {
-	req *ListDomainsRequest
+	req *listDomainsRequest
 }
 
 func NewListDomainsRequest() *ListDomainsRequestBuilder {
 	return &ListDomainsRequestBuilder{
-		req: &ListDomainsRequest{},
+		req: &listDomainsRequest{},
 	}
 }
 
@@ -43,11 +43,11 @@ func (b *ListDomainsRequestBuilder) Previous(previous string) *ListDomainsReques
 	return b
 }
 
-func (b *ListDomainsRequestBuilder) Build() *ListDomainsRequest {
+func (b *ListDomainsRequestBuilder) Build() *listDomainsRequest {
 	return b.req
 }
 
-func (r *ListDomainsRequest) toQuery() string {
+func (r *listDomainsRequest) toQuery() string {
 	params := url.Values{}
 
 	if r.UseCursor != nil {

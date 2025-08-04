@@ -6,35 +6,42 @@ import (
 
 	"github.com/huysamen/paystack-go/net"
 	"github.com/huysamen/paystack-go/types"
-) // GetUploadURLRequest represents the request to get upload URL for a dispute
-type GetUploadURLRequest struct {
+)
+
+type getUploadURLRequest struct {
 	UploadFileName string `json:"upload_filename"`
 }
 
-type GetUploadURLBuilder struct {
-	request *GetUploadURLRequest
+type GetUploadURLRequestBuilder struct {
+	request *getUploadURLRequest
 }
 
-func NewGetUploadURLBuilder(uploadFileName string) *GetUploadURLBuilder {
-	return &GetUploadURLBuilder{
-		request: &GetUploadURLRequest{
+func NewGetUploadURLRequestBuilder(uploadFileName string) *GetUploadURLRequestBuilder {
+	return &GetUploadURLRequestBuilder{
+		request: &getUploadURLRequest{
 			UploadFileName: uploadFileName,
 		},
 	}
 }
 
-func (b *GetUploadURLBuilder) Build() *GetUploadURLRequest {
+func (b *GetUploadURLRequestBuilder) Build() *getUploadURLRequest {
 	return b.request
 }
 
-type GetUploadURLResponse = types.Response[UploadURLData]
+type GetUploadURLResponseData struct {
+	SignedURL string `json:"signedUrl"`
+	FileName  string `json:"fileName"`
+	ExpiresIn int    `json:"expiresIn"`
+}
 
-func (c *Client) GetUploadURL(ctx context.Context, disputeID string, builder *GetUploadURLBuilder) (*GetUploadURLResponse, error) {
+type GetUploadURLResponse = types.Response[GetUploadURLResponseData]
+
+func (c *Client) GetUploadURL(ctx context.Context, disputeID string, builder *GetUploadURLRequestBuilder) (*GetUploadURLResponse, error) {
 	req := builder.Build()
 
 	params := url.Values{}
 	params.Set("upload_filename", req.UploadFileName)
 	endpoint := basePath + "/" + disputeID + "/upload_url?" + params.Encode()
 
-	return net.Get[UploadURLData](ctx, c.Client, c.Secret, endpoint, c.BaseURL)
+	return net.Get[GetUploadURLResponseData](ctx, c.Client, c.Secret, endpoint, c.BaseURL)
 }

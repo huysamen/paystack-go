@@ -7,7 +7,7 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type SplitTransactionRequest struct {
+type splitTransactionRequest struct {
 	Customer      string `json:"customer"`
 	Subaccount    string `json:"subaccount,omitempty"`
 	SplitCode     string `json:"split_code,omitempty"`
@@ -15,12 +15,12 @@ type SplitTransactionRequest struct {
 }
 
 type SplitTransactioRequestnBuilder struct {
-	request *SplitTransactionRequest
+	request *splitTransactionRequest
 }
 
 func NewSplitTransactionRequestBuilder() *SplitTransactioRequestnBuilder {
 	return &SplitTransactioRequestnBuilder{
-		request: &SplitTransactionRequest{},
+		request: &splitTransactionRequest{},
 	}
 }
 
@@ -48,7 +48,7 @@ func (b *SplitTransactioRequestnBuilder) PreferredBank(preferredBank string) *Sp
 	return b
 }
 
-func (b *SplitTransactioRequestnBuilder) Build() *SplitTransactionRequest {
+func (b *SplitTransactioRequestnBuilder) Build() *splitTransactionRequest {
 	return b.request
 }
 
@@ -56,5 +56,5 @@ type SplitTransactionResponseData = types.DedicatedVirtualAccount
 type SplitTransactionResponse = types.Response[SplitTransactionResponseData]
 
 func (c *Client) SplitTransaction(ctx context.Context, builder SplitTransactioRequestnBuilder) (*SplitTransactionResponse, error) {
-	return net.Post[SplitTransactionRequest, SplitTransactionResponseData](ctx, c.Client, c.Secret, basePath+"/split", builder.Build(), c.BaseURL)
+	return net.Post[splitTransactionRequest, SplitTransactionResponseData](ctx, c.Client, c.Secret, basePath+"/split", builder.Build(), c.BaseURL)
 }

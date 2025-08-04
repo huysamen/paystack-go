@@ -8,7 +8,7 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type UpdateRequest struct {
+type updateRequest struct {
 	FirstName *string        `json:"first_name,omitempty"`
 	LastName  *string        `json:"last_name,omitempty"`
 	Phone     *string        `json:"phone,omitempty"`
@@ -16,12 +16,12 @@ type UpdateRequest struct {
 }
 
 type UpdateRequestBuilder struct {
-	req *UpdateRequest
+	req *updateRequest
 }
 
-func NewUpdateRequest() *UpdateRequestBuilder {
+func NewUpdateRequestBuilder() *UpdateRequestBuilder {
 	return &UpdateRequestBuilder{
-		req: &UpdateRequest{},
+		req: &updateRequest{},
 	}
 }
 
@@ -49,7 +49,7 @@ func (b *UpdateRequestBuilder) Metadata(metadata map[string]any) *UpdateRequestB
 	return b
 }
 
-func (b *UpdateRequestBuilder) Build() *UpdateRequest {
+func (b *UpdateRequestBuilder) Build() *updateRequest {
 	return b.req
 }
 
@@ -59,5 +59,5 @@ type UpdateResponse = types.Response[UpdateResponseData]
 func (c *Client) Update(ctx context.Context, customerCode string, builder UpdateRequestBuilder) (*UpdateResponse, error) {
 	path := fmt.Sprintf("%s/%s", basePath, customerCode)
 
-	return net.Put[UpdateRequest, UpdateResponseData](ctx, c.Client, c.Secret, path, builder.Build(), c.BaseURL)
+	return net.Put[updateRequest, UpdateResponseData](ctx, c.Client, c.Secret, path, builder.Build(), c.BaseURL)
 }
