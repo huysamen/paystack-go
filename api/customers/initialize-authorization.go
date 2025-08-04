@@ -18,55 +18,50 @@ type AuthorizationInitializeRequest struct {
 
 // Builder for AuthorizationInitializeRequest
 type AuthorizationInitializeRequestBuilder struct {
-	email       string
-	channel     string
-	callbackURL *string
-	account     *Account
-	address     *Address
+	req *AuthorizationInitializeRequest
 }
 
 // NewInitializeAuthorizationRequest creates a new builder for authorization initialization
 func NewInitializeAuthorizationRequest(email, channel string) *AuthorizationInitializeRequestBuilder {
 	return &AuthorizationInitializeRequestBuilder{
-		email:   email,
-		channel: channel,
+		req: &AuthorizationInitializeRequest{
+			Email:   email,
+			Channel: channel,
+		},
 	}
 }
 
 // CallbackURL sets the callback URL
 func (b *AuthorizationInitializeRequestBuilder) CallbackURL(callbackURL string) *AuthorizationInitializeRequestBuilder {
-	b.callbackURL = &callbackURL
+	b.req.CallbackURL = &callbackURL
+
 	return b
 }
 
 // Account sets the account details
 func (b *AuthorizationInitializeRequestBuilder) Account(number, bankCode string) *AuthorizationInitializeRequestBuilder {
-	b.account = &Account{
+	b.req.Account = &Account{
 		Number:   number,
 		BankCode: bankCode,
 	}
+
 	return b
 }
 
 // Address sets the address details
 func (b *AuthorizationInitializeRequestBuilder) Address(street, city, state string) *AuthorizationInitializeRequestBuilder {
-	b.address = &Address{
+	b.req.Address = &Address{
 		Street: street,
 		City:   city,
 		State:  state,
 	}
+
 	return b
 }
 
 // Build creates the AuthorizationInitializeRequest
 func (b *AuthorizationInitializeRequestBuilder) Build() *AuthorizationInitializeRequest {
-	return &AuthorizationInitializeRequest{
-		Email:       b.email,
-		Channel:     b.channel,
-		CallbackURL: b.callbackURL,
-		Account:     b.account,
-		Address:     b.address,
-	}
+	return b.req
 }
 
 type InitializeAuthorizationResponseData struct {
@@ -75,6 +70,7 @@ type InitializeAuthorizationResponseData struct {
 	Reference   string `json:"reference"`
 }
 
+// InitializeAuthorizationResponse represents the response for initializing authorization
 type InitializeAuthorizationResponse = types.Response[InitializeAuthorizationResponseData]
 
 // InitializeAuthorization initializes authorization for a customer

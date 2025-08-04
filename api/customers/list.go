@@ -34,12 +34,14 @@ func NewCustomerListRequest() *CustomerListRequestBuilder {
 // PerPage sets the number of records per page
 func (b *CustomerListRequestBuilder) PerPage(perPage int) *CustomerListRequestBuilder {
 	b.req.PerPage = optional.Int(perPage)
+
 	return b
 }
 
 // Page sets the page number
 func (b *CustomerListRequestBuilder) Page(page int) *CustomerListRequestBuilder {
 	b.req.Page = optional.Int(page)
+
 	return b
 }
 
@@ -47,18 +49,21 @@ func (b *CustomerListRequestBuilder) Page(page int) *CustomerListRequestBuilder 
 func (b *CustomerListRequestBuilder) DateRange(from, to time.Time) *CustomerListRequestBuilder {
 	b.req.From = optional.Time(from)
 	b.req.To = optional.Time(to)
+
 	return b
 }
 
 // From sets the start date filter
 func (b *CustomerListRequestBuilder) From(from time.Time) *CustomerListRequestBuilder {
 	b.req.From = optional.Time(from)
+
 	return b
 }
 
 // To sets the end date filter
 func (b *CustomerListRequestBuilder) To(to time.Time) *CustomerListRequestBuilder {
 	b.req.To = optional.Time(to)
+
 	return b
 }
 
@@ -91,6 +96,7 @@ type CustomerListResponseData struct {
 	Meta types.Meta       `json:"meta"`
 }
 
+// CustomerListResponse represents the response for listing customers
 type CustomerListResponse = types.Response[CustomerListResponseData]
 
 // List lists customers using a builder (fluent interface)

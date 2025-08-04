@@ -29,31 +29,29 @@ type DirectDebitInitializeRequest struct {
 
 // Builder for DirectDebitInitializeRequest
 type DirectDebitInitializeRequestBuilder struct {
-	account Account
-	address Address
+	req *DirectDebitInitializeRequest
 }
 
 // NewInitializeDirectDebitRequest creates a new builder for direct debit initialization
 func NewInitializeDirectDebitRequest(accountNumber, bankCode, street, city, state string) *DirectDebitInitializeRequestBuilder {
 	return &DirectDebitInitializeRequestBuilder{
-		account: Account{
-			Number:   accountNumber,
-			BankCode: bankCode,
-		},
-		address: Address{
-			Street: street,
-			City:   city,
-			State:  state,
+		req: &DirectDebitInitializeRequest{
+			Account: Account{
+				Number:   accountNumber,
+				BankCode: bankCode,
+			},
+			Address: Address{
+				Street: street,
+				City:   city,
+				State:  state,
+			},
 		},
 	}
 }
 
 // Build creates the DirectDebitInitializeRequest
 func (b *DirectDebitInitializeRequestBuilder) Build() *DirectDebitInitializeRequest {
-	return &DirectDebitInitializeRequest{
-		Account: b.account,
-		Address: b.address,
-	}
+	return b.req
 }
 
 type InitializeDirectDebitResponseData struct {
@@ -62,6 +60,7 @@ type InitializeDirectDebitResponseData struct {
 	Reference   string `json:"reference"`
 }
 
+// InitializeDirectDebitResponse is the response type for initializing direct debit
 type InitializeDirectDebitResponse = types.Response[InitializeDirectDebitResponseData]
 
 // InitializeDirectDebit initializes direct debit for a customer

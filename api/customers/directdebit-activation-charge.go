@@ -15,23 +15,24 @@ type DirectDebitActivationChargeRequest struct {
 
 // Builder for DirectDebitActivationChargeRequest
 type DirectDebitActivationChargeRequestBuilder struct {
-	authorizationID int
+	req *DirectDebitActivationChargeRequest
 }
 
 // NewDirectDebitActivationChargeRequest creates a new builder for direct debit activation charge
 func NewDirectDebitActivationChargeRequest(authorizationID int) *DirectDebitActivationChargeRequestBuilder {
 	return &DirectDebitActivationChargeRequestBuilder{
-		authorizationID: authorizationID,
+		req: &DirectDebitActivationChargeRequest{
+			AuthorizationID: authorizationID,
+		},
 	}
 }
 
 // Build creates the DirectDebitActivationChargeRequest
 func (b *DirectDebitActivationChargeRequestBuilder) Build() *DirectDebitActivationChargeRequest {
-	return &DirectDebitActivationChargeRequest{
-		AuthorizationID: b.authorizationID,
-	}
+	return b.req
 }
 
+// DirectDebitActivationChargeResponse is the response type for direct debit activation charge
 type DirectDebitActivationChargeResponse = types.Response[any]
 
 // DirectDebitActivationCharge creates an activation charge for a direct debit authorization

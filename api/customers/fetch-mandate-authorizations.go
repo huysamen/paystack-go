@@ -22,6 +22,7 @@ type MandateAuthorization struct {
 	Customer          CustomerReference `json:"customer"`
 }
 
+// CustomerReference represents a reference to a customer
 type FetchMandateAuthorizationsResponse = types.Response[[]MandateAuthorization]
 
 // FetchMandateAuthorizations fetches mandate authorizations for a customer

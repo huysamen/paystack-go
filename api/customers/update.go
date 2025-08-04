@@ -18,51 +18,50 @@ type CustomerUpdateRequest struct {
 
 // Builder for updating CustomerUpdateRequest
 type CustomerUpdateRequestBuilder struct {
-	firstName *string
-	lastName  *string
-	phone     *string
-	metadata  map[string]any
+	req *CustomerUpdateRequest
 }
 
 // NewUpdateCustomerRequest creates a new builder for customer update
 func NewUpdateCustomerRequest() *CustomerUpdateRequestBuilder {
-	return &CustomerUpdateRequestBuilder{}
+	return &CustomerUpdateRequestBuilder{
+		req: &CustomerUpdateRequest{},
+	}
 }
 
 // FirstName sets the first name
 func (b *CustomerUpdateRequestBuilder) FirstName(firstName string) *CustomerUpdateRequestBuilder {
-	b.firstName = &firstName
+	b.req.FirstName = &firstName
+
 	return b
 }
 
 // LastName sets the last name
 func (b *CustomerUpdateRequestBuilder) LastName(lastName string) *CustomerUpdateRequestBuilder {
-	b.lastName = &lastName
+	b.req.LastName = &lastName
+
 	return b
 }
 
 // Phone sets the phone number
 func (b *CustomerUpdateRequestBuilder) Phone(phone string) *CustomerUpdateRequestBuilder {
-	b.phone = &phone
+	b.req.Phone = &phone
+
 	return b
 }
 
 // Metadata sets the metadata
 func (b *CustomerUpdateRequestBuilder) Metadata(metadata map[string]any) *CustomerUpdateRequestBuilder {
-	b.metadata = metadata
+	b.req.Metadata = metadata
+
 	return b
 }
 
 // Build creates the CustomerUpdateRequest
 func (b *CustomerUpdateRequestBuilder) Build() *CustomerUpdateRequest {
-	return &CustomerUpdateRequest{
-		FirstName: b.firstName,
-		LastName:  b.lastName,
-		Phone:     b.phone,
-		Metadata:  b.metadata,
-	}
+	return b.req
 }
 
+// UpdateCustomerResponse represents the response for updating a customer
 type UpdateCustomerResponse = types.Response[types.Customer]
 
 // Update updates a customer with the provided builder

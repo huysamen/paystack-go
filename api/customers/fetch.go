@@ -16,6 +16,7 @@ type CustomerWithRelations struct {
 	Transactions   []types.Transaction   `json:"transactions"`
 }
 
+// FetchCustomerResponse represents the response for fetching a customer
 type FetchCustomerResponse = types.Response[CustomerWithRelations]
 
 // Fetch retrieves a customer by email or customer code

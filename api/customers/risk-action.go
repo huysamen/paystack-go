@@ -23,31 +23,30 @@ type CustomerRiskActionRequest struct {
 
 // Builder for CustomerRiskActionRequest
 type CustomerRiskActionRequestBuilder struct {
-	customer   string
-	riskAction *RiskAction
+	req *CustomerRiskActionRequest
 }
 
 // NewSetRiskActionRequest creates a new builder for setting risk action
 func NewSetRiskActionRequest(customer string) *CustomerRiskActionRequestBuilder {
 	return &CustomerRiskActionRequestBuilder{
-		customer: customer,
+		req: &CustomerRiskActionRequest{
+			Customer: customer,
+		},
 	}
 }
 
 // RiskAction sets the risk action
 func (b *CustomerRiskActionRequestBuilder) RiskAction(riskAction RiskAction) *CustomerRiskActionRequestBuilder {
-	b.riskAction = &riskAction
+	b.req.RiskAction = &riskAction
 	return b
 }
 
 // Build creates the CustomerRiskActionRequest
 func (b *CustomerRiskActionRequestBuilder) Build() *CustomerRiskActionRequest {
-	return &CustomerRiskActionRequest{
-		Customer:   b.customer,
-		RiskAction: b.riskAction,
-	}
+	return b.req
 }
 
+// SetRiskActionResponse is the response type for setting risk action
 type SetRiskActionResponse = types.Response[types.Customer]
 
 // SetRiskAction sets the risk action for a customer

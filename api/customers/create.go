@@ -18,55 +18,52 @@ type CustomerCreateRequest struct {
 
 // Builder for creating CustomerCreateRequest
 type CustomerCreateRequestBuilder struct {
-	email     string
-	firstName *string
-	lastName  *string
-	phone     *string
-	metadata  map[string]any
+	req *CustomerCreateRequest
 }
 
 // NewCreateCustomerRequest creates a new builder for customer creation
 func NewCreateCustomerRequest(email string) *CustomerCreateRequestBuilder {
 	return &CustomerCreateRequestBuilder{
-		email: email,
+		req: &CustomerCreateRequest{
+			Email: email,
+		},
 	}
 }
 
 // FirstName sets the first name
 func (b *CustomerCreateRequestBuilder) FirstName(firstName string) *CustomerCreateRequestBuilder {
-	b.firstName = &firstName
+	b.req.FirstName = &firstName
+
 	return b
 }
 
 // LastName sets the last name
 func (b *CustomerCreateRequestBuilder) LastName(lastName string) *CustomerCreateRequestBuilder {
-	b.lastName = &lastName
+	b.req.LastName = &lastName
+
 	return b
 }
 
 // Phone sets the phone number
 func (b *CustomerCreateRequestBuilder) Phone(phone string) *CustomerCreateRequestBuilder {
-	b.phone = &phone
+	b.req.Phone = &phone
+
 	return b
 }
 
 // Metadata sets the metadata
 func (b *CustomerCreateRequestBuilder) Metadata(metadata map[string]any) *CustomerCreateRequestBuilder {
-	b.metadata = metadata
+	b.req.Metadata = metadata
+
 	return b
 }
 
 // Build creates the CustomerCreateRequest
 func (b *CustomerCreateRequestBuilder) Build() *CustomerCreateRequest {
-	return &CustomerCreateRequest{
-		Email:     b.email,
-		FirstName: b.firstName,
-		LastName:  b.lastName,
-		Phone:     b.phone,
-		Metadata:  b.metadata,
-	}
+	return b.req
 }
 
+// CustomerCreateResponse represents the response for creating a customer
 type CustomerCreateResponse = types.Response[types.Customer]
 
 // Create creates a new customer with the provided builder

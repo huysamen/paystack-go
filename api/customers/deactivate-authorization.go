@@ -14,23 +14,24 @@ type DeactivateAuthorizationRequest struct {
 
 // Builder for DeactivateAuthorizationRequest
 type DeactivateAuthorizationRequestBuilder struct {
-	authorizationCode string
+	req *DeactivateAuthorizationRequest
 }
 
 // NewDeactivateAuthorizationRequest creates a new builder for deactivating authorization
 func NewDeactivateAuthorizationRequest(authorizationCode string) *DeactivateAuthorizationRequestBuilder {
 	return &DeactivateAuthorizationRequestBuilder{
-		authorizationCode: authorizationCode,
+		req: &DeactivateAuthorizationRequest{
+			AuthorizationCode: authorizationCode,
+		},
 	}
 }
 
 // Build creates the DeactivateAuthorizationRequest
 func (b *DeactivateAuthorizationRequestBuilder) Build() *DeactivateAuthorizationRequest {
-	return &DeactivateAuthorizationRequest{
-		AuthorizationCode: b.authorizationCode,
-	}
+	return b.req
 }
 
+// DeactivateAuthorizationResponse is the response type for deactivating an authorization
 type DeactivateAuthorizationResponse = types.Response[any]
 
 // DeactivateAuthorization deactivates an authorization with the provided builder
