@@ -7,7 +7,7 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type SubaccountCreateRequest struct {
+type createRequest struct {
 	BusinessName        string         `json:"business_name"`                   // Required: Name of business
 	BankCode            string         `json:"settlement_bank"`                 // Required: Bank Code (use settlement_bank as per API docs)
 	AccountNumber       string         `json:"account_number"`                  // Required: Bank Account Number
@@ -19,13 +19,13 @@ type SubaccountCreateRequest struct {
 	Metadata            map[string]any `json:"metadata,omitempty"`              // Optional: Additional data
 }
 
-type SubaccountCreateRequestBuilder struct {
-	req *SubaccountCreateRequest
+type CreateRequestBuilder struct {
+	req *createRequest
 }
 
-func NewSubaccountCreateRequest(businessName, bankCode, accountNumber string, percentageCharge float64) *SubaccountCreateRequestBuilder {
-	return &SubaccountCreateRequestBuilder{
-		req: &SubaccountCreateRequest{
+func NewCreateRequestBuilder(businessName, bankCode, accountNumber string, percentageCharge float64) *CreateRequestBuilder {
+	return &CreateRequestBuilder{
+		req: &createRequest{
 			BusinessName:     businessName,
 			BankCode:         bankCode,
 			AccountNumber:    accountNumber,
@@ -34,42 +34,43 @@ func NewSubaccountCreateRequest(businessName, bankCode, accountNumber string, pe
 	}
 }
 
-func (b *SubaccountCreateRequestBuilder) Description(description string) *SubaccountCreateRequestBuilder {
+func (b *CreateRequestBuilder) Description(description string) *CreateRequestBuilder {
 	b.req.Description = &description
 
 	return b
 }
 
-func (b *SubaccountCreateRequestBuilder) PrimaryContactEmail(email string) *SubaccountCreateRequestBuilder {
+func (b *CreateRequestBuilder) PrimaryContactEmail(email string) *CreateRequestBuilder {
 	b.req.PrimaryContactEmail = &email
 
 	return b
 }
 
-func (b *SubaccountCreateRequestBuilder) PrimaryContactName(name string) *SubaccountCreateRequestBuilder {
+func (b *CreateRequestBuilder) PrimaryContactName(name string) *CreateRequestBuilder {
 	b.req.PrimaryContactName = &name
 
 	return b
 }
 
-func (b *SubaccountCreateRequestBuilder) PrimaryContactPhone(phone string) *SubaccountCreateRequestBuilder {
+func (b *CreateRequestBuilder) PrimaryContactPhone(phone string) *CreateRequestBuilder {
 	b.req.PrimaryContactPhone = &phone
 
 	return b
 }
 
-func (b *SubaccountCreateRequestBuilder) Metadata(metadata map[string]any) *SubaccountCreateRequestBuilder {
+func (b *CreateRequestBuilder) Metadata(metadata map[string]any) *CreateRequestBuilder {
 	b.req.Metadata = metadata
 
 	return b
 }
 
-func (b *SubaccountCreateRequestBuilder) Build() *SubaccountCreateRequest {
+func (b *CreateRequestBuilder) Build() *createRequest {
 	return b.req
 }
 
-type SubaccountCreateResponse = types.Response[types.Subaccount]
+type CreateResponseData = types.Subaccount
+type CreateResponse = types.Response[CreateResponseData]
 
-func (c *Client) Create(ctx context.Context, builder *SubaccountCreateRequestBuilder) (*SubaccountCreateResponse, error) {
-	return net.Post[SubaccountCreateRequest, types.Subaccount](ctx, c.Client, c.Secret, basePath, builder.Build(), c.BaseURL)
+func (c *Client) Create(ctx context.Context, builder CreateRequestBuilder) (*CreateResponse, error) {
+	return net.Post[createRequest, CreateResponseData](ctx, c.Client, c.Secret, basePath, builder.Build(), c.BaseURL)
 }

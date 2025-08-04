@@ -8,7 +8,7 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type SubaccountUpdateRequest struct {
+type updateRequest struct {
 	BusinessName        *string        `json:"business_name,omitempty"`         // Optional: Business name
 	BankCode            *string        `json:"settlement_bank,omitempty"`       // Optional: Bank code
 	AccountNumber       *string        `json:"account_number,omitempty"`        // Optional: Account number
@@ -21,82 +21,83 @@ type SubaccountUpdateRequest struct {
 	Metadata            map[string]any `json:"metadata,omitempty"`              // Optional: Metadata
 }
 
-type SubaccountUpdateRequestBuilder struct {
-	req *SubaccountUpdateRequest
+type UpdateRequestBuilder struct {
+	req *updateRequest
 }
 
-func NewSubaccountUpdateRequest() *SubaccountUpdateRequestBuilder {
-	return &SubaccountUpdateRequestBuilder{
-		req: &SubaccountUpdateRequest{},
+func NewUpdateRequestBuilder() *UpdateRequestBuilder {
+	return &UpdateRequestBuilder{
+		req: &updateRequest{},
 	}
 }
 
-func (b *SubaccountUpdateRequestBuilder) BusinessName(businessName string) *SubaccountUpdateRequestBuilder {
+func (b *UpdateRequestBuilder) BusinessName(businessName string) *UpdateRequestBuilder {
 	b.req.BusinessName = &businessName
 
 	return b
 }
 
-func (b *SubaccountUpdateRequestBuilder) BankCode(bankCode string) *SubaccountUpdateRequestBuilder {
+func (b *UpdateRequestBuilder) BankCode(bankCode string) *UpdateRequestBuilder {
 	b.req.BankCode = &bankCode
 
 	return b
 }
 
-func (b *SubaccountUpdateRequestBuilder) AccountNumber(accountNumber string) *SubaccountUpdateRequestBuilder {
+func (b *UpdateRequestBuilder) AccountNumber(accountNumber string) *UpdateRequestBuilder {
 	b.req.AccountNumber = &accountNumber
 
 	return b
 }
 
-func (b *SubaccountUpdateRequestBuilder) PercentageCharge(percentageCharge float64) *SubaccountUpdateRequestBuilder {
+func (b *UpdateRequestBuilder) PercentageCharge(percentageCharge float64) *UpdateRequestBuilder {
 	b.req.PercentageCharge = &percentageCharge
 
 	return b
 }
 
-func (b *SubaccountUpdateRequestBuilder) Description(description string) *SubaccountUpdateRequestBuilder {
+func (b *UpdateRequestBuilder) Description(description string) *UpdateRequestBuilder {
 	b.req.Description = &description
 
 	return b
 }
 
-func (b *SubaccountUpdateRequestBuilder) PrimaryContactEmail(email string) *SubaccountUpdateRequestBuilder {
+func (b *UpdateRequestBuilder) PrimaryContactEmail(email string) *UpdateRequestBuilder {
 	b.req.PrimaryContactEmail = &email
 
 	return b
 }
 
-func (b *SubaccountUpdateRequestBuilder) PrimaryContactName(name string) *SubaccountUpdateRequestBuilder {
+func (b *UpdateRequestBuilder) PrimaryContactName(name string) *UpdateRequestBuilder {
 	b.req.PrimaryContactName = &name
 
 	return b
 }
 
-func (b *SubaccountUpdateRequestBuilder) PrimaryContactPhone(phone string) *SubaccountUpdateRequestBuilder {
+func (b *UpdateRequestBuilder) PrimaryContactPhone(phone string) *UpdateRequestBuilder {
 	b.req.PrimaryContactPhone = &phone
 
 	return b
 }
 
-func (b *SubaccountUpdateRequestBuilder) Active(active bool) *SubaccountUpdateRequestBuilder {
+func (b *UpdateRequestBuilder) Active(active bool) *UpdateRequestBuilder {
 	b.req.Active = &active
 
 	return b
 }
 
-func (b *SubaccountUpdateRequestBuilder) Metadata(metadata map[string]any) *SubaccountUpdateRequestBuilder {
+func (b *UpdateRequestBuilder) Metadata(metadata map[string]any) *UpdateRequestBuilder {
 	b.req.Metadata = metadata
 
 	return b
 }
 
-func (b *SubaccountUpdateRequestBuilder) Build() *SubaccountUpdateRequest {
+func (b *UpdateRequestBuilder) Build() *updateRequest {
 	return b.req
 }
 
-type SubaccountUpdateResponse = types.Response[types.Subaccount]
+type UpdateResponseData = types.Subaccount
+type UpdateResponse = types.Response[UpdateResponseData]
 
-func (c *Client) Update(ctx context.Context, idOrCode string, builder *SubaccountUpdateRequestBuilder) (*SubaccountUpdateResponse, error) {
-	return net.Put[SubaccountUpdateRequest, types.Subaccount](ctx, c.Client, c.Secret, fmt.Sprintf("%s/%s", basePath, idOrCode), builder.Build(), c.BaseURL)
+func (c *Client) Update(ctx context.Context, idOrCode string, builder UpdateRequestBuilder) (*UpdateResponse, error) {
+	return net.Put[updateRequest, UpdateResponseData](ctx, c.Client, c.Secret, fmt.Sprintf("%s/%s", basePath, idOrCode), builder.Build(), c.BaseURL)
 }
