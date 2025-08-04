@@ -33,24 +33,28 @@ func NewListProductsRequest() *ListProductsRequestBuilder {
 // PerPage sets the number of records per page
 func (b *ListProductsRequestBuilder) PerPage(perPage int) *ListProductsRequestBuilder {
 	b.req.PerPage = &perPage
+
 	return b
 }
 
 // Page sets the page number
 func (b *ListProductsRequestBuilder) Page(page int) *ListProductsRequestBuilder {
 	b.req.Page = &page
+
 	return b
 }
 
 // From sets the start date filter
 func (b *ListProductsRequestBuilder) From(from string) *ListProductsRequestBuilder {
 	b.req.From = &from
+
 	return b
 }
 
 // To sets the end date filter
 func (b *ListProductsRequestBuilder) To(to string) *ListProductsRequestBuilder {
 	b.req.To = &to
+
 	return b
 }
 
@@ -58,6 +62,7 @@ func (b *ListProductsRequestBuilder) To(to string) *ListProductsRequestBuilder {
 func (b *ListProductsRequestBuilder) DateRange(from, to string) *ListProductsRequestBuilder {
 	b.req.From = &from
 	b.req.To = &to
+
 	return b
 }
 
@@ -65,6 +70,9 @@ func (b *ListProductsRequestBuilder) DateRange(from, to string) *ListProductsReq
 func (b *ListProductsRequestBuilder) Build() *ListProductsRequest {
 	return b.req
 }
+
+// ListProductsResponse represents the response from listing products
+type ListProductsResponse = types.Response[[]types.Product]
 
 // List retrieves products available on your integration using a builder
 func (c *Client) List(ctx context.Context, builder *ListProductsRequestBuilder) (*ListProductsResponse, error) {

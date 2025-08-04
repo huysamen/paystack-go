@@ -38,18 +38,21 @@ func NewCreateProductRequest(name, description string, price int, currency strin
 // Unlimited sets whether the product has unlimited quantity
 func (b *CreateProductRequestBuilder) Unlimited(unlimited bool) *CreateProductRequestBuilder {
 	b.req.Unlimited = &unlimited
+
 	return b
 }
 
 // Quantity sets the product quantity (ignored if unlimited is true)
 func (b *CreateProductRequestBuilder) Quantity(quantity int) *CreateProductRequestBuilder {
 	b.req.Quantity = &quantity
+
 	return b
 }
 
 // Metadata sets the product metadata
 func (b *CreateProductRequestBuilder) Metadata(metadata *types.Metadata) *CreateProductRequestBuilder {
 	b.req.Metadata = metadata
+
 	return b
 }
 
@@ -57,6 +60,9 @@ func (b *CreateProductRequestBuilder) Metadata(metadata *types.Metadata) *Create
 func (b *CreateProductRequestBuilder) Build() *CreateProductRequest {
 	return b.req
 }
+
+// CreateProductResponse represents the response from creating a product
+type CreateProductResponse = types.Response[types.Product]
 
 // Create creates a new product
 func (c *Client) Create(ctx context.Context, builder *CreateProductRequestBuilder) (*CreateProductResponse, error) {
