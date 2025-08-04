@@ -8,15 +8,31 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type TerminalDecommissionRequest struct {
-	SerialNumber string `json:"serial_number"` // Device serial number
+type DecommissionDeviceRequest struct {
+	SerialNumber string `json:"serial_number"`
 }
 
-type TerminalDecommissionResponse = types.Response[any]
+type DecommissionDeviceRequestBuilder struct {
+	req *DecommissionDeviceRequest
+}
 
-func (c *Client) DecommissionDevice(ctx context.Context, req *TerminalDecommissionRequest) (*TerminalDecommissionResponse, error) {
+func NewDecommissionDeviceRequest(serialNumber string) *DecommissionDeviceRequestBuilder {
+	return &DecommissionDeviceRequestBuilder{
+		req: &DecommissionDeviceRequest{
+			SerialNumber: serialNumber,
+		},
+	}
+}
+
+func (b *DecommissionDeviceRequestBuilder) Build() *DecommissionDeviceRequest {
+	return b.req
+}
+
+type DecommissionDeviceResponseData = any
+type DecommissionDeviceResponse = types.Response[DecommissionDeviceResponseData]
+
+func (c *Client) DecommissionDevice(ctx context.Context, builder DecommissionDeviceRequestBuilder) (*DecommissionDeviceResponse, error) {
 	endpoint := fmt.Sprintf("%s/decommission_device", basePath)
-	return net.Post[TerminalDecommissionRequest, any](
-		ctx, c.Client, c.Secret, endpoint, req, c.BaseURL,
-	)
+
+	return net.Post[DecommissionDeviceRequest, DecommissionDeviceResponseData](ctx, c.Client, c.Secret, endpoint, builder.Build(), c.BaseURL)
 }

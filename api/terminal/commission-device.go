@@ -8,15 +8,31 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type TerminalCommissionRequest struct {
-	SerialNumber string `json:"serial_number"` // Device serial number
+type CommissionDeviceRequest struct {
+	SerialNumber string `json:"serial_number"`
 }
 
-type TerminalCommissionResponse = types.Response[types.Terminal]
+type CommissionDeviceRequestBuilder struct {
+	req *CommissionDeviceRequest
+}
 
-func (c *Client) CommissionDevice(ctx context.Context, req *TerminalCommissionRequest) (*TerminalCommissionResponse, error) {
+func NewCommissionDeviceRequestBuilder(serialNumber string) *CommissionDeviceRequestBuilder {
+	return &CommissionDeviceRequestBuilder{
+		req: &CommissionDeviceRequest{
+			SerialNumber: serialNumber,
+		},
+	}
+}
+
+func (b *CommissionDeviceRequestBuilder) Build() *CommissionDeviceRequest {
+	return b.req
+}
+
+type CommissionDeviceResponseData = types.Terminal
+type CommissionDeviceResponse = types.Response[CommissionDeviceResponseData]
+
+func (c *Client) CommissionDevice(ctx context.Context, builder CommissionDeviceRequestBuilder) (*CommissionDeviceResponse, error) {
 	endpoint := fmt.Sprintf("%s/commission_device", basePath)
-	return net.Post[TerminalCommissionRequest, types.Terminal](
-		ctx, c.Client, c.Secret, endpoint, req, c.BaseURL,
-	)
+
+	return net.Post[CommissionDeviceRequest, types.Terminal](ctx, c.Client, c.Secret, endpoint, builder.Build(), c.BaseURL)
 }

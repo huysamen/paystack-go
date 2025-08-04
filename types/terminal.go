@@ -58,13 +58,6 @@ type Terminal struct {
 // TerminalEventData represents the data payload for terminal events
 type TerminalEventData map[string]any
 
-// TerminalSendEventRequest represents the request to send an event to terminal
-type TerminalSendEventRequest struct {
-	Type   TerminalEventType   `json:"type"`   // Type of event (invoice or transaction)
-	Action TerminalEventAction `json:"action"` // Action to perform
-	Data   TerminalEventData   `json:"data"`   // Event data payload
-}
-
 // TerminalEventResult represents the result of sending an event
 type TerminalEventResult struct {
 	ID string `json:"id"` // Event ID
