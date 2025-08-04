@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/huysamen/paystack-go/net"
+	"github.com/huysamen/paystack-go/types"
 )
 
 // SubaccountCreateRequestBuilder provides a fluent interface for building SubaccountCreateRequest
@@ -60,5 +61,5 @@ func (b *SubaccountCreateRequestBuilder) Build() *SubaccountCreateRequest {
 
 // Create creates a new subaccount using the builder pattern
 func (c *Client) Create(ctx context.Context, builder *SubaccountCreateRequestBuilder) (*SubaccountCreateResponse, error) {
-	return net.Post[SubaccountCreateRequest, Subaccount](ctx, c.Client, c.Secret, basePath, builder.Build(), c.BaseURL)
+	return net.Post[SubaccountCreateRequest, types.Subaccount](ctx, c.Client, c.Secret, basePath, builder.Build(), c.BaseURL)
 }

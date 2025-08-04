@@ -17,6 +17,6 @@ type TransferInitiateRequest struct {
 	Reference        *string `json:"reference,omitempty"`         // Unique identifier for transfer
 }
 
-func (c *Client) Initiate(ctx context.Context, req *TransferInitiateRequest) (*types.Response[Transfer], error) {
-	return net.Post[TransferInitiateRequest, Transfer](ctx, c.Client, c.Secret, basePath, req, c.BaseURL)
+func (c *Client) Initiate(ctx context.Context, req *TransferInitiateRequest) (*types.Response[types.Transfer], error) {
+	return net.Post[TransferInitiateRequest, types.Transfer](ctx, c.Client, c.Secret, basePath, req, c.BaseURL)
 }

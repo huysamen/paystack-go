@@ -59,7 +59,7 @@ func (b *ListPaymentPagesRequestBuilder) Build() *ListPaymentPagesRequest {
 }
 
 // ListPaymentPagesResponse represents the response from listing payment pages
-type ListPaymentPagesResponse = types.Response[[]PaymentPage]
+type ListPaymentPagesResponse = types.Response[[]types.PaymentPage]
 
 // List retrieves payment pages available on your integration using the builder pattern
 func (c *Client) List(ctx context.Context, builder *ListPaymentPagesRequestBuilder) (*ListPaymentPagesResponse, error) {
@@ -86,5 +86,5 @@ func (c *Client) List(ctx context.Context, builder *ListPaymentPagesRequestBuild
 		endpoint += "?" + params.Encode()
 	}
 
-	return net.Get[[]PaymentPage](ctx, c.Client, c.Secret, endpoint, c.BaseURL)
+	return net.Get[[]types.PaymentPage](ctx, c.Client, c.Secret, endpoint, c.BaseURL)
 }

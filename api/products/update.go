@@ -80,5 +80,5 @@ func (b *UpdateProductRequestBuilder) Build() *UpdateProductRequest {
 
 // Update modifies a product details on your integration
 func (c *Client) Update(ctx context.Context, productID string, builder *UpdateProductRequestBuilder) (*UpdateProductResponse, error) {
-	return net.Put[UpdateProductRequest, Product](ctx, c.Client, c.Secret, fmt.Sprintf("%s/%s", basePath, productID), builder.Build(), c.BaseURL)
+	return net.Put[UpdateProductRequest, types.Product](ctx, c.Client, c.Secret, fmt.Sprintf("%s/%s", basePath, productID), builder.Build(), c.BaseURL)
 }

@@ -3,7 +3,6 @@ package webhook
 import (
 	"time"
 
-	"github.com/huysamen/paystack-go/api/transferrecipients"
 	"github.com/huysamen/paystack-go/types"
 )
 
@@ -280,68 +279,68 @@ type CustomerIdentification struct {
 
 // TransferSuccessEvent represents the data structure for transfer.success webhook events
 type TransferSuccessEvent struct {
-	Amount        int64                                `json:"amount"`
-	Currency      string                               `json:"currency"`
-	Domain        string                               `json:"domain"`
-	Failures      *any                                 `json:"failures"`
-	ID            int64                                `json:"id"`
-	Integration   int64                                `json:"integration"`
-	Reason        string                               `json:"reason"`
-	Reference     string                               `json:"reference"`
-	Source        string                               `json:"source"`
-	SourceDetails *any                                 `json:"source_details"`
-	Status        string                               `json:"status"`
-	TitanCode     *string                              `json:"titan_code"`
-	TransferCode  string                               `json:"transfer_code"`
-	TransferredAt *time.Time                           `json:"transferred_at"`
-	Recipient     transferrecipients.TransferRecipient `json:"recipient"`
-	Session       *any                                 `json:"session"`
-	CreatedAt     time.Time                            `json:"created_at"`
-	UpdatedAt     time.Time                            `json:"updated_at"`
+	Amount        int64                   `json:"amount"`
+	Currency      string                  `json:"currency"`
+	Domain        string                  `json:"domain"`
+	Failures      *any                    `json:"failures"`
+	ID            int64                   `json:"id"`
+	Integration   int64                   `json:"integration"`
+	Reason        string                  `json:"reason"`
+	Reference     string                  `json:"reference"`
+	Source        string                  `json:"source"`
+	SourceDetails *any                    `json:"source_details"`
+	Status        string                  `json:"status"`
+	TitanCode     *string                 `json:"titan_code"`
+	TransferCode  string                  `json:"transfer_code"`
+	TransferredAt *time.Time              `json:"transferred_at"`
+	Recipient     types.TransferRecipient `json:"recipient"`
+	Session       *any                    `json:"session"`
+	CreatedAt     time.Time               `json:"created_at"`
+	UpdatedAt     time.Time               `json:"updated_at"`
 }
 
 // TransferFailedEvent represents the data structure for transfer.failed webhook events
 type TransferFailedEvent struct {
-	Amount        int64                                `json:"amount"`
-	Currency      string                               `json:"currency"`
-	Domain        string                               `json:"domain"`
-	Failures      *any                                 `json:"failures"`
-	ID            int64                                `json:"id"`
-	Integration   int64                                `json:"integration"`
-	Reason        string                               `json:"reason"`
-	Reference     string                               `json:"reference"`
-	Source        string                               `json:"source"`
-	SourceDetails *any                                 `json:"source_details"`
-	Status        string                               `json:"status"`
-	TitanCode     *string                              `json:"titan_code"`
-	TransferCode  string                               `json:"transfer_code"`
-	TransferredAt *time.Time                           `json:"transferred_at"`
-	Recipient     transferrecipients.TransferRecipient `json:"recipient"`
-	Session       *any                                 `json:"session"`
-	CreatedAt     time.Time                            `json:"created_at"`
-	UpdatedAt     time.Time                            `json:"updated_at"`
+	Amount        int64                   `json:"amount"`
+	Currency      string                  `json:"currency"`
+	Domain        string                  `json:"domain"`
+	Failures      *any                    `json:"failures"`
+	ID            int64                   `json:"id"`
+	Integration   int64                   `json:"integration"`
+	Reason        string                  `json:"reason"`
+	Reference     string                  `json:"reference"`
+	Source        string                  `json:"source"`
+	SourceDetails *any                    `json:"source_details"`
+	Status        string                  `json:"status"`
+	TitanCode     *string                 `json:"titan_code"`
+	TransferCode  string                  `json:"transfer_code"`
+	TransferredAt *time.Time              `json:"transferred_at"`
+	Recipient     types.TransferRecipient `json:"recipient"`
+	Session       *any                    `json:"session"`
+	CreatedAt     time.Time               `json:"created_at"`
+	UpdatedAt     time.Time               `json:"updated_at"`
 }
 
 // TransferReversedEvent represents the data structure for transfer.reversed webhook events
 type TransferReversedEvent struct {
-	Amount        int64                                `json:"amount"`
-	Currency      string                               `json:"currency"`
-	Domain        string                               `json:"domain"`
-	Failures      *any                                 `json:"failures"`
-	ID            int64                                `json:"id"`
-	Integration   int64                                `json:"integration"`
-	Reason        string                               `json:"reason"`
-	Reference     string                               `json:"reference"`
-	Source        string                               `json:"source"`
-	SourceDetails *any                                 `json:"source_details"`
-	Status        string                               `json:"status"`
-	TitanCode     *string                              `json:"titan_code"`
-	TransferCode  string                               `json:"transfer_code"`
-	TransferredAt *time.Time                           `json:"transferred_at"`
-	Recipient     transferrecipients.TransferRecipient `json:"recipient"`
-	Session       *any                                 `json:"session"`
-	CreatedAt     time.Time                            `json:"created_at"`
-	UpdatedAt     time.Time                            `json:"updated_at"`
+	Amount        int64                   `json:"amount"`
+	Currency      string                  `json:"currency"`
+	Domain        string                  `json:"domain"`
+	Failures      *any                    `json:"failures"`
+	ID            int64                   `json:"id"`
+	Integration   int64                   `json:"integration"`
+	Reason        string                  `json:"reason"`
+	Reference     string                  `json:"reference"`
+	Source        string                  `json:"source"`
+	SourceDetails *any                    `json:"source_details"`
+	Status        string                  `json:"status"`
+	TitanCode     *string                 `json:"titan_code"`
+	TransferCode  string                  `json:"transfer_code"`
+	TransferredAt *time.Time              `json:"transferred_at"`
+	Recipient     types.TransferRecipient `json:"recipient"`
+	Session       *any                    `json:"session"`
+	CreatedAt     time.Time               `json:"created_at"`
+	UpdatedAt     time.Time               `json:"updated_at"`
 }
 
 // SubscriptionCreateEvent represents the data structure for subscription.create webhook events

@@ -60,5 +60,5 @@ func (b *CreateProductRequestBuilder) Build() *CreateProductRequest {
 
 // Create creates a new product
 func (c *Client) Create(ctx context.Context, builder *CreateProductRequestBuilder) (*CreateProductResponse, error) {
-	return net.Post[CreateProductRequest, Product](ctx, c.Client, c.Secret, basePath, builder.Build(), c.BaseURL)
+	return net.Post[CreateProductRequest, types.Product](ctx, c.Client, c.Secret, basePath, builder.Build(), c.BaseURL)
 }

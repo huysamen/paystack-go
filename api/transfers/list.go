@@ -97,16 +97,16 @@ func (r *TransferListRequest) toQuery() string {
 }
 
 type TransferListResponse struct {
-	Data []Transfer `json:"data"`
-	Meta types.Meta `json:"meta"`
+	Data []types.Transfer `json:"data"`
+	Meta types.Meta       `json:"meta"`
 }
 
 // List lists transfers using a builder (fluent interface)
-func (c *Client) List(ctx context.Context, builder *TransferListRequestBuilder) (*types.Response[[]Transfer], error) {
+func (c *Client) List(ctx context.Context, builder *TransferListRequestBuilder) (*types.Response[[]types.Transfer], error) {
 	req := builder.Build()
 	query := ""
 	if req != nil {
 		query = req.toQuery()
 	}
-	return net.Get[[]Transfer](ctx, c.Client, c.Secret, basePath, query, c.BaseURL)
+	return net.Get[[]types.Transfer](ctx, c.Client, c.Secret, basePath, query, c.BaseURL)
 }

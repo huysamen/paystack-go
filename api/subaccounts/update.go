@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/huysamen/paystack-go/net"
+	"github.com/huysamen/paystack-go/types"
 )
 
 // SubaccountUpdateRequestBuilder provides a fluent interface for building SubaccountUpdateRequest
@@ -86,5 +87,5 @@ func (b *SubaccountUpdateRequestBuilder) Build() *SubaccountUpdateRequest {
 
 // Update updates an existing subaccount using the builder pattern
 func (c *Client) Update(ctx context.Context, idOrCode string, builder *SubaccountUpdateRequestBuilder) (*SubaccountUpdateResponse, error) {
-	return net.Put[SubaccountUpdateRequest, Subaccount](ctx, c.Client, c.Secret, fmt.Sprintf("%s/%s", basePath, idOrCode), builder.Build(), c.BaseURL)
+	return net.Put[SubaccountUpdateRequest, types.Subaccount](ctx, c.Client, c.Secret, fmt.Sprintf("%s/%s", basePath, idOrCode), builder.Build(), c.BaseURL)
 }

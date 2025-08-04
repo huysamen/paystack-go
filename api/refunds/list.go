@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/huysamen/paystack-go/net"
+	"github.com/huysamen/paystack-go/types"
 )
 
 // RefundListRequestBuilder provides a fluent interface for building RefundListRequest
@@ -69,5 +70,5 @@ func (b *RefundListRequestBuilder) Build() *RefundListRequest {
 
 // List retrieves all refunds available on your integration using a builder
 func (c *Client) List(ctx context.Context, builder *RefundListRequestBuilder) (*RefundListResponse, error) {
-	return net.Get[[]Refund](ctx, c.Client, c.Secret, basePath, c.BaseURL)
+	return net.Get[[]types.Refund](ctx, c.Client, c.Secret, basePath, c.BaseURL)
 }

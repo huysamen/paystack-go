@@ -12,12 +12,12 @@ import (
 
 // ExportDisputesRequest represents the request to export disputes
 type ExportDisputesRequest struct {
-	From        *time.Time     `json:"from,omitempty"`
-	To          *time.Time     `json:"to,omitempty"`
-	PerPage     *int           `json:"per_page,omitempty"`
-	Page        *int           `json:"page,omitempty"`
-	Transaction *string        `json:"transaction,omitempty"`
-	Status      *DisputeStatus `json:"status,omitempty"`
+	From        *time.Time           `json:"from,omitempty"`
+	To          *time.Time           `json:"to,omitempty"`
+	PerPage     *int                 `json:"per_page,omitempty"`
+	Page        *int                 `json:"page,omitempty"`
+	Transaction *string              `json:"transaction,omitempty"`
+	Status      *types.DisputeStatus `json:"status,omitempty"`
 }
 
 // ExportDisputesResponse represents the response from exporting disputes
@@ -73,7 +73,7 @@ func (b *ExportDisputesBuilder) Transaction(transaction string) *ExportDisputesB
 }
 
 // Status filters by dispute status
-func (b *ExportDisputesBuilder) Status(status DisputeStatus) *ExportDisputesBuilder {
+func (b *ExportDisputesBuilder) Status(status types.DisputeStatus) *ExportDisputesBuilder {
 	b.request.Status = &status
 	return b
 }

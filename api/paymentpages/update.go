@@ -57,9 +57,9 @@ func (b *UpdatePaymentPageRequestBuilder) Build() *UpdatePaymentPageRequest {
 }
 
 // UpdatePaymentPageResponse represents the response from updating a payment page
-type UpdatePaymentPageResponse = types.Response[PaymentPage]
+type UpdatePaymentPageResponse = types.Response[types.PaymentPage]
 
 // Update updates a payment page details on your integration using the builder pattern
 func (c *Client) Update(ctx context.Context, idOrSlug string, builder *UpdatePaymentPageRequestBuilder) (*UpdatePaymentPageResponse, error) {
-	return net.Put[UpdatePaymentPageRequest, PaymentPage](ctx, c.Client, c.Secret, basePath+"/"+idOrSlug, builder.Build(), c.BaseURL)
+	return net.Put[UpdatePaymentPageRequest, types.PaymentPage](ctx, c.Client, c.Secret, basePath+"/"+idOrSlug, builder.Build(), c.BaseURL)
 }

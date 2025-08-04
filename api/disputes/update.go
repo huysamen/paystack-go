@@ -12,7 +12,7 @@ type UpdateDisputeRequest struct {
 }
 
 // UpdateDisputeResponse represents the response from updating a dispute
-type UpdateDisputeResponse = types.Response[Dispute]
+type UpdateDisputeResponse = types.Response[types.Dispute]
 
 // UpdateDisputeBuilder builds requests for updating disputes
 type UpdateDisputeBuilder struct {
@@ -45,5 +45,5 @@ func (b *UpdateDisputeBuilder) Build() *UpdateDisputeRequest {
 
 // Update updates the details of a dispute on your integration
 func (c *Client) Update(ctx context.Context, disputeID string, builder *UpdateDisputeBuilder) (*UpdateDisputeResponse, error) {
-	return net.Put[UpdateDisputeRequest, Dispute](ctx, c.Client, c.Secret, basePath+"/"+disputeID, builder.Build(), c.BaseURL)
+	return net.Put[UpdateDisputeRequest, types.Dispute](ctx, c.Client, c.Secret, basePath+"/"+disputeID, builder.Build(), c.BaseURL)
 }

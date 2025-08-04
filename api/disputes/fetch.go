@@ -8,9 +8,9 @@ import (
 )
 
 // FetchDisputeResponse represents the response from fetching a dispute
-type FetchDisputeResponse = types.Response[Dispute]
+type FetchDisputeResponse = types.Response[types.Dispute]
 
 // Fetch retrieves details of a specific dispute
 func (c *Client) Fetch(ctx context.Context, disputeID string) (*FetchDisputeResponse, error) {
-	return net.Get[Dispute](ctx, c.Client, c.Secret, basePath+"/"+disputeID, c.BaseURL)
+	return net.Get[types.Dispute](ctx, c.Client, c.Secret, basePath+"/"+disputeID, c.BaseURL)
 }

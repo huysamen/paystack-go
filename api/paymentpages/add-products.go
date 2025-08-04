@@ -45,9 +45,9 @@ func (b *AddProductsToPageRequestBuilder) Build() *AddProductsToPageRequest {
 }
 
 // AddProductsToPageResponse represents the response from adding products to a payment page
-type AddProductsToPageResponse = types.Response[PaymentPage]
+type AddProductsToPageResponse = types.Response[types.PaymentPage]
 
 // AddProducts adds products to a payment page using the builder pattern
 func (c *Client) AddProducts(ctx context.Context, pageID int, builder *AddProductsToPageRequestBuilder) (*AddProductsToPageResponse, error) {
-	return net.Post[AddProductsToPageRequest, PaymentPage](ctx, c.Client, c.Secret, basePath+"/"+strconv.Itoa(pageID)+"/product", builder.Build(), c.BaseURL)
+	return net.Post[AddProductsToPageRequest, types.PaymentPage](ctx, c.Client, c.Secret, basePath+"/"+strconv.Itoa(pageID)+"/product", builder.Build(), c.BaseURL)
 }

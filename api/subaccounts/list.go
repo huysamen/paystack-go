@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/huysamen/paystack-go/net"
+	"github.com/huysamen/paystack-go/types"
 )
 
 // SubaccountListRequestBuilder provides a fluent interface for building SubaccountListRequest
@@ -81,5 +82,5 @@ func (c *Client) List(ctx context.Context, builder *SubaccountListRequestBuilder
 		endpoint += "?" + params.Encode()
 	}
 
-	return net.Get[[]Subaccount](ctx, c.Client, c.Secret, endpoint, c.BaseURL)
+	return net.Get[[]types.Subaccount](ctx, c.Client, c.Secret, endpoint, c.BaseURL)
 }

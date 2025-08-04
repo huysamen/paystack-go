@@ -7,6 +7,7 @@ import (
 	"strconv"
 
 	"github.com/huysamen/paystack-go/net"
+	"github.com/huysamen/paystack-go/types"
 )
 
 // ListProductsRequest represents the request to list products
@@ -90,5 +91,5 @@ func (c *Client) List(ctx context.Context, builder *ListProductsRequestBuilder) 
 		path = fmt.Sprintf("%s?%s", basePath, params.Encode())
 	}
 
-	return net.Get[[]Product](ctx, c.Client, c.Secret, path, c.BaseURL)
+	return net.Get[[]types.Product](ctx, c.Client, c.Secret, path, c.BaseURL)
 }

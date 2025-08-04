@@ -19,7 +19,7 @@ type AddEvidenceRequest struct {
 }
 
 // AddEvidenceResponse represents the response from adding evidence to a dispute
-type AddEvidenceResponse = types.Response[Evidence]
+type AddEvidenceResponse = types.Response[types.Evidence]
 
 // AddEvidenceBuilder builds requests for adding evidence to disputes
 type AddEvidenceBuilder struct {
@@ -57,5 +57,5 @@ func (b *AddEvidenceBuilder) Build() *AddEvidenceRequest {
 
 // AddEvidence provides evidence for a dispute
 func (c *Client) AddEvidence(ctx context.Context, disputeID string, builder *AddEvidenceBuilder) (*AddEvidenceResponse, error) {
-	return net.Post[AddEvidenceRequest, Evidence](ctx, c.Client, c.Secret, basePath+"/"+disputeID+"/evidence", builder.Build(), c.BaseURL)
+	return net.Post[AddEvidenceRequest, types.Evidence](ctx, c.Client, c.Secret, basePath+"/"+disputeID+"/evidence", builder.Build(), c.BaseURL)
 }

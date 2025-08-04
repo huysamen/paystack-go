@@ -73,7 +73,7 @@ func (b *ListDisputesBuilder) Transaction(transaction string) *ListDisputesBuild
 }
 
 // Status filters by dispute status
-func (b *ListDisputesBuilder) Status(status DisputeStatus) *ListDisputesBuilder {
+func (b *ListDisputesBuilder) Status(status types.DisputeStatus) *ListDisputesBuilder {
 	b.request.Status = &status
 	return b
 }
@@ -113,5 +113,5 @@ func (c *Client) List(ctx context.Context, builder *ListDisputesBuilder) (*ListD
 		endpoint += "?" + params.Encode()
 	}
 
-	return net.Get[[]Dispute](ctx, c.Client, c.Secret, endpoint, c.BaseURL)
+	return net.Get[[]types.Dispute](ctx, c.Client, c.Secret, endpoint, c.BaseURL)
 }
