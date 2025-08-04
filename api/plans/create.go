@@ -7,7 +7,7 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type CreatePlanRequest struct {
+type createRequest struct {
 	Name     string         `json:"name"`
 	Amount   int            `json:"amount"`
 	Interval types.Interval `json:"interval"`
@@ -19,13 +19,13 @@ type CreatePlanRequest struct {
 	InvoiceLimit *int           `json:"invoice_limit,omitempty"`
 }
 
-type CreatePlanRequestBuilder struct {
-	req *CreatePlanRequest
+type CreateRequestBuilder struct {
+	req *createRequest
 }
 
-func NewCreatePlanRequest(name string, amount int, interval types.Interval) *CreatePlanRequestBuilder {
-	return &CreatePlanRequestBuilder{
-		req: &CreatePlanRequest{
+func NewCreateRequestBuilder(name string, amount int, interval types.Interval) *CreateRequestBuilder {
+	return &CreateRequestBuilder{
+		req: &createRequest{
 			Name:     name,
 			Amount:   amount,
 			Interval: interval,
@@ -33,42 +33,43 @@ func NewCreatePlanRequest(name string, amount int, interval types.Interval) *Cre
 	}
 }
 
-func (b *CreatePlanRequestBuilder) Description(description string) *CreatePlanRequestBuilder {
+func (b *CreateRequestBuilder) Description(description string) *CreateRequestBuilder {
 	b.req.Description = description
 
 	return b
 }
 
-func (b *CreatePlanRequestBuilder) SendInvoices(sendInvoices bool) *CreatePlanRequestBuilder {
+func (b *CreateRequestBuilder) SendInvoices(sendInvoices bool) *CreateRequestBuilder {
 	b.req.SendInvoices = &sendInvoices
 
 	return b
 }
 
-func (b *CreatePlanRequestBuilder) SendSMS(sendSMS bool) *CreatePlanRequestBuilder {
+func (b *CreateRequestBuilder) SendSMS(sendSMS bool) *CreateRequestBuilder {
 	b.req.SendSMS = &sendSMS
 
 	return b
 }
 
-func (b *CreatePlanRequestBuilder) Currency(currency types.Currency) *CreatePlanRequestBuilder {
+func (b *CreateRequestBuilder) Currency(currency types.Currency) *CreateRequestBuilder {
 	b.req.Currency = currency
 
 	return b
 }
 
-func (b *CreatePlanRequestBuilder) InvoiceLimit(limit int) *CreatePlanRequestBuilder {
+func (b *CreateRequestBuilder) InvoiceLimit(limit int) *CreateRequestBuilder {
 	b.req.InvoiceLimit = &limit
 
 	return b
 }
 
-func (b *CreatePlanRequestBuilder) Build() *CreatePlanRequest {
+func (b *CreateRequestBuilder) Build() *createRequest {
 	return b.req
 }
 
-type CreatePlanResponse = types.Response[types.Plan]
+type CreateResponseData = types.Plan
+type CreateResponse = types.Response[CreateResponseData]
 
-func (c *Client) Create(ctx context.Context, builder *CreatePlanRequestBuilder) (*CreatePlanResponse, error) {
-	return net.Post[CreatePlanRequest, types.Plan](ctx, c.Client, c.Secret, basePath, builder.Build(), c.BaseURL)
+func (c *Client) Create(ctx context.Context, builder CreateRequestBuilder) (*CreateResponse, error) {
+	return net.Post[createRequest, CreateResponseData](ctx, c.Client, c.Secret, basePath, builder.Build(), c.BaseURL)
 }

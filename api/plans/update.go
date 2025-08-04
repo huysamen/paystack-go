@@ -8,7 +8,7 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type UpdatePlanRequest struct {
+type updateRequest struct {
 	Name     string         `json:"name"`
 	Amount   int            `json:"amount"`
 	Interval types.Interval `json:"interval"`
@@ -21,13 +21,13 @@ type UpdatePlanRequest struct {
 	UpdateExistingSubscriptions *bool          `json:"update_existing_subscriptions,omitempty"`
 }
 
-type UpdatePlanRequestBuilder struct {
-	req *UpdatePlanRequest
+type UpdateRequestBuilder struct {
+	req *updateRequest
 }
 
-func NewUpdatePlanRequest(name string, amount int, interval types.Interval) *UpdatePlanRequestBuilder {
-	return &UpdatePlanRequestBuilder{
-		req: &UpdatePlanRequest{
+func NewUpdateRequestBuilder(name string, amount int, interval types.Interval) *UpdateRequestBuilder {
+	return &UpdateRequestBuilder{
+		req: &updateRequest{
 			Name:     name,
 			Amount:   amount,
 			Interval: interval,
@@ -35,48 +35,49 @@ func NewUpdatePlanRequest(name string, amount int, interval types.Interval) *Upd
 	}
 }
 
-func (b *UpdatePlanRequestBuilder) Description(description string) *UpdatePlanRequestBuilder {
+func (b *UpdateRequestBuilder) Description(description string) *UpdateRequestBuilder {
 	b.req.Description = description
 
 	return b
 }
 
-func (b *UpdatePlanRequestBuilder) SendInvoices(sendInvoices bool) *UpdatePlanRequestBuilder {
+func (b *UpdateRequestBuilder) SendInvoices(sendInvoices bool) *UpdateRequestBuilder {
 	b.req.SendInvoices = &sendInvoices
 
 	return b
 }
 
-func (b *UpdatePlanRequestBuilder) SendSMS(sendSMS bool) *UpdatePlanRequestBuilder {
+func (b *UpdateRequestBuilder) SendSMS(sendSMS bool) *UpdateRequestBuilder {
 	b.req.SendSMS = &sendSMS
 
 	return b
 }
 
-func (b *UpdatePlanRequestBuilder) Currency(currency types.Currency) *UpdatePlanRequestBuilder {
+func (b *UpdateRequestBuilder) Currency(currency types.Currency) *UpdateRequestBuilder {
 	b.req.Currency = currency
 
 	return b
 }
 
-func (b *UpdatePlanRequestBuilder) InvoiceLimit(limit int) *UpdatePlanRequestBuilder {
+func (b *UpdateRequestBuilder) InvoiceLimit(limit int) *UpdateRequestBuilder {
 	b.req.InvoiceLimit = &limit
 
 	return b
 }
 
-func (b *UpdatePlanRequestBuilder) UpdateExistingSubscriptions(update bool) *UpdatePlanRequestBuilder {
+func (b *UpdateRequestBuilder) UpdateExistingSubscriptions(update bool) *UpdateRequestBuilder {
 	b.req.UpdateExistingSubscriptions = &update
 
 	return b
 }
 
-func (b *UpdatePlanRequestBuilder) Build() *UpdatePlanRequest {
+func (b *UpdateRequestBuilder) Build() *updateRequest {
 	return b.req
 }
 
-type UpdatePlanResponse = types.Response[any]
+type UpdateResponseData = any
+type UpdateResponse = types.Response[any]
 
-func (c *Client) Update(ctx context.Context, idOrCode string, builder *UpdatePlanRequestBuilder) (*UpdatePlanResponse, error) {
-	return net.Put[UpdatePlanRequest, any](ctx, c.Client, c.Secret, fmt.Sprintf("%s/%s", basePath, idOrCode), builder.Build(), c.BaseURL)
+func (c *Client) Update(ctx context.Context, idOrCode string, builder UpdateRequestBuilder) (*UpdateResponse, error) {
+	return net.Put[updateRequest, UpdateResponseData](ctx, c.Client, c.Secret, fmt.Sprintf("%s/%s", basePath, idOrCode), builder.Build(), c.BaseURL)
 }

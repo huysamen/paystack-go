@@ -9,7 +9,7 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type ListPlansRequest struct {
+type listRequest struct {
 	PerPage  *int            `json:"perPage,omitempty"`
 	Page     *int            `json:"page,omitempty"`
 	Status   *string         `json:"status,omitempty"`
@@ -17,51 +17,51 @@ type ListPlansRequest struct {
 	Amount   *int            `json:"amount,omitempty"`
 }
 
-type ListPlansRequestBuilder struct {
-	req *ListPlansRequest
+type ListRequestBuilder struct {
+	req *listRequest
 }
 
-func NewListPlansRequest() *ListPlansRequestBuilder {
-	return &ListPlansRequestBuilder{
-		req: &ListPlansRequest{},
+func NewListRequestBuilder() *ListRequestBuilder {
+	return &ListRequestBuilder{
+		req: &listRequest{},
 	}
 }
 
-func (b *ListPlansRequestBuilder) PerPage(perPage int) *ListPlansRequestBuilder {
+func (b *ListRequestBuilder) PerPage(perPage int) *ListRequestBuilder {
 	b.req.PerPage = &perPage
 
 	return b
 }
 
-func (b *ListPlansRequestBuilder) Page(page int) *ListPlansRequestBuilder {
+func (b *ListRequestBuilder) Page(page int) *ListRequestBuilder {
 	b.req.Page = &page
 
 	return b
 }
 
-func (b *ListPlansRequestBuilder) Status(status string) *ListPlansRequestBuilder {
+func (b *ListRequestBuilder) Status(status string) *ListRequestBuilder {
 	b.req.Status = &status
 
 	return b
 }
 
-func (b *ListPlansRequestBuilder) Interval(interval types.Interval) *ListPlansRequestBuilder {
+func (b *ListRequestBuilder) Interval(interval types.Interval) *ListRequestBuilder {
 	b.req.Interval = &interval
 
 	return b
 }
 
-func (b *ListPlansRequestBuilder) Amount(amount int) *ListPlansRequestBuilder {
+func (b *ListRequestBuilder) Amount(amount int) *ListRequestBuilder {
 	b.req.Amount = &amount
 
 	return b
 }
 
-func (b *ListPlansRequestBuilder) Build() *ListPlansRequest {
+func (b *ListRequestBuilder) Build() *listRequest {
 	return b.req
 }
 
-func (r *ListPlansRequest) toQuery() string {
+func (r *listRequest) toQuery() string {
 	params := url.Values{}
 
 	if r.PerPage != nil {
@@ -83,17 +83,16 @@ func (r *ListPlansRequest) toQuery() string {
 	return params.Encode()
 }
 
-type ListPlansResponse = types.Response[[]types.Plan]
+type ListResponseData = []types.Plan
+type ListResponse = types.Response[ListResponseData]
 
-func (c *Client) List(ctx context.Context, builder *ListPlansRequestBuilder) (*ListPlansResponse, error) {
+func (c *Client) List(ctx context.Context, builder ListRequestBuilder) (*ListResponse, error) {
 	path := basePath
 
-	if builder != nil {
-		req := builder.Build()
-		if query := req.toQuery(); query != "" {
-			path += "?" + query
-		}
+	req := builder.Build()
+	if query := req.toQuery(); query != "" {
+		path += "?" + query
 	}
 
-	return net.Get[[]types.Plan](ctx, c.Client, c.Secret, path, c.BaseURL)
+	return net.Get[ListResponseData](ctx, c.Client, c.Secret, path, c.BaseURL)
 }
