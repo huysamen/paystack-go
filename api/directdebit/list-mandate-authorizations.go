@@ -31,7 +31,7 @@ func (b *ListMandateAuthorizationsRequestBuilder) Cursor(cursor string) *ListMan
 	return b
 }
 
-func (b *ListMandateAuthorizationsRequestBuilder) Status(status MandateAuthorizationStatus) *ListMandateAuthorizationsRequestBuilder {
+func (b *ListMandateAuthorizationsRequestBuilder) Status(status types.MandateAuthorizationStatus) *ListMandateAuthorizationsRequestBuilder {
 	b.req.Status = status
 
 	return b
