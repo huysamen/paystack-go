@@ -8,39 +8,41 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type AccountResolveRequest struct {
+type resolveAccountRequest struct {
 	AccountNumber string `json:"account_number"` // Required: account number
 	BankCode      string `json:"bank_code"`      // Required: bank code
 }
 
-type AccountResolveRequestBuilder struct {
-	request AccountResolveRequest
+type ResolveAccountRequestBuilder struct {
+	request resolveAccountRequest
 }
 
-func NewAccountResolveRequestBuilder() *AccountResolveRequestBuilder {
-	return &AccountResolveRequestBuilder{}
+func NewResolveAccountRequestBuilder() *ResolveAccountRequestBuilder {
+	return &ResolveAccountRequestBuilder{}
 }
 
-func (b *AccountResolveRequestBuilder) AccountNumber(accountNumber string) *AccountResolveRequestBuilder {
+func (b *ResolveAccountRequestBuilder) AccountNumber(accountNumber string) *ResolveAccountRequestBuilder {
 	b.request.AccountNumber = accountNumber
 
 	return b
 }
 
-func (b *AccountResolveRequestBuilder) BankCode(bankCode string) *AccountResolveRequestBuilder {
+func (b *ResolveAccountRequestBuilder) BankCode(bankCode string) *ResolveAccountRequestBuilder {
 	b.request.BankCode = bankCode
 
 	return b
 }
 
-func (b *AccountResolveRequestBuilder) Build() *AccountResolveRequest {
+func (b *ResolveAccountRequestBuilder) Build() *resolveAccountRequest {
 	return &b.request
 }
 
-type AccountResolveResponse = types.Response[types.AccountResolution]
+type ResolveAccountResponseData = types.AccountResolution
+type ResolveAccountResponse = types.Response[ResolveAccountResponseData]
 
-func (c *Client) ResolveAccount(ctx context.Context, builder *AccountResolveRequestBuilder) (*AccountResolveResponse, error) {
+func (c *Client) ResolveAccount(ctx context.Context, builder ResolveAccountRequestBuilder) (*ResolveAccountResponse, error) {
 	req := builder.Build()
 	endpoint := fmt.Sprintf("%s?account_number=%s&bank_code=%s", accountResolveBasePath, req.AccountNumber, req.BankCode)
-	return net.Get[types.AccountResolution](ctx, c.Client, c.Secret, endpoint, "", c.BaseURL)
+
+	return net.Get[ResolveAccountResponseData](ctx, c.Client, c.Secret, endpoint, "", c.BaseURL)
 }

@@ -8,11 +8,9 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type CardBINResolveResponse = types.Response[types.CardBINResolution]
+type ResolveCardBINResponseData = types.CardBINResolution
+type ResolveCardBINResponse = types.Response[ResolveCardBINResponseData]
 
-func (c *Client) ResolveCardBIN(ctx context.Context, bin string) (*CardBINResolveResponse, error) {
-	if len(bin) > 6 {
-		bin = bin[:6]
-	}
-	return net.Get[types.CardBINResolution](ctx, c.Client, c.Secret, fmt.Sprintf("%s/%s", cardBINResolveBasePath, bin), "", c.BaseURL)
+func (c *Client) ResolveCardBIN(ctx context.Context, bin string) (*ResolveCardBINResponse, error) {
+	return net.Get[ResolveCardBINResponseData](ctx, c.Client, c.Secret, fmt.Sprintf("%s/%s", cardBINResolveBasePath, bin), "", c.BaseURL)
 }

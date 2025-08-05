@@ -7,7 +7,7 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type AccountValidateRequest struct {
+type validateAccountRequest struct {
 	AccountName    string  `json:"account_name"`              // Required: customer's name
 	AccountNumber  string  `json:"account_number"`            // Required: account number
 	AccountType    string  `json:"account_type"`              // Required: personal or business
@@ -17,13 +17,13 @@ type AccountValidateRequest struct {
 	DocumentNumber *string `json:"document_number,omitempty"` // Optional: identity document number
 }
 
-type AccountValidateRequestBuilder struct {
-	req *AccountValidateRequest
+type ValidateAccountRequestBuilder struct {
+	req *validateAccountRequest
 }
 
-func NewAccountValidateRequest(accountName, accountNumber, accountType, bankCode, countryCode, documentType string) *AccountValidateRequestBuilder {
-	return &AccountValidateRequestBuilder{
-		req: &AccountValidateRequest{
+func NewValidateAccountRequestBuilder(accountName, accountNumber, accountType, bankCode, countryCode, documentType string) *ValidateAccountRequestBuilder {
+	return &ValidateAccountRequestBuilder{
+		req: &validateAccountRequest{
 			AccountName:   accountName,
 			AccountNumber: accountNumber,
 			AccountType:   accountType,
@@ -34,18 +34,19 @@ func NewAccountValidateRequest(accountName, accountNumber, accountType, bankCode
 	}
 }
 
-func (b *AccountValidateRequestBuilder) DocumentNumber(documentNumber string) *AccountValidateRequestBuilder {
+func (b *ValidateAccountRequestBuilder) DocumentNumber(documentNumber string) *ValidateAccountRequestBuilder {
 	b.req.DocumentNumber = &documentNumber
 
 	return b
 }
 
-func (b *AccountValidateRequestBuilder) Build() *AccountValidateRequest {
+func (b *ValidateAccountRequestBuilder) Build() *validateAccountRequest {
 	return b.req
 }
 
-type AccountValidateResponse = types.Response[types.AccountValidation]
+type ValidateAccountResponseData = types.AccountValidation
+type ValidateAccountResponse = types.Response[ValidateAccountResponseData]
 
-func (c *Client) ValidateAccount(ctx context.Context, builder *AccountValidateRequestBuilder) (*types.Response[types.AccountValidation], error) {
-	return net.Post[AccountValidateRequest, types.AccountValidation](ctx, c.Client, c.Secret, accountValidateBasePath, builder.Build(), c.BaseURL)
+func (c *Client) ValidateAccount(ctx context.Context, builder ValidateAccountRequestBuilder) (*ValidateAccountResponse, error) {
+	return net.Post[validateAccountRequest, ValidateAccountResponseData](ctx, c.Client, c.Secret, accountValidateBasePath, builder.Build(), c.BaseURL)
 }
