@@ -1,0 +1,8 @@
+{
+  "status": true,
+  "message": "Personal Account Verification attempted",
+  "data": {
+    "verified": true,
+    "verificationMessage": "Account is verified successfully"
+  }
+}

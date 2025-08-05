@@ -1,0 +1,7 @@
+{
+  "status": false,
+  "message": "The push notification ID provided is invalid",
+  "data": {
+    "code": "INVALID_PUSH_ID"
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "status": true,
+  "message": "Subaccount added",
+  "data": {
+    "id": 2703655,
+    "name": "Halfsies",
+    "type": "percentage",
+    "currency": "NGN",
+    "integration": 463433,
+    "domain": "test",
+    "split_code": "SPL_RcScyW5jp2",
+    "active": true,
+    "bearer_type": "all-proportional",
+    "bearer_subaccount": null,
+    "createdAt": "2024-08-26T11:38:47.000Z",
+    "updatedAt": "2024-08-26T11:50:47.000Z",
+    "is_dynamic": false,
+    "subaccounts": [
+      {
+        "subaccount": {
+          "id": 1151727,
+          "subaccount_code": "ACCT_6uujpqtzmnufzkw",
+          "business_name": "Oasis Global",
+          "description": "Oasis Global",
+          "primary_contact_name": null,
+          "primary_contact_email": null,
+          "primary_contact_phone": null,
+          "metadata": null,
+          "settlement_bank": "Guaranty Trust Bank",
+          "currency": "NGN",
+          "account_number": "0123456047"
+        },
+        "share": 50
+      },
+      {
+        "subaccount": {
+          "id": 803508,
+          "subaccount_code": "ACCT_eg4sob4590pq9vb",
+          "business_name": "mmhm",
+          "description": "mmhm",
+          "primary_contact_name": null,
+          "primary_contact_email": null,
+          "primary_contact_phone": null,
+          "metadata": null,
+          "settlement_bank": "Zenith Bank",
+          "currency": "NGN",
+          "account_number": "0000000000"
+        },
+        "share": 20
+      }
+    ],
+    "total_subaccounts": 2
+  }
+}

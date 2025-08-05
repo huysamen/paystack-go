@@ -1,0 +1,9 @@
+{
+  "status": false,
+  "message": "Invalid bearer type : must be one of: subaccount, account, all-proportional or all",
+  "meta": {
+    "nextStep": "Ensure that the value(s) you're passing are valid."
+  },
+  "type": "validation_error",
+  "code": "invalid_params"
+}

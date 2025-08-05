@@ -1,0 +1,9 @@
+{
+  "status": false,
+  "message": "\"name\" is required",
+  "meta": {
+    "nextStep": "Provide all required params "
+  },
+  "type": "validation_error",
+  "code": "missing_params"
+}

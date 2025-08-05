@@ -1,0 +1,8 @@
+{
+  "status": true,
+  "message": "Terminal status retrieved",
+  "data": {
+    "online": true,
+    "available": false
+  }
+}
