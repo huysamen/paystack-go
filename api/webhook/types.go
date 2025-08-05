@@ -8,36 +8,29 @@ import (
 const (
 	EventChargeSuccess = "charge.success"
 
-	EventChargeDisputeCreate  = "charge.dispute.create"
-	EventChargeDisputeRemind  = "charge.dispute.remind"
-	EventChargeDisputeResolve = "charge.dispute.resolve"
-
+	EventChargeDisputeCreate           = "charge.dispute.create"
+	EventChargeDisputeRemind           = "charge.dispute.remind"
+	EventChargeDisputeResolve          = "charge.dispute.resolve"
 	EventCustomerIdentificationFailed  = "customeridentification.failed"
 	EventCustomerIdentificationSuccess = "customeridentification.success"
-
 	EventDedicatedAccountAssignFailed  = "dedicatedaccount.assign.failed"
 	EventDedicatedAccountAssignSuccess = "dedicatedaccount.assign.success"
-
-	EventInvoiceCreate        = "invoice.create"
-	EventInvoicePaymentFailed = "invoice.payment_failed"
-	EventInvoiceUpdate        = "invoice.update"
-
-	EventPaymentRequestPending = "paymentrequest.pending"
-	EventPaymentRequestSuccess = "paymentrequest.success"
-
-	EventRefundFailed     = "refund.failed"
-	EventRefundPending    = "refund.pending"
-	EventRefundProcessed  = "refund.processed"
-	EventRefundProcessing = "refund.processing"
-
-	EventSubscriptionCreate        = "subscription.create"
-	EventSubscriptionDisable       = "subscription.disable"
-	EventSubscriptionExpiringCards = "subscription.expiring_cards"
-	EventSubscriptionNotRenew      = "subscription.not_renew"
-
-	EventTransferFailed   = "transfer.failed"
-	EventTransferReversed = "transfer.reversed"
-	EventTransferSuccess  = "transfer.success"
+	EventInvoiceCreate                 = "invoice.create"
+	EventInvoicePaymentFailed          = "invoice.payment_failed"
+	EventInvoiceUpdate                 = "invoice.update"
+	EventPaymentRequestPending         = "paymentrequest.pending"
+	EventPaymentRequestSuccess         = "paymentrequest.success"
+	EventRefundFailed                  = "refund.failed"
+	EventRefundPending                 = "refund.pending"
+	EventRefundProcessed               = "refund.processed"
+	EventRefundProcessing              = "refund.processing"
+	EventSubscriptionCreate            = "subscription.create"
+	EventSubscriptionDisable           = "subscription.disable"
+	EventSubscriptionExpiringCards     = "subscription.expiring_cards"
+	EventSubscriptionNotRenew          = "subscription.not_renew"
+	EventTransferFailed                = "transfer.failed"
+	EventTransferReversed              = "transfer.reversed"
+	EventTransferSuccess               = "transfer.success"
 )
 
 type Event struct {
@@ -52,7 +45,6 @@ func ParseEventData[T any](event *Event) (*T, error) {
 	}
 	return &data, nil
 }
-
 
 func (e *Event) AsChargeSuccess() (*ChargeSuccessEvent, error) {
 	return ParseEventData[ChargeSuccessEvent](e)
