@@ -8,36 +8,36 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type TransferRecipientUpdateRequest struct {
+type updateRequest struct {
 	Name  string  `json:"name"`            // Required: recipient name
 	Email *string `json:"email,omitempty"` // Optional: email address
 }
 
-type TransferRecipientUpdateRequestBuilder struct {
-	req *TransferRecipientUpdateRequest
+type UpdateRequestBuilder struct {
+	req *updateRequest
 }
 
-func NewTransferRecipientUpdateRequest(name string) *TransferRecipientUpdateRequestBuilder {
-	return &TransferRecipientUpdateRequestBuilder{
-		req: &TransferRecipientUpdateRequest{
+func NewUpdateRequestBuilder(name string) *UpdateRequestBuilder {
+	return &UpdateRequestBuilder{
+		req: &updateRequest{
 			Name: name,
 		},
 	}
 }
 
-func (b *TransferRecipientUpdateRequestBuilder) Email(email string) *TransferRecipientUpdateRequestBuilder {
+func (b *UpdateRequestBuilder) Email(email string) *UpdateRequestBuilder {
 	b.req.Email = &email
 
 	return b
 }
 
-func (b *TransferRecipientUpdateRequestBuilder) Build() *TransferRecipientUpdateRequest {
+func (b *UpdateRequestBuilder) Build() *updateRequest {
 	return b.req
 }
 
-type TransferRecipientUpdateResponse = types.Response[types.TransferRecipient]
+type UpdateResponseData = types.TransferRecipient
+type UpdateResponse = types.Response[UpdateResponseData]
 
-func (c *Client) Update(ctx context.Context, idOrCode string, builder *TransferRecipientUpdateRequestBuilder) (*TransferRecipientUpdateResponse, error) {
-	req := builder.Build()
-	return net.Put[TransferRecipientUpdateRequest, types.TransferRecipient](ctx, c.Client, c.Secret, fmt.Sprintf("%s/%s", basePath, idOrCode), req, c.BaseURL)
+func (c *Client) Update(ctx context.Context, idOrCode string, builder UpdateRequestBuilder) (*UpdateResponse, error) {
+	return net.Put[updateRequest, UpdateResponseData](ctx, c.Client, c.Secret, fmt.Sprintf("%s/%s", basePath, idOrCode), builder.Build(), c.BaseURL)
 }

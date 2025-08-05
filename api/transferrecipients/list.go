@@ -10,83 +10,88 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type TransferRecipientListRequest struct {
+type listRequest struct {
 	PerPage *int       `json:"perPage,omitempty"` // Optional: records per page (default: 50)
 	Page    *int       `json:"page,omitempty"`    // Optional: page number (default: 1)
 	From    *time.Time `json:"from,omitempty"`    // Optional: start date filter
 	To      *time.Time `json:"to,omitempty"`      // Optional: end date filter
 }
 
-type TransferRecipientListRequestBuilder struct {
-	req *TransferRecipientListRequest
+type ListRequestBuilder struct {
+	req *listRequest
 }
 
-func NewTransferRecipientListRequest() *TransferRecipientListRequestBuilder {
-	return &TransferRecipientListRequestBuilder{
-		req: &TransferRecipientListRequest{},
+func NewListRequestBuilder() *ListRequestBuilder {
+	return &ListRequestBuilder{
+		req: &listRequest{},
 	}
 }
 
-func (b *TransferRecipientListRequestBuilder) PerPage(perPage int) *TransferRecipientListRequestBuilder {
+func (b *ListRequestBuilder) PerPage(perPage int) *ListRequestBuilder {
 	b.req.PerPage = &perPage
 
 	return b
 }
 
-func (b *TransferRecipientListRequestBuilder) Page(page int) *TransferRecipientListRequestBuilder {
+func (b *ListRequestBuilder) Page(page int) *ListRequestBuilder {
 	b.req.Page = &page
 
 	return b
 }
 
-func (b *TransferRecipientListRequestBuilder) From(from time.Time) *TransferRecipientListRequestBuilder {
+func (b *ListRequestBuilder) From(from time.Time) *ListRequestBuilder {
 	b.req.From = &from
 
 	return b
 }
 
-func (b *TransferRecipientListRequestBuilder) To(to time.Time) *TransferRecipientListRequestBuilder {
+func (b *ListRequestBuilder) To(to time.Time) *ListRequestBuilder {
 	b.req.To = &to
 
 	return b
 }
 
-func (b *TransferRecipientListRequestBuilder) DateRange(from, to time.Time) *TransferRecipientListRequestBuilder {
+func (b *ListRequestBuilder) DateRange(from, to time.Time) *ListRequestBuilder {
 	b.req.From = &from
 	b.req.To = &to
 
 	return b
 }
 
-func (b *TransferRecipientListRequestBuilder) Build() *TransferRecipientListRequest {
+func (b *ListRequestBuilder) Build() *listRequest {
 	return b.req
 }
 
-type TransferRecipientListResponse = types.Response[[]types.TransferRecipient]
-
-func (c *Client) List(ctx context.Context, builder *TransferRecipientListRequestBuilder) (*TransferRecipientListResponse, error) {
-	req := builder.Build()
+func (r *listRequest) toQuery() string {
 	params := url.Values{}
+	if r.PerPage != nil {
+		params.Set("perPage", strconv.Itoa(*r.PerPage))
+	}
+	if r.Page != nil {
+		params.Set("page", strconv.Itoa(*r.Page))
+	}
+	if r.From != nil {
+		params.Set("from", r.From.Format(time.RFC3339))
+	}
+	if r.To != nil {
+		params.Set("to", r.To.Format(time.RFC3339))
+	}
+
+	return params.Encode()
+}
+
+type ListResponseData = []types.TransferRecipient
+type ListResponse = types.Response[ListResponseData]
+
+func (c *Client) List(ctx context.Context, builder ListRequestBuilder) (*ListResponse, error) {
+	req := builder.Build()
+	path := basePath
 
 	if req != nil {
-		if req.PerPage != nil {
-			params.Set("perPage", strconv.Itoa(*req.PerPage))
-		}
-		if req.Page != nil {
-			params.Set("page", strconv.Itoa(*req.Page))
-		}
-		if req.From != nil {
-			params.Set("from", req.From.Format(time.RFC3339))
-		}
-		if req.To != nil {
-			params.Set("to", req.To.Format(time.RFC3339))
+		if query := req.toQuery(); query != "" {
+			path += "?" + query
 		}
 	}
 
-	queryParams := ""
-	if len(params) > 0 {
-		queryParams = params.Encode()
-	}
-
-	return net.Get[[]types.TransferRecipient](ctx, c.Client, c.Secret, basePath, queryParams, c.BaseURL)
+	return net.Get[ListResponseData](ctx, c.Client, c.Secret, path, c.BaseURL)
 }

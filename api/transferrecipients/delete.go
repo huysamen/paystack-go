@@ -8,8 +8,9 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type TransferRecipientDeleteResponse = types.Response[any]
+type DeleteResponseData = any
+type DeleteResponse = types.Response[DeleteResponseData]
 
-func (c *Client) Delete(ctx context.Context, idOrCode string) (*TransferRecipientDeleteResponse, error) {
-	return net.Delete[any](ctx, c.Client, c.Secret, fmt.Sprintf("%s/%s", basePath, idOrCode), c.BaseURL)
+func (c *Client) Delete(ctx context.Context, idOrCode string) (*DeleteResponse, error) {
+	return net.Delete[DeleteResponseData](ctx, c.Client, c.Secret, fmt.Sprintf("%s/%s", basePath, idOrCode), c.BaseURL)
 }

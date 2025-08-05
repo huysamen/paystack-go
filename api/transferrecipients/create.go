@@ -7,7 +7,7 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type TransferRecipientCreateRequest struct {
+type createRequest struct {
 	Type              types.TransferRecipientType `json:"type"`                         // Required: nuban, ghipss, mobile_money, basa
 	Name              string                      `json:"name"`                         // Required: recipient's name
 	AccountNumber     string                      `json:"account_number"`               // Required for all types except authorization
@@ -18,13 +18,13 @@ type TransferRecipientCreateRequest struct {
 	Metadata          map[string]any              `json:"metadata,omitempty"`           // Optional: additional data
 }
 
-type TransferRecipientCreateRequestBuilder struct {
-	req *TransferRecipientCreateRequest
+type CreateRequestBuilder struct {
+	req *createRequest
 }
 
-func NewTransferRecipientCreateRequest(recipientType types.TransferRecipientType, name, accountNumber, bankCode string) *TransferRecipientCreateRequestBuilder {
-	return &TransferRecipientCreateRequestBuilder{
-		req: &TransferRecipientCreateRequest{
+func NewCreateRequestBuilder(recipientType types.TransferRecipientType, name, accountNumber, bankCode string) *CreateRequestBuilder {
+	return &CreateRequestBuilder{
+		req: &createRequest{
 			Type:          recipientType,
 			Name:          name,
 			AccountNumber: accountNumber,
@@ -33,37 +33,37 @@ func NewTransferRecipientCreateRequest(recipientType types.TransferRecipientType
 	}
 }
 
-func (b *TransferRecipientCreateRequestBuilder) Description(description string) *TransferRecipientCreateRequestBuilder {
+func (b *CreateRequestBuilder) Description(description string) *CreateRequestBuilder {
 	b.req.Description = &description
 
 	return b
 }
 
-func (b *TransferRecipientCreateRequestBuilder) Currency(currency string) *TransferRecipientCreateRequestBuilder {
+func (b *CreateRequestBuilder) Currency(currency string) *CreateRequestBuilder {
 	b.req.Currency = &currency
 
 	return b
 }
 
-func (b *TransferRecipientCreateRequestBuilder) AuthorizationCode(authCode string) *TransferRecipientCreateRequestBuilder {
+func (b *CreateRequestBuilder) AuthorizationCode(authCode string) *CreateRequestBuilder {
 	b.req.AuthorizationCode = &authCode
 
 	return b
 }
 
-func (b *TransferRecipientCreateRequestBuilder) Metadata(metadata map[string]any) *TransferRecipientCreateRequestBuilder {
+func (b *CreateRequestBuilder) Metadata(metadata map[string]any) *CreateRequestBuilder {
 	b.req.Metadata = metadata
 
 	return b
 }
 
-func (b *TransferRecipientCreateRequestBuilder) Build() *TransferRecipientCreateRequest {
+func (b *CreateRequestBuilder) Build() *createRequest {
 	return b.req
 }
 
-type TransferRecipientCreateResponse = types.Response[types.TransferRecipient]
+type CreateResponseData = types.TransferRecipient
+type CreateResponse = types.Response[CreateResponseData]
 
-func (c *Client) Create(ctx context.Context, builder *TransferRecipientCreateRequestBuilder) (*TransferRecipientCreateResponse, error) {
-	req := builder.Build()
-	return net.Post[TransferRecipientCreateRequest, types.TransferRecipient](ctx, c.Client, c.Secret, basePath, req, c.BaseURL)
+func (c *Client) Create(ctx context.Context, builder CreateRequestBuilder) (*CreateResponse, error) {
+	return net.Post[createRequest, CreateResponseData](ctx, c.Client, c.Secret, basePath, builder.Build(), c.BaseURL)
 }

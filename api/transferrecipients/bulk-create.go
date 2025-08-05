@@ -7,38 +7,41 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type BulkCreateTransferRecipientRequest struct {
+type bulkCreateRequest struct {
 	Batch []types.BulkRecipientItem `json:"batch"` // Required: list of recipients
 }
 
-type BulkCreateTransferRecipientRequestBuilder struct {
-	request BulkCreateTransferRecipientRequest
+type BulkCreateRequestBuilder struct {
+	req bulkCreateRequest
 }
 
-func NewBulkCreateTransferRecipientRequestBuilder() *BulkCreateTransferRecipientRequestBuilder {
-	return &BulkCreateTransferRecipientRequestBuilder{}
+func NewBulkCreateRequestBuilder() *BulkCreateRequestBuilder {
+	return &BulkCreateRequestBuilder{}
 }
 
-func (b *BulkCreateTransferRecipientRequestBuilder) Batch(batch []types.BulkRecipientItem) *BulkCreateTransferRecipientRequestBuilder {
-	b.request.Batch = batch
+func (b *BulkCreateRequestBuilder) Batch(batch []types.BulkRecipientItem) *BulkCreateRequestBuilder {
+	b.req.Batch = batch
+
 	return b
 }
 
-func (b *BulkCreateTransferRecipientRequestBuilder) AddRecipient(item types.BulkRecipientItem) *BulkCreateTransferRecipientRequestBuilder {
-	if b.request.Batch == nil {
-		b.request.Batch = make([]types.BulkRecipientItem, 0)
+func (b *BulkCreateRequestBuilder) AddRecipient(item types.BulkRecipientItem) *BulkCreateRequestBuilder {
+	if b.req.Batch == nil {
+		b.req.Batch = make([]types.BulkRecipientItem, 0)
 	}
-	b.request.Batch = append(b.request.Batch, item)
+
+	b.req.Batch = append(b.req.Batch, item)
+
 	return b
 }
 
-func (b *BulkCreateTransferRecipientRequestBuilder) Build() *BulkCreateTransferRecipientRequest {
-	return &b.request
+func (b *BulkCreateRequestBuilder) Build() *bulkCreateRequest {
+	return &b.req
 }
 
-type BulkCreateTransferRecipientResponse = types.Response[types.BulkCreateResult]
+type BulkCreateResponseData = types.BulkCreateResult
+type BulkCreateResponse = types.Response[BulkCreateResponseData]
 
-func (c *Client) BulkCreate(ctx context.Context, builder *BulkCreateTransferRecipientRequestBuilder) (*BulkCreateTransferRecipientResponse, error) {
-	req := builder.Build()
-	return net.Post[BulkCreateTransferRecipientRequest, types.BulkCreateResult](ctx, c.Client, c.Secret, basePath+"/bulk", req, c.BaseURL)
+func (c *Client) BulkCreate(ctx context.Context, builder BulkCreateRequestBuilder) (*BulkCreateResponse, error) {
+	return net.Post[bulkCreateRequest, BulkCreateResponseData](ctx, c.Client, c.Secret, basePath+"/bulk", builder.Build(), c.BaseURL)
 }
