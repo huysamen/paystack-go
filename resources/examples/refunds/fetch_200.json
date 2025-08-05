@@ -16,10 +16,10 @@
     "refunded_by": "eseyinwale@gmail.com",
     "refunded_at": "2018-01-12T10:54:47.000Z",
     "expected_at": "2017-10-01T21:10:59.000Z",
-    "customer_note": "Product was damaged",
-    "merchant_note": "Refund approved by merchant",
+    "customer_note": "xxx",
+    "merchant_note": "xxx",
     "id": 1,
-    "createdAt": "2017-10-01T21:10:59.000Z",
-    "updatedAt": "2018-01-12T10:54:47.000Z"
+    "createdAt": "2017-09-24T21:10:59.000Z",
+    "updatedAt": "2018-01-18T11:59:56.000Z"
   }
 }

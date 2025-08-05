@@ -17,16 +17,18 @@
       "exp_month": "12",
       "exp_year": "2020",
       "channel": "card",
-      "card_type": "visa",
+      "card_type": "visa visa",
       "bank": "TEST BANK",
       "country_code": "NG",
       "brand": "visa",
       "reusable": true,
-      "signature": "SIG_2F2E4sdgzryOo3YZXw",
-      "account_name": null
+      "signature": "SIG_uSYN4fv1adlAuoij8QXh",
+      "account_name": "BoJack Horseman"
     },
+    "subscription_code": "SUB_vsyqdmlzble3uii",
+    "email_token": "d7gofp6yppn3qz7",
     "id": 9,
-    "createdAt": "2016-03-30T00:01:04.000Z",
-    "updatedAt": "2016-03-30T00:01:04.000Z"
+    "createdAt": "2016-03-30T00:01:04.687Z",
+    "updatedAt": "2016-03-30T00:01:04.687Z"
   }
 }

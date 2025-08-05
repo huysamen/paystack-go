@@ -1,0 +1,145 @@
+{
+  "status": true,
+  "message": "Products retrieved",
+  "data": [
+    {
+      "id": 795638,
+      "name": "Mimshack",
+      "description": "Everything cars",
+      "product_code": "PROD_22deobcvbht2dfe",
+      "slug": "mimshack-yiuedh",
+      "currency": "NGN",
+      "price": 50000,
+      "quantity": 10,
+      "quantity_sold": 0,
+      "active": true,
+      "domain": "test",
+      "type": "good",
+      "in_stock": true,
+      "unlimited": false,
+      "metadata": {
+        "background_color": "#F5F5F5"
+      },
+      "files": [],
+      "success_message": null,
+      "redirect_url": null,
+      "split_code": null,
+      "notification_emails": null,
+      "minimum_orderable": 1,
+      "maximum_orderable": null,
+      "createdAt": "2022-04-12T11:21:43.000Z",
+      "updatedAt": "2022-04-12T11:21:43.000Z",
+      "digital_assets": [],
+      "variant_options": [],
+      "is_shippable": true,
+      "shipping_fields": {
+        "delivery_note": "disabled"
+      },
+      "integration": 463433,
+      "low_stock_alert": 0
+    },
+    {
+      "id": 682324,
+      "name": "Nike Air 23",
+      "description": "Just do it!",
+      "product_code": "PROD_4vg503b3qga3vul",
+      "slug": "nike-air-23-gylbao",
+      "currency": "NGN",
+      "price": 25000000,
+      "quantity": 7,
+      "quantity_sold": 0,
+      "active": true,
+      "domain": "test",
+      "type": "good",
+      "in_stock": true,
+      "unlimited": false,
+      "metadata": {
+        "background_color": "#05090b"
+      },
+      "files": [
+        {
+          "key": "products/2eppxpcv5mqdulp7l410.jpeg",
+          "type": "image",
+          "path": "https://res.cloudinary.com/paystack/image/upload/public/files/products/2eppxpcv5mqdulp7l410.jpeg",
+          "original_filename": "download.jpeg"
+        }
+      ],
+      "success_message": "Thanks for your order",
+      "redirect_url": "https://nike.com",
+      "split_code": null,
+      "notification_emails": null,
+      "minimum_orderable": 1,
+      "maximum_orderable": null,
+      "createdAt": "2022-03-02T11:48:09.000Z",
+      "updatedAt": "2022-03-02T11:50:57.000Z",
+      "digital_assets": [],
+      "variant_options": [],
+      "is_shippable": true,
+      "shipping_fields": {
+        "delivery_note": "optional",
+        "shipping_fees": [
+          {
+            "region": "Ikeja",
+            "fee": 100000,
+            "currency": "NGN"
+          },
+          {
+            "region": "Yaba",
+            "fee": 150000,
+            "currency": "NGN"
+          },
+          {
+            "region": "Rest of Lagos",
+            "fee": 300000,
+            "currency": "NGN"
+          }
+        ]
+      },
+      "integration": 463433,
+      "low_stock_alert": 0
+    },
+    {
+      "id": 489399,
+      "name": "Puff Puff",
+      "description": "Crispy flour ball with fluffy interior",
+      "product_code": "PROD_ddot3upakgl3ejt",
+      "slug": "puff-puff-prqnxc",
+      "currency": "NGN",
+      "price": 5000,
+      "quantity": 100,
+      "quantity_sold": 0,
+      "active": true,
+      "domain": "test",
+      "type": "good",
+      "in_stock": true,
+      "unlimited": false,
+      "metadata": {
+        "background_color": "#F5F5F5"
+      },
+      "files": [],
+      "success_message": null,
+      "redirect_url": null,
+      "split_code": null,
+      "notification_emails": null,
+      "minimum_orderable": 1,
+      "maximum_orderable": null,
+      "createdAt": "2021-11-08T14:39:37.000Z",
+      "updatedAt": "2021-11-08T14:39:37.000Z",
+      "digital_assets": [],
+      "variant_options": [],
+      "is_shippable": true,
+      "shipping_fields": {
+        "delivery_note": "disabled"
+      },
+      "integration": 463433,
+      "low_stock_alert": 0
+    }
+  ],
+  "meta": {
+    "total": 3,
+    "skipped": 0,
+    "perPage": 50,
+    "page": 1,
+    "pageCount": 1
+  }
+}

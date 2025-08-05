@@ -1,0 +1,27 @@
+{
+  "status": true,
+  "message": "Product successfully updated",
+  "data": {
+    "name": "Prod One",
+    "description": "Prod 1",
+    "product_code": "PROD_ohc0xq1ajpt2271",
+    "price": 20000,
+    "currency": "NGN",
+    "quantity": 5,
+    "quantity_sold": null,
+    "type": "good",
+    "image_path": "",
+    "file_path": "",
+    "is_shippable": false,
+    "unlimited": false,
+    "domain": "test",
+    "active": true,
+    "features": null,
+    "in_stock": true,
+    "metadata": null,
+    "id": 526,
+    "integration": 343288,
+    "createdAt": "2019-06-29T14:46:52.000Z",
+    "updatedAt": "2019-06-29T15:29:21.000Z"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "status": true,
+  "message": "Subaccount updated",
+  "data": {
+    "domain": "test",
+    "subaccount_code": "ACCT_6uujpqtzmnufzkw",
+    "business_name": "Oasis Global",
+    "description": "Provide IT services",
+    "primary_contact_name": null,
+    "primary_contact_email": null,
+    "primary_contact_phone": null,
+    "metadata": null,
+    "percentage_charge": 30,
+    "is_verified": false,
+    "settlement_bank": "Guaranty Trust Bank",
+    "account_number": "0123456047",
+    "settlement_schedule": "AUTO",
+    "active": true,
+    "migrate": false,
+    "currency": "NGN",
+    "account_name": "LARRY JAMES  O",
+    "product": "collection",
+    "id": 1151727,
+    "integration": 463433,
+    "bank": 9,
+    "managed_by_integration": 463433,
+    "createdAt": "2024-08-26T09:24:28.000Z",
+    "updatedAt": "2024-08-26T09:34:18.000Z"
+  }
+}

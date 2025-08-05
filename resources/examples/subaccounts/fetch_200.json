@@ -20,10 +20,11 @@
     "settlement_schedule": "AUTO",
     "active": true,
     "migrate": false,
-    "product": "collection",
     "currency": "NGN",
+    "account_name": "LARRY JAMES  O",
+    "product": "collection",
     "id": 1151727,
-    "createdAt": "2024-08-22T11:30:15.000Z",
-    "updatedAt": "2024-08-22T11:30:15.000Z"
+    "createdAt": "2024-08-26T09:24:28.000Z",
+    "updatedAt": "2024-08-26T09:24:28.000Z"
   }
 }

@@ -1,0 +1,48 @@
+{
+  "status": true,
+  "message": "Refund has been queued for processing",
+  "data": {
+    "transaction": {
+      "id": 1004723697,
+      "domain": "live",
+      "reference": "T685312322670591",
+      "amount": 10000,
+      "paid_at": "2021-08-20T18:34:11.000Z",
+      "channel": "apple_pay",
+      "currency": "NGN",
+      "authorization": {
+        "exp_month": null,
+        "exp_year": null,
+        "account_name": null
+      },
+      "customer": {
+        "international_format_phone": null
+      },
+      "plan": {},
+      "subaccount": {
+        "currency": null
+      },
+      "split": {},
+      "order_id": null,
+      "paidAt": "2021-08-20T18:34:11.000Z",
+      "pos_transaction_data": null,
+      "source": null,
+      "fees_breakdown": null
+    },
+    "integration": 412829,
+    "deducted_amount": 0,
+    "channel": null,
+    "merchant_note": "Refund for transaction T685312322670591 by test@me.com",
+    "customer_note": "Refund for transaction T685312322670591",
+    "status": "pending",
+    "refunded_by": "test@me.com",
+    "expected_at": "2021-12-16T09:21:17.016Z",
+    "currency": "NGN",
+    "domain": "live",
+    "amount": 10000,
+    "fully_deducted": false,
+    "id": 3018284,
+    "createdAt": "2021-12-07T09:21:17.122Z",
+    "updatedAt": "2021-12-07T09:21:17.122Z"
+  }
+}
