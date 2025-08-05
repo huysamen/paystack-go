@@ -11,7 +11,7 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type TransferListRequest struct {
+type listRequest struct {
 	PerPage   *int
 	Page      *int
 	Recipient *int       // Filter by recipient ID
@@ -19,58 +19,58 @@ type TransferListRequest struct {
 	To        *time.Time // End date filter
 }
 
-type TransferListRequestBuilder struct {
-	req *TransferListRequest
+type ListRequestBuilder struct {
+	req *listRequest
 }
 
-func NewTransferListRequest() *TransferListRequestBuilder {
-	return &TransferListRequestBuilder{
-		req: &TransferListRequest{},
+func NewListRequestBuilder() *ListRequestBuilder {
+	return &ListRequestBuilder{
+		req: &listRequest{},
 	}
 }
 
-func (b *TransferListRequestBuilder) PerPage(perPage int) *TransferListRequestBuilder {
+func (b *ListRequestBuilder) PerPage(perPage int) *ListRequestBuilder {
 	b.req.PerPage = optional.Int(perPage)
 
 	return b
 }
 
-func (b *TransferListRequestBuilder) Page(page int) *TransferListRequestBuilder {
+func (b *ListRequestBuilder) Page(page int) *ListRequestBuilder {
 	b.req.Page = optional.Int(page)
 
 	return b
 }
 
-func (b *TransferListRequestBuilder) Recipient(recipient int) *TransferListRequestBuilder {
+func (b *ListRequestBuilder) Recipient(recipient int) *ListRequestBuilder {
 	b.req.Recipient = optional.Int(recipient)
 
 	return b
 }
 
-func (b *TransferListRequestBuilder) DateRange(from, to time.Time) *TransferListRequestBuilder {
+func (b *ListRequestBuilder) DateRange(from, to time.Time) *ListRequestBuilder {
 	b.req.From = optional.Time(from)
 	b.req.To = optional.Time(to)
 
 	return b
 }
 
-func (b *TransferListRequestBuilder) From(from time.Time) *TransferListRequestBuilder {
+func (b *ListRequestBuilder) From(from time.Time) *ListRequestBuilder {
 	b.req.From = optional.Time(from)
 
 	return b
 }
 
-func (b *TransferListRequestBuilder) To(to time.Time) *TransferListRequestBuilder {
+func (b *ListRequestBuilder) To(to time.Time) *ListRequestBuilder {
 	b.req.To = optional.Time(to)
 
 	return b
 }
 
-func (b *TransferListRequestBuilder) Build() *TransferListRequest {
+func (b *ListRequestBuilder) Build() *listRequest {
 	return b.req
 }
 
-func (r *TransferListRequest) toQuery() string {
+func (r *listRequest) toQuery() string {
 	params := url.Values{}
 
 	if r.PerPage != nil {
@@ -92,14 +92,16 @@ func (r *TransferListRequest) toQuery() string {
 	return params.Encode()
 }
 
-type ListResponse = types.Response[[]types.Transfer]
+type ListResponseData = []types.Transfer
+type ListResponse = types.Response[ListResponseData]
 
-func (c *Client) List(ctx context.Context, builder *TransferListRequestBuilder) (*ListResponse, error) {
+func (c *Client) List(ctx context.Context, builder ListRequestBuilder) (*ListResponse, error) {
 	req := builder.Build()
 	query := ""
+
 	if req != nil {
 		query = req.toQuery()
 	}
 
-	return net.Get[[]types.Transfer](ctx, c.Client, c.Secret, basePath, query, c.BaseURL)
+	return net.Get[ListResponseData](ctx, c.Client, c.Secret, basePath, query, c.BaseURL)
 }

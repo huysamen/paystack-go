@@ -7,7 +7,7 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type BulkTransferRequest struct {
+type bulkRequest struct {
 	Source    string             `json:"source"`    // Only "balance" supported for now
 	Currency  *string            `json:"currency"`  // Optional, defaults to NGN
 	Transfers []BulkTransferItem `json:"transfers"` // List of transfers
@@ -20,42 +20,42 @@ type BulkTransferItem struct {
 	Recipient string `json:"recipient"`
 }
 
-type BulkTransferRequestBuilder struct {
-	req *BulkTransferRequest
+type BulkRequestBuilder struct {
+	req *bulkRequest
 }
 
-func NewBulkTransferRequest(source string) *BulkTransferRequestBuilder {
-	return &BulkTransferRequestBuilder{
-		req: &BulkTransferRequest{
+func NewBulkRequestBuilder(source string) *BulkRequestBuilder {
+	return &BulkRequestBuilder{
+		req: &bulkRequest{
 			Source:    source,
 			Transfers: make([]BulkTransferItem, 0),
 		},
 	}
 }
 
-func (b *BulkTransferRequestBuilder) Currency(currency string) *BulkTransferRequestBuilder {
+func (b *BulkRequestBuilder) Currency(currency string) *BulkRequestBuilder {
 	b.req.Currency = &currency
 
 	return b
 }
 
-func (b *BulkTransferRequestBuilder) AddTransfer(item BulkTransferItem) *BulkTransferRequestBuilder {
+func (b *BulkRequestBuilder) AddTransfer(item BulkTransferItem) *BulkRequestBuilder {
 	b.req.Transfers = append(b.req.Transfers, item)
 
 	return b
 }
 
-func (b *BulkTransferRequestBuilder) Transfers(transfers []BulkTransferItem) *BulkTransferRequestBuilder {
+func (b *BulkRequestBuilder) Transfers(transfers []BulkTransferItem) *BulkRequestBuilder {
 	b.req.Transfers = transfers
 
 	return b
 }
 
-func (b *BulkTransferRequestBuilder) Build() *BulkTransferRequest {
+func (b *BulkRequestBuilder) Build() *bulkRequest {
 	return b.req
 }
 
-type BulkTransferResponseData struct {
+type BulkResponseData struct {
 	Reference    string         `json:"reference"`
 	Recipient    string         `json:"recipient"`
 	Amount       int            `json:"amount"`
@@ -64,8 +64,8 @@ type BulkTransferResponseData struct {
 	Status       string         `json:"status"`
 }
 
-type BulkTransferResponse = types.Response[[]BulkTransferResponseData]
+type BulkResponse = types.Response[[]BulkResponseData]
 
-func (c *Client) Bulk(ctx context.Context, builder *BulkTransferRequestBuilder) (*BulkTransferResponse, error) {
-	return net.Post[BulkTransferRequest, []BulkTransferResponseData](ctx, c.Client, c.Secret, basePath+"/bulk", builder.Build(), c.BaseURL)
+func (c *Client) Bulk(ctx context.Context, builder BulkRequestBuilder) (*BulkResponse, error) {
+	return net.Post[bulkRequest, []BulkResponseData](ctx, c.Client, c.Secret, basePath+"/bulk", builder.Build(), c.BaseURL)
 }

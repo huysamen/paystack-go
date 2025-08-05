@@ -8,7 +8,7 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type TransferInitiateRequest struct {
+type initiateRequest struct {
 	Source           string  `json:"source"`                      // Only "balance" supported for now
 	Amount           int     `json:"amount"`                      // Amount in kobo (NGN) or pesewas (GHS)
 	Recipient        string  `json:"recipient"`                   // Transfer recipient code
@@ -18,13 +18,13 @@ type TransferInitiateRequest struct {
 	Reference        *string `json:"reference,omitempty"`         // Unique identifier for transfer
 }
 
-type TransferInitiateRequestBuilder struct {
-	req *TransferInitiateRequest
+type InitiateRequestBuilder struct {
+	req *initiateRequest
 }
 
-func NewInitiateTransferRequest(source string, amount int, recipient string) *TransferInitiateRequestBuilder {
-	return &TransferInitiateRequestBuilder{
-		req: &TransferInitiateRequest{
+func NewInitiateRequestBuilder(source string, amount int, recipient string) *InitiateRequestBuilder {
+	return &InitiateRequestBuilder{
+		req: &initiateRequest{
 			Source:    source,
 			Amount:    amount,
 			Recipient: recipient,
@@ -32,36 +32,37 @@ func NewInitiateTransferRequest(source string, amount int, recipient string) *Tr
 	}
 }
 
-func (b *TransferInitiateRequestBuilder) Reason(reason string) *TransferInitiateRequestBuilder {
+func (b *InitiateRequestBuilder) Reason(reason string) *InitiateRequestBuilder {
 	b.req.Reason = optional.String(reason)
 
 	return b
 }
 
-func (b *TransferInitiateRequestBuilder) Currency(currency string) *TransferInitiateRequestBuilder {
+func (b *InitiateRequestBuilder) Currency(currency string) *InitiateRequestBuilder {
 	b.req.Currency = optional.String(currency)
 
 	return b
 }
 
-func (b *TransferInitiateRequestBuilder) AccountReference(accountReference string) *TransferInitiateRequestBuilder {
+func (b *InitiateRequestBuilder) AccountReference(accountReference string) *InitiateRequestBuilder {
 	b.req.AccountReference = optional.String(accountReference)
 
 	return b
 }
 
-func (b *TransferInitiateRequestBuilder) Reference(reference string) *TransferInitiateRequestBuilder {
+func (b *InitiateRequestBuilder) Reference(reference string) *InitiateRequestBuilder {
 	b.req.Reference = optional.String(reference)
 
 	return b
 }
 
-func (b *TransferInitiateRequestBuilder) Build() *TransferInitiateRequest {
+func (b *InitiateRequestBuilder) Build() *initiateRequest {
 	return b.req
 }
 
-type InitiateResponse = types.Response[types.Transfer]
+type InitiateResponseData = types.Transfer
+type InitiateResponse = types.Response[InitiateResponseData]
 
-func (c *Client) Initiate(ctx context.Context, builder *TransferInitiateRequestBuilder) (*InitiateResponse, error) {
-	return net.Post[TransferInitiateRequest, types.Transfer](ctx, c.Client, c.Secret, basePath, builder.Build(), c.BaseURL)
+func (c *Client) Initiate(ctx context.Context, builder InitiateRequestBuilder) (*InitiateResponse, error) {
+	return net.Post[initiateRequest, InitiateResponseData](ctx, c.Client, c.Secret, basePath, builder.Build(), c.BaseURL)
 }

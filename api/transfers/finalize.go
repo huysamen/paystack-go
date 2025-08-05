@@ -7,30 +7,31 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type TransferFinalizeRequest struct {
+type finalizeRequest struct {
 	TransferCode string `json:"transfer_code"` // Transfer code to finalize
 	OTP          string `json:"otp"`           // OTP sent to business phone
 }
 
-type TransferFinalizeRequestBuilder struct {
-	req *TransferFinalizeRequest
+type FinalizeRequestBuilder struct {
+	req *finalizeRequest
 }
 
-func NewFinalizeTransferRequest(transferCode string, otp string) *TransferFinalizeRequestBuilder {
-	return &TransferFinalizeRequestBuilder{
-		req: &TransferFinalizeRequest{
+func NewFinalizeRequestBuilder(transferCode string, otp string) *FinalizeRequestBuilder {
+	return &FinalizeRequestBuilder{
+		req: &finalizeRequest{
 			TransferCode: transferCode,
 			OTP:          otp,
 		},
 	}
 }
 
-func (b *TransferFinalizeRequestBuilder) Build() *TransferFinalizeRequest {
+func (b *FinalizeRequestBuilder) Build() *finalizeRequest {
 	return b.req
 }
 
-type FinalizeResponse = types.Response[types.Transfer]
+type FinalizeResponseData = types.Transfer
+type FinalizeResponse = types.Response[FinalizeResponseData]
 
-func (c *Client) Finalize(ctx context.Context, builder *TransferFinalizeRequestBuilder) (*FinalizeResponse, error) {
-	return net.Post[TransferFinalizeRequest, types.Transfer](ctx, c.Client, c.Secret, basePath+"/finalize_transfer", builder.Build(), c.BaseURL)
+func (c *Client) Finalize(ctx context.Context, builder FinalizeRequestBuilder) (*FinalizeResponse, error) {
+	return net.Post[finalizeRequest, FinalizeResponseData](ctx, c.Client, c.Secret, basePath+"/finalize_transfer", builder.Build(), c.BaseURL)
 }

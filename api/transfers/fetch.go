@@ -8,8 +8,9 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type FetchResponse = types.Response[types.Transfer]
+type FetchResponseData = types.Transfer
+type FetchResponse = types.Response[FetchResponseData]
 
 func (c *Client) Fetch(ctx context.Context, idOrCode string) (*FetchResponse, error) {
-	return net.Get[types.Transfer](ctx, c.Client, c.Secret, fmt.Sprintf("%s/%s", basePath, idOrCode), "", c.BaseURL)
+	return net.Get[FetchResponseData](ctx, c.Client, c.Secret, fmt.Sprintf("%s/%s", basePath, idOrCode), "", c.BaseURL)
 }
