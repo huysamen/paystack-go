@@ -7,8 +7,9 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type EnableOTPResponse = types.Response[any]
+type EnableOTPResponseData = any
+type EnableOTPResponse = types.Response[EnableOTPResponseData]
 
 func (c *Client) EnableOTP(ctx context.Context) (*EnableOTPResponse, error) {
-	return net.Post[any, any](ctx, c.Client, c.Secret, "/transfer/enable_otp", nil, c.BaseURL)
+	return net.Post[any, EnableOTPResponseData](ctx, c.Client, c.Secret, "/transfer/enable_otp", nil, c.BaseURL)
 }

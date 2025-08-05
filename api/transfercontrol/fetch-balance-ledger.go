@@ -7,8 +7,9 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type FetchBalanceLedgerResponse = types.Response[[]types.BalanceLedger]
+type FetchBalanceLedgerResponseData = []types.BalanceLedger
+type FetchBalanceLedgerResponse = types.Response[FetchBalanceLedgerResponseData]
 
 func (c *Client) FetchBalanceLedger(ctx context.Context) (*FetchBalanceLedgerResponse, error) {
-	return net.Get[[]types.BalanceLedger](ctx, c.Client, c.Secret, "/balance/ledger", "", c.BaseURL)
+	return net.Get[FetchBalanceLedgerResponseData](ctx, c.Client, c.Secret, "/balance/ledger", "", c.BaseURL)
 }

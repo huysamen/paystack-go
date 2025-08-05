@@ -7,12 +7,12 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type FinalizeDisableOTPRequest struct {
+type finalizeDisableOTPRequest struct {
 	OTP string `json:"otp"`
 }
 
 type FinalizeDisableOTPRequestBuilder struct {
-	request FinalizeDisableOTPRequest
+	request finalizeDisableOTPRequest
 }
 
 func NewFinalizeDisableOTPRequestBuilder() *FinalizeDisableOTPRequestBuilder {
@@ -25,13 +25,14 @@ func (b *FinalizeDisableOTPRequestBuilder) OTP(otp string) *FinalizeDisableOTPRe
 	return b
 }
 
-func (b *FinalizeDisableOTPRequestBuilder) Build() *FinalizeDisableOTPRequest {
+func (b *FinalizeDisableOTPRequestBuilder) Build() *finalizeDisableOTPRequest {
 	return &b.request
 }
 
-type FinalizeDisableOTPResponse = types.Response[any]
+type FinalizeDisableOTPResponseData = any
+type FinalizeDisableOTPResponse = types.Response[FinalizeDisableOTPResponseData]
 
-func (c *Client) FinalizeDisableOTP(ctx context.Context, builder *FinalizeDisableOTPRequestBuilder) (*FinalizeDisableOTPResponse, error) {
+func (c *Client) FinalizeDisableOTP(ctx context.Context, builder FinalizeDisableOTPRequestBuilder) (*FinalizeDisableOTPResponse, error) {
 	req := builder.Build()
-	return net.Post[FinalizeDisableOTPRequest, any](ctx, c.Client, c.Secret, "/transfer/disable_otp_finalize", req, c.BaseURL)
+	return net.Post[finalizeDisableOTPRequest, FinalizeDisableOTPResponseData](ctx, c.Client, c.Secret, "/transfer/disable_otp_finalize", req, c.BaseURL)
 }

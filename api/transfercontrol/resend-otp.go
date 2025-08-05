@@ -7,13 +7,13 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type ResendOTPRequest struct {
+type resendOTPRequest struct {
 	TransferCode string `json:"transfer_code"`
 	Reason       string `json:"reason"`
 }
 
 type ResendOTPRequestBuilder struct {
-	request ResendOTPRequest
+	request resendOTPRequest
 }
 
 func NewResendOTPRequestBuilder() *ResendOTPRequestBuilder {
@@ -32,13 +32,13 @@ func (b *ResendOTPRequestBuilder) Reason(reason string) *ResendOTPRequestBuilder
 	return b
 }
 
-func (b *ResendOTPRequestBuilder) Build() *ResendOTPRequest {
+func (b *ResendOTPRequestBuilder) Build() *resendOTPRequest {
 	return &b.request
 }
 
-type ResendOTPResponse = types.Response[any]
+type ResendOTPResponseData = any
+type ResendOTPResponse = types.Response[ResendOTPResponseData]
 
-func (c *Client) ResendOTP(ctx context.Context, builder *ResendOTPRequestBuilder) (*ResendOTPResponse, error) {
-	req := builder.Build()
-	return net.Post[ResendOTPRequest, any](ctx, c.Client, c.Secret, "/transfer/resend_otp", req, c.BaseURL)
+func (c *Client) ResendOTP(ctx context.Context, builder ResendOTPRequestBuilder) (*ResendOTPResponse, error) {
+	return net.Post[resendOTPRequest, ResendOTPResponseData](ctx, c.Client, c.Secret, "/transfer/resend_otp", builder.Build(), c.BaseURL)
 }
