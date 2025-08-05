@@ -8,45 +8,46 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type TransactionSplitSubaccountAddRequest struct {
+type addSubaccountRequest struct {
 	Subaccount string `json:"subaccount"` // Subaccount code
 	Share      int    `json:"share"`      // Share amount (percentage or flat amount)
 }
 
-type TransactionSplitSubaccountAddRequestBuilder struct {
+type AddSubaccountRequestBuilder struct {
 	subaccount string
 	share      int
 }
 
-func NewTransactionSplitSubaccountAddRequest(subaccount string, share int) *TransactionSplitSubaccountAddRequestBuilder {
-	return &TransactionSplitSubaccountAddRequestBuilder{
+func NewAddSubaccountRequestBuilder(subaccount string, share int) *AddSubaccountRequestBuilder {
+	return &AddSubaccountRequestBuilder{
 		subaccount: subaccount,
 		share:      share,
 	}
 }
 
-func (b *TransactionSplitSubaccountAddRequestBuilder) Subaccount(subaccount string) *TransactionSplitSubaccountAddRequestBuilder {
+func (b *AddSubaccountRequestBuilder) Subaccount(subaccount string) *AddSubaccountRequestBuilder {
 	b.subaccount = subaccount
 	return b
 }
 
-func (b *TransactionSplitSubaccountAddRequestBuilder) Share(share int) *TransactionSplitSubaccountAddRequestBuilder {
+func (b *AddSubaccountRequestBuilder) Share(share int) *AddSubaccountRequestBuilder {
 	b.share = share
 	return b
 }
 
-func (b *TransactionSplitSubaccountAddRequestBuilder) Build() *TransactionSplitSubaccountAddRequest {
-	return &TransactionSplitSubaccountAddRequest{
+func (b *AddSubaccountRequestBuilder) Build() *addSubaccountRequest {
+	return &addSubaccountRequest{
 		Subaccount: b.subaccount,
 		Share:      b.share,
 	}
 }
 
-type AddSubaccountResponse = types.Response[types.TransactionSplit]
+type AddSubaccountResponseData = types.TransactionSplit
+type AddSubaccountResponse = types.Response[AddSubaccountResponseData]
 
-func (c *Client) AddSubaccount(ctx context.Context, id string, builder *TransactionSplitSubaccountAddRequestBuilder) (*AddSubaccountResponse, error) {
+func (c *Client) AddSubaccount(ctx context.Context, id string, builder AddSubaccountRequestBuilder) (*AddSubaccountResponse, error) {
 	req := builder.Build()
-	return net.Post[TransactionSplitSubaccountAddRequest, types.TransactionSplit](
+	return net.Post[addSubaccountRequest, AddSubaccountResponseData](
 		ctx, c.Client, c.Secret, fmt.Sprintf("%s/%s/subaccount/add", basePath, id), req, c.BaseURL,
 	)
 }

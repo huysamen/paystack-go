@@ -7,7 +7,7 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type TransactionSplitCreateRequest struct {
+type createRequest struct {
 	Name             string                             `json:"name"`                        // Name of the transaction split
 	Type             types.TransactionSplitType         `json:"type"`                        // Type of split (percentage or flat)
 	Currency         types.Currency                     `json:"currency"`                    // Currency for the split
@@ -16,7 +16,7 @@ type TransactionSplitCreateRequest struct {
 	BearerSubaccount *string                            `json:"bearer_subaccount,omitempty"` // Subaccount code if bearer_type is subaccount (optional)
 }
 
-type TransactionSplitCreateRequestBuilder struct {
+type CreateRequestBuilder struct {
 	name             string
 	splitType        types.TransactionSplitType
 	currency         types.Currency
@@ -25,8 +25,8 @@ type TransactionSplitCreateRequestBuilder struct {
 	bearerSubaccount *string
 }
 
-func NewTransactionSplitCreateRequest(name string, splitType types.TransactionSplitType, currency types.Currency) *TransactionSplitCreateRequestBuilder {
-	return &TransactionSplitCreateRequestBuilder{
+func NewCreateRequest(name string, splitType types.TransactionSplitType, currency types.Currency) *CreateRequestBuilder {
+	return &CreateRequestBuilder{
 		name:        name,
 		splitType:   splitType,
 		currency:    currency,
@@ -34,7 +34,7 @@ func NewTransactionSplitCreateRequest(name string, splitType types.TransactionSp
 	}
 }
 
-func (b *TransactionSplitCreateRequestBuilder) AddSubaccount(subaccount string, share int) *TransactionSplitCreateRequestBuilder {
+func (b *CreateRequestBuilder) AddSubaccount(subaccount string, share int) *CreateRequestBuilder {
 	b.subaccounts = append(b.subaccounts, types.TransactionSplitSubaccount{
 		Subaccount: subaccount,
 		Share:      share,
@@ -42,23 +42,23 @@ func (b *TransactionSplitCreateRequestBuilder) AddSubaccount(subaccount string, 
 	return b
 }
 
-func (b *TransactionSplitCreateRequestBuilder) Subaccounts(subaccounts []types.TransactionSplitSubaccount) *TransactionSplitCreateRequestBuilder {
+func (b *CreateRequestBuilder) Subaccounts(subaccounts []types.TransactionSplitSubaccount) *CreateRequestBuilder {
 	b.subaccounts = subaccounts
 	return b
 }
 
-func (b *TransactionSplitCreateRequestBuilder) BearerType(bearerType types.TransactionSplitBearerType) *TransactionSplitCreateRequestBuilder {
+func (b *CreateRequestBuilder) BearerType(bearerType types.TransactionSplitBearerType) *CreateRequestBuilder {
 	b.bearerType = &bearerType
 	return b
 }
 
-func (b *TransactionSplitCreateRequestBuilder) BearerSubaccount(subaccount string) *TransactionSplitCreateRequestBuilder {
+func (b *CreateRequestBuilder) BearerSubaccount(subaccount string) *CreateRequestBuilder {
 	b.bearerSubaccount = &subaccount
 	return b
 }
 
-func (b *TransactionSplitCreateRequestBuilder) Build() *TransactionSplitCreateRequest {
-	return &TransactionSplitCreateRequest{
+func (b *CreateRequestBuilder) Build() *createRequest {
+	return &createRequest{
 		Name:             b.name,
 		Type:             b.splitType,
 		Currency:         b.currency,
@@ -68,11 +68,10 @@ func (b *TransactionSplitCreateRequestBuilder) Build() *TransactionSplitCreateRe
 	}
 }
 
-type TransactionSplitCreateResponse = types.Response[types.TransactionSplit]
+type CreateResponseData = types.TransactionSplit
+type CreateResponse = types.Response[CreateResponseData]
 
-func (c *Client) Create(ctx context.Context, builder *TransactionSplitCreateRequestBuilder) (*types.Response[types.TransactionSplit], error) {
+func (c *Client) Create(ctx context.Context, builder CreateRequestBuilder) (*CreateResponse, error) {
 	req := builder.Build()
-	return net.Post[TransactionSplitCreateRequest, types.TransactionSplit](
-		ctx, c.Client, c.Secret, basePath, req, c.BaseURL,
-	)
+	return net.Post[createRequest, CreateResponseData](ctx, c.Client, c.Secret, basePath, req, c.BaseURL)
 }

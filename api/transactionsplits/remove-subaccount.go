@@ -8,33 +8,35 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type TransactionSplitSubaccountRemoveRequest struct {
+type removeSubaccountRequest struct {
 	Subaccount string `json:"subaccount"` // Subaccount code
 }
 
-type TransactionSplitSubaccountRemoveRequestBuilder struct {
+type RemoveSubaccountRequestBuilder struct {
 	subaccount string
 }
 
-func NewTransactionSplitSubaccountRemoveRequest(subaccount string) *TransactionSplitSubaccountRemoveRequestBuilder {
-	return &TransactionSplitSubaccountRemoveRequestBuilder{
+func NewRemoveSubaccountRequestBuilder(subaccount string) *RemoveSubaccountRequestBuilder {
+	return &RemoveSubaccountRequestBuilder{
 		subaccount: subaccount,
 	}
 }
 
-func (b *TransactionSplitSubaccountRemoveRequestBuilder) Subaccount(subaccount string) *TransactionSplitSubaccountRemoveRequestBuilder {
+func (b *RemoveSubaccountRequestBuilder) Subaccount(subaccount string) *RemoveSubaccountRequestBuilder {
 	b.subaccount = subaccount
+
 	return b
 }
 
-func (b *TransactionSplitSubaccountRemoveRequestBuilder) Build() *TransactionSplitSubaccountRemoveRequest {
-	return &TransactionSplitSubaccountRemoveRequest{
+func (b *RemoveSubaccountRequestBuilder) Build() *removeSubaccountRequest {
+	return &removeSubaccountRequest{
 		Subaccount: b.subaccount,
 	}
 }
 
-type TransactionSplitSubaccountRemoveResponse = types.Response[any]
+type RemoveSubaccountResponseData = any
+type RemoveSubaccountResponse = types.Response[RemoveSubaccountResponseData]
 
-func (c *Client) RemoveSubaccount(ctx context.Context, id string, builder *TransactionSplitSubaccountRemoveRequestBuilder) (*TransactionSplitSubaccountRemoveResponse, error) {
-	return net.Post[TransactionSplitSubaccountRemoveRequest, any](ctx, c.Client, c.Secret, fmt.Sprintf("%s/%s/subaccount/remove", basePath, id), builder.Build(), c.BaseURL)
+func (c *Client) RemoveSubaccount(ctx context.Context, id string, builder RemoveSubaccountRequestBuilder) (*RemoveSubaccountResponse, error) {
+	return net.Post[removeSubaccountRequest, RemoveSubaccountResponseData](ctx, c.Client, c.Secret, fmt.Sprintf("%s/%s/subaccount/remove", basePath, id), builder.Build(), c.BaseURL)
 }
