@@ -76,6 +76,30 @@ func (b *ExportRequestBuilder) Build() *exportRequest {
 	return b.request
 }
 
+func (r *exportRequest) toQuery() string {
+	params := url.Values{}
+	if r.From != nil {
+		params.Set("from", r.From.Format("2006-01-02"))
+	}
+	if r.To != nil {
+		params.Set("to", r.To.Format("2006-01-02"))
+	}
+	if r.PerPage != nil {
+		params.Set("per_page", strconv.Itoa(*r.PerPage))
+	}
+	if r.Page != nil {
+		params.Set("page", strconv.Itoa(*r.Page))
+	}
+	if r.Transaction != nil {
+		params.Set("transaction", *r.Transaction)
+	}
+	if r.Status != nil {
+		params.Set("status", string(*r.Status))
+	}
+
+	return params.Encode()
+}
+
 type ExportResponseData struct {
 	Path      string          `json:"path"`
 	ExpiresAt *types.DateTime `json:"expires_at,omitempty"`
@@ -83,33 +107,15 @@ type ExportResponseData struct {
 
 type ExportResponse = types.Response[ExportResponseData]
 
-func (c *Client) Export(ctx context.Context, builder *ExportRequestBuilder) (*ExportResponse, error) {
-	endpoint := basePath + "/export"
+func (c *Client) Export(ctx context.Context, builder ExportRequestBuilder) (*ExportResponse, error) {
+	path := basePath + "/export"
+
 	req := builder.Build()
-
-	params := url.Values{}
-	if req.From != nil {
-		params.Set("from", req.From.Format("2006-01-02"))
-	}
-	if req.To != nil {
-		params.Set("to", req.To.Format("2006-01-02"))
-	}
-	if req.PerPage != nil {
-		params.Set("per_page", strconv.Itoa(*req.PerPage))
-	}
-	if req.Page != nil {
-		params.Set("page", strconv.Itoa(*req.Page))
-	}
-	if req.Transaction != nil {
-		params.Set("transaction", *req.Transaction)
-	}
-	if req.Status != nil {
-		params.Set("status", string(*req.Status))
+	if req != nil {
+		if query := req.toQuery(); query != "" {
+			path += "?" + query
+		}
 	}
 
-	if len(params) > 0 {
-		endpoint += "?" + params.Encode()
-	}
-
-	return net.Get[ExportResponseData](ctx, c.Client, c.Secret, endpoint, c.BaseURL)
+	return net.Get[ExportResponseData](ctx, c.Client, c.Secret, path, c.BaseURL)
 }

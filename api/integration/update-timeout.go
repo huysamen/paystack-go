@@ -33,6 +33,6 @@ type UpdateTimeoutResponseData struct {
 
 type UpdateTimeoutResponse = types.Response[UpdateTimeoutResponseData]
 
-func (c *Client) UpdateTimeout(ctx context.Context, builder *UpdateTimeoutRequestBuilder) (*UpdateTimeoutResponse, error) {
+func (c *Client) UpdateTimeout(ctx context.Context, builder UpdateTimeoutRequestBuilder) (*UpdateTimeoutResponse, error) {
 	return net.Put[updateTimeoutRequest, UpdateTimeoutResponseData](ctx, c.Client, c.Secret, basePath+"/payment_session_timeout", builder.Build(), c.BaseURL)
 }

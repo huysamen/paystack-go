@@ -40,6 +40,6 @@ func (b *TriggerActivationChargeRequestBuilder) Build() *triggerActivationCharge
 type TriggerActivationChargeResponseData = any
 type TriggerActivationChargeResponse = types.Response[TriggerActivationChargeResponseData]
 
-func (c *Client) TriggerActivationCharge(ctx context.Context, builder *TriggerActivationChargeRequestBuilder) (*TriggerActivationChargeResponse, error) {
+func (c *Client) TriggerActivationCharge(ctx context.Context, builder TriggerActivationChargeRequestBuilder) (*TriggerActivationChargeResponse, error) {
 	return net.Put[triggerActivationChargeRequest, TriggerActivationChargeResponseData](ctx, c.Client, c.Secret, basePath+"/activation-charge", builder.Build(), c.BaseURL)
 }

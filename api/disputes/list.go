@@ -76,36 +76,42 @@ func (b *ListRequestBuilder) Build() *listRequest {
 	return b.req
 }
 
-type ListResponseData = []types.Dispute
-type ListDisputesResponse = types.Response[ListResponseData]
-
-func (c *Client) List(ctx context.Context, builder *ListRequestBuilder) (*ListDisputesResponse, error) {
-	endpoint := basePath
-	req := builder.Build()
-
+func (r *listRequest) toQuery() string {
 	params := url.Values{}
-	if req.From != nil {
-		params.Set("from", req.From.Format("2006-01-02"))
+	if r.From != nil {
+		params.Set("from", r.From.Format("2006-01-02"))
 	}
-	if req.To != nil {
-		params.Set("to", req.To.Format("2006-01-02"))
+	if r.To != nil {
+		params.Set("to", r.To.Format("2006-01-02"))
 	}
-	if req.PerPage != nil {
-		params.Set("per_page", strconv.Itoa(*req.PerPage))
+	if r.PerPage != nil {
+		params.Set("per_page", strconv.Itoa(*r.PerPage))
 	}
-	if req.Page != nil {
-		params.Set("page", strconv.Itoa(*req.Page))
+	if r.Page != nil {
+		params.Set("page", strconv.Itoa(*r.Page))
 	}
-	if req.Transaction != nil {
-		params.Set("transaction", *req.Transaction)
+	if r.Transaction != nil {
+		params.Set("transaction", *r.Transaction)
 	}
-	if req.Status != nil {
-		params.Set("status", string(*req.Status))
-	}
-
-	if len(params) > 0 {
-		endpoint += "?" + params.Encode()
+	if r.Status != nil {
+		params.Set("status", string(*r.Status))
 	}
 
-	return net.Get[ListResponseData](ctx, c.Client, c.Secret, endpoint, c.BaseURL)
+	return params.Encode()
+}
+
+type ListResponseData = []types.Dispute
+type ListResponse = types.Response[ListResponseData]
+
+func (c *Client) List(ctx context.Context, builder ListRequestBuilder) (*ListResponse, error) {
+	path := basePath
+
+	req := builder.Build()
+	if req != nil {
+		if query := req.toQuery(); query != "" {
+			path += "?" + query
+		}
+	}
+
+	return net.Get[ListResponseData](ctx, c.Client, c.Secret, path, c.BaseURL)
 }

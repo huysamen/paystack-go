@@ -160,6 +160,6 @@ type QRDetails struct {
 type CreateChargeResponseData = types.ChargeData
 type CreateChargeResponse = types.Response[CreateChargeResponseData]
 
-func (c *Client) Create(ctx context.Context, builder *CreateRequestBuilder) (*CreateChargeResponse, error) {
+func (c *Client) Create(ctx context.Context, builder CreateRequestBuilder) (*CreateChargeResponse, error) {
 	return net.Post[createRequest, CreateChargeResponseData](ctx, c.Client, c.Secret, basePath, builder.Build(), c.BaseURL)
 }

@@ -125,7 +125,7 @@ func (r *listRequest) toQuery() string {
 type ListResponseData = []types.Transaction
 type ListResponse = types.Response[ListResponseData]
 
-func (c *Client) List(ctx context.Context, builder *ListRequestBuilder) (*ListResponse, error) {
+func (c *Client) List(ctx context.Context, builder ListRequestBuilder) (*ListResponse, error) {
 	req := builder.Build()
 	query := ""
 

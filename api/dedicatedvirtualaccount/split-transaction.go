@@ -14,47 +14,47 @@ type splitTransactionRequest struct {
 	PreferredBank string `json:"preferred_bank,omitempty"`
 }
 
-type SplitTransactioRequestnBuilder struct {
+type SplitTransactionRequestBuilder struct {
 	request *splitTransactionRequest
 }
 
-func NewSplitTransactionRequestBuilder() *SplitTransactioRequestnBuilder {
-	return &SplitTransactioRequestnBuilder{
+func NewSplitTransactionRequestBuilder() *SplitTransactionRequestBuilder {
+	return &SplitTransactionRequestBuilder{
 		request: &splitTransactionRequest{},
 	}
 }
 
-func (b *SplitTransactioRequestnBuilder) Customer(customer string) *SplitTransactioRequestnBuilder {
+func (b *SplitTransactionRequestBuilder) Customer(customer string) *SplitTransactionRequestBuilder {
 	b.request.Customer = customer
 
 	return b
 }
 
-func (b *SplitTransactioRequestnBuilder) Subaccount(subaccount string) *SplitTransactioRequestnBuilder {
+func (b *SplitTransactionRequestBuilder) Subaccount(subaccount string) *SplitTransactionRequestBuilder {
 	b.request.Subaccount = subaccount
 
 	return b
 }
 
-func (b *SplitTransactioRequestnBuilder) SplitCode(splitCode string) *SplitTransactioRequestnBuilder {
+func (b *SplitTransactionRequestBuilder) SplitCode(splitCode string) *SplitTransactionRequestBuilder {
 	b.request.SplitCode = splitCode
 
 	return b
 }
 
-func (b *SplitTransactioRequestnBuilder) PreferredBank(preferredBank string) *SplitTransactioRequestnBuilder {
+func (b *SplitTransactionRequestBuilder) PreferredBank(preferredBank string) *SplitTransactionRequestBuilder {
 	b.request.PreferredBank = preferredBank
 
 	return b
 }
 
-func (b *SplitTransactioRequestnBuilder) Build() *splitTransactionRequest {
+func (b *SplitTransactionRequestBuilder) Build() *splitTransactionRequest {
 	return b.request
 }
 
 type SplitTransactionResponseData = types.DedicatedVirtualAccount
 type SplitTransactionResponse = types.Response[SplitTransactionResponseData]
 
-func (c *Client) SplitTransaction(ctx context.Context, builder SplitTransactioRequestnBuilder) (*SplitTransactionResponse, error) {
+func (c *Client) SplitTransaction(ctx context.Context, builder SplitTransactionRequestBuilder) (*SplitTransactionResponse, error) {
 	return net.Post[splitTransactionRequest, SplitTransactionResponseData](ctx, c.Client, c.Secret, basePath+"/split", builder.Build(), c.BaseURL)
 }
