@@ -7,7 +7,7 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type CreateVirtualTerminalRequest struct {
+type createRequest struct {
 	Name         string                             `json:"name"`
 	Destinations []types.VirtualTerminalDestination `json:"destinations,omitempty"`
 	Metadata     *types.Metadata                    `json:"metadata,omitempty"`
@@ -15,24 +15,25 @@ type CreateVirtualTerminalRequest struct {
 	CustomFields []types.VirtualTerminalCustomField `json:"custom_fields,omitempty"`
 }
 
-type CreateVirtualTerminalRequestBuilder struct {
-	req *CreateVirtualTerminalRequest
+type CreateRequestBuilder struct {
+	req *createRequest
 }
 
-func NewCreateVirtualTerminalRequest(name string) *CreateVirtualTerminalRequestBuilder {
-	return &CreateVirtualTerminalRequestBuilder{
-		req: &CreateVirtualTerminalRequest{
+func NewRequestBuilder(name string) *CreateRequestBuilder {
+	return &CreateRequestBuilder{
+		req: &createRequest{
 			Name: name,
 		},
 	}
 }
 
-func (b *CreateVirtualTerminalRequestBuilder) Build() *CreateVirtualTerminalRequest {
+func (b *CreateRequestBuilder) Build() *createRequest {
 	return b.req
 }
 
-type CreateVirtualTerminalResponse = types.Response[types.VirtualTerminal]
+type CreateResponseData = types.VirtualTerminal
+type CreateResponse = types.Response[CreateResponseData]
 
-func (c *Client) Create(ctx context.Context, builder *CreateVirtualTerminalRequestBuilder) (*CreateVirtualTerminalResponse, error) {
-	return net.Post[CreateVirtualTerminalRequest, types.VirtualTerminal](ctx, c.Client, c.Secret, basePath, builder.Build(), c.BaseURL)
+func (c *Client) Create(ctx context.Context, builder CreateRequestBuilder) (*CreateResponse, error) {
+	return net.Post[createRequest, CreateResponseData](ctx, c.Client, c.Secret, basePath, builder.Build(), c.BaseURL)
 }

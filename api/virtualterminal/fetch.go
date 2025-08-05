@@ -8,8 +8,9 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type FetchVirtualTerminalResponse = types.Response[types.VirtualTerminal]
+type FetchResponseData = types.VirtualTerminal
+type FetchResponse = types.Response[FetchResponseData]
 
-func (c *Client) Fetch(ctx context.Context, code string) (*FetchVirtualTerminalResponse, error) {
-	return net.Get[types.VirtualTerminal](ctx, c.Client, c.Secret, fmt.Sprintf("%s/%s", basePath, code), c.BaseURL)
+func (c *Client) Fetch(ctx context.Context, code string) (*FetchResponse, error) {
+	return net.Get[FetchResponseData](ctx, c.Client, c.Secret, fmt.Sprintf("%s/%s", basePath, code), c.BaseURL)
 }

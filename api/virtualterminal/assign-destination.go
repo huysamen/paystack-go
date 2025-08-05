@@ -8,7 +8,7 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type AssignDestinationRequest struct {
+type assignDestinationRequest struct {
 	Destinations []types.VirtualTerminalDestination `json:"destinations"`
 }
 
@@ -16,7 +16,7 @@ type AssignDestinationRequestBuilder struct {
 	destinations []types.VirtualTerminalDestination
 }
 
-func NewAssignDestinationRequest() *AssignDestinationRequestBuilder {
+func NewAssignDestinationRequestBuilder() *AssignDestinationRequestBuilder {
 	return &AssignDestinationRequestBuilder{
 		destinations: make([]types.VirtualTerminalDestination, 0),
 	}
@@ -34,14 +34,15 @@ func (b *AssignDestinationRequestBuilder) Destinations(destinations []types.Virt
 	return b
 }
 
-func (b *AssignDestinationRequestBuilder) Build() *AssignDestinationRequest {
-	return &AssignDestinationRequest{
+func (b *AssignDestinationRequestBuilder) Build() *assignDestinationRequest {
+	return &assignDestinationRequest{
 		Destinations: b.destinations,
 	}
 }
 
-type AssignDestinationResponse = types.Response[[]types.VirtualTerminalDestination]
+type AssignDestinationResponseData = []types.VirtualTerminalDestination
+type AssignDestinationResponse = types.Response[AssignDestinationResponseData]
 
-func (c *Client) AssignDestination(ctx context.Context, code string, builder *AssignDestinationRequestBuilder) (*AssignDestinationResponse, error) {
-	return net.Post[AssignDestinationRequest, []types.VirtualTerminalDestination](ctx, c.Client, c.Secret, fmt.Sprintf("%s/%s/destination/assign", basePath, code), builder.Build(), c.BaseURL)
+func (c *Client) AssignDestination(ctx context.Context, code string, builder AssignDestinationRequestBuilder) (*AssignDestinationResponse, error) {
+	return net.Post[assignDestinationRequest, AssignDestinationResponseData](ctx, c.Client, c.Secret, fmt.Sprintf("%s/%s/destination/assign", basePath, code), builder.Build(), c.BaseURL)
 }

@@ -9,7 +9,7 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type ListVirtualTerminalsRequest struct {
+type listRequest struct {
 	Status   string `json:"status,omitempty"`
 	PerPage  int    `json:"perPage,omitempty"`
 	Search   string `json:"search,omitempty"`
@@ -17,48 +17,83 @@ type ListVirtualTerminalsRequest struct {
 	Previous string `json:"previous,omitempty"`
 }
 
-type ListVirtualTerminalsRequestBuilder struct {
-	req *ListVirtualTerminalsRequest
+type ListRequestBuilder struct {
+	req *listRequest
 }
 
-func NewListVirtualTerminalsRequest() *ListVirtualTerminalsRequestBuilder {
-	return &ListVirtualTerminalsRequestBuilder{
-		req: &ListVirtualTerminalsRequest{},
+func NewListRequestBuilder() *ListRequestBuilder {
+	return &ListRequestBuilder{
+		req: &listRequest{},
 	}
 }
 
-func (b *ListVirtualTerminalsRequestBuilder) Build() *ListVirtualTerminalsRequest {
+func (b *ListRequestBuilder) Status(status string) *ListRequestBuilder {
+	b.req.Status = status
+
+	return b
+}
+
+func (b *ListRequestBuilder) PerPage(perPage int) *ListRequestBuilder {
+	b.req.PerPage = perPage
+
+	return b
+}
+
+func (b *ListRequestBuilder) Search(search string) *ListRequestBuilder {
+	b.req.Search = search
+
+	return b
+}
+
+func (b *ListRequestBuilder) Next(next string) *ListRequestBuilder {
+	b.req.Next = next
+
+	return b
+}
+
+func (b *ListRequestBuilder) Previous(previous string) *ListRequestBuilder {
+	b.req.Previous = previous
+
+	return b
+}
+
+func (b *ListRequestBuilder) Build() *listRequest {
 	return b.req
 }
 
-type ListVirtualTerminalsResponse = types.Response[[]types.VirtualTerminal]
-
-func (c *Client) List(ctx context.Context, builder *ListVirtualTerminalsRequestBuilder) (*ListVirtualTerminalsResponse, error) {
+func (r *listRequest) toQuery() string {
 	params := url.Values{}
+	if r.Status != "" {
+		params.Set("status", r.Status)
+	}
+	if r.PerPage > 0 {
+		params.Set("perPage", strconv.Itoa(r.PerPage))
+	}
+	if r.Search != "" {
+		params.Set("search", r.Search)
+	}
+	if r.Next != "" {
+		params.Set("next", r.Next)
+	}
+	if r.Previous != "" {
+		params.Set("previous", r.Previous)
+	}
 
-	if builder != nil {
-		req := builder.Build()
-		if req.Status != "" {
-			params.Set("status", req.Status)
-		}
-		if req.PerPage > 0 {
-			params.Set("perPage", strconv.Itoa(req.PerPage))
-		}
-		if req.Search != "" {
-			params.Set("search", req.Search)
-		}
-		if req.Next != "" {
-			params.Set("next", req.Next)
-		}
-		if req.Previous != "" {
-			params.Set("previous", req.Previous)
+	return params.Encode()
+}
+
+type ListResponseData = []types.VirtualTerminal
+type ListResponse = types.Response[ListResponseData]
+
+func (c *Client) List(ctx context.Context, builder ListRequestBuilder) (*ListResponse, error) {
+	req := builder.Build()
+	path := basePath
+
+	if req != nil {
+		if query := req.toQuery(); query != "" {
+			path += "?" + query
 		}
 	}
 
-	endpoint := basePath
-	if params.Encode() != "" {
-		endpoint += "?" + params.Encode()
-	}
-
-	return net.Get[[]types.VirtualTerminal](ctx, c.Client, c.Secret, endpoint, c.BaseURL)
+	return net.Get[[]types.VirtualTerminal](ctx, c.Client, c.Secret, path, c.BaseURL)
 }

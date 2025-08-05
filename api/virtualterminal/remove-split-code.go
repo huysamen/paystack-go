@@ -8,7 +8,7 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type RemoveSplitCodeRequest struct {
+type removeSplitCodeRequest struct {
 	SplitCode string `json:"split_code"`
 }
 
@@ -16,7 +16,7 @@ type RemoveSplitCodeRequestBuilder struct {
 	splitCode string
 }
 
-func NewRemoveSplitCodeRequest(splitCode string) *RemoveSplitCodeRequestBuilder {
+func NewRemoveSplitCodeRequestBuilder(splitCode string) *RemoveSplitCodeRequestBuilder {
 	return &RemoveSplitCodeRequestBuilder{
 		splitCode: splitCode,
 	}
@@ -28,16 +28,17 @@ func (b *RemoveSplitCodeRequestBuilder) SplitCode(splitCode string) *RemoveSplit
 	return b
 }
 
-func (b *RemoveSplitCodeRequestBuilder) Build() *RemoveSplitCodeRequest {
-	return &RemoveSplitCodeRequest{
+func (b *RemoveSplitCodeRequestBuilder) Build() *removeSplitCodeRequest {
+	return &removeSplitCodeRequest{
 		SplitCode: b.splitCode,
 	}
 }
 
-type RemoveSplitCodeResponse = types.Response[any]
+type RemoveSplitCodeResponseData = any
+type RemoveSplitCodeResponse = types.Response[RemoveSplitCodeResponseData]
 
-func (c *Client) RemoveSplitCode(ctx context.Context, code string, builder *RemoveSplitCodeRequestBuilder) (*RemoveSplitCodeResponse, error) {
+func (c *Client) RemoveSplitCode(ctx context.Context, code string, builder RemoveSplitCodeRequestBuilder) (*RemoveSplitCodeResponse, error) {
 	endpoint := fmt.Sprintf("%s/%s/split_code", basePath, code)
 
-	return net.DeleteWithBody[RemoveSplitCodeRequest, any](ctx, c.Client, c.Secret, endpoint, builder.Build(), c.BaseURL)
+	return net.DeleteWithBody[removeSplitCodeRequest, RemoveSplitCodeResponseData](ctx, c.Client, c.Secret, endpoint, builder.Build(), c.BaseURL)
 }
