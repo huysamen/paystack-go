@@ -1,4 +1,4 @@
-package dedicatedvirtualaccount
+package dedicatedvirtualaccounts
 
 import (
 	"github.com/huysamen/paystack-go/api"

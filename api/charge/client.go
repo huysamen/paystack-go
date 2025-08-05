@@ -1,4 +1,4 @@
-package charges
+package charge
 
 import (
 	"github.com/huysamen/paystack-go/api"

@@ -1,4 +1,4 @@
-package charges
+package charge
 
 import (
 	"context"

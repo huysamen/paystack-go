@@ -1,4 +1,4 @@
-package dedicatedvirtualaccount
+package dedicatedvirtualaccounts
 
 import (
 	"context"

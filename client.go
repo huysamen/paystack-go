@@ -9,9 +9,9 @@ import (
 	"github.com/huysamen/paystack-go/api"
 	"github.com/huysamen/paystack-go/api/applepay"
 	"github.com/huysamen/paystack-go/api/bulkcharges"
-	"github.com/huysamen/paystack-go/api/charges"
+	"github.com/huysamen/paystack-go/api/charge"
 	"github.com/huysamen/paystack-go/api/customers"
-	"github.com/huysamen/paystack-go/api/dedicatedvirtualaccount"
+	"github.com/huysamen/paystack-go/api/dedicatedvirtualaccounts"
 	"github.com/huysamen/paystack-go/api/directdebit"
 	"github.com/huysamen/paystack-go/api/disputes"
 	"github.com/huysamen/paystack-go/api/integration"
@@ -27,9 +27,9 @@ import (
 	"github.com/huysamen/paystack-go/api/terminal"
 	"github.com/huysamen/paystack-go/api/transactions"
 	"github.com/huysamen/paystack-go/api/transactionsplits"
-	"github.com/huysamen/paystack-go/api/transfercontrol"
 	"github.com/huysamen/paystack-go/api/transferrecipients"
 	"github.com/huysamen/paystack-go/api/transfers"
+	"github.com/huysamen/paystack-go/api/transferscontrol"
 	"github.com/huysamen/paystack-go/api/verification"
 	"github.com/huysamen/paystack-go/api/virtualterminal"
 )
@@ -43,10 +43,10 @@ type client struct {
 	Customers               *customers.Client
 	Subscriptions           *subscriptions.Client
 	Transfers               *transfers.Client
-	TransferControl         *transfercontrol.Client
+	TransferControl         *transferscontrol.Client
 	TransferRecipients      *transferrecipients.Client
 	BulkCharges             *bulkcharges.Client
-	Charges                 *charges.Client
+	Charges                 *charge.Client
 	Disputes                *disputes.Client
 	Refunds                 *refunds.Client
 	Subaccounts             *subaccounts.Client
@@ -57,7 +57,7 @@ type client struct {
 	Terminal                *terminal.Client
 	VirtualTerminal         *virtualterminal.Client
 	DirectDebit             *directdebit.Client
-	DedicatedVirtualAccount *dedicatedvirtualaccount.Client
+	DedicatedVirtualAccount *dedicatedvirtualaccounts.Client
 	ApplePay                *applepay.Client
 	Integration             *integration.Client
 }
@@ -110,10 +110,10 @@ func NewClient(config *Config) *client {
 		Customers:               (*customers.Client)(&api.API{Client: httpClient, Secret: config.SecretKey, BaseURL: config.GetBaseURL()}),
 		Subscriptions:           (*subscriptions.Client)(&api.API{Client: httpClient, Secret: config.SecretKey, BaseURL: config.GetBaseURL()}),
 		Transfers:               (*transfers.Client)(&api.API{Client: httpClient, Secret: config.SecretKey, BaseURL: config.GetBaseURL()}),
-		TransferControl:         (*transfercontrol.Client)(&api.API{Client: httpClient, Secret: config.SecretKey, BaseURL: config.GetBaseURL()}),
+		TransferControl:         (*transferscontrol.Client)(&api.API{Client: httpClient, Secret: config.SecretKey, BaseURL: config.GetBaseURL()}),
 		TransferRecipients:      (*transferrecipients.Client)(&api.API{Client: httpClient, Secret: config.SecretKey, BaseURL: config.GetBaseURL()}),
 		BulkCharges:             (*bulkcharges.Client)(&api.API{Client: httpClient, Secret: config.SecretKey, BaseURL: config.GetBaseURL()}),
-		Charges:                 (*charges.Client)(&api.API{Client: httpClient, Secret: config.SecretKey, BaseURL: config.GetBaseURL()}),
+		Charges:                 (*charge.Client)(&api.API{Client: httpClient, Secret: config.SecretKey, BaseURL: config.GetBaseURL()}),
 		Disputes:                (*disputes.Client)(&api.API{Client: httpClient, Secret: config.SecretKey, BaseURL: config.GetBaseURL()}),
 		Refunds:                 (*refunds.Client)(&api.API{Client: httpClient, Secret: config.SecretKey, BaseURL: config.GetBaseURL()}),
 		Subaccounts:             (*subaccounts.Client)(&api.API{Client: httpClient, Secret: config.SecretKey, BaseURL: config.GetBaseURL()}),
@@ -124,7 +124,7 @@ func NewClient(config *Config) *client {
 		Terminal:                (*terminal.Client)(&api.API{Client: httpClient, Secret: config.SecretKey, BaseURL: config.GetBaseURL()}),
 		VirtualTerminal:         (*virtualterminal.Client)(&api.API{Client: httpClient, Secret: config.SecretKey, BaseURL: config.GetBaseURL()}),
 		DirectDebit:             (*directdebit.Client)(&api.API{Client: httpClient, Secret: config.SecretKey, BaseURL: config.GetBaseURL()}),
-		DedicatedVirtualAccount: (*dedicatedvirtualaccount.Client)(&api.API{Client: httpClient, Secret: config.SecretKey, BaseURL: config.GetBaseURL()}),
+		DedicatedVirtualAccount: (*dedicatedvirtualaccounts.Client)(&api.API{Client: httpClient, Secret: config.SecretKey, BaseURL: config.GetBaseURL()}),
 		ApplePay:                (*applepay.Client)(&api.API{Client: httpClient, Secret: config.SecretKey, BaseURL: config.GetBaseURL()}),
 		Integration:             (*integration.Client)(&api.API{Client: httpClient, Secret: config.SecretKey, BaseURL: config.GetBaseURL()}),
 	}

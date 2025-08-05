@@ -1,4 +1,4 @@
-package transfercontrol
+package transferscontrol
 
 import "github.com/huysamen/paystack-go/api"
 

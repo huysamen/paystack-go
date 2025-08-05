@@ -1,4 +1,4 @@
-package transfercontrol
+package transferscontrol
 
 import (
 	"context"
