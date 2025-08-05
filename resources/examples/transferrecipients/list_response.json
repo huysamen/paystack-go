@@ -1,0 +1,51 @@
+{
+  "status": true,
+  "message": "Recipients retrieved",
+  "data": [
+    {
+      "domain": "test",
+      "type": "nuban",
+      "currency": "NGN",
+      "name": "Flesh",
+      "details": {
+        "account_number": "01000000000",
+        "account_name": null,
+        "bank_code": "044",
+        "bank_name": "Access Bank"
+      },
+      "metadata": {
+        "job": "Eater"
+      },
+      "recipient_code": "RCP_2x5j67tnnw1t98k",
+      "active": true,
+      "id": 28,
+      "createdAt": "2017-02-02T19:39:04.000Z",
+      "updatedAt": "2017-02-02T19:39:04.000Z"
+    },
+    {
+      "domain": "test",
+      "type": "nuban",
+      "currency": "NGN",
+      "name": "Tolu Robert",
+      "details": {
+        "account_number": "01000000010",
+        "account_name": null,
+        "bank_code": "058",
+        "bank_name": "Guaranty Trust Bank"
+      },
+      "metadata": null,
+      "recipient_code": "RCP_m7ljkv8leesep7p",
+      "active": true,
+      "id": 20317609,
+      "createdAt": "2021-11-05T11:27:53.000Z",
+      "updatedAt": "2021-11-05T11:27:53.000Z"
+    }
+  ],
+  "meta": {
+    "total": 2,
+    "skipped": 0,
+    "perPage": 50,
+    "page": 1,
+    "pageCount": 1
+  }
+}

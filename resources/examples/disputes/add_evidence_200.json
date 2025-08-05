@@ -1,0 +1,15 @@
+{
+  "status": true,
+  "message": "Evidence created",
+  "data": {
+    "customer_email": "cus@gmail.com",
+    "customer_name": "Mensah King",
+    "customer_phone": "0802345167",
+    "service_details": "claim for buying product",
+    "delivery_address": "3a ladoke street ogbomoso",
+    "dispute": 624,
+    "id": 21,
+    "createdAt": "2019-08-28T15:36:13.783Z",
+    "updatedAt": "2019-08-28T15:39:39.153Z"
+  }
+}

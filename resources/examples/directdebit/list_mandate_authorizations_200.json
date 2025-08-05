@@ -1,0 +1,31 @@
+{
+  "status": true,
+  "message": "Mandate authorizations retrieved successfully",
+  "data": [
+    {
+      "id": 112244,
+      "status": "active",
+      "mandate_id": 1560169,
+      "authorization_id": 1069309917,
+      "authorization_code": "AUTH_lEt8QgrSfW",
+      "integration_id": 463433,
+      "account_number": "0123456789",
+      "bank_code": "058",
+      "bank_name": "Guaranty Trust Bank",
+      "customer": {
+        "id": 28958104,
+        "customer_code": "CUS_5kye9bc41uw15pb",
+        "email": "customer@email.com",
+        "first_name": "Booker",
+        "last_name": "Jones"
+      },
+      "authorized_at": "2025-06-23T12:47:10.632Z"
+    }
+  ],
+  "meta": {
+    "per_page": 10,
+    "next": "MTI1OTc=",
+    "count": 10,
+    "total": 40
+  }
+}

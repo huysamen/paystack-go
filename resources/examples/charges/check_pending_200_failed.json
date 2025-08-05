@@ -1,0 +1,9 @@
+{
+  "status": true,
+  "message": "Reference check successful",
+  "data": {
+    "reference": "ojk8k0bimgftf0x",
+    "status": "failed",
+    "message": "Insufficient funds"
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "status": true,
+  "message": "Payment request finalized",
+  "data": {
+    "id": 3136496,
+    "domain": "test",
+    "amount": 45000,
+    "currency": "NGN",
+    "due_date": "2020-06-30T22:59:59.000Z",
+    "has_invoice": true,
+    "invoice_number": 2,
+    "description": "Testing Invoice",
+    "pdf_url": null,
+    "line_items": [
+      {
+        "name": "Water",
+        "amount": 15000,
+        "quantity": 1
+      },
+      {
+        "name": "Bread",
+        "amount": 30000,
+        "quantity": 1
+      }
+    ],
+    "tax": [],
+    "request_code": "PRQ_rtjkfk1tpmvqo40",
+    "status": "pending",
+    "paid": false,
+    "paid_at": null,
+    "metadata": null,
+    "notifications": [],
+    "offline_reference": "4286263136496",
+    "customer": {
+      "id": 25833615,
+      "first_name": "Damilola",
+      "last_name": "Odujoko",
+      "email": "damilola@email.com",
+      "customer_code": "CUS_xwaj0txjryg393b",
+      "phone": null,
+      "metadata": {
+        "calling_code": "+234"
+      },
+      "risk_action": "default",
+      "international_format_phone": null
+    },
+    "created_at": "2020-06-29T16:22:35.000Z",
+    "pending_amount": 45000
+  }
+}

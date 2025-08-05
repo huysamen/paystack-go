@@ -1,0 +1,36 @@
+{
+  "status": true,
+  "message": "Payment request totals",
+  "data": {
+    "pending": [
+      {
+        "currency": "NGN",
+        "amount": 42000
+      },
+      {
+        "currency": "USD",
+        "amount": 0
+      }
+    ],
+    "successful": [
+      {
+        "currency": "NGN",
+        "amount": 0
+      },
+      {
+        "currency": "USD",
+        "amount": 0
+      }
+    ],
+    "total": [
+      {
+        "currency": "NGN",
+        "amount": 42000
+      },
+      {
+        "currency": "USD",
+        "amount": 0
+      }
+    ]
+  }
+}

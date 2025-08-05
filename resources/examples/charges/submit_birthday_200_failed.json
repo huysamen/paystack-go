@@ -1,0 +1,9 @@
+{
+  "status": true,
+  "message": "Charge attempted",
+  "data": {
+    "reference": "bc9w93gh629a4d7",
+    "status": "failed",
+    "message": "Error occured while enrolling you for OTP!"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "status": true,
+  "message": "Charge attempted",
+  "data": {
+    "reference": "apg8mnjf5yg7zp8",
+    "url": "https://standard.paystack.co/close",
+    "status": "open_url"
+  }
+}

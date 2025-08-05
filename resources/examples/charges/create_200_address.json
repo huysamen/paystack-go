@@ -1,0 +1,10 @@
+{
+  "message": "Charge attempted",
+  "status": true,
+  "data": {
+    "display_text": "Please send details for address verification",
+    "reference": "7c7rpkqpc0tijs8",
+    "status": "send_address",
+    "country_code": "CA"
+  }
+}

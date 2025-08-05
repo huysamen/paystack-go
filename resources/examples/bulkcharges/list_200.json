@@ -1,0 +1,21 @@
+{
+  "status": true,
+  "message": "Bulk charges retrieved",
+  "data": [
+    {
+      "domain": "test",
+      "batch_code": "BCH_1nV4L1D7cayggh",
+      "status": "complete",
+      "id": 1733,
+      "createdAt": "2017-02-04T05:44:19.000Z",
+      "updatedAt": "2017-02-04T05:45:02.000Z"
+    }
+  ],
+  "meta": {
+    "total": 1,
+    "skipped": 0,
+    "perPage": 50,
+    "page": 1,
+    "pageCount": 1
+  }
+}

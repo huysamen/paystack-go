@@ -1,0 +1,53 @@
+{
+  "status": true,
+  "message": "Page retrieved",
+  "data": {
+    "integration": 100032,
+    "domain": "test",
+    "name": "Offering collections",
+    "description": "Give unto the Lord, and it shall be multiplied ten-fold to you.",
+    "amount": null,
+    "currency": "NGN",
+    "slug": "5nApBwZkvY",
+    "active": true,
+    "id": 18,
+    "createdAt": "2016-03-30T00:49:57.000Z",
+    "updatedAt": "2016-03-30T00:49:57.000Z",
+    "products": [
+      {
+        "product_id": 523,
+        "name": "Product Four",
+        "description": "Product Four Description",
+        "product_code": "PROD_l9p81u9pkjqjunb",
+        "page": 18,
+        "price": 500000,
+        "currency": "NGN",
+        "quantity": 0,
+        "type": "good",
+        "features": null,
+        "is_shippable": 0,
+        "domain": "test",
+        "integration": 343288,
+        "active": 1,
+        "in_stock": 1
+      },
+      {
+        "product_id": 522,
+        "name": "Product Five",
+        "description": "Product Five Description",
+        "product_code": "PROD_8ne9cxutagmtsyz",
+        "page": 18,
+        "price": 500000,
+        "currency": "NGN",
+        "quantity": 0,
+        "type": "good",
+        "features": null,
+        "is_shippable": 0,
+        "domain": "test",
+        "integration": 343288,
+        "active": 1,
+        "in_stock": 0
+      }
+    ]
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "status": true,
+  "message": "Charge attempted",
+  "data": {
+    "reference": "2ofkbk0yie6dvzb",
+    "status": "pay_offline",
+    "display_text": "Please dial *737*33*4*453441# on your mobile phone to complete the transaction",
+    "ussd_code": "*737*33*4*453441#"
+  }
+}

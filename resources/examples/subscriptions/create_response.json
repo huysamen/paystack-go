@@ -1,0 +1,32 @@
+{
+  "status": true,
+  "message": "Subscription successfully created",
+  "data": {
+    "customer": 1173,
+    "plan": 28,
+    "integration": 100032,
+    "domain": "test",
+    "start": 1459296064,
+    "status": "active",
+    "quantity": 1,
+    "amount": 50000,
+    "authorization": {
+      "authorization_code": "AUTH_6tmt288t0o",
+      "bin": "408408",
+      "last4": "4081",
+      "exp_month": "12",
+      "exp_year": "2020",
+      "channel": "card",
+      "card_type": "visa",
+      "bank": "TEST BANK",
+      "country_code": "NG",
+      "brand": "visa",
+      "reusable": true,
+      "signature": "SIG_2F2E4sdgzryOo3YZXw",
+      "account_name": null
+    },
+    "id": 9,
+    "createdAt": "2016-03-30T00:01:04.000Z",
+    "updatedAt": "2016-03-30T00:01:04.000Z"
+  }
+}

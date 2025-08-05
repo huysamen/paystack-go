@@ -1,0 +1,76 @@
+{
+  "status": true,
+  "message": "Subscription retrieved successfully",
+  "data": {
+    "invoices": [],
+    "customer": {
+      "first_name": "BoJack",
+      "last_name": "Horseman",
+      "email": "bojack@horsinaround.com",
+      "phone": null,
+      "metadata": {
+        "photos": [
+          {
+            "type": "twitter",
+            "typeId": "twitter",
+            "typeName": "Twitter",
+            "url": "https://d2ojpxxtu63wzl.cloudfront.net/static/61b1a0a1d4dda2c9fe9e165fed07f812_a722ae7148870cc2e33465d1807dfdc6efca33"
+          }
+        ]
+      },
+      "domain": "test",
+      "customer_code": "CUS_hdhye17yj8qd2tx",
+      "risk_action": "default",
+      "id": 84312,
+      "integration": 100073,
+      "createdAt": "2016-10-01T10:59:52.000Z",
+      "updatedAt": "2016-10-01T10:59:52.000Z"
+    },
+    "plan": {
+      "id": 28,
+      "name": "Monthly retainer",
+      "plan_code": "PLN_gx2wn530m0i3w3m",
+      "description": null,
+      "amount": 50000,
+      "interval": "monthly",
+      "send_invoices": true,
+      "send_sms": true,
+      "currency": "NGN",
+      "integration": 100073,
+      "domain": "test",
+      "is_deleted": false,
+      "createdAt": "2016-10-01T10:59:11.000Z",
+      "updatedAt": "2016-10-01T10:59:11.000Z"
+    },
+    "integration": 100073,
+    "authorization": {
+      "authorization_code": "AUTH_6tmt288t0o",
+      "bin": "408408",
+      "last4": "4081",
+      "exp_month": "12",
+      "exp_year": "2020",
+      "channel": "card",
+      "card_type": "visa",
+      "bank": "TEST BANK",
+      "country_code": "NG",
+      "brand": "visa",
+      "reusable": true,
+      "signature": "SIG_2F2E4sdgzryOo3YZXw",
+      "account_name": null
+    },
+    "domain": "test",
+    "start": 1475319592,
+    "status": "active",
+    "quantity": 1,
+    "amount": 50000,
+    "subscription_code": "SUB_vsyqdmlzble3uii",
+    "email_token": "d7gofp6yppn3qz7",
+    "easy_cron_id": null,
+    "cron_expression": "0 0 28 * *",
+    "next_payment_date": "2016-11-28T07:00:00.000Z",
+    "open_invoice": null,
+    "id": 9,
+    "createdAt": "2016-10-01T10:59:59.000Z",
+    "updatedAt": "2016-10-01T10:59:59.000Z"
+  }
+}

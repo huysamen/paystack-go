@@ -1,0 +1,33 @@
+{
+  "status": true,
+  "message": "Managed account successfully retrieved",
+  "data": {
+    "customer": {
+      "id": 42200598,
+      "first_name": "Rose",
+      "last_name": "Sharon",
+      "email": "rose@sharon.com",
+      "customer_code": "CUS_lfq5hi7rsnub7gl",
+      "phone": "8091234650",
+      "metadata": {
+        "calling_code": "+234"
+      },
+      "risk_action": "default",
+      "international_format_phone": null
+    },
+    "bank": {
+      "name": "Wema Bank",
+      "id": 20,
+      "slug": "wema-bank"
+    },
+    "id": 1234553,
+    "account_name": "BOOMBOOMINDUS/Sharon Rose",
+    "account_number": "1234709987",
+    "created_at": "2021-02-13T00:29:50.000Z",
+    "updated_at": "2021-03-30T10:03:54.000Z",
+    "currency": "NGN",
+    "split_config": "{\"subaccount\":\"ACCT_f651f39t7x9a9c6\"}",
+    "active": true,
+    "assigned": true
+  }
+}

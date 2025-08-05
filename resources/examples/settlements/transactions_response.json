@@ -1,0 +1,82 @@
+{
+  "status": true,
+  "message": "Transactions retrieved",
+  "data": [
+    {
+      "id": 2067030515,
+      "domain": "live",
+      "status": "success",
+      "reference": "da8ed5u8sz6yn95",
+      "amount": 10000,
+      "message": "",
+      "gateway_response": "Approved",
+      "paid_at": "2022-09-01T10:36:37.000Z",
+      "created_at": "2022-09-01T10:26:02.000Z",
+      "channel": "card",
+      "currency": "NGN",
+      "ip_address": "172.31.63.124",
+      "metadata": {
+        "referrer": "http://localhost:8080/pay"
+      },
+      "log": {
+        "start_time": 1662033962,
+        "time_spent": 10,
+        "attempts": 1,
+        "errors": 0,
+        "success": true,
+        "mobile": false,
+        "input": [],
+        "history": [
+          {
+            "type": "action",
+            "message": "Attempted to pay with card",
+            "time": 10
+          }
+        ]
+      },
+      "fees": 150,
+      "fees_split": null,
+      "authorization": {
+        "authorization_code": "AUTH_5z4xkkxqjf",
+        "bin": "408408",
+        "last4": "4081",
+        "exp_month": "12",
+        "exp_year": "2030",
+        "channel": "card",
+        "card_type": "visa ",
+        "bank": "TEST BANK",
+        "country_code": "NG",
+        "brand": "visa",
+        "reusable": true,
+        "signature": "SIG_2F2E4sdgzryOo3YZXw",
+        "account_name": null
+      },
+      "customer": {
+        "id": 63929,
+        "first_name": "",
+        "last_name": "",
+        "email": "customer@email.com",
+        "customer_code": "CUS_hdhye17yj8qd2tx",
+        "phone": "",
+        "metadata": {},
+        "risk_action": "default",
+        "international_format_phone": null
+      },
+      "plan": null,
+      "subaccount": null,
+      "split": {},
+      "order_id": null,
+      "paidAt": "2022-09-01T10:36:37.000Z",
+      "pos_transaction_data": null,
+      "source": null,
+      "fees_breakdown": null
+    }
+  ],
+  "meta": {
+    "total": 1,
+    "skipped": 0,
+    "perPage": 50,
+    "page": 1,
+    "pageCount": 1
+  }
+}

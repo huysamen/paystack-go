@@ -1,0 +1,27 @@
+{
+  "status": true,
+  "message": "Managed Account Successfully Unassigned",
+  "data": {
+    "bank": {
+      "name": "Wema Bank",
+      "id": 20,
+      "slug": "wema-bank"
+    },
+    "account_name": "KAROKART/A YINKA",
+    "account_number": "9930020212",
+    "assigned": false,
+    "currency": "NGN",
+    "metadata": null,
+    "active": true,
+    "id": 173,
+    "created_at": "2019-12-09T13:31:38.000Z",
+    "updated_at": "2020-08-28T10:04:25.000Z",
+    "assignment": {
+      "assignee_id": 1530104,
+      "assignee_type": "Integration",
+      "assigned_at": "2019-12-09T13:40:21.000Z",
+      "integration": 100043,
+      "account_type": "PAY-WITH-TRANSFER-RECURRING"
+    }
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "status": true,
+  "message": "Charge attempted",
+  "data": {
+    "reference": "apg8mnjf5yg7zp8",
+    "status": "send_pin"
+  }
+}

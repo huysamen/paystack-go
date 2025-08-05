@@ -1,0 +1,62 @@
+{
+  "status": true,
+  "message": "Payment request retrieved",
+  "data": {
+    "id": 3136406,
+    "domain": "test",
+    "amount": 42000,
+    "currency": "NGN",
+    "due_date": "2020-07-08T00:00:00.000Z",
+    "has_invoice": true,
+    "invoice_number": 1,
+    "description": "a test invoice",
+    "pdf_url": null,
+    "line_items": [
+      {
+        "name": "item 1",
+        "amount": 20000
+      },
+      {
+        "name": "item 2",
+        "amount": 20000
+      }
+    ],
+    "tax": [
+      {
+        "name": "VAT",
+        "amount": 2000
+      }
+    ],
+    "request_code": "PRQ_1weqqsn2wwzgft8",
+    "status": "pending",
+    "paid": false,
+    "paid_at": null,
+    "metadata": null,
+    "notifications": [],
+    "offline_reference": "4286263136406",
+    "customer": {
+      "id": 25833615,
+      "first_name": "Damilola",
+      "last_name": "Odujoko",
+      "email": "damilola@example.com",
+      "customer_code": "CUS_xwaj0txjryg393b",
+      "phone": null,
+      "metadata": {
+        "calling_code": "+234"
+      },
+      "risk_action": "default",
+      "international_format_phone": null
+    },
+    "created_at": "2020-06-29T16:07:33.000Z",
+    "integration": {
+      "key": "pk_test_xxxxxxxx",
+      "name": "Paystack Documentation",
+      "logo": "https://s3-eu-west-1.amazonaws.com/pstk-integration-logos/paystack.jpg",
+      "allowed_currencies": [
+        "NGN",
+        "USD"
+      ]
+    },
+    "pending_amount": 42000
+  }
+}

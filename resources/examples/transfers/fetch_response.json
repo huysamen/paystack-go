@@ -1,0 +1,45 @@
+{
+  "status": true,
+  "message": "Transfer retrieved",
+  "data": {
+    "amount": 20000,
+    "createdAt": "2024-02-01T08:32:21.000Z",
+    "currency": "NGN",
+    "domain": "test",
+    "failures": null,
+    "id": 451930323,
+    "integration": 463433,
+    "reason": "Life go better for you",
+    "reference": "ge-bzrf8u8k2pygxrnqf",
+    "source": "balance",
+    "source_details": null,
+    "status": "success",
+    "titan_code": null,
+    "transfer_code": "TRF_fpmd0l3w6o",
+    "transferred_at": "2024-02-01T08:32:42.000Z",
+    "updatedAt": "2024-02-01T08:32:42.000Z",
+    "recipient": {
+      "active": true,
+      "createdAt": "2023-10-10T10:29:46.000Z",
+      "currency": "NGN",
+      "description": "Test transfer recipient",
+      "domain": "test",
+      "email": null,
+      "id": 44157479,
+      "integration": 463433,
+      "metadata": null,
+      "name": "Awesome Customer",
+      "recipient_code": "RCP_fpmd0l3w6o",
+      "type": "nuban",
+      "updatedAt": "2023-10-10T10:29:46.000Z",
+      "is_deleted": false,
+      "details": {
+        "authorization_code": null,
+        "account_number": "0123456789",
+        "account_name": "AWESOME CUSTOMER",
+        "bank_code": "011",
+        "bank_name": "First Bank of Nigeria"
+      }
+    }
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "status": true,
+  "message": "Upload url generated",
+  "data": {
+    "signedUrl": "https://s3.eu-west-1.amazonaws.com/files.paystack.co/qesp8a4df1xejihd9x5q?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAI7CL5IZL2DJHOPPA%2F20191009%2Feu-west-1%2Fs3%2Faws4_request&X-Amz-Date=20191009T220931Z&X-Amz-Expires=1800&X-Amz-Signature=f5cc387949f3520982886e70ab2e08721a82a9fa9e26b696b91471f36453867a&X-Amz-SignedHeaders=host",
+    "fileName": "qesp8a4df1xejihd9x5q"
+  }
+}

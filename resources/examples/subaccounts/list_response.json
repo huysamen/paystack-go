@@ -1,0 +1,61 @@
+{
+  "status": true,
+  "message": "Subaccounts retrieved",
+  "data": [
+    {
+      "id": 1151727,
+      "subaccount_code": "ACCT_6uujpqtzmnufzkw",
+      "business_name": "Oasis",
+      "description": "Oasis",
+      "primary_contact_name": null,
+      "primary_contact_email": null,
+      "primary_contact_phone": null,
+      "metadata": null,
+      "percentage_charge": 30,
+      "settlement_bank": "Guaranty Trust Bank",
+      "bank_id": 9,
+      "account_number": "0123456047",
+      "currency": "NGN",
+      "active": 1,
+      "migrate": false,
+      "is_verified": false,
+      "settlement_schedule": "AUTO",
+      "domain": "test",
+      "integration": 463433,
+      "product": "collection",
+      "createdAt": "2024-08-22T11:30:15.000Z",
+      "updatedAt": "2024-08-22T11:30:15.000Z"
+    },
+    {
+      "id": 1151728,
+      "subaccount_code": "ACCT_xyz123mnufzkw",
+      "business_name": "Tech Solutions",
+      "description": "Software development services",
+      "primary_contact_name": "John Smith",
+      "primary_contact_email": "john@techsolutions.com",
+      "primary_contact_phone": "+2348123456789",
+      "metadata": null,
+      "percentage_charge": 20,
+      "settlement_bank": "First Bank of Nigeria",
+      "bank_id": 8,
+      "account_number": "0987654321",
+      "currency": "NGN",
+      "active": 1,
+      "migrate": false,
+      "is_verified": true,
+      "settlement_schedule": "WEEKLY",
+      "domain": "test",
+      "integration": 463433,
+      "product": "collection",
+      "createdAt": "2024-08-22T12:30:15.000Z",
+      "updatedAt": "2024-08-22T12:30:15.000Z"
+    }
+  ],
+  "meta": {
+    "total": 2,
+    "skipped": 0,
+    "perPage": 50,
+    "page": 1,
+    "pageCount": 1
+  }
+}

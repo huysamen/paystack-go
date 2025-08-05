@@ -1,0 +1,25 @@
+{
+  "status": true,
+  "message": "Refund retrieved",
+  "data": {
+    "integration": 100982,
+    "transaction": 1641,
+    "dispute": null,
+    "settlement": null,
+    "domain": "live",
+    "amount": 500000,
+    "deducted_amount": 500000,
+    "fully_deducted": true,
+    "currency": "NGN",
+    "channel": "migs",
+    "status": "processed",
+    "refunded_by": "eseyinwale@gmail.com",
+    "refunded_at": "2018-01-12T10:54:47.000Z",
+    "expected_at": "2017-10-01T21:10:59.000Z",
+    "customer_note": "Product was damaged",
+    "merchant_note": "Refund approved by merchant",
+    "id": 1,
+    "createdAt": "2017-10-01T21:10:59.000Z",
+    "updatedAt": "2018-01-12T10:54:47.000Z"
+  }
+}

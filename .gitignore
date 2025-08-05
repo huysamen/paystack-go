@@ -41,7 +41,7 @@ coverage.html
 !/net/
 !/optional/
 !/types/
-!/utils/
+!/resources/
 
 # IDE and editor files
 .vscode/
