@@ -1,19 +1,8 @@
 package types
 
-// TransferRecipientType represents the type of transfer recipient
-type TransferRecipientType string
-
-const (
-	RecipientTypeNuban       TransferRecipientType = "nuban"        // Nigerian bank account
-	RecipientTypeGhipss      TransferRecipientType = "ghipss"       // Ghana bank account
-	RecipientTypeMobileMoney TransferRecipientType = "mobile_money" // Mobile money account
-	RecipientTypeBasa        TransferRecipientType = "basa"         // South African bank account
+import (
+	"github.com/huysamen/paystack-go/enums"
 )
-
-// String returns the string representation of RecipientType
-func (r TransferRecipientType) String() string {
-	return string(r)
-}
 
 // Transfer represents a Paystack transfer
 type Transfer struct {
@@ -21,7 +10,7 @@ type Transfer struct {
 	Integration   int            `json:"integration"`
 	Domain        string         `json:"domain"`
 	Amount        int            `json:"amount"`
-	Currency      Currency       `json:"currency"`
+	Currency      enums.Currency `json:"currency"`
 	Source        string         `json:"source"`
 	SourceDetails map[string]any `json:"source_details"`
 	Reason        string         `json:"reason"`
@@ -41,7 +30,7 @@ type Recipient struct {
 	ID            int              `json:"id"`
 	Domain        string           `json:"domain"`
 	Type          string           `json:"type"`
-	Currency      Currency         `json:"currency"`
+	Currency      enums.Currency   `json:"currency"`
 	Name          string           `json:"name"`
 	Details       RecipientDetails `json:"details"`
 	Description   string           `json:"description"`
@@ -84,33 +73,33 @@ type BalanceLedger struct {
 
 // TransferRecipient represents a transfer recipient
 type TransferRecipient struct {
-	ID            uint64                `json:"id"`
-	Domain        string                `json:"domain"`
-	Type          TransferRecipientType `json:"type"`
-	Currency      string                `json:"currency"`
-	Name          string                `json:"name"`
-	Description   string                `json:"description"`
-	Details       RecipientDetails      `json:"details"`
-	Metadata      map[string]any        `json:"metadata"`
-	RecipientCode string                `json:"recipient_code"`
-	Active        bool                  `json:"active"`
-	IsDeleted     bool                  `json:"is_deleted"`
-	CreatedAt     DateTime              `json:"createdAt"`
-	UpdatedAt     DateTime              `json:"updatedAt"`
-	Integration   uint64                `json:"integration"`
-	Email         *string               `json:"email,omitempty"`
+	ID            uint64                      `json:"id"`
+	Domain        string                      `json:"domain"`
+	Type          enums.TransferRecipientType `json:"type"`
+	Currency      string                      `json:"currency"`
+	Name          string                      `json:"name"`
+	Description   string                      `json:"description"`
+	Details       RecipientDetails            `json:"details"`
+	Metadata      map[string]any              `json:"metadata"`
+	RecipientCode string                      `json:"recipient_code"`
+	Active        bool                        `json:"active"`
+	IsDeleted     bool                        `json:"is_deleted"`
+	CreatedAt     DateTime                    `json:"createdAt"`
+	UpdatedAt     DateTime                    `json:"updatedAt"`
+	Integration   uint64                      `json:"integration"`
+	Email         *string                     `json:"email,omitempty"`
 }
 
 // BulkRecipientItem represents a single recipient in a bulk create request
 type BulkRecipientItem struct {
-	Type              TransferRecipientType `json:"type"`                         // Required: nuban, ghipss, mobile_money, basa
-	Name              string                `json:"name"`                         // Required: recipient's name
-	AccountNumber     string                `json:"account_number"`               // Required for all types except authorization
-	BankCode          string                `json:"bank_code"`                    // Required for all types except authorization
-	Description       *string               `json:"description,omitempty"`        // Optional: description
-	Currency          *string               `json:"currency,omitempty"`           // Optional: currency
-	AuthorizationCode *string               `json:"authorization_code,omitempty"` // Optional: authorization code
-	Metadata          map[string]any        `json:"metadata,omitempty"`           // Optional: additional data
+	Type              enums.TransferRecipientType `json:"type"`                         // Required: nuban, ghipss, mobile_money, basa
+	Name              string                      `json:"name"`                         // Required: recipient's name
+	AccountNumber     string                      `json:"account_number"`               // Required for all types except authorization
+	BankCode          string                      `json:"bank_code"`                    // Required for all types except authorization
+	Description       *string                     `json:"description,omitempty"`        // Optional: description
+	Currency          *string                     `json:"currency,omitempty"`           // Optional: currency
+	AuthorizationCode *string                     `json:"authorization_code,omitempty"` // Optional: authorization code
+	Metadata          map[string]any              `json:"metadata,omitempty"`           // Optional: additional data
 }
 
 // BulkCreateResult represents the result of a bulk create operation

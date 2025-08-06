@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/huysamen/paystack-go/enums"
 	"github.com/huysamen/paystack-go/net"
 	"github.com/huysamen/paystack-go/types"
 )
@@ -11,12 +12,12 @@ import (
 type updateRequest struct {
 	Name     string         `json:"name"`
 	Amount   int            `json:"amount"`
-	Interval types.Interval `json:"interval"`
+	Interval enums.Interval `json:"interval"`
 
 	Description                 string         `json:"description,omitempty"`
 	SendInvoices                *bool          `json:"send_invoices,omitempty"`
 	SendSMS                     *bool          `json:"send_sms,omitempty"`
-	Currency                    types.Currency `json:"currency,omitempty"`
+	Currency                    enums.Currency `json:"currency,omitempty"`
 	InvoiceLimit                *int           `json:"invoice_limit,omitempty"`
 	UpdateExistingSubscriptions *bool          `json:"update_existing_subscriptions,omitempty"`
 }
@@ -25,7 +26,7 @@ type UpdateRequestBuilder struct {
 	req *updateRequest
 }
 
-func NewUpdateRequestBuilder(name string, amount int, interval types.Interval) *UpdateRequestBuilder {
+func NewUpdateRequestBuilder(name string, amount int, interval enums.Interval) *UpdateRequestBuilder {
 	return &UpdateRequestBuilder{
 		req: &updateRequest{
 			Name:     name,
@@ -53,7 +54,7 @@ func (b *UpdateRequestBuilder) SendSMS(sendSMS bool) *UpdateRequestBuilder {
 	return b
 }
 
-func (b *UpdateRequestBuilder) Currency(currency types.Currency) *UpdateRequestBuilder {
+func (b *UpdateRequestBuilder) Currency(currency enums.Currency) *UpdateRequestBuilder {
 	b.req.Currency = currency
 
 	return b

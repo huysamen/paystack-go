@@ -1,5 +1,9 @@
 package types
 
+import (
+	"github.com/huysamen/paystack-go/enums"
+)
+
 // Plan represents a Paystack plan
 type Plan struct {
 	Domain                   string         `json:"domain"`
@@ -7,14 +11,14 @@ type Plan struct {
 	PlanCode                 string         `json:"plan_code"`
 	Description              string         `json:"description"`
 	Amount                   int            `json:"amount"`
-	Interval                 Interval       `json:"interval"`
+	Interval                 enums.Interval `json:"interval"`
 	InvoiceLimit             int            `json:"invoice_limit"`
 	SendInvoices             bool           `json:"send_invoices"`
 	SendSms                  bool           `json:"send_sms"`
 	HostedPage               bool           `json:"hosted_page"`
 	HostedPageURL            string         `json:"hosted_page_url"`
 	HostedPageSummary        string         `json:"hosted_page_summary"`
-	Currency                 Currency       `json:"currency"`
+	Currency                 enums.Currency `json:"currency"`
 	Migrate                  bool           `json:"migrate"`
 	IsDeleted                bool           `json:"is_deleted"`
 	IsArchived               bool           `json:"is_archived"`
@@ -63,13 +67,13 @@ type Subscription struct {
 
 // Subscriber represents a plan subscriber
 type Subscriber struct {
-	CustomerCode            string   `json:"customer_code"`
-	CustomerFirstName       string   `json:"customer_first_name"`
-	CustomerLastName        string   `json:"customer_last_name"`
-	CustomerEmail           string   `json:"customer_email"`
-	SubscriptionStatus      string   `json:"subscription_status"`
-	Currency                Currency `json:"currency"`
-	CustomerTotalAmountPaid int      `json:"customer_total_amount_paid"`
+	CustomerCode            string         `json:"customer_code"`
+	CustomerFirstName       string         `json:"customer_first_name"`
+	CustomerLastName        string         `json:"customer_last_name"`
+	CustomerEmail           string         `json:"customer_email"`
+	SubscriptionStatus      string         `json:"subscription_status"`
+	Currency                enums.Currency `json:"currency"`
+	CustomerTotalAmountPaid int            `json:"customer_total_amount_paid"`
 }
 
 // Invoice represents a Paystack invoice
@@ -84,8 +88,8 @@ type Invoice struct {
 	GatewayResponse    string              `json:"gateway_response"`
 	PaidAt             *DateTime           `json:"paid_at,omitempty"`
 	CreatedAt          DateTime            `json:"created_at"`
-	Channel            Channel             `json:"channel"`
-	Currency           Currency            `json:"currency"`
+	Channel            enums.Channel       `json:"channel"`
+	Currency           enums.Currency      `json:"currency"`
 	IPAddress          string              `json:"ip_address"`
 	Metadata           Metadata            `json:"metadata"`
 	Log                Log                 `json:"log"`

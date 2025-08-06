@@ -2,39 +2,26 @@ package types
 
 import (
 	"time"
+
+	"github.com/huysamen/paystack-go/enums"
 )
-
-// SettlementStatus represents the status of a settlement
-type SettlementStatus string
-
-const (
-	SettlementStatusSuccess    SettlementStatus = "success"    // Successfully settled
-	SettlementStatusProcessing SettlementStatus = "processing" // Currently being processed
-	SettlementStatusPending    SettlementStatus = "pending"    // Pending settlement
-	SettlementStatusFailed     SettlementStatus = "failed"     // Failed settlement
-)
-
-// String returns the string representation of SettlementStatus
-func (s SettlementStatus) String() string {
-	return string(s)
-}
 
 // Settlement represents a settlement record
 type Settlement struct {
-	ID              uint64           `json:"id"`
-	Domain          string           `json:"domain"`
-	Status          SettlementStatus `json:"status"`
-	Currency        string           `json:"currency"`
-	Integration     uint64           `json:"integration"`
-	TotalAmount     int64            `json:"total_amount"`     // Amount after fees in kobo
-	EffectiveAmount int64            `json:"effective_amount"` // Amount actually settled in kobo
-	TotalFees       int64            `json:"total_fees"`       // Total fees charged in kobo
-	TotalProcessed  int64            `json:"total_processed"`  // Total amount processed in kobo
-	Deductions      map[string]any   `json:"deductions"`       // Any deductions applied
-	SettlementDate  time.Time        `json:"settlement_date"`  // Date settlement was made
-	SettledBy       *string          `json:"settled_by"`       // Who processed the settlement
-	CreatedAt       time.Time        `json:"createdAt"`        // When settlement record was created
-	UpdatedAt       time.Time        `json:"updatedAt"`        // When settlement was last updated
+	ID              uint64                 `json:"id"`
+	Domain          string                 `json:"domain"`
+	Status          enums.SettlementStatus `json:"status"`
+	Currency        string                 `json:"currency"`
+	Integration     uint64                 `json:"integration"`
+	TotalAmount     int64                  `json:"total_amount"`     // Amount after fees in kobo
+	EffectiveAmount int64                  `json:"effective_amount"` // Amount actually settled in kobo
+	TotalFees       int64                  `json:"total_fees"`       // Total fees charged in kobo
+	TotalProcessed  int64                  `json:"total_processed"`  // Total amount processed in kobo
+	Deductions      map[string]any         `json:"deductions"`       // Any deductions applied
+	SettlementDate  time.Time              `json:"settlement_date"`  // Date settlement was made
+	SettledBy       *string                `json:"settled_by"`       // Who processed the settlement
+	CreatedAt       time.Time              `json:"createdAt"`        // When settlement record was created
+	UpdatedAt       time.Time              `json:"updatedAt"`        // When settlement was last updated
 }
 
 // SettlementTransaction represents a transaction within a settlement

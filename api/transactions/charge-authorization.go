@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/huysamen/paystack-go/enums"
 	"github.com/huysamen/paystack-go/net"
 	"github.com/huysamen/paystack-go/types"
 )
@@ -14,12 +15,12 @@ type chargeAuthorizationRequest struct {
 	AuthorizationCode string `json:"authorization_code"`
 
 	Reference         string          `json:"reference,omitempty"`
-	Currency          types.Currency  `json:"currency,omitempty"`
+	Currency          enums.Currency  `json:"currency,omitempty"`
 	Metadata          types.Metadata  `json:"metadata,omitempty"`
-	Channels          []types.Channel `json:"channels,omitempty"`
+	Channels          []enums.Channel `json:"channels,omitempty"`
 	Subaccount        string          `json:"subaccount,omitempty"`
 	TransactionCharge int             `json:"transaction_charge,omitempty"`
-	Bearer            types.Bearer    `json:"bearer,omitempty"`
+	Bearer            enums.Bearer    `json:"bearer,omitempty"`
 	Queue             bool            `json:"queue,omitempty"`
 }
 
@@ -55,7 +56,7 @@ func (b *ChargeAuthorizationRequestBuilder) Reference(reference string) *ChargeA
 	return b
 }
 
-func (b *ChargeAuthorizationRequestBuilder) Currency(currency types.Currency) *ChargeAuthorizationRequestBuilder {
+func (b *ChargeAuthorizationRequestBuilder) Currency(currency enums.Currency) *ChargeAuthorizationRequestBuilder {
 	b.request.Currency = currency
 
 	return b
@@ -67,7 +68,7 @@ func (b *ChargeAuthorizationRequestBuilder) Metadata(metadata types.Metadata) *C
 	return b
 }
 
-func (b *ChargeAuthorizationRequestBuilder) Channels(channels []types.Channel) *ChargeAuthorizationRequestBuilder {
+func (b *ChargeAuthorizationRequestBuilder) Channels(channels []enums.Channel) *ChargeAuthorizationRequestBuilder {
 	b.request.Channels = channels
 
 	return b
@@ -85,7 +86,7 @@ func (b *ChargeAuthorizationRequestBuilder) TransactionCharge(transactionCharge 
 	return b
 }
 
-func (b *ChargeAuthorizationRequestBuilder) Bearer(bearer types.Bearer) *ChargeAuthorizationRequestBuilder {
+func (b *ChargeAuthorizationRequestBuilder) Bearer(bearer enums.Bearer) *ChargeAuthorizationRequestBuilder {
 	b.request.Bearer = bearer
 
 	return b

@@ -3,6 +3,7 @@ package plans
 import (
 	"context"
 
+	"github.com/huysamen/paystack-go/enums"
 	"github.com/huysamen/paystack-go/net"
 	"github.com/huysamen/paystack-go/types"
 )
@@ -10,12 +11,12 @@ import (
 type createRequest struct {
 	Name     string         `json:"name"`
 	Amount   int            `json:"amount"`
-	Interval types.Interval `json:"interval"`
+	Interval enums.Interval `json:"interval"`
 
 	Description  string         `json:"description,omitempty"`
 	SendInvoices *bool          `json:"send_invoices,omitempty"`
 	SendSMS      *bool          `json:"send_sms,omitempty"`
-	Currency     types.Currency `json:"currency,omitempty"`
+	Currency     enums.Currency `json:"currency,omitempty"`
 	InvoiceLimit *int           `json:"invoice_limit,omitempty"`
 }
 
@@ -23,7 +24,7 @@ type CreateRequestBuilder struct {
 	req *createRequest
 }
 
-func NewCreateRequestBuilder(name string, amount int, interval types.Interval) *CreateRequestBuilder {
+func NewCreateRequestBuilder(name string, amount int, interval enums.Interval) *CreateRequestBuilder {
 	return &CreateRequestBuilder{
 		req: &createRequest{
 			Name:     name,
@@ -51,7 +52,7 @@ func (b *CreateRequestBuilder) SendSMS(sendSMS bool) *CreateRequestBuilder {
 	return b
 }
 
-func (b *CreateRequestBuilder) Currency(currency types.Currency) *CreateRequestBuilder {
+func (b *CreateRequestBuilder) Currency(currency enums.Currency) *CreateRequestBuilder {
 	b.req.Currency = currency
 
 	return b

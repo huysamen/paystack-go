@@ -3,6 +3,8 @@ package types
 import (
 	"encoding/json"
 	"fmt"
+
+	"github.com/huysamen/paystack-go/enums"
 )
 
 // Metadata represents arbitrary metadata that can be attached to Paystack objects
@@ -135,8 +137,8 @@ type CustomField struct {
 
 // CustomFilters represents filters for customizing payment options
 type CustomFilters struct {
-	Recurring                     bool        `json:"recurring,omitempty"`
-	Banks                         []string    `json:"banks,omitempty"`
-	CardBrands                    []CardBrand `json:"card_brands,omitempty"`
-	SupportedMobileMoneyProviders []MoMo      `json:"supported_mobile_money_providers,omitempty"`
+	Recurring                     bool              `json:"recurring,omitempty"`
+	Banks                         []string          `json:"banks,omitempty"`
+	CardBrands                    []enums.CardBrand `json:"card_brands,omitempty"`
+	SupportedMobileMoneyProviders []enums.MoMo      `json:"supported_mobile_money_providers,omitempty"`
 }

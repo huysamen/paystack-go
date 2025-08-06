@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/huysamen/paystack-go/enums"
 	"github.com/huysamen/paystack-go/net"
 	"github.com/huysamen/paystack-go/types"
 )
@@ -12,17 +13,17 @@ type initializeRequest struct {
 	Amount int    `json:"amount"`
 	Email  string `json:"email"`
 
-	Currency          types.Currency  `json:"currency,omitempty"`
+	Currency          enums.Currency  `json:"currency,omitempty"`
 	Reference         string          `json:"reference,omitempty"`
 	CallbackURL       string          `json:"callback_url,omitempty"`
 	Plan              string          `json:"plan,omitempty"`
 	InvoiceLimit      int             `json:"invoice_limit,omitempty"`
 	Metadata          types.Metadata  `json:"metadata,omitempty"`
-	Channels          []types.Channel `json:"channels,omitempty"`
+	Channels          []enums.Channel `json:"channels,omitempty"`
 	SplitCode         []string        `json:"split_code,omitempty"`
 	Subaccount        string          `json:"subaccount,omitempty"`
 	TransactionCharge int             `json:"transaction_charge,omitempty"`
-	Bearer            types.Bearer    `json:"bearer,omitempty"`
+	Bearer            enums.Bearer    `json:"bearer,omitempty"`
 }
 
 type InitializeRequestBuilder struct {
@@ -45,7 +46,7 @@ func (b *InitializeRequestBuilder) Email(email string) *InitializeRequestBuilder
 	return b
 }
 
-func (b *InitializeRequestBuilder) Currency(currency types.Currency) *InitializeRequestBuilder {
+func (b *InitializeRequestBuilder) Currency(currency enums.Currency) *InitializeRequestBuilder {
 	b.request.Currency = currency
 
 	return b
@@ -81,7 +82,7 @@ func (b *InitializeRequestBuilder) Metadata(metadata types.Metadata) *Initialize
 	return b
 }
 
-func (b *InitializeRequestBuilder) Channels(channels []types.Channel) *InitializeRequestBuilder {
+func (b *InitializeRequestBuilder) Channels(channels []enums.Channel) *InitializeRequestBuilder {
 	b.request.Channels = channels
 
 	return b
@@ -105,7 +106,7 @@ func (b *InitializeRequestBuilder) TransactionCharge(transactionCharge int) *Ini
 	return b
 }
 
-func (b *InitializeRequestBuilder) Bearer(bearer types.Bearer) *InitializeRequestBuilder {
+func (b *InitializeRequestBuilder) Bearer(bearer enums.Bearer) *InitializeRequestBuilder {
 	b.request.Bearer = bearer
 
 	return b

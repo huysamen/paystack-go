@@ -7,6 +7,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/huysamen/paystack-go/enums"
 	"github.com/huysamen/paystack-go/net"
 	"github.com/huysamen/paystack-go/optional"
 	"github.com/huysamen/paystack-go/types"
@@ -19,7 +20,7 @@ type exportRequest struct {
 	To          *time.Time
 	Customer    *uint64
 	Status      *string
-	Currency    *types.Currency
+	Currency    *enums.Currency
 	Amount      *int
 	Settled     *bool
 	Settlement  *uint64
@@ -79,7 +80,7 @@ func (b *ExportRequestBuilder) Status(status string) *ExportRequestBuilder {
 	return b
 }
 
-func (b *ExportRequestBuilder) Currency(currency types.Currency) *ExportRequestBuilder {
+func (b *ExportRequestBuilder) Currency(currency enums.Currency) *ExportRequestBuilder {
 	b.req.Currency = &currency
 
 	return b

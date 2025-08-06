@@ -5,13 +5,14 @@ import (
 	"fmt"
 	"net/url"
 
+	"github.com/huysamen/paystack-go/enums"
 	"github.com/huysamen/paystack-go/net"
 	"github.com/huysamen/paystack-go/types"
 )
 
 type listMandateAuthorizationsRequest struct {
 	Cursor  string                           `json:"cursor,omitempty"`
-	Status  types.MandateAuthorizationStatus `json:"status,omitempty"`
+	Status  enums.MandateAuthorizationStatus `json:"status,omitempty"`
 	PerPage int                              `json:"per_page,omitempty"`
 }
 
@@ -31,7 +32,7 @@ func (b *ListMandateAuthorizationsRequestBuilder) Cursor(cursor string) *ListMan
 	return b
 }
 
-func (b *ListMandateAuthorizationsRequestBuilder) Status(status types.MandateAuthorizationStatus) *ListMandateAuthorizationsRequestBuilder {
+func (b *ListMandateAuthorizationsRequestBuilder) Status(status enums.MandateAuthorizationStatus) *ListMandateAuthorizationsRequestBuilder {
 	b.req.Status = status
 
 	return b

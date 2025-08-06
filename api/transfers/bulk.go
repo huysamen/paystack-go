@@ -3,6 +3,7 @@ package transfers
 import (
 	"context"
 
+	"github.com/huysamen/paystack-go/enums"
 	"github.com/huysamen/paystack-go/net"
 	"github.com/huysamen/paystack-go/types"
 )
@@ -60,7 +61,7 @@ type BulkResponseData struct {
 	Recipient    string         `json:"recipient"`
 	Amount       int            `json:"amount"`
 	TransferCode string         `json:"transfer_code"`
-	Currency     types.Currency `json:"currency"`
+	Currency     enums.Currency `json:"currency"`
 	Status       string         `json:"status"`
 }
 

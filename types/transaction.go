@@ -1,5 +1,9 @@
 package types
 
+import (
+	"github.com/huysamen/paystack-go/enums"
+)
+
 // Transaction represents a Paystack transaction
 type Transaction struct {
 	ID                 uint64              `json:"id"`
@@ -11,8 +15,8 @@ type Transaction struct {
 	GatewayResponse    string              `json:"gateway_response"`
 	PaidAt             *DateTime           `json:"paid_at,omitempty"`
 	CreatedAt          DateTime            `json:"created_at"`
-	Channel            Channel             `json:"channel"`
-	Currency           Currency            `json:"currency"`
+	Channel            enums.Channel       `json:"channel"`
+	Currency           enums.Currency      `json:"currency"`
 	IPAddress          string              `json:"ip_address"`
 	Metadata           Metadata            `json:"metadata"`
 	Log                Log                 `json:"log"`

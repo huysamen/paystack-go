@@ -5,6 +5,7 @@ import (
 	"net/url"
 	"strconv"
 
+	"github.com/huysamen/paystack-go/enums"
 	"github.com/huysamen/paystack-go/net"
 	"github.com/huysamen/paystack-go/types"
 )
@@ -13,7 +14,7 @@ type listRequest struct {
 	PerPage  *int            `json:"perPage,omitempty"`
 	Page     *int            `json:"page,omitempty"`
 	Status   *string         `json:"status,omitempty"`
-	Interval *types.Interval `json:"interval,omitempty"`
+	Interval *enums.Interval `json:"interval,omitempty"`
 	Amount   *int            `json:"amount,omitempty"`
 }
 
@@ -45,7 +46,7 @@ func (b *ListRequestBuilder) Status(status string) *ListRequestBuilder {
 	return b
 }
 
-func (b *ListRequestBuilder) Interval(interval types.Interval) *ListRequestBuilder {
+func (b *ListRequestBuilder) Interval(interval enums.Interval) *ListRequestBuilder {
 	b.req.Interval = &interval
 
 	return b

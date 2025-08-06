@@ -4,6 +4,7 @@ import (
 	"context"
 	"time"
 
+	"github.com/huysamen/paystack-go/enums"
 	"github.com/huysamen/paystack-go/net"
 	"github.com/huysamen/paystack-go/types"
 )
@@ -11,7 +12,7 @@ import (
 type listRequest struct {
 	PerPage    *int                    `json:"perPage,omitempty"`    // Optional: records per page (default: 50)
 	Page       *int                    `json:"page,omitempty"`       // Optional: page number (default: 1)
-	Status     *types.SettlementStatus `json:"status,omitempty"`     // Optional: filter by status
+	Status     *enums.SettlementStatus `json:"status,omitempty"`     // Optional: filter by status
 	Subaccount *string                 `json:"subaccount,omitempty"` // Optional: filter by subaccount ID (use "none" for main account only)
 	From       *time.Time              `json:"from,omitempty"`       // Optional: start date filter
 	To         *time.Time              `json:"to,omitempty"`         // Optional: end date filter
@@ -39,7 +40,7 @@ func (b *ListRequestBuilder) Page(page int) *ListRequestBuilder {
 	return b
 }
 
-func (b *ListRequestBuilder) Status(status types.SettlementStatus) *ListRequestBuilder {
+func (b *ListRequestBuilder) Status(status enums.SettlementStatus) *ListRequestBuilder {
 	b.req.Status = &status
 
 	return b

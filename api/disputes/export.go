@@ -6,6 +6,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/huysamen/paystack-go/enums"
 	"github.com/huysamen/paystack-go/net"
 	"github.com/huysamen/paystack-go/types"
 )
@@ -16,7 +17,7 @@ type exportRequest struct {
 	PerPage     *int                 `json:"per_page,omitempty"`
 	Page        *int                 `json:"page,omitempty"`
 	Transaction *string              `json:"transaction,omitempty"`
-	Status      *types.DisputeStatus `json:"status,omitempty"`
+	Status      *enums.DisputeStatus `json:"status,omitempty"`
 }
 
 type ExportRequestBuilder struct {
@@ -66,7 +67,7 @@ func (b *ExportRequestBuilder) Transaction(transaction string) *ExportRequestBui
 	return b
 }
 
-func (b *ExportRequestBuilder) Status(status types.DisputeStatus) *ExportRequestBuilder {
+func (b *ExportRequestBuilder) Status(status enums.DisputeStatus) *ExportRequestBuilder {
 	b.request.Status = &status
 
 	return b

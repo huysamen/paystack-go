@@ -3,12 +3,13 @@ package transferrecipients
 import (
 	"context"
 
+	"github.com/huysamen/paystack-go/enums"
 	"github.com/huysamen/paystack-go/net"
 	"github.com/huysamen/paystack-go/types"
 )
 
 type createRequest struct {
-	Type              types.TransferRecipientType `json:"type"`                         // Required: nuban, ghipss, mobile_money, basa
+	Type              enums.TransferRecipientType `json:"type"`                         // Required: nuban, ghipss, mobile_money, basa
 	Name              string                      `json:"name"`                         // Required: recipient's name
 	AccountNumber     string                      `json:"account_number"`               // Required for all types except authorization
 	BankCode          string                      `json:"bank_code"`                    // Required for all types except authorization
@@ -22,7 +23,7 @@ type CreateRequestBuilder struct {
 	req *createRequest
 }
 
-func NewCreateRequestBuilder(recipientType types.TransferRecipientType, name, accountNumber, bankCode string) *CreateRequestBuilder {
+func NewCreateRequestBuilder(recipientType enums.TransferRecipientType, name, accountNumber, bankCode string) *CreateRequestBuilder {
 	return &CreateRequestBuilder{
 		req: &createRequest{
 			Type:          recipientType,

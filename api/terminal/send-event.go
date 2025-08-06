@@ -4,13 +4,14 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/huysamen/paystack-go/enums"
 	"github.com/huysamen/paystack-go/net"
 	"github.com/huysamen/paystack-go/types"
 )
 
 type sendEventRequest struct {
-	Type   types.TerminalEventType   `json:"type"`
-	Action types.TerminalEventAction `json:"action"`
+	Type   enums.TerminalEventType   `json:"type"`
+	Action enums.TerminalEventAction `json:"action"`
 	Data   types.TerminalEventData   `json:"data"`
 }
 
@@ -18,7 +19,7 @@ type SendEventRequestBuilder struct {
 	req *sendEventRequest
 }
 
-func NewSendEventRequestBuilder(eventType types.TerminalEventType, action types.TerminalEventAction, data types.TerminalEventData) *SendEventRequestBuilder {
+func NewSendEventRequestBuilder(eventType enums.TerminalEventType, action enums.TerminalEventAction, data types.TerminalEventData) *SendEventRequestBuilder {
 	return &SendEventRequestBuilder{
 		req: &sendEventRequest{
 			Type:   eventType,

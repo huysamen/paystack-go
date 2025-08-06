@@ -3,12 +3,13 @@ package disputes
 import (
 	"context"
 
+	"github.com/huysamen/paystack-go/enums"
 	"github.com/huysamen/paystack-go/net"
 	"github.com/huysamen/paystack-go/types"
 )
 
 type resolveRequest struct {
-	Resolution       types.DisputeResolution `json:"resolution"`
+	Resolution       enums.DisputeResolution `json:"resolution"`
 	Message          string                  `json:"message"`
 	RefundAmount     int                     `json:"refund_amount"`
 	UploadedFileName string                  `json:"uploaded_filename"`
@@ -19,7 +20,7 @@ type ResolveRequestBuilder struct {
 	req *resolveRequest
 }
 
-func NewResolveRequestBuilder(resolution types.DisputeResolution, message string, refundAmount int, uploadedFileName string) *ResolveRequestBuilder {
+func NewResolveRequestBuilder(resolution enums.DisputeResolution, message string, refundAmount int, uploadedFileName string) *ResolveRequestBuilder {
 	return &ResolveRequestBuilder{
 		req: &resolveRequest{
 			Resolution:       resolution,

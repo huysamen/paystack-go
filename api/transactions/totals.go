@@ -6,6 +6,7 @@ import (
 	"net/url"
 	"time"
 
+	"github.com/huysamen/paystack-go/enums"
 	"github.com/huysamen/paystack-go/net"
 	"github.com/huysamen/paystack-go/optional"
 	"github.com/huysamen/paystack-go/types"
@@ -83,7 +84,7 @@ func (r *totalsRequest) toQuery() string {
 }
 
 type CurrencyTotal struct {
-	Currency types.Currency `json:"currency"`
+	Currency enums.Currency `json:"currency"`
 	Amount   int            `json:"amount"`
 }
 

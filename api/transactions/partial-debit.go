@@ -4,13 +4,14 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/huysamen/paystack-go/enums"
 	"github.com/huysamen/paystack-go/net"
 	"github.com/huysamen/paystack-go/types"
 )
 
 type partialDebitRequest struct {
 	AuthorizationCode string         `json:"authorization_code"`
-	Currency          types.Currency `json:"currency"`
+	Currency          enums.Currency `json:"currency"`
 	Amount            int            `json:"amount"`
 	Email             string         `json:"email"`
 
@@ -31,7 +32,7 @@ func (b *PartialDebitRequestBuilder) AuthorizationCode(authorizationCode string)
 	return b
 }
 
-func (b *PartialDebitRequestBuilder) Currency(currency types.Currency) *PartialDebitRequestBuilder {
+func (b *PartialDebitRequestBuilder) Currency(currency enums.Currency) *PartialDebitRequestBuilder {
 	b.request.Currency = currency
 	return b
 }

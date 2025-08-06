@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/huysamen/paystack-go/enums"
 	"github.com/huysamen/paystack-go/net"
 	"github.com/huysamen/paystack-go/types"
 )
@@ -11,7 +12,7 @@ import (
 type updateRequest struct {
 	Name             *string                           `json:"name,omitempty"`
 	Active           *bool                             `json:"active,omitempty"`
-	BearerType       *types.TransactionSplitBearerType `json:"bearer_type,omitempty"`
+	BearerType       *enums.TransactionSplitBearerType `json:"bearer_type,omitempty"`
 	BearerSubaccount *string                           `json:"bearer_subaccount,omitempty"`
 }
 
@@ -37,7 +38,7 @@ func (b *UpdateRequestBuilder) Active(active bool) *UpdateRequestBuilder {
 	return b
 }
 
-func (b *UpdateRequestBuilder) BearerType(bearerType types.TransactionSplitBearerType) *UpdateRequestBuilder {
+func (b *UpdateRequestBuilder) BearerType(bearerType enums.TransactionSplitBearerType) *UpdateRequestBuilder {
 	b.req.BearerType = &bearerType
 
 	return b
