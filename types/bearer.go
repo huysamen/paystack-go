@@ -1,47 +1,25 @@
 package types
 
-import (
-	"encoding/json"
-)
-
-type Bearer int
+// Bearer represents who bears the transaction charges
+type Bearer string
 
 const (
-	BearerUnknown Bearer = iota
-	BearerAccount
-	BearerSubaccount
+	BearerUnknown    Bearer = ""
+	BearerAccount    Bearer = "account"
+	BearerSubaccount Bearer = "subaccount"
 )
 
+// String returns the string representation of the bearer
 func (b Bearer) String() string {
+	return string(b)
+}
+
+// IsValid returns true if the bearer is a valid known value
+func (b Bearer) IsValid() bool {
 	switch b {
-	case BearerAccount:
-		return "account"
-	case BearerSubaccount:
-		return "subaccount"
+	case BearerAccount, BearerSubaccount:
+		return true
 	default:
-		return ""
+		return false
 	}
-}
-
-func (b Bearer) MarshalJSON() ([]byte, error) {
-	return json.Marshal(b.String())
-}
-
-func (b *Bearer) UnmarshalJSON(data []byte) error {
-	var str string
-
-	if err := json.Unmarshal(data, &str); err != nil {
-		return err
-	}
-
-	switch str {
-	case "account":
-		*b = BearerAccount
-	case "subaccount":
-		*b = BearerSubaccount
-	default:
-		*b = BearerUnknown
-	}
-
-	return nil
 }

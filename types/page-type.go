@@ -1,57 +1,27 @@
 package types
 
-import (
-	"encoding/json"
-)
-
-type PageType int
+// PageType represents the type of payment page
+type PageType string
 
 const (
-	PageTypeUnknown PageType = iota
-	PageTypePayment
-	PageTypeSubscription
-	PageTypeProduct
-	PageTypePlan
+	PageTypeUnknown      PageType = ""
+	PageTypePayment      PageType = "payment"
+	PageTypeSubscription PageType = "subscription"
+	PageTypeProduct      PageType = "product"
+	PageTypePlan         PageType = "plan"
 )
 
+// String returns the string representation of the page type
 func (p PageType) String() string {
+	return string(p)
+}
+
+// IsValid returns true if the page type is a valid known value
+func (p PageType) IsValid() bool {
 	switch p {
-	case PageTypePayment:
-		return "payment"
-	case PageTypeSubscription:
-		return "subscription"
-	case PageTypeProduct:
-		return "product"
-	case PageTypePlan:
-		return "plan"
+	case PageTypePayment, PageTypeSubscription, PageTypeProduct, PageTypePlan:
+		return true
 	default:
-		return ""
+		return false
 	}
-}
-
-func (p PageType) MarshalJSON() ([]byte, error) {
-	return json.Marshal(p.String())
-}
-
-func (p *PageType) UnmarshalJSON(data []byte) error {
-	var str string
-
-	if err := json.Unmarshal(data, &str); err != nil {
-		return err
-	}
-
-	switch str {
-	case "payment":
-		*p = PageTypePayment
-	case "subscription":
-		*p = PageTypeSubscription
-	case "product":
-		*p = PageTypeProduct
-	case "plan":
-		*p = PageTypePlan
-	default:
-		*p = PageTypeUnknown
-	}
-
-	return nil
 }

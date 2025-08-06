@@ -1,7 +1,5 @@
 package types
 
-import "time"
-
 // TransactionSplitType represents the type of transaction split
 type TransactionSplitType string
 
@@ -48,8 +46,8 @@ type TransactionSplit struct {
 	Active           bool                         `json:"active"`
 	BearerType       TransactionSplitBearerType   `json:"bearer_type"`
 	BearerSubaccount *string                      `json:"bearer_subaccount"`
-	CreatedAt        time.Time                    `json:"createdAt"`
-	UpdatedAt        time.Time                    `json:"updatedAt"`
+	CreatedAt        DateTime                     `json:"createdAt"`
+	UpdatedAt        DateTime                     `json:"updatedAt"`
 	IsDynamic        bool                         `json:"is_dynamic"`
 	Subaccounts      []TransactionSplitSubaccount `json:"subaccounts"`
 	TotalSubaccounts int                          `json:"total_subaccounts"`

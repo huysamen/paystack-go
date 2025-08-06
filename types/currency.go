@@ -1,62 +1,28 @@
 package types
 
-import (
-	"encoding/json"
-)
-
-type Currency int
+// Currency represents currencies supported by Paystack
+type Currency string
 
 const (
-	CurrencyUnknown Currency = iota
-	CurrencyZAR
-	CurrencyNGN
-	CurrencyUSD
-	CurrencyGHS
-	CurrencyKES
+	CurrencyUnknown Currency = ""
+	CurrencyZAR     Currency = "ZAR"
+	CurrencyNGN     Currency = "NGN"
+	CurrencyUSD     Currency = "USD"
+	CurrencyGHS     Currency = "GHS"
+	CurrencyKES     Currency = "KES"
 )
 
+// String returns the string representation of the currency
 func (c Currency) String() string {
+	return string(c)
+}
+
+// IsValid returns true if the currency is a valid known value
+func (c Currency) IsValid() bool {
 	switch c {
-	case CurrencyZAR:
-		return "ZAR"
-	case CurrencyNGN:
-		return "NGN"
-	case CurrencyUSD:
-		return "USD"
-	case CurrencyGHS:
-		return "GHS"
-	case CurrencyKES:
-		return "KES"
+	case CurrencyZAR, CurrencyNGN, CurrencyUSD, CurrencyGHS, CurrencyKES:
+		return true
 	default:
-		return ""
+		return false
 	}
-}
-
-func (c Currency) MarshalJSON() ([]byte, error) {
-	return json.Marshal(c.String())
-}
-
-func (c *Currency) UnmarshalJSON(data []byte) error {
-	var str string
-
-	if err := json.Unmarshal(data, &str); err != nil {
-		return err
-	}
-
-	switch str {
-	case "ZAR":
-		*c = CurrencyZAR
-	case "NGN":
-		*c = CurrencyNGN
-	case "USD":
-		*c = CurrencyUSD
-	case "GHS":
-		*c = CurrencyGHS
-	case "KES":
-		*c = CurrencyKES
-	default:
-		*c = CurrencyUnknown
-	}
-
-	return nil
 }

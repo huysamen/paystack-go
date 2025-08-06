@@ -1,7 +1,5 @@
 package types
 
-import "time"
-
 // Plan represents a Paystack plan
 type Plan struct {
 	Domain                   string         `json:"domain"`
@@ -22,15 +20,15 @@ type Plan struct {
 	IsArchived               bool           `json:"is_archived"`
 	ID                       uint64         `json:"id"`
 	Integration              int            `json:"integration"`
-	CreatedAt                time.Time      `json:"createdAt"`
-	UpdatedAt                time.Time      `json:"updatedAt"`
+	CreatedAt                DateTime       `json:"createdAt"`
+	UpdatedAt                DateTime       `json:"updatedAt"`
 	PagesCount               int            `json:"pages_count"`
 	SubscribersCount         int            `json:"subscribers_count"`
 	ActiveSubscriptionsCount int            `json:"active_subscriptions_count"`
 	TotalRevenue             int            `json:"total_revenue"`
-	Subscriptions            []Subscription `json:"subscriptions"`
-	Pages                    []Page         `json:"pages"`
-	Subscribers              []Subscriber   `json:"subscribers"`
+	Subscriptions            []Subscription `json:"subscriptions,omitempty"`
+	Pages                    []Page         `json:"pages,omitempty"`
+	Subscribers              []Subscriber   `json:"subscribers,omitempty"`
 }
 
 // Subscription represents a Paystack subscription
@@ -42,25 +40,25 @@ type Subscription struct {
 	EmailToken        string           `json:"email_token"`
 	Amount            int              `json:"amount"`
 	CronExpression    string           `json:"cron_expression"`
-	NextPaymentDate   time.Time        `json:"next_payment_date"`
+	NextPaymentDate   DateTime         `json:"next_payment_date"`
 	OpenInvoice       *Invoice         `json:"open_invoice,omitempty"`
-	CreatedAt         time.Time        `json:"createdAt"`
-	CancelledAt       *time.Time       `json:"cancelledAt"`
+	CreatedAt         DateTime         `json:"createdAt"`
+	CancelledAt       *DateTime        `json:"cancelledAt,omitempty"`
 	Integration       int              `json:"integration"`
 	Plan              Plan             `json:"plan"`
 	Authorization     Authorization    `json:"authorization"`
 	Customer          Customer         `json:"customer"`
-	Invoices          []Invoice        `json:"invoices"`
-	InvoicesHistory   []InvoiceHistory `json:"invoices_history"`
+	Invoices          []Invoice        `json:"invoices,omitempty"`
+	InvoicesHistory   []InvoiceHistory `json:"invoices_history,omitempty"`
 	InvoiceLimit      int              `json:"invoice_limit"`
-	SplitCode         string           `json:"split_code"`
-	MostRecentInvoice Invoice          `json:"most_recent_invoice"`
+	SplitCode         string           `json:"split_code,omitempty"`
+	MostRecentInvoice *Invoice         `json:"most_recent_invoice,omitempty"`
 	PaymentsCount     int              `json:"payments_count"`
 
 	// Returned as part of fetching related resources.
-	Quantity           *int       `json:"quantity,omitempty"`
-	SuccessfulPayments *int       `json:"successful_payments,omitempty"`
-	Start              *time.Time `json:"start,omitempty"`
+	Quantity           *int      `json:"quantity,omitempty"`
+	SuccessfulPayments *int      `json:"successful_payments,omitempty"`
+	Start              *DateTime `json:"start,omitempty"`
 }
 
 // Subscriber represents a plan subscriber
@@ -76,34 +74,34 @@ type Subscriber struct {
 
 // Invoice represents a Paystack invoice
 type Invoice struct {
-	ID                 uint64        `json:"id"`
-	Domain             string        `json:"domain"`
-	Status             string        `json:"status"`
-	Reference          string        `json:"reference"`
-	ReceiptNumber      string        `json:"receipt_number"`
-	Amount             int           `json:"amount"`
-	Message            string        `json:"message"`
-	GatewayResponse    string        `json:"gateway_response"`
-	PaidAt             time.Time     `json:"paid_at"`
-	CreatedAt          time.Time     `json:"created_at"`
-	Channel            Channel       `json:"channel"`
-	Currency           Currency      `json:"currency"`
-	IPAddress          string        `json:"ip_address"`
-	Metadata           Metadata      `json:"metadata"`
-	Log                Log           `json:"log"`
-	Fees               int           `json:"fees"`
-	FeesSplit          any           `json:"fees_split"`
-	Plan               Plan          `json:"plan"`
-	Subaccount         Subaccount    `json:"subaccount"`
-	Split              Split         `json:"split"`
-	OrderID            any           `json:"order_id"`
-	RequestedAmount    int           `json:"requested_amount"`
-	PosTransactionData any           `json:"pos_transaction_data"`
-	Source             any           `json:"source"`
-	FeesBreakdown      any           `json:"fees_breakdown"`
-	Connect            any           `json:"connect"`
-	Authorization      Authorization `json:"authorization"`
-	Customer           Customer      `json:"customer"`
+	ID                 uint64              `json:"id"`
+	Domain             string              `json:"domain"`
+	Status             string              `json:"status"`
+	Reference          string              `json:"reference"`
+	ReceiptNumber      string              `json:"receipt_number"`
+	Amount             int                 `json:"amount"`
+	Message            string              `json:"message"`
+	GatewayResponse    string              `json:"gateway_response"`
+	PaidAt             *DateTime           `json:"paid_at,omitempty"`
+	CreatedAt          DateTime            `json:"created_at"`
+	Channel            Channel             `json:"channel"`
+	Currency           Currency            `json:"currency"`
+	IPAddress          string              `json:"ip_address"`
+	Metadata           Metadata            `json:"metadata"`
+	Log                Log                 `json:"log"`
+	Fees               int                 `json:"fees"`
+	FeesSplit          *FeesSplit          `json:"fees_split,omitempty"`
+	Plan               *Plan               `json:"plan,omitempty"`
+	Subaccount         *Subaccount         `json:"subaccount,omitempty"`
+	Split              *TransactionSplit   `json:"split,omitempty"`
+	OrderID            *string             `json:"order_id,omitempty"`
+	RequestedAmount    int                 `json:"requested_amount"`
+	PosTransactionData *POSTransactionData `json:"pos_transaction_data,omitempty"`
+	Source             *Source             `json:"source,omitempty"`
+	FeesBreakdown      *FeesSplit          `json:"fees_breakdown,omitempty"`
+	Connect            *ConnectData        `json:"connect,omitempty"`
+	Authorization      Authorization       `json:"authorization"`
+	Customer           Customer            `json:"customer"`
 }
 
 // InvoiceHistory represents invoice history
@@ -112,15 +110,15 @@ type InvoiceHistory struct {
 	Domain        string        `json:"domain"`
 	InvoiceCode   string        `json:"invoice_code"`
 	Amount        int           `json:"amount"`
-	PeriodStart   time.Time     `json:"period_start"`
-	PeriodEnd     time.Time     `json:"period_end"`
+	PeriodStart   DateTime      `json:"period_start"`
+	PeriodEnd     DateTime      `json:"period_end"`
 	Status        string        `json:"status"`
 	Paid          bool          `json:"paid"`
-	PaidAt        time.Time     `json:"paid_at"`
+	PaidAt        *DateTime     `json:"paid_at,omitempty"`
 	Description   string        `json:"description"`
-	CreatedAt     time.Time     `json:"createdAt"`
+	CreatedAt     DateTime      `json:"createdAt"`
 	Authorization Authorization `json:"authorization"`
 	Subscription  Subscription  `json:"subscription"`
 	Customer      Customer      `json:"customer"`
-	Transaction   Transaction   `json:"transaction"`
+	Transaction   *Transaction  `json:"transaction,omitempty"`
 }

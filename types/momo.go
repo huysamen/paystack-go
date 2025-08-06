@@ -1,52 +1,26 @@
 package types
 
-import (
-	"encoding/json"
-)
-
-type MoMo int
+// MoMo represents mobile money providers supported by Paystack
+type MoMo string
 
 const (
-	MoMoUnknown MoMo = iota
-	MoMoMTN
-	MoMoVodafone
-	MoMoAirtelTigo
+	MoMoUnknown    MoMo = ""
+	MoMoMTN        MoMo = "mtn"
+	MoMoVodafone   MoMo = "vod"
+	MoMoAirtelTigo MoMo = "atl"
 )
 
-func (c MoMo) String() string {
-	switch c {
-	case MoMoMTN:
-		return "mtn"
-	case MoMoVodafone:
-		return "vod"
-	case MoMoAirtelTigo:
-		return "atl"
-	default:
-		return ""
-	}
+// String returns the string representation of the mobile money provider
+func (m MoMo) String() string {
+	return string(m)
 }
 
-func (c MoMo) MarshalJSON() ([]byte, error) {
-	return json.Marshal(c.String())
-}
-
-func (c *MoMo) UnmarshalJSON(data []byte) error {
-	var str string
-
-	if err := json.Unmarshal(data, &str); err != nil {
-		return err
-	}
-
-	switch str {
-	case "mtn":
-		*c = MoMoMTN
-	case "vod":
-		*c = MoMoVodafone
-	case "atl":
-		*c = MoMoAirtelTigo
+// IsValid returns true if the mobile money provider is a valid known value
+func (m MoMo) IsValid() bool {
+	switch m {
+	case MoMoMTN, MoMoVodafone, MoMoAirtelTigo:
+		return true
 	default:
-		*c = MoMoUnknown
+		return false
 	}
-
-	return nil
 }

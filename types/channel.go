@@ -1,72 +1,31 @@
 package types
 
-import (
-	"encoding/json"
-)
-
-type Channel int
+// Channel represents payment channels supported by Paystack
+type Channel string
 
 const (
-	ChannelUnknown Channel = iota
-	ChannelCard
-	ChannelBank
-	ChannelUSSD
-	ChannelQR
-	ChannelMobileMoney
-	ChannelBankTransfer
-	ChannelEFT
+	ChannelUnknown      Channel = ""
+	ChannelCard         Channel = "card"
+	ChannelBank         Channel = "bank"
+	ChannelUSSD         Channel = "ussd"
+	ChannelQR           Channel = "qr"
+	ChannelMobileMoney  Channel = "mobile_money"
+	ChannelBankTransfer Channel = "bank_transfer"
+	ChannelEFT          Channel = "eft"
 )
 
+// String returns the string representation of the channel
 func (c Channel) String() string {
+	return string(c)
+}
+
+// IsValid returns true if the channel is a valid known value
+func (c Channel) IsValid() bool {
 	switch c {
-	case ChannelCard:
-		return "card"
-	case ChannelBank:
-		return "bank"
-	case ChannelUSSD:
-		return "ussd"
-	case ChannelQR:
-		return "qr"
-	case ChannelMobileMoney:
-		return "mobile_money"
-	case ChannelBankTransfer:
-		return "bank_transfer"
-	case ChannelEFT:
-		return "eft"
+	case ChannelCard, ChannelBank, ChannelUSSD, ChannelQR,
+		ChannelMobileMoney, ChannelBankTransfer, ChannelEFT:
+		return true
 	default:
-		return ""
+		return false
 	}
-}
-
-func (c Channel) MarshalJSON() ([]byte, error) {
-	return json.Marshal(c.String())
-}
-
-func (c *Channel) UnmarshalJSON(data []byte) error {
-	var str string
-
-	if err := json.Unmarshal(data, &str); err != nil {
-		return err
-	}
-
-	switch str {
-	case "card":
-		*c = ChannelCard
-	case "bank":
-		*c = ChannelBank
-	case "ussd":
-		*c = ChannelUSSD
-	case "qr":
-		*c = ChannelQR
-	case "mobile_money":
-		*c = ChannelMobileMoney
-	case "bank_transfer":
-		*c = ChannelBankTransfer
-	case "eft":
-		*c = ChannelEFT
-	default:
-		*c = ChannelUnknown
-	}
-
-	return nil
 }

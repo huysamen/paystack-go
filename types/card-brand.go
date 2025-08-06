@@ -1,52 +1,26 @@
 package types
 
-import (
-	"encoding/json"
-)
-
-type CardBrand int
+// CardBrand represents credit/debit card brands supported by Paystack
+type CardBrand string
 
 const (
-	CardBrandUnknown CardBrand = iota
-	CardBrandVisa
-	CardBrandMasterCard
-	CardBrandVerve
+	CardBrandUnknown    CardBrand = ""
+	CardBrandVisa       CardBrand = "visa"
+	CardBrandMasterCard CardBrand = "mastercard"
+	CardBrandVerve      CardBrand = "verve"
 )
 
+// String returns the string representation of the card brand
 func (c CardBrand) String() string {
+	return string(c)
+}
+
+// IsValid returns true if the card brand is a valid known value
+func (c CardBrand) IsValid() bool {
 	switch c {
-	case CardBrandVisa:
-		return "visa"
-	case CardBrandMasterCard:
-		return "mastercard"
-	case CardBrandVerve:
-		return "verve"
+	case CardBrandVisa, CardBrandMasterCard, CardBrandVerve:
+		return true
 	default:
-		return ""
+		return false
 	}
-}
-
-func (c CardBrand) MarshalJSON() ([]byte, error) {
-	return json.Marshal(c.String())
-}
-
-func (c *CardBrand) UnmarshalJSON(data []byte) error {
-	var str string
-
-	if err := json.Unmarshal(data, &str); err != nil {
-		return err
-	}
-
-	switch str {
-	case "visa":
-		*c = CardBrandVisa
-	case "mastercard":
-		*c = CardBrandMasterCard
-	case "verve":
-		*c = CardBrandVerve
-	default:
-		*c = CardBrandUnknown
-	}
-
-	return nil
 }

@@ -1,7 +1,5 @@
 package types
 
-import "time"
-
 // TransferRecipientType represents the type of transfer recipient
 type TransferRecipientType string
 
@@ -31,11 +29,11 @@ type Transfer struct {
 	Failures      any            `json:"failures"`
 	TransferCode  string         `json:"transfer_code"`
 	TitanCode     *string        `json:"titan_code"`
-	TransferredAt *time.Time     `json:"transferred_at"`
+	TransferredAt *DateTime      `json:"transferred_at,omitempty"`
 	Reference     string         `json:"reference"`
 	Recipient     Recipient      `json:"recipient"`
-	CreatedAt     time.Time      `json:"createdAt"`
-	UpdatedAt     time.Time      `json:"updatedAt"`
+	CreatedAt     DateTime       `json:"createdAt"`
+	UpdatedAt     DateTime       `json:"updatedAt"`
 }
 
 // Recipient represents a transfer recipient
@@ -51,8 +49,8 @@ type Recipient struct {
 	RecipientCode string           `json:"recipient_code"`
 	Active        bool             `json:"active"`
 	Email         *string          `json:"email"`
-	CreatedAt     time.Time        `json:"createdAt"`
-	UpdatedAt     time.Time        `json:"updatedAt"`
+	CreatedAt     DateTime         `json:"createdAt"`
+	UpdatedAt     DateTime         `json:"updatedAt"`
 }
 
 // RecipientDetails represents recipient account details
@@ -71,17 +69,17 @@ type Balance struct {
 
 // BalanceLedger represents a balance ledger entry
 type BalanceLedger struct {
-	Integration      int    `json:"integration"`
-	Domain           string `json:"domain"`
-	Balance          int64  `json:"balance"`
-	Currency         string `json:"currency"`
-	Difference       int64  `json:"difference"`
-	Reason           string `json:"reason"`
-	ModelResponsible string `json:"model_responsible"`
-	ModelRow         int    `json:"model_row"`
-	ID               int    `json:"id"`
-	CreatedAt        string `json:"createdAt"`
-	UpdatedAt        string `json:"updatedAt"`
+	Integration      int      `json:"integration"`
+	Domain           string   `json:"domain"`
+	Balance          int64    `json:"balance"`
+	Currency         string   `json:"currency"`
+	Difference       int64    `json:"difference"`
+	Reason           string   `json:"reason"`
+	ModelResponsible string   `json:"model_responsible"`
+	ModelRow         int      `json:"model_row"`
+	ID               int      `json:"id"`
+	CreatedAt        DateTime `json:"createdAt"`
+	UpdatedAt        DateTime `json:"updatedAt"`
 }
 
 // TransferRecipient represents a transfer recipient
@@ -97,8 +95,8 @@ type TransferRecipient struct {
 	RecipientCode string                `json:"recipient_code"`
 	Active        bool                  `json:"active"`
 	IsDeleted     bool                  `json:"is_deleted"`
-	CreatedAt     time.Time             `json:"createdAt"`
-	UpdatedAt     time.Time             `json:"updatedAt"`
+	CreatedAt     DateTime              `json:"createdAt"`
+	UpdatedAt     DateTime              `json:"updatedAt"`
 	Integration   uint64                `json:"integration"`
 	Email         *string               `json:"email,omitempty"`
 }
