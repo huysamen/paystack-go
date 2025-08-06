@@ -39,6 +39,7 @@ coverage.html
 !.gitignore
 !/api/
 !/enums/
+!/models/
 !/net/
 !/optional/
 !/resources/
