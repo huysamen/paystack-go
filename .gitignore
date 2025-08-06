@@ -38,10 +38,12 @@ coverage.html
 !LICENSE
 !.gitignore
 !/api/
+!/enums/
 !/net/
 !/optional/
-!/types/
 !/resources/
+!/types/
+
 
 # IDE and editor files
 .vscode/
