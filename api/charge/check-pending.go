@@ -27,7 +27,7 @@ func (b *CheckPendingRequestBuilder) Build() *checkPendingRequest {
 	return b.req
 }
 
-type CheckPendingResponseData = types.ChargeData
+type CheckPendingResponseData = types.Charge
 type CheckPendingResponse = types.Response[CheckPendingResponseData]
 
 func (c *Client) CheckPending(ctx context.Context, builder CheckPendingRequestBuilder) (*CheckPendingResponse, error) {

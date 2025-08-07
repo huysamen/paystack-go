@@ -2,12 +2,12 @@ package types
 
 // VirtualTerminalDestination represents a notification destination for a virtual terminal
 type VirtualTerminalDestination struct {
-	ID        int    `json:"id,omitempty"`
-	Target    string `json:"target"`
-	Name      string `json:"name"`
-	Type      string `json:"type,omitempty"`
-	CreatedAt string `json:"created_at,omitempty"`
-	UpdatedAt string `json:"updated_at,omitempty"`
+	ID        int      `json:"id,omitempty"`
+	Target    string   `json:"target"`
+	Name      string   `json:"name"`
+	Type      string   `json:"type,omitempty"`
+	CreatedAt DateTime `json:"created_at,omitempty"`
+	UpdatedAt DateTime `json:"updated_at,omitempty"`
 }
 
 // VirtualTerminal represents a virtual terminal
@@ -19,7 +19,7 @@ type VirtualTerminal struct {
 	Domain         string                       `json:"domain"`
 	PaymentMethods []string                     `json:"paymentMethods"`
 	Active         bool                         `json:"active"`
-	CreatedAt      string                       `json:"created_at,omitempty"`
+	CreatedAt      DateTime                     `json:"created_at,omitempty"`
 	Metadata       *Metadata                    `json:"metadata,omitempty"`
 	Destinations   []VirtualTerminalDestination `json:"destinations,omitempty"`
 	Currency       string                       `json:"currency"`

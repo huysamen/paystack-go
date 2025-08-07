@@ -6,7 +6,7 @@ type Country struct {
 	Name                string               `json:"name"`
 	ISOCode             string               `json:"iso_code"`
 	DefaultCurrencyCode string               `json:"default_currency_code"`
-	IntegrationDefaults map[string]any       `json:"integration_defaults"`
+	IntegrationDefaults *Metadata            `json:"integration_defaults"`
 	Relationships       CountryRelationships `json:"relationships"`
 }
 
@@ -21,4 +21,11 @@ type CountryRelationships struct {
 type CountryRelationshipData struct {
 	Type string `json:"type"`
 	Data []any  `json:"data"`
+}
+
+// State represents a state for address verification
+type State struct {
+	Name         string `json:"name"`
+	Slug         string `json:"slug"`
+	Abbreviation string `json:"abbreviation"`
 }

@@ -29,7 +29,7 @@ func (b *SubmitOTPRequestBuilder) Build() *submitOTPRequest {
 	return b.req
 }
 
-type SubmitOTPResponseData = types.ChargeData
+type SubmitOTPResponseData = types.Charge
 type SubmitOTPResponse = types.Response[SubmitOTPResponseData]
 
 func (c *Client) SubmitOTP(ctx context.Context, builder SubmitOTPRequestBuilder) (*SubmitOTPResponse, error) {

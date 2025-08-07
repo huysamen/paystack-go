@@ -29,7 +29,7 @@ func (b *SubmitPINRequestBuilder) Build() *submitPINRequest {
 	return b.req
 }
 
-type SubmitPINResponseData = types.ChargeData
+type SubmitPINResponseData = types.Charge
 type SubmitPINResponse = types.Response[SubmitPINResponseData]
 
 func (c *Client) SubmitPIN(ctx context.Context, builder SubmitPINRequestBuilder) (*SubmitPINResponse, error) {

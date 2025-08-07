@@ -8,7 +8,7 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type TimelineResponseData = types.Log
+type TimelineResponseData = types.TransactionLog
 type TimelineResponse = types.Response[TimelineResponseData]
 
 func (c *Client) ViewTimelineByID(ctx context.Context, id uint64) (*TimelineResponse, error) {

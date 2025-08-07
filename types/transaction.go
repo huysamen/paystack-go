@@ -4,14 +4,14 @@ import (
 	"github.com/huysamen/paystack-go/enums"
 )
 
-// Transaction represents a Paystack transaction
+// Transaction represents a Paystack transaction with comprehensive field coverage
 type Transaction struct {
 	ID                 uint64              `json:"id"`
 	Domain             string              `json:"domain"`
 	Status             string              `json:"status"`
 	Reference          string              `json:"reference"`
 	Amount             int                 `json:"amount"`
-	Message            string              `json:"message"`
+	Message            *string             `json:"message"`
 	GatewayResponse    string              `json:"gateway_response"`
 	PaidAt             *DateTime           `json:"paid_at,omitempty"`
 	CreatedAt          DateTime            `json:"created_at"`
@@ -19,7 +19,7 @@ type Transaction struct {
 	Currency           enums.Currency      `json:"currency"`
 	IPAddress          string              `json:"ip_address"`
 	Metadata           Metadata            `json:"metadata"`
-	Log                Log                 `json:"log"`
+	Log                *TransactionLog     `json:"log,omitempty"`
 	Fees               int                 `json:"fees"`
 	FeesSplit          *FeesSplit          `json:"fees_split,omitempty"`
 	Customer           Customer            `json:"customer"`
@@ -29,21 +29,55 @@ type Transaction struct {
 	Subaccount         *Subaccount         `json:"subaccount,omitempty"`
 	OrderID            *string             `json:"order_id,omitempty"`
 	RequestedAmount    int                 `json:"requested_amount"`
-	Source             Source              `json:"source"`
+	Source             *TransactionSource  `json:"source,omitempty"`
 	Connect            *ConnectData        `json:"connect,omitempty"`
 	POSTransactionData *POSTransactionData `json:"pos_transaction_data,omitempty"`
+
+	// Additional fields found in API responses that might be camelCase
+	PaidAtCamel    *DateTime `json:"paidAt,omitempty"`
+	CreatedAtCamel DateTime  `json:"createdAt,omitempty"`
+}
+
+// TransactionLog represents the transaction processing log
+type TransactionLog struct {
+	StartTime int                   `json:"start_time"`
+	TimeSpent int                   `json:"time_spent"`
+	Attempts  int                   `json:"attempts"`
+	Errors    int                   `json:"errors"`
+	Success   bool                  `json:"success"`
+	Mobile    bool                  `json:"mobile"`
+	Input     []any                 `json:"input"`
+	History   []TransactionLogEntry `json:"history"`
+}
+
+// TransactionLogEntry represents an entry in the transaction log
+type TransactionLogEntry struct {
+	Type    string `json:"type"`
+	Message string `json:"message"`
+	Time    int    `json:"time"`
 }
 
 // FeesSplit represents the breakdown of transaction fees
 type FeesSplit struct {
-	Paystack    int `json:"paystack"`
-	Integration int `json:"integration"`
-	Subaccount  int `json:"subaccount,omitempty"`
-	Params      struct {
-		Bearer            string `json:"bearer"`
-		TransactionCharge string `json:"transaction_charge"`
-		PercentageCharge  string `json:"percentage_charge"`
-	} `json:"params,omitempty"`
+	Paystack    int              `json:"paystack"`
+	Integration int              `json:"integration"`
+	Subaccount  int              `json:"subaccount,omitempty"`
+	Params      *FeesSplitParams `json:"params,omitempty"`
+}
+
+// FeesSplitParams represents the parameters used for fee calculation
+type FeesSplitParams struct {
+	Bearer            string `json:"bearer"`
+	TransactionCharge string `json:"transaction_charge"`
+	PercentageCharge  string `json:"percentage_charge"`
+}
+
+// TransactionSource represents the source of a transaction
+type TransactionSource struct {
+	Source     string  `json:"source"`
+	Type       string  `json:"type"`
+	Identifier *string `json:"identifier"`
+	EntryPoint string  `json:"entry_point"`
 }
 
 // ConnectData represents connect-related transaction data
@@ -55,47 +89,31 @@ type ConnectData struct {
 
 // POSTransactionData represents point-of-sale transaction data
 type POSTransactionData struct {
+	// Define POS-specific fields based on actual API responses
 	TerminalID  *string `json:"terminal_id,omitempty"`
-	Location    *string `json:"location,omitempty"`
-	MerchantID  *string `json:"merchant_id,omitempty"`
 	ReceiptData *string `json:"receipt_data,omitempty"`
 }
 
-// LogHistoryEntry represents a single entry in transaction log history
-type LogHistoryEntry struct {
-	Type    string `json:"type"`
-	Message string `json:"message"`
-	Time    int    `json:"time"`
+// TransactionInitializeRequest represents a request to initialize a transaction
+type TransactionInitializeRequest struct {
+	Email             string          `json:"email"`
+	Amount            int             `json:"amount"`
+	Currency          *enums.Currency `json:"currency,omitempty"`
+	Reference         *string         `json:"reference,omitempty"`
+	CallbackURL       *string         `json:"callback_url,omitempty"`
+	Plan              *string         `json:"plan,omitempty"`
+	InvoiceLimit      *int            `json:"invoice_limit,omitempty"`
+	Metadata          Metadata        `json:"metadata,omitempty"`
+	Channels          []enums.Channel `json:"channels,omitempty"`
+	SplitCode         *string         `json:"split_code,omitempty"`
+	SubaccountCode    *string         `json:"subaccount,omitempty"`
+	TransactionCharge *int            `json:"transaction_charge,omitempty"`
+	Bearer            *enums.Bearer   `json:"bearer,omitempty"`
 }
 
-// LogInput represents the input data for a transaction log
-type LogInput struct {
-	Email       *string        `json:"email,omitempty"`
-	Amount      *int           `json:"amount,omitempty"`
-	Currency    *string        `json:"currency,omitempty"`
-	Reference   *string        `json:"reference,omitempty"`
-	CallbackURL *string        `json:"callback_url,omitempty"`
-	Metadata    map[string]any `json:"metadata,omitempty"`
-	Channels    []string       `json:"channels,omitempty"`
-	Custom      map[string]any `json:"custom,omitempty"`
-}
-
-// Log represents transaction log information
-type Log struct {
-	StartTime int               `json:"start_time"`
-	TimeSpent int               `json:"time_spent"`
-	Attempts  int               `json:"attempts"`
-	Errors    int               `json:"errors"`
-	Success   bool              `json:"success"`
-	Mobile    bool              `json:"mobile"`
-	Input     *LogInput         `json:"input,omitempty"`
-	History   []LogHistoryEntry `json:"history"`
-}
-
-// Source represents the source of a transaction
-type Source struct {
-	Type       string `json:"type"`
-	Source     string `json:"source"`
-	EntryPoint string `json:"entry_point"`
-	Identifier string `json:"identifier"`
+// TransactionInitializeResponse represents the response from transaction initialization
+type TransactionInitializeResponse struct {
+	AuthorizationURL string `json:"authorization_url"`
+	AccessCode       string `json:"access_code"`
+	Reference        string `json:"reference"`
 }

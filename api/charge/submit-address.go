@@ -35,7 +35,7 @@ func (b *SubmitAddressRequestBuilder) Build() *submitAddressRequest {
 	return b.req
 }
 
-type SubmitAddressResponseData = types.ChargeData
+type SubmitAddressResponseData = types.Charge
 type SubmitAddressResponse = types.Response[SubmitAddressResponseData]
 
 func (c *Client) SubmitAddress(ctx context.Context, builder SubmitAddressRequestBuilder) (*SubmitAddressResponse, error) {

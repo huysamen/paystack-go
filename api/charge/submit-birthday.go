@@ -29,7 +29,7 @@ func (b *SubmitBirthdayRequestBuilder) Build() *submitBirthdayRequest {
 	return b.req
 }
 
-type SubmitBirthdayResponseData = types.ChargeData
+type SubmitBirthdayResponseData = types.Charge
 type SubmitBirthdayResponse = types.Response[SubmitBirthdayResponseData]
 
 func (c *Client) SubmitBirthday(ctx context.Context, builder SubmitBirthdayRequestBuilder) (*SubmitBirthdayResponse, error) {

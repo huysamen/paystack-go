@@ -8,7 +8,7 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type FetchResponseData = types.TransferRecipient
+type FetchResponseData = types.Recipient
 type FetchResponse = types.Response[FetchResponseData]
 
 func (c *Client) Fetch(ctx context.Context, idOrCode string) (*FetchResponse, error) {

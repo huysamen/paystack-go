@@ -62,7 +62,7 @@ func (b *CreateRequestBuilder) Build() *createRequest {
 	return b.req
 }
 
-type CreateResponseData = types.TransferRecipient
+type CreateResponseData = types.Recipient
 type CreateResponse = types.Response[CreateResponseData]
 
 func (c *Client) Create(ctx context.Context, builder CreateRequestBuilder) (*CreateResponse, error) {

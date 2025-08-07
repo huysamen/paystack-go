@@ -1,30 +1,29 @@
 package types
 
-import (
-	"github.com/huysamen/paystack-go/enums"
-)
+import "github.com/huysamen/paystack-go/enums"
 
 // Dispute represents a dispute
 type Dispute struct {
 	ID                           int                      `json:"id"`
 	RefundAmount                 *int                     `json:"refund_amount"`
-	Currency                     *string                  `json:"currency"`
+	Currency                     *enums.Currency          `json:"currency"`
 	Status                       enums.DisputeStatus      `json:"status"`
 	Resolution                   *enums.DisputeResolution `json:"resolution"`
 	Domain                       string                   `json:"domain"`
 	Transaction                  *Transaction             `json:"transaction"`
 	TransactionReference         *string                  `json:"transaction_reference"`
 	MerchantTransactionReference *string                  `json:"merchant_transaction_reference"`
-	Source                       enums.DisputeSource      `json:"source"`
-	Category                     enums.DisputeCategory    `json:"category"`
+	Source                       *enums.DisputeSource     `json:"source"`
+	Category                     *enums.DisputeCategory   `json:"category"`
 	Note                         *string                  `json:"note"`
 	Attachments                  *string                  `json:"attachments"`
 	LastFour                     *string                  `json:"last4"`
 	BIN                          *string                  `json:"bin"`
-	CreatedAt                    DateTime                 `json:"created_at"`
-	UpdatedAt                    DateTime                 `json:"updated_at"`
-	DueAt                        *DateTime                `json:"due_at"`
-	ResolvedAt                   *DateTime                `json:"resolved_at"`
+	Customer                     *Customer                `json:"customer"`
+	CreatedAt                    DateTime                 `json:"createdAt"`
+	UpdatedAt                    DateTime                 `json:"updatedAt"`
+	DueAt                        *DateTime                `json:"dueAt"`
+	ResolvedAt                   *DateTime                `json:"resolvedAt"`
 	Evidence                     *Evidence                `json:"evidence"`
 	Messages                     []DisputeMessage         `json:"messages"`
 	History                      []DisputeHistory         `json:"history"`
@@ -46,11 +45,13 @@ type Evidence struct {
 
 // DisputeMessage represents a dispute message
 type DisputeMessage struct {
-	ID        int    `json:"id"`
-	Sender    string `json:"sender"`
-	Body      string `json:"body"`
-	Dispute   int    `json:"dispute"`
-	IsDeleted bool   `json:"is_deleted"`
+	ID        int      `json:"id"`
+	Sender    string   `json:"sender"`
+	Body      string   `json:"body"`
+	Dispute   int      `json:"dispute"`
+	IsDeleted bool     `json:"is_deleted"`
+	CreatedAt DateTime `json:"created_at"`
+	UpdatedAt DateTime `json:"updated_at"`
 }
 
 // DisputeHistory represents dispute history

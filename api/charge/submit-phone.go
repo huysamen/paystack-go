@@ -29,7 +29,7 @@ func (b *SubmitPhoneRequestBuilder) Build() *submitPhoneRequest {
 	return b.req
 }
 
-type SubmitPhoneResponseData = types.ChargeData
+type SubmitPhoneResponseData = types.Charge
 type SubmitPhoneResponse = types.Response[SubmitPhoneResponseData]
 
 func (c *Client) SubmitPhone(ctx context.Context, builder SubmitPhoneRequestBuilder) (*SubmitPhoneResponse, error) {

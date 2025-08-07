@@ -35,7 +35,7 @@ func (b *UpdateRequestBuilder) Build() *updateRequest {
 	return b.req
 }
 
-type UpdateResponseData = types.TransferRecipient
+type UpdateResponseData = types.Recipient
 type UpdateResponse = types.Response[UpdateResponseData]
 
 func (c *Client) Update(ctx context.Context, idOrCode string, builder UpdateRequestBuilder) (*UpdateResponse, error) {

@@ -157,7 +157,7 @@ type QRDetails struct {
 	Provider string `json:"provider"`
 }
 
-type CreateChargeResponseData = types.ChargeData
+type CreateChargeResponseData = types.Charge
 type CreateChargeResponse = types.Response[CreateChargeResponseData]
 
 func (c *Client) Create(ctx context.Context, builder CreateRequestBuilder) (*CreateChargeResponse, error) {

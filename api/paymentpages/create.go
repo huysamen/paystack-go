@@ -7,28 +7,22 @@ import (
 	"github.com/huysamen/paystack-go/types"
 )
 
-type CustomField struct {
-	DisplayName  string `json:"display_name"`
-	VariableName string `json:"variable_name"`
-	Required     bool   `json:"required"`
-}
-
 type createRequest struct {
-	Name              string          `json:"name"`
-	Description       string          `json:"description,omitempty"`
-	Amount            *int            `json:"amount,omitempty"`
-	Currency          string          `json:"currency,omitempty"`
-	Slug              string          `json:"slug,omitempty"`
-	Type              string          `json:"type,omitempty"`
-	Plan              string          `json:"plan,omitempty"`
-	FixedAmount       *bool           `json:"fixed_amount,omitempty"`
-	SplitCode         string          `json:"split_code,omitempty"`
-	Metadata          *types.Metadata `json:"metadata,omitempty"`
-	RedirectURL       string          `json:"redirect_url,omitempty"`
-	SuccessMessage    string          `json:"success_message,omitempty"`
-	NotificationEmail string          `json:"notification_email,omitempty"`
-	CollectPhone      *bool           `json:"collect_phone,omitempty"`
-	CustomFields      []CustomField   `json:"custom_fields,omitempty"`
+	Name              string              `json:"name"`
+	Description       string              `json:"description,omitempty"`
+	Amount            *int                `json:"amount,omitempty"`
+	Currency          string              `json:"currency,omitempty"`
+	Slug              string              `json:"slug,omitempty"`
+	Type              string              `json:"type,omitempty"`
+	Plan              string              `json:"plan,omitempty"`
+	FixedAmount       *bool               `json:"fixed_amount,omitempty"`
+	SplitCode         string              `json:"split_code,omitempty"`
+	Metadata          *types.Metadata     `json:"metadata,omitempty"`
+	RedirectURL       string              `json:"redirect_url,omitempty"`
+	SuccessMessage    string              `json:"success_message,omitempty"`
+	NotificationEmail string              `json:"notification_email,omitempty"`
+	CollectPhone      *bool               `json:"collect_phone,omitempty"`
+	CustomFields      []types.CustomField `json:"custom_fields,omitempty"`
 }
 
 type CreateRequestBuilder struct {
@@ -121,7 +115,7 @@ func (b *CreateRequestBuilder) CollectPhone(collect bool) *CreateRequestBuilder 
 	return b
 }
 
-func (b *CreateRequestBuilder) CustomFields(fields []CustomField) *CreateRequestBuilder {
+func (b *CreateRequestBuilder) CustomFields(fields []types.CustomField) *CreateRequestBuilder {
 	b.req.CustomFields = fields
 
 	return b
@@ -129,10 +123,10 @@ func (b *CreateRequestBuilder) CustomFields(fields []CustomField) *CreateRequest
 
 func (b *CreateRequestBuilder) AddCustomField(displayName, variableName string, required bool) *CreateRequestBuilder {
 	if b.req.CustomFields == nil {
-		b.req.CustomFields = []CustomField{}
+		b.req.CustomFields = []types.CustomField{}
 	}
 
-	b.req.CustomFields = append(b.req.CustomFields, CustomField{
+	b.req.CustomFields = append(b.req.CustomFields, types.CustomField{
 		DisplayName:  displayName,
 		VariableName: variableName,
 		Required:     required,

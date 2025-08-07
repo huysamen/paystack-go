@@ -1,8 +1,6 @@
 package types
 
-import (
-	"github.com/huysamen/paystack-go/enums"
-)
+import "github.com/huysamen/paystack-go/enums"
 
 // Terminal represents a Paystack terminal device
 type Terminal struct {
@@ -16,8 +14,6 @@ type Terminal struct {
 	Address      *string              `json:"address"`
 	Status       enums.TerminalStatus `json:"status"`
 }
-
-// Terminal Event
 
 // TerminalEventData represents the data payload for terminal events
 type TerminalEventData map[string]any

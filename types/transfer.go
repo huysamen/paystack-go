@@ -1,8 +1,6 @@
 package types
 
-import (
-	"github.com/huysamen/paystack-go/enums"
-)
+import "github.com/huysamen/paystack-go/enums"
 
 // Transfer represents a Paystack transfer
 type Transfer struct {
@@ -12,10 +10,10 @@ type Transfer struct {
 	Amount        int            `json:"amount"`
 	Currency      enums.Currency `json:"currency"`
 	Source        string         `json:"source"`
-	SourceDetails map[string]any `json:"source_details"`
+	SourceDetails *Metadata      `json:"source_details"`
 	Reason        string         `json:"reason"`
 	Status        string         `json:"status"`
-	Failures      any            `json:"failures"`
+	Failures      *Metadata      `json:"failures"`
 	TransferCode  string         `json:"transfer_code"`
 	TitanCode     *string        `json:"titan_code"`
 	TransferredAt *DateTime      `json:"transferred_at,omitempty"`
@@ -28,26 +26,29 @@ type Transfer struct {
 // Recipient represents a transfer recipient
 type Recipient struct {
 	ID            int              `json:"id"`
+	Integration   int              `json:"integration"`
 	Domain        string           `json:"domain"`
 	Type          string           `json:"type"`
 	Currency      enums.Currency   `json:"currency"`
 	Name          string           `json:"name"`
 	Details       RecipientDetails `json:"details"`
 	Description   string           `json:"description"`
-	Metadata      map[string]any   `json:"metadata"`
+	Metadata      *Metadata        `json:"metadata"`
 	RecipientCode string           `json:"recipient_code"`
 	Active        bool             `json:"active"`
 	Email         *string          `json:"email"`
+	IsDeleted     bool             `json:"is_deleted"`
 	CreatedAt     DateTime         `json:"createdAt"`
 	UpdatedAt     DateTime         `json:"updatedAt"`
 }
 
 // RecipientDetails represents recipient account details
 type RecipientDetails struct {
-	AccountNumber string `json:"account_number"`
-	AccountName   string `json:"account_name"`
-	BankCode      string `json:"bank_code"`
-	BankName      string `json:"bank_name"`
+	AuthorizationCode *string `json:"authorization_code"`
+	AccountNumber     string  `json:"account_number"`
+	AccountName       string  `json:"account_name"`
+	BankCode          string  `json:"bank_code"`
+	BankName          string  `json:"bank_name"`
 }
 
 // Balance represents account balance information
@@ -71,45 +72,23 @@ type BalanceLedger struct {
 	UpdatedAt        DateTime `json:"updatedAt"`
 }
 
-// TransferRecipient represents a transfer recipient
-type TransferRecipient struct {
-	ID            uint64                      `json:"id"`
-	Domain        string                      `json:"domain"`
-	Type          enums.TransferRecipientType `json:"type"`
-	Currency      string                      `json:"currency"`
-	Name          string                      `json:"name"`
-	Description   string                      `json:"description"`
-	Details       RecipientDetails            `json:"details"`
-	Metadata      map[string]any              `json:"metadata"`
-	RecipientCode string                      `json:"recipient_code"`
-	Active        bool                        `json:"active"`
-	IsDeleted     bool                        `json:"is_deleted"`
-	CreatedAt     DateTime                    `json:"createdAt"`
-	UpdatedAt     DateTime                    `json:"updatedAt"`
-	Integration   uint64                      `json:"integration"`
-	Email         *string                     `json:"email,omitempty"`
-}
-
-// BulkRecipientItem represents a single recipient in a bulk create request
+// BulkRecipientItem represents a recipient item for bulk creation
 type BulkRecipientItem struct {
-	Type              enums.TransferRecipientType `json:"type"`                         // Required: nuban, ghipss, mobile_money, basa
-	Name              string                      `json:"name"`                         // Required: recipient's name
-	AccountNumber     string                      `json:"account_number"`               // Required for all types except authorization
-	BankCode          string                      `json:"bank_code"`                    // Required for all types except authorization
-	Description       *string                     `json:"description,omitempty"`        // Optional: description
-	Currency          *string                     `json:"currency,omitempty"`           // Optional: currency
-	AuthorizationCode *string                     `json:"authorization_code,omitempty"` // Optional: authorization code
-	Metadata          map[string]any              `json:"metadata,omitempty"`           // Optional: additional data
+	Type          string         `json:"type"`
+	Name          string         `json:"name"`
+	AccountNumber string         `json:"account_number"`
+	BankCode      string         `json:"bank_code"`
+	Currency      enums.Currency `json:"currency"`
+	Description   string         `json:"description,omitempty"`
+	Email         string         `json:"email,omitempty"`
+	Metadata      *Metadata      `json:"metadata,omitempty"`
 }
 
-// BulkCreateResult represents the result of a bulk create operation
+// BulkCreateResult represents the result of bulk recipient creation
 type BulkCreateResult struct {
-	Success []TransferRecipient `json:"success"` // Successfully created recipients
+	Success []Recipient `json:"success"`
 	Errors  []struct {
-		Type          string `json:"type"`
-		Name          string `json:"name"`
-		AccountNumber string `json:"account_number"`
-		BankCode      string `json:"bank_code"`
-		Message       string `json:"message"`
-	} `json:"errors"` // Failed recipient creations
+		Error   string            `json:"error"`
+		Payload BulkRecipientItem `json:"payload"`
+	} `json:"errors"`
 }

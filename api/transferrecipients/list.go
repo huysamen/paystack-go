@@ -80,7 +80,7 @@ func (r *listRequest) toQuery() string {
 	return params.Encode()
 }
 
-type ListResponseData = []types.TransferRecipient
+type ListResponseData = []types.Recipient
 type ListResponse = types.Response[ListResponseData]
 
 func (c *Client) List(ctx context.Context, builder ListRequestBuilder) (*ListResponse, error) {
