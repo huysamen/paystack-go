@@ -50,6 +50,84 @@ func TestListDomainsResponse_JSONDeserialization(t *testing.T) {
 	}
 }
 
+func TestListDomainsResponse_FieldByFieldValidation(t *testing.T) {
+	t.Run("list_domains_200_json_comprehensive_field_validation", func(t *testing.T) {
+		// Read the exact JSON response file
+		responseFilePath := filepath.Join("..", "..", "resources", "examples", "responses", "applepay", "list_domains_200.json")
+		responseData, err := os.ReadFile(responseFilePath)
+		require.NoError(t, err, "failed to read list_domains_200.json")
+
+		// Parse into our struct
+		var response ListDomainsResponse
+		err = json.Unmarshal(responseData, &response)
+		require.NoError(t, err, "failed to unmarshal list_domains_200.json")
+
+		// Parse the raw JSON to compare exact values
+		var rawJSON map[string]any
+		err = json.Unmarshal(responseData, &rawJSON)
+		require.NoError(t, err, "failed to parse raw JSON for comparison")
+
+		// Field-by-field validation against the exact JSON values
+		assert.Equal(t, true, rawJSON["status"], "status in JSON should be true")
+		assert.Equal(t, true, response.Status.Bool(), "status in struct should be true")
+
+		assert.Equal(t, "Apple Pay registered domains retrieved", rawJSON["message"], "message in JSON should match")
+		assert.Equal(t, "Apple Pay registered domains retrieved", response.Message, "message in struct should match")
+
+		// Verify data field exists and has correct structure
+		assert.Contains(t, rawJSON, "data", "JSON should contain data field")
+		assert.NotNil(t, response.Data, "struct data field should not be nil")
+
+		// Get the data portion from raw JSON
+		rawData, ok := rawJSON["data"].(map[string]any)
+		require.True(t, ok, "data field should be an object")
+
+		// Verify domainNames array
+		assert.Contains(t, rawData, "domainNames", "data should contain domainNames field")
+		rawDomainNames, ok := rawData["domainNames"].([]any)
+		require.True(t, ok, "domainNames should be an array")
+
+		// Convert raw domain names to string slice for comparison
+		expectedDomainNames := make([]string, len(rawDomainNames))
+		for i, domain := range rawDomainNames {
+			expectedDomainNames[i] = domain.(string)
+		}
+
+		assert.Equal(t, expectedDomainNames, response.Data.DomainNames, "domainNames should match exactly")
+		assert.Len(t, response.Data.DomainNames, len(rawDomainNames), "domainNames length should match")
+
+		// Verify specific values from the JSON
+		assert.Len(t, rawDomainNames, 1, "should have exactly 1 domain in JSON")
+		assert.Equal(t, "example.com", rawDomainNames[0].(string), "first domain should be example.com")
+		assert.Len(t, response.Data.DomainNames, 1, "should have exactly 1 domain in struct")
+		assert.Equal(t, "example.com", response.Data.DomainNames[0], "first domain should be example.com")
+
+		// Verify complete JSON structure matches our struct
+		reconstituted, err := json.Marshal(response)
+		require.NoError(t, err, "should be able to marshal struct back to JSON")
+
+		var reconstitutedMap map[string]any
+		err = json.Unmarshal(reconstituted, &reconstitutedMap)
+		require.NoError(t, err, "should be able to parse reconstituted JSON")
+
+		// Core fields should match
+		assert.Equal(t, rawJSON["status"], reconstitutedMap["status"], "status should survive round-trip")
+		assert.Equal(t, rawJSON["message"], reconstitutedMap["message"], "message should survive round-trip")
+
+		// Data field should match
+		reconstitutedData, ok := reconstitutedMap["data"].(map[string]any)
+		require.True(t, ok, "reconstituted data should be an object")
+
+		reconstitutedDomains, ok := reconstitutedData["domainNames"].([]any)
+		require.True(t, ok, "reconstituted domainNames should be an array")
+
+		assert.Equal(t, len(rawDomainNames), len(reconstitutedDomains), "domain count should survive round-trip")
+		for i, expectedDomain := range rawDomainNames {
+			assert.Equal(t, expectedDomain, reconstitutedDomains[i], "domain %d should survive round-trip", i)
+		}
+	})
+}
+
 func TestListDomainsRequestBuilder(t *testing.T) {
 	t.Run("builds request with all fields", func(t *testing.T) {
 		builder := NewListDomainsRequest()

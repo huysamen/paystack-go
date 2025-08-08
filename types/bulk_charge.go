@@ -1,5 +1,5 @@
 package types
-
+import "github.com/huysamen/paystack-go/types/data"
 import "github.com/huysamen/paystack-go/enums"
 
 // BulkCharge represents a single charge within a bulk charge batch
@@ -15,9 +15,9 @@ type BulkCharge struct {
 	Reference     string         `json:"reference"`
 	Status        string         `json:"status"`
 	Message       string         `json:"message"`
-	PaidAt        *DateTime      `json:"paid_at,omitempty"`
-	CreatedAt     DateTime       `json:"createdAt"`
-	UpdatedAt     DateTime       `json:"updatedAt"`
+	PaidAt        *data.MultiDateTime      `json:"paid_at,omitempty"`
+	CreatedAt     data.MultiDateTime       `json:"createdAt"`
+	UpdatedAt     data.MultiDateTime       `json:"updatedAt"`
 }
 
 // BulkChargeBatch represents a bulk charge batch
@@ -30,6 +30,6 @@ type BulkChargeBatch struct {
 	Status         string   `json:"status"`
 	TotalCharges   int      `json:"total_charges"`
 	PendingCharges int      `json:"pending_charges"`
-	CreatedAt      DateTime `json:"createdAt"`
-	UpdatedAt      DateTime `json:"updatedAt"`
+	CreatedAt      data.MultiDateTime `json:"createdAt"`
+	UpdatedAt      data.MultiDateTime `json:"updatedAt"`
 }

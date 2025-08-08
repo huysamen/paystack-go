@@ -1,5 +1,5 @@
 package types
-
+import "github.com/huysamen/paystack-go/types/data"
 import "github.com/huysamen/paystack-go/enums"
 
 // Charge represents the charge data in API responses
@@ -11,8 +11,8 @@ type Charge struct {
 	Amount          int            `json:"amount"`
 	Message         string         `json:"message"`
 	GatewayResponse string         `json:"gateway_response"`
-	PaidAt          *DateTime      `json:"paid_at"`
-	CreatedAt       *DateTime      `json:"created_at"`
+	PaidAt          *data.MultiDateTime      `json:"paid_at"`
+	CreatedAt       *data.MultiDateTime      `json:"created_at"`
 	Channel         enums.Channel  `json:"channel"`
 	Currency        enums.Currency `json:"currency"`
 	IPAddress       string         `json:"ip_address"`
@@ -20,7 +20,7 @@ type Charge struct {
 	Log             *Metadata      `json:"log"`
 	Fees            int            `json:"fees"`
 	RequestedAmount int            `json:"requested_amount"`
-	TransactionDate *DateTime      `json:"transaction_date"`
+	TransactionDate *data.MultiDateTime      `json:"transaction_date"`
 	Plan            *Plan          `json:"plan"`
 	Authorization   *Authorization `json:"authorization"`
 	Customer        *Customer      `json:"customer"`

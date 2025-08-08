@@ -37,6 +37,6 @@ type MandateAuthorization struct {
 	BankCode          string                           `json:"bank_code"`
 	BankName          string                           `json:"bank_name"`
 	CustomerCode      string                           `json:"customer_code"`
-	CreatedAt         DateTime                         `json:"created_at"`
-	UpdatedAt         DateTime                         `json:"updated_at"`
+	CreatedAt         data.MultiDateTime                         `json:"created_at"`
+	UpdatedAt         data.MultiDateTime                         `json:"updated_at"`
 }

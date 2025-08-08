@@ -5,6 +5,7 @@ import (
 	"os"
 	"path/filepath"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -62,6 +63,127 @@ func TestListResponse_JSONDeserialization(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestListResponse_FieldByFieldValidation(t *testing.T) {
+	t.Run("list_200_json_comprehensive_field_validation", func(t *testing.T) {
+		// Read the exact JSON response file
+		responseFilePath := filepath.Join("..", "..", "resources", "examples", "responses", "bulkcharges", "list_200.json")
+		responseData, err := os.ReadFile(responseFilePath)
+		require.NoError(t, err, "failed to read list_200.json")
+
+		// Parse into our struct
+		var response ListResponse
+		err = json.Unmarshal(responseData, &response)
+		require.NoError(t, err, "failed to unmarshal list_200.json")
+
+		// Parse the raw JSON to compare exact values
+		var rawJSON map[string]any
+		err = json.Unmarshal(responseData, &rawJSON)
+		require.NoError(t, err, "failed to parse raw JSON for comparison")
+
+		// Field-by-field validation against the exact JSON values
+		assert.Equal(t, true, rawJSON["status"], "status in JSON should be true")
+		assert.Equal(t, true, response.Status.Bool(), "status in struct should be true")
+
+		assert.Equal(t, "Bulk charges retrieved", rawJSON["message"], "message in JSON should match")
+		assert.Equal(t, "Bulk charges retrieved", response.Message, "message in struct should match")
+
+		// Verify data field exists and has correct structure
+		assert.Contains(t, rawJSON, "data", "JSON should contain data field")
+		assert.NotNil(t, response.Data, "struct data field should not be nil")
+
+		// Get the data array from raw JSON
+		rawData, ok := rawJSON["data"].([]any)
+		require.True(t, ok, "data field should be an array")
+		require.Len(t, rawData, 1, "should have exactly 1 item in JSON")
+		require.Len(t, response.Data, 1, "should have exactly 1 item in struct")
+
+		// Validate the first (and only) item in detail
+		rawItem, ok := rawData[0].(map[string]any)
+		require.True(t, ok, "first item should be an object")
+		structItem := response.Data[0]
+
+		assert.Equal(t, "test", rawItem["domain"], "domain in JSON should match")
+		assert.Equal(t, "test", structItem.Domain, "domain in struct should match")
+
+		assert.Equal(t, "BCH_1nV4L1D7cayggh", rawItem["batch_code"], "batch_code in JSON should match")
+		assert.Equal(t, "BCH_1nV4L1D7cayggh", structItem.BatchCode, "batch_code in struct should match")
+
+		assert.Equal(t, "complete", rawItem["status"], "status in JSON should match")
+		assert.Equal(t, "complete", structItem.Status, "status in struct should match")
+
+		assert.Equal(t, float64(1733), rawItem["id"], "id in JSON should match")
+		assert.Equal(t, 1733, structItem.ID, "id in struct should match")
+
+		assert.Equal(t, "2017-02-04T05:44:19.000Z", rawItem["createdAt"], "createdAt in JSON should match")
+		// For timestamp comparison, check that we can parse both correctly rather than string format
+		expectedCreatedAt, err := time.Parse(time.RFC3339, "2017-02-04T05:44:19.000Z")
+		require.NoError(t, err, "should parse expected createdAt")
+		actualCreatedAt, err := time.Parse(time.RFC3339, structItem.CreatedAt.String())
+		require.NoError(t, err, "should parse actual createdAt")
+		assert.True(t, expectedCreatedAt.Equal(actualCreatedAt), "createdAt timestamps should be equal")
+
+		assert.Equal(t, "2017-02-04T05:45:02.000Z", rawItem["updatedAt"], "updatedAt in JSON should match")
+		// For timestamp comparison, check that we can parse both correctly rather than string format
+		expectedUpdatedAt, err := time.Parse(time.RFC3339, "2017-02-04T05:45:02.000Z")
+		require.NoError(t, err, "should parse expected updatedAt")
+		actualUpdatedAt, err := time.Parse(time.RFC3339, structItem.UpdatedAt.String())
+		require.NoError(t, err, "should parse actual updatedAt")
+		assert.True(t, expectedUpdatedAt.Equal(actualUpdatedAt), "updatedAt timestamps should be equal")
+
+		// Verify meta field exists and has correct structure
+		assert.Contains(t, rawJSON, "meta", "JSON should contain meta field")
+		assert.NotNil(t, response.Meta, "struct meta field should not be nil")
+
+		rawMeta, ok := rawJSON["meta"].(map[string]any)
+		require.True(t, ok, "meta field should be an object")
+
+		assert.Equal(t, float64(1), rawMeta["total"], "total in JSON should match")
+		assert.NotNil(t, response.Meta.Total, "total in struct should not be nil")
+		assert.Equal(t, 1, *response.Meta.Total, "total in struct should match")
+
+		assert.Equal(t, float64(0), rawMeta["skipped"], "skipped in JSON should match")
+		assert.NotNil(t, response.Meta.Skipped, "skipped in struct should not be nil")
+		assert.Equal(t, 0, *response.Meta.Skipped, "skipped in struct should match")
+
+		assert.Equal(t, float64(50), rawMeta["perPage"], "perPage in JSON should match")
+		assert.Equal(t, 50, response.Meta.PerPage, "perPage in struct should match")
+
+		assert.Equal(t, float64(1), rawMeta["page"], "page in JSON should match")
+		assert.NotNil(t, response.Meta.Page, "page in struct should not be nil")
+		assert.Equal(t, 1, *response.Meta.Page, "page in struct should match")
+
+		assert.Equal(t, float64(1), rawMeta["pageCount"], "pageCount in JSON should match")
+		assert.NotNil(t, response.Meta.PageCount, "pageCount in struct should not be nil")
+		assert.Equal(t, 1, *response.Meta.PageCount, "pageCount in struct should match")
+
+		// Verify complete JSON structure matches our struct
+		reconstituted, err := json.Marshal(response)
+		require.NoError(t, err, "should be able to marshal struct back to JSON")
+
+		var reconstitutedMap map[string]any
+		err = json.Unmarshal(reconstituted, &reconstitutedMap)
+		require.NoError(t, err, "should be able to parse reconstituted JSON")
+
+		// Core fields should match
+		assert.Equal(t, rawJSON["status"], reconstitutedMap["status"], "status should survive round-trip")
+		assert.Equal(t, rawJSON["message"], reconstitutedMap["message"], "message should survive round-trip")
+
+		// Data array should match
+		reconstitutedData, ok := reconstitutedMap["data"].([]any)
+		require.True(t, ok, "reconstituted data should be an array")
+		assert.Equal(t, len(rawData), len(reconstitutedData), "data length should survive round-trip")
+
+		// Meta object should match
+		reconstitutedMeta, ok := reconstitutedMap["meta"].(map[string]any)
+		require.True(t, ok, "reconstituted meta should be an object")
+		assert.Equal(t, rawMeta["total"], reconstitutedMeta["total"], "meta total should survive round-trip")
+		assert.Equal(t, rawMeta["skipped"], reconstitutedMeta["skipped"], "meta skipped should survive round-trip")
+		assert.Equal(t, rawMeta["perPage"], reconstitutedMeta["perPage"], "meta perPage should survive round-trip")
+		assert.Equal(t, rawMeta["page"], reconstitutedMeta["page"], "meta page should survive round-trip")
+		assert.Equal(t, rawMeta["pageCount"], reconstitutedMeta["pageCount"], "meta pageCount should survive round-trip")
+	})
 }
 
 func TestListRequestBuilder(t *testing.T) {

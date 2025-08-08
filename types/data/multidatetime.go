@@ -1,4 +1,4 @@
-package types
+package data
 
 import (
 	"encoding/json"
@@ -6,33 +6,33 @@ import (
 	"time"
 )
 
-// DateTime represents a time value that can be marshaled/unmarshaled from various formats
-type DateTime struct {
+// MultiDateTime represents a time value that can be marshaled/unmarshaled from various formats
+type MultiDateTime struct {
 	time.Time
 }
 
-// NewDateTime creates a new DateTime from a time.Time
-func NewDateTime(t time.Time) DateTime {
-	return DateTime{Time: t}
+// NewMultiDateTime creates a new MultiDateTime from a time.Time
+func NewMultiDateTime(t time.Time) MultiDateTime {
+	return MultiDateTime{Time: t}
 }
 
-// MarshalJSON implements json.Marshaler for DateTime
-func (dt DateTime) MarshalJSON() ([]byte, error) {
+// MarshalJSON implements json.Marshaler for MultiDateTime
+func (dt MultiDateTime) MarshalJSON() ([]byte, error) {
 	if dt.IsZero() {
 		return []byte("null"), nil
 	}
 	return json.Marshal(dt.Format(time.RFC3339))
 }
 
-// UnmarshalJSON implements json.Unmarshaler for DateTime
-func (dt *DateTime) UnmarshalJSON(data []byte) error {
+// UnmarshalJSON implements json.Unmarshaler for MultiDateTime
+func (dt *MultiDateTime) UnmarshalJSON(data []byte) error {
 	var s string
 	if err := json.Unmarshal(data, &s); err != nil {
 		return err
 	}
 
 	if s == "" || s == "null" {
-		*dt = DateTime{}
+		*dt = MultiDateTime{}
 		return nil
 	}
 
@@ -47,7 +47,7 @@ func (dt *DateTime) UnmarshalJSON(data []byte) error {
 
 	for _, format := range formats {
 		if t, err := time.Parse(format, s); err == nil {
-			*dt = DateTime{Time: t}
+			*dt = MultiDateTime{Time: t}
 			return nil
 		}
 	}
@@ -55,8 +55,8 @@ func (dt *DateTime) UnmarshalJSON(data []byte) error {
 	return fmt.Errorf("unsupported time format: %s", s)
 }
 
-// String returns the string representation of DateTime
-func (dt DateTime) String() string {
+// String returns the string representation of MultiDateTime
+func (dt MultiDateTime) String() string {
 	if dt.IsZero() {
 		return ""
 	}
@@ -64,6 +64,6 @@ func (dt DateTime) String() string {
 }
 
 // Unix returns the Unix timestamp
-func (dt DateTime) Unix() int64 {
+func (dt MultiDateTime) Unix() int64 {
 	return dt.Time.Unix()
 }

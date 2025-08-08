@@ -5,6 +5,7 @@ import (
 
 	"github.com/huysamen/paystack-go/net"
 	"github.com/huysamen/paystack-go/types"
+	"github.com/huysamen/paystack-go/types/data"
 )
 
 type createRequest struct {
@@ -52,12 +53,12 @@ func (b *CreateRequestBuilder) Build() *createRequest {
 }
 
 type CreateResponseData struct {
-	Transaction *types.Transaction `json:"transaction"`
-	Amount      int                `json:"amount"`
-	Currency    string             `json:"currency"`
-	RefundedBy  string             `json:"refunded_by"`
-	RefundedAt  *types.DateTime    `json:"refunded_at"`
-	CreatedAt   *types.DateTime    `json:"created_at"`
+	Transaction *types.Transaction  `json:"transaction"`
+	Amount      int                 `json:"amount"`
+	Currency    string              `json:"currency"`
+	RefundedBy  string              `json:"refunded_by"`
+	RefundedAt  *data.MultiDateTime `json:"refunded_at"`
+	CreatedAt   *data.MultiDateTime `json:"created_at"`
 }
 
 type CreateResponse = types.Response[CreateResponseData]

@@ -1,5 +1,5 @@
 package types
-
+import "github.com/huysamen/paystack-go/types/data"
 import "github.com/huysamen/paystack-go/enums"
 
 // LineItem represents a line item in a payment request
@@ -17,7 +17,7 @@ type Tax struct {
 
 // Notification represents a notification for a payment request
 type Notification struct {
-	SentAt  *DateTime `json:"sent_at,omitempty"`
+	SentAt  *data.MultiDateTime `json:"sent_at,omitempty"`
 	Channel string    `json:"channel"`
 }
 
@@ -41,7 +41,7 @@ type PaymentRequest struct {
 	Domain           string            `json:"domain"`
 	Amount           int               `json:"amount"`
 	Currency         enums.Currency    `json:"currency"`
-	DueDate          DateTime          `json:"due_date"`
+	DueDate          data.MultiDateTime          `json:"due_date"`
 	HasInvoice       bool              `json:"has_invoice"`
 	InvoiceNumber    *int              `json:"invoice_number"`
 	Description      string            `json:"description"`
@@ -50,13 +50,13 @@ type PaymentRequest struct {
 	RequestCode      string            `json:"request_code"`
 	Status           string            `json:"status"`
 	Paid             bool              `json:"paid"`
-	PaidAt           *DateTime         `json:"paid_at"`
+	PaidAt           *data.MultiDateTime         `json:"paid_at"`
 	Metadata         *Metadata         `json:"metadata"`
 	Notifications    []Notification    `json:"notifications"`
 	OfflineReference string            `json:"offline_reference"`
 	Customer         Customer          `json:"customer"`
-	CreatedAt        DateTime          `json:"created_at"`
-	UpdatedAt        DateTime          `json:"updated_at"`
+	CreatedAt        data.MultiDateTime          `json:"created_at"`
+	UpdatedAt        data.MultiDateTime          `json:"updated_at"`
 	PendingAmount    int               `json:"pending_amount"`
 	Split            *TransactionSplit `json:"split"`
 	Integration      int               `json:"integration"`

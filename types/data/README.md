@@ -54,6 +54,32 @@ type Authorization struct {
 month := auth.ExpMonth.String()
 ```
 
+## MultiDateTime
+
+Handles datetime fields that may come in various timestamp formats from the API.
+
+**Supported formats:**
+- RFC3339: `"2023-01-15T14:30:45Z"`
+- RFC3339Nano: `"2023-01-15T14:30:45.123456789Z"`
+- Custom with milliseconds: `"2023-01-15T14:30:45.000Z"`
+- Simple format: `"2023-01-15 14:30:45"`
+- Null/empty values: `null`, `""`
+
+**Usage:**
+```go
+type Customer struct {
+    CreatedAt MultiDateTime `json:"createdAt"`
+    UpdatedAt MultiDateTime `json:"updatedAt"`
+}
+
+// Access the underlying time.Time
+timeValue := customer.CreatedAt.Time
+// Get string representation (RFC3339)
+timeString := customer.CreatedAt.String()
+// Get Unix timestamp
+unixTime := customer.CreatedAt.Unix()
+```
+
 ## Design Philosophy
 
 These types are designed to be:

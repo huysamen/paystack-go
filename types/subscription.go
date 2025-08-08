@@ -1,5 +1,5 @@
 package types
-
+import "github.com/huysamen/paystack-go/types/data"
 import (
 	"github.com/huysamen/paystack-go/enums"
 )
@@ -20,10 +20,10 @@ type Subscription struct {
 	Authorization    Authorization `json:"authorization"`
 	EasyCronID       *string       `json:"easy_cron_id"`
 	CronExpression   string        `json:"cron_expression"`
-	NextPaymentDate  *DateTime     `json:"next_payment_date"`
+	NextPaymentDate  *data.MultiDateTime     `json:"next_payment_date"`
 	OpenInvoice      *string       `json:"open_invoice"`
-	CreatedAt        DateTime      `json:"createdAt"`
-	UpdatedAt        DateTime      `json:"updatedAt"`
+	CreatedAt        data.MultiDateTime      `json:"createdAt"`
+	UpdatedAt        data.MultiDateTime      `json:"updatedAt"`
 
 	// Additional fields from customer subscription data
 	CustomerCode            string         `json:"customer_code,omitempty"`

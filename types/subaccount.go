@@ -1,5 +1,5 @@
 package types
-
+import "github.com/huysamen/paystack-go/types/data"
 import "github.com/huysamen/paystack-go/enums"
 
 // Subaccount represents a Paystack subaccount
@@ -26,8 +26,8 @@ type Subaccount struct {
 	Currency             enums.Currency `json:"currency"`
 	AccountName          string         `json:"account_name"`
 	Product              string         `json:"product"`
-	CreatedAt            DateTime       `json:"createdAt"`
-	UpdatedAt            DateTime       `json:"updatedAt"`
+	CreatedAt            data.MultiDateTime       `json:"createdAt"`
+	UpdatedAt            data.MultiDateTime       `json:"updatedAt"`
 }
 
 // TransactionSplit represents a Paystack transaction split
@@ -42,8 +42,8 @@ type TransactionSplit struct {
 	Active           bool              `json:"active"`
 	BearerType       string            `json:"bearer_type"` // all, account, subaccount
 	BearerSubaccount *string           `json:"bearer_subaccount"`
-	CreatedAt        DateTime          `json:"createdAt"`
-	UpdatedAt        DateTime          `json:"updatedAt"`
+	CreatedAt        data.MultiDateTime          `json:"createdAt"`
+	UpdatedAt        data.MultiDateTime          `json:"updatedAt"`
 	IsDynamic        bool              `json:"is_dynamic"`
 	Subaccounts      []SplitSubaccount `json:"subaccounts"`
 	TotalSubaccounts int               `json:"total_subaccounts"`

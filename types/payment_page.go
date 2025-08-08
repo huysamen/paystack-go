@@ -1,5 +1,5 @@
 package types
-
+import "github.com/huysamen/paystack-go/types/data"
 import "github.com/huysamen/paystack-go/enums"
 
 // CustomFilters represents filters for customizing payment options
@@ -34,8 +34,8 @@ type PaymentPage struct {
 	Plan              *int           `json:"plan,omitempty"`
 	Products          []PageProduct  `json:"products,omitempty"`
 	Metadata          *Metadata      `json:"metadata,omitempty"`
-	CreatedAt         DateTime       `json:"createdAt,omitempty"`
-	UpdatedAt         DateTime       `json:"updatedAt,omitempty"`
+	CreatedAt         data.MultiDateTime       `json:"createdAt,omitempty"`
+	UpdatedAt         data.MultiDateTime       `json:"updatedAt,omitempty"`
 }
 
 // PageProduct represents a product within a payment page

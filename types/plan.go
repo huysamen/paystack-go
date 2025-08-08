@@ -1,5 +1,5 @@
 package types
-
+import "github.com/huysamen/paystack-go/types/data"
 import "github.com/huysamen/paystack-go/enums"
 
 // Plan represents a Paystack subscription plan
@@ -22,8 +22,8 @@ type Plan struct {
 	Migrate                  bool           `json:"migrate"`
 	IsDeleted                bool           `json:"is_deleted"`
 	IsArchived               bool           `json:"is_archived"`
-	CreatedAt                DateTime       `json:"createdAt"`
-	UpdatedAt                DateTime       `json:"updatedAt"`
+	CreatedAt                data.MultiDateTime       `json:"createdAt"`
+	UpdatedAt                data.MultiDateTime       `json:"updatedAt"`
 	PagesCount               int            `json:"pages_count"`
 	SubscribersCount         int            `json:"subscribers_count"`
 	ActiveSubscriptionsCount int            `json:"active_subscriptions_count"`

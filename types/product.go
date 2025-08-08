@@ -1,5 +1,5 @@
 package types
-
+import "github.com/huysamen/paystack-go/types/data"
 import "github.com/huysamen/paystack-go/enums"
 
 // Product represents a product on the integration
@@ -36,6 +36,6 @@ type Product struct {
 	StockThreshold     *int           `json:"stock_threshold,omitempty"`
 	ExpiresIn          *int           `json:"expires_in,omitempty"`
 	DigitalAssets      []any          `json:"digital_assets,omitempty"`
-	CreatedAt          DateTime       `json:"createdAt,omitempty"`
-	UpdatedAt          DateTime       `json:"updatedAt,omitempty"`
+	CreatedAt          data.MultiDateTime       `json:"createdAt,omitempty"`
+	UpdatedAt          data.MultiDateTime       `json:"updatedAt,omitempty"`
 }

@@ -11,6 +11,7 @@ import (
 	"github.com/huysamen/paystack-go/net"
 	"github.com/huysamen/paystack-go/optional"
 	"github.com/huysamen/paystack-go/types"
+	"github.com/huysamen/paystack-go/types/data"
 )
 
 type exportRequest struct {
@@ -155,8 +156,8 @@ func (r *exportRequest) toQuery() string {
 }
 
 type ExportResponseData struct {
-	Path      string         `json:"path"`
-	ExpiresAt types.DateTime `json:"expiresAt"`
+	Path      string             `json:"path"`
+	ExpiresAt data.MultiDateTime `json:"expiresAt"`
 }
 
 type ExportResponse = types.Response[ExportResponseData]

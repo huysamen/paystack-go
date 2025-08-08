@@ -132,7 +132,7 @@ func TestCreateRequest_JSONSerialization(t *testing.T) {
 		jsonData, err := json.Marshal(request)
 		require.NoError(t, err, "should marshal to JSON without error")
 
-		var unmarshaled map[string]interface{}
+		var unmarshaled map[string]any
 		err = json.Unmarshal(jsonData, &unmarshaled)
 		require.NoError(t, err, "should unmarshal JSON without error")
 
@@ -151,7 +151,7 @@ func TestCreateRequest_JSONSerialization(t *testing.T) {
 		jsonData, err := json.Marshal(request)
 		require.NoError(t, err, "should marshal to JSON without error")
 
-		var unmarshaled map[string]interface{}
+		var unmarshaled map[string]any
 		err = json.Unmarshal(jsonData, &unmarshaled)
 		require.NoError(t, err, "should unmarshal JSON without error")
 

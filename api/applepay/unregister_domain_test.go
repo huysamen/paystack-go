@@ -47,6 +47,48 @@ func TestUnregisterDomainResponse_JSONDeserialization(t *testing.T) {
 	}
 }
 
+func TestUnregisterDomainResponse_FieldByFieldValidation(t *testing.T) {
+	t.Run("unregister_domain_200_json_comprehensive_field_validation", func(t *testing.T) {
+		// Read the exact JSON response file
+		responseFilePath := filepath.Join("..", "..", "resources", "examples", "responses", "applepay", "unregister_domain_200.json")
+		responseData, err := os.ReadFile(responseFilePath)
+		require.NoError(t, err, "failed to read unregister_domain_200.json")
+
+		// Parse into our struct
+		var response UnregisterDomainResponse
+		err = json.Unmarshal(responseData, &response)
+		require.NoError(t, err, "failed to unmarshal unregister_domain_200.json")
+
+		// Parse the raw JSON to compare exact values
+		var rawJSON map[string]any
+		err = json.Unmarshal(responseData, &rawJSON)
+		require.NoError(t, err, "failed to parse raw JSON for comparison")
+
+		// Field-by-field validation against the exact JSON values
+		assert.Equal(t, true, rawJSON["status"], "status in JSON should be true")
+		assert.Equal(t, true, response.Status.Bool(), "status in struct should be true")
+
+		assert.Equal(t, "Domain successfully unregistered on Apple Pay", rawJSON["message"], "message in JSON should match")
+		assert.Equal(t, "Domain successfully unregistered on Apple Pay", response.Message, "message in struct should match")
+
+		// Verify no data field exists in this response
+		assert.NotContains(t, rawJSON, "data", "JSON should not contain data field")
+		assert.Nil(t, response.Data, "struct data field should be nil")
+
+		// Verify complete JSON structure matches our struct
+		reconstituted, err := json.Marshal(response)
+		require.NoError(t, err, "should be able to marshal struct back to JSON")
+
+		var reconstitutedMap map[string]any
+		err = json.Unmarshal(reconstituted, &reconstitutedMap)
+		require.NoError(t, err, "should be able to parse reconstituted JSON")
+
+		// Core fields should match
+		assert.Equal(t, rawJSON["status"], reconstitutedMap["status"], "status should survive round-trip")
+		assert.Equal(t, rawJSON["message"], reconstitutedMap["message"], "message should survive round-trip")
+	})
+}
+
 func TestUnregisterDomainRequestBuilder(t *testing.T) {
 	t.Run("builds request with domain name", func(t *testing.T) {
 		domainName := "test.example.com"
@@ -85,7 +127,7 @@ func TestUnregisterDomainRequest_JSONSerialization(t *testing.T) {
 		jsonData, err := json.Marshal(request)
 		require.NoError(t, err, "should marshal to JSON without error")
 
-		var unmarshaled map[string]interface{}
+		var unmarshaled map[string]any
 		err = json.Unmarshal(jsonData, &unmarshaled)
 		require.NoError(t, err, "should unmarshal JSON without error")
 

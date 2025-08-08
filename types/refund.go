@@ -1,5 +1,5 @@
 package types
-
+import "github.com/huysamen/paystack-go/types/data"
 import "github.com/huysamen/paystack-go/enums"
 
 // Refund represents a refund object
@@ -17,10 +17,10 @@ type Refund struct {
 	FullyDeducted  bool                 `json:"fully_deducted"`
 	Status         enums.RefundStatus   `json:"status"`
 	RefundedBy     string               `json:"refunded_by"`
-	RefundedAt     *DateTime            `json:"refunded_at"`
-	ExpectedAt     *DateTime            `json:"expected_at"`
-	CreatedAt      DateTime             `json:"createdAt"`
-	UpdatedAt      DateTime             `json:"updatedAt"`
+	RefundedAt     *data.MultiDateTime            `json:"refunded_at"`
+	ExpectedAt     *data.MultiDateTime            `json:"expected_at"`
+	CreatedAt      data.MultiDateTime             `json:"createdAt"`
+	UpdatedAt      data.MultiDateTime             `json:"updatedAt"`
 	CustomerNote   *string              `json:"customer_note"`
 	MerchantNote   *string              `json:"merchant_note"`
 }

@@ -1,5 +1,5 @@
 package types
-
+import "github.com/huysamen/paystack-go/types/data"
 import "github.com/huysamen/paystack-go/enums"
 
 // Settlement represents a settlement record
@@ -14,10 +14,10 @@ type Settlement struct {
 	TotalFees       int64                  `json:"total_fees"`       // Total fees charged in kobo
 	TotalProcessed  int64                  `json:"total_processed"`  // Total amount processed in kobo
 	Deductions      *Metadata              `json:"deductions"`       // Any deductions applied
-	SettlementDate  DateTime               `json:"settlement_date"`  // Date settlement was made
+	SettlementDate  data.MultiDateTime               `json:"settlement_date"`  // Date settlement was made
 	SettledBy       *string                `json:"settled_by"`       // Who processed the settlement
-	CreatedAt       DateTime               `json:"createdAt"`        // When settlement record was created
-	UpdatedAt       DateTime               `json:"updatedAt"`        // When settlement was last updated
+	CreatedAt       data.MultiDateTime               `json:"createdAt"`        // When settlement record was created
+	UpdatedAt       data.MultiDateTime               `json:"updatedAt"`        // When settlement was last updated
 }
 
 // SettlementTransaction represents a transaction within a settlement
@@ -29,8 +29,8 @@ type SettlementTransaction struct {
 	Amount          int64     `json:"amount"` // Transaction amount in kobo
 	Message         string    `json:"message"`
 	GatewayResponse string    `json:"gateway_response"`
-	PaidAt          *DateTime `json:"paid_at"`
-	CreatedAt       DateTime  `json:"createdAt"`
+	PaidAt          *data.MultiDateTime `json:"paid_at"`
+	CreatedAt       data.MultiDateTime  `json:"createdAt"`
 	Channel         string    `json:"channel"`
 	Currency        string    `json:"currency"`
 	IPAddress       string    `json:"ip_address"`

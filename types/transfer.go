@@ -1,5 +1,5 @@
 package types
-
+import "github.com/huysamen/paystack-go/types/data"
 import "github.com/huysamen/paystack-go/enums"
 
 // Transfer represents a Paystack transfer
@@ -16,11 +16,11 @@ type Transfer struct {
 	Failures      *Metadata      `json:"failures"`
 	TransferCode  string         `json:"transfer_code"`
 	TitanCode     *string        `json:"titan_code"`
-	TransferredAt *DateTime      `json:"transferred_at,omitempty"`
+	TransferredAt *data.MultiDateTime      `json:"transferred_at,omitempty"`
 	Reference     string         `json:"reference"`
 	Recipient     Recipient      `json:"recipient"`
-	CreatedAt     DateTime       `json:"createdAt"`
-	UpdatedAt     DateTime       `json:"updatedAt"`
+	CreatedAt     data.MultiDateTime       `json:"createdAt"`
+	UpdatedAt     data.MultiDateTime       `json:"updatedAt"`
 }
 
 // Recipient represents a transfer recipient
@@ -38,8 +38,8 @@ type Recipient struct {
 	Active        bool             `json:"active"`
 	Email         *string          `json:"email"`
 	IsDeleted     bool             `json:"is_deleted"`
-	CreatedAt     DateTime         `json:"createdAt"`
-	UpdatedAt     DateTime         `json:"updatedAt"`
+	CreatedAt     data.MultiDateTime         `json:"createdAt"`
+	UpdatedAt     data.MultiDateTime         `json:"updatedAt"`
 }
 
 // RecipientDetails represents recipient account details
@@ -68,8 +68,8 @@ type BalanceLedger struct {
 	ModelResponsible string   `json:"model_responsible"`
 	ModelRow         int      `json:"model_row"`
 	ID               int      `json:"id"`
-	CreatedAt        DateTime `json:"createdAt"`
-	UpdatedAt        DateTime `json:"updatedAt"`
+	CreatedAt        data.MultiDateTime `json:"createdAt"`
+	UpdatedAt        data.MultiDateTime `json:"updatedAt"`
 }
 
 // BulkRecipientItem represents a recipient item for bulk creation
