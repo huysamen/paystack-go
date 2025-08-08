@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/huysamen/paystack-go/enums"
 	"github.com/huysamen/paystack-go/net"
 	"github.com/huysamen/paystack-go/types"
 )
@@ -16,7 +15,7 @@ type CustomerReference struct {
 
 type verifyAuthorizationResponseData struct {
 	AuthorizationCode string            `json:"authorization_code"`
-	Channel           enums.Channel     `json:"channel"`
+	Channel           string            `json:"channel"`
 	Bank              string            `json:"bank"`
 	Active            bool              `json:"active"`
 	Customer          CustomerReference `json:"customer"`
