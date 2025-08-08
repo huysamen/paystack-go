@@ -1,7 +1,8 @@
 package types
-import "github.com/huysamen/paystack-go/types/data"
+
 import (
 	"github.com/huysamen/paystack-go/enums"
+	"github.com/huysamen/paystack-go/types/data"
 )
 
 // Transaction represents a Paystack transaction with comprehensive field coverage
@@ -13,8 +14,8 @@ type Transaction struct {
 	Amount             int                 `json:"amount"`
 	Message            *string             `json:"message"`
 	GatewayResponse    string              `json:"gateway_response"`
-	PaidAt             *data.MultiDateTime           `json:"paid_at,omitempty"`
-	CreatedAt          data.MultiDateTime            `json:"created_at"`
+	PaidAt             *data.MultiDateTime `json:"paid_at,omitempty"`
+	CreatedAt          data.MultiDateTime  `json:"created_at"`
 	Channel            enums.Channel       `json:"channel"`
 	Currency           enums.Currency      `json:"currency"`
 	IPAddress          string              `json:"ip_address"`
@@ -32,10 +33,6 @@ type Transaction struct {
 	Source             *TransactionSource  `json:"source,omitempty"`
 	Connect            *ConnectData        `json:"connect,omitempty"`
 	POSTransactionData *POSTransactionData `json:"pos_transaction_data,omitempty"`
-
-	// Additional fields found in API responses that might be camelCase
-	PaidAtCamel    *data.MultiDateTime `json:"paidAt,omitempty"`
-	CreatedAtCamel data.MultiDateTime  `json:"createdAt,omitempty"`
 }
 
 // TransactionLog represents the transaction processing log
