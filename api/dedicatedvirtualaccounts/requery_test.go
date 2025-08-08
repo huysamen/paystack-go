@@ -120,3 +120,37 @@ func TestRequeryRequest_QueryGeneration(t *testing.T) {
 		assert.NotContains(t, query, "date=", "query should not contain empty date parameter")
 	})
 }
+
+func TestRequeryResponse_FieldByFieldValidation(t *testing.T) {
+	// Read the response file
+	responseFilePath := filepath.Join("..", "..", "resources", "examples", "responses", "dedicatedvirtualaccounts", "requery_200.json")
+	responseData, err := os.ReadFile(responseFilePath)
+	require.NoError(t, err, "failed to read response file")
+
+	// Parse as raw JSON to get expected values
+	var rawData map[string]any
+	err = json.Unmarshal(responseData, &rawData)
+	require.NoError(t, err, "failed to unmarshal raw JSON")
+
+	// Deserialize into struct
+	var response RequeryResponse
+	err = json.Unmarshal(responseData, &response)
+	require.NoError(t, err, "failed to unmarshal into struct")
+
+	// Validate top-level fields
+	expectedStatus := rawData["status"].(bool)
+	assert.Equal(t, expectedStatus, response.Status.Bool(), "status should match")
+	assert.Equal(t, rawData["message"], response.Message, "message should match")
+
+	// Test round-trip serialization
+	serialized, err := json.Marshal(response)
+	require.NoError(t, err, "should marshal back to JSON without error")
+
+	var roundTripResponse RequeryResponse
+	err = json.Unmarshal(serialized, &roundTripResponse)
+	require.NoError(t, err, "should unmarshal round-trip JSON without error")
+
+	// Verify round-trip integrity
+	assert.Equal(t, response.Status.Bool(), roundTripResponse.Status.Bool(), "round-trip status should match")
+	assert.Equal(t, response.Message, roundTripResponse.Message, "round-trip message should match")
+}

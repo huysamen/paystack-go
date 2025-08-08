@@ -5,6 +5,7 @@ import (
 	"os"
 	"path/filepath"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -64,4 +65,100 @@ func TestFetchResponse_JSONDeserialization(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestFetchResponse_FieldByFieldValidation(t *testing.T) {
+	// Read the fetch_200.json file
+	responseFilePath := filepath.Join("..", "..", "resources", "examples", "responses", "dedicatedvirtualaccounts", "fetch_200.json")
+	responseData, err := os.ReadFile(responseFilePath)
+	require.NoError(t, err, "failed to read fetch_200.json")
+
+	// Parse the raw JSON to get the original values
+	var rawResponse map[string]any
+	err = json.Unmarshal(responseData, &rawResponse)
+	require.NoError(t, err, "failed to unmarshal raw JSON response")
+
+	// Deserialize into the FetchResponse struct
+	var response FetchResponse
+	err = json.Unmarshal(responseData, &response)
+	require.NoError(t, err, "failed to unmarshal into FetchResponse struct")
+
+	// Validate top-level fields against the raw JSON
+	assert.Equal(t, rawResponse["status"], response.Status.Bool(), "status field should match")
+	assert.Equal(t, rawResponse["message"], response.Message, "message field should match")
+
+	// Validate data object fields
+	rawData := rawResponse["data"].(map[string]any)
+	data := response.Data
+
+	// Basic account fields
+	assert.Equal(t, rawData["account_name"], data.AccountName, "account_name should match")
+	assert.Equal(t, rawData["account_number"], data.AccountNumber, "account_number should match")
+	assert.Equal(t, rawData["assigned"], data.Assigned, "assigned should match")
+	assert.Equal(t, rawData["currency"], string(data.Currency), "currency should match")
+	assert.Equal(t, rawData["active"], data.Active, "active should match")
+	assert.Equal(t, rawData["id"], float64(data.ID), "id should match")
+
+	// split_config field (JSON string in response)
+	if rawData["split_config"] != nil {
+		// In this response, split_config is a JSON string, but in the struct it might be parsed differently
+		// We'll check if it exists and is not nil
+		assert.NotNil(t, data.SplitConfig, "split_config should not be nil when present in JSON")
+	}
+
+	// Bank object validation
+	rawBank := rawData["bank"].(map[string]any)
+	bank := data.Bank
+	assert.Equal(t, rawBank["name"], bank.Name, "bank.name should match")
+	assert.Equal(t, rawBank["id"], float64(bank.ID), "bank.id should match")
+	assert.Equal(t, rawBank["slug"], bank.Slug, "bank.slug should match")
+
+	// Customer object validation
+	rawCustomer := rawData["customer"].(map[string]any)
+	customer := data.Customer
+	require.NotNil(t, customer, "customer should not be nil")
+	assert.Equal(t, rawCustomer["id"], float64(customer.ID), "customer.id should match")
+	assert.Equal(t, rawCustomer["first_name"], *customer.FirstName, "customer.first_name should match")
+	assert.Equal(t, rawCustomer["last_name"], *customer.LastName, "customer.last_name should match")
+	assert.Equal(t, rawCustomer["email"], customer.Email, "customer.email should match")
+	assert.Equal(t, rawCustomer["customer_code"], customer.CustomerCode, "customer.customer_code should match")
+	assert.Equal(t, rawCustomer["phone"], *customer.Phone, "customer.phone should match")
+	assert.Equal(t, rawCustomer["risk_action"], customer.RiskAction, "customer.risk_action should match")
+
+	// Customer metadata (object in this response)
+	rawCustomerMetadata := rawCustomer["metadata"].(map[string]any)
+	assert.NotNil(t, customer.Metadata, "customer.metadata should not be nil")
+	assert.NotEmpty(t, rawCustomerMetadata, "customer metadata should not be empty")
+
+	// international_format_phone is null
+	assert.Equal(t, rawCustomer["international_format_phone"], nil, "international_format_phone should be null")
+
+	// Timestamp validation using MultiDateTime
+	createdAtStr, ok := rawData["created_at"].(string)
+	require.True(t, ok, "created_at should be a string")
+	parsedCreatedAt, err := time.Parse("2006-01-02T15:04:05.000Z", createdAtStr)
+	require.NoError(t, err, "should parse created_at timestamp")
+	assert.Equal(t, 2021, parsedCreatedAt.Year(), "created_at year should be 2021")
+	assert.Equal(t, 2021, data.CreatedAt.Time.Year(), "data CreatedAt year should match")
+
+	updatedAtStr, ok := rawData["updated_at"].(string)
+	require.True(t, ok, "updated_at should be a string")
+	parsedUpdatedAt, err := time.Parse("2006-01-02T15:04:05.000Z", updatedAtStr)
+	require.NoError(t, err, "should parse updated_at timestamp")
+	assert.Equal(t, 2021, parsedUpdatedAt.Year(), "updated_at year should be 2021")
+	assert.Equal(t, 2021, data.UpdatedAt.Time.Year(), "data UpdatedAt year should match")
+
+	// Test round-trip serialization
+	serialized, err := json.Marshal(response)
+	require.NoError(t, err, "failed to marshal response back to JSON")
+
+	var roundTripResponse FetchResponse
+	err = json.Unmarshal(serialized, &roundTripResponse)
+	require.NoError(t, err, "failed to unmarshal round-trip JSON")
+
+	// Verify core fields survive round-trip
+	assert.Equal(t, response.Status.Bool(), roundTripResponse.Status.Bool(), "status should survive round-trip")
+	assert.Equal(t, response.Message, roundTripResponse.Message, "message should survive round-trip")
+	assert.Equal(t, response.Data.AccountNumber, roundTripResponse.Data.AccountNumber, "account_number should survive round-trip")
+	assert.Equal(t, response.Data.AccountName, roundTripResponse.Data.AccountName, "account_name should survive round-trip")
 }

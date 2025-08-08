@@ -157,3 +157,96 @@ func TestSplitTransactionRequest_JSONSerialization(t *testing.T) {
 		}
 	})
 }
+
+func TestSplitTransactionResponse_FieldByFieldValidation(t *testing.T) {
+	// Read the response file
+	responseFilePath := filepath.Join("..", "..", "resources", "examples", "responses", "dedicatedvirtualaccounts", "split_transaction_200.json")
+	responseData, err := os.ReadFile(responseFilePath)
+	require.NoError(t, err, "failed to read response file")
+
+	// Parse as raw JSON to get expected values
+	var rawData map[string]any
+	err = json.Unmarshal(responseData, &rawData)
+	require.NoError(t, err, "failed to unmarshal raw JSON")
+
+	// Deserialize into struct
+	var response SplitTransactionResponse
+	err = json.Unmarshal(responseData, &response)
+	require.NoError(t, err, "failed to unmarshal into struct")
+
+	// Validate top-level fields
+	expectedStatus := rawData["status"].(bool)
+	assert.Equal(t, expectedStatus, response.Status.Bool(), "status should match")
+	assert.Equal(t, rawData["message"], response.Message, "message should match")
+
+	// Validate data object
+	rawDataObj := rawData["data"].(map[string]any)
+	assert.Equal(t, int(rawDataObj["id"].(float64)), response.Data.ID, "data.id should match")
+	assert.Equal(t, rawDataObj["account_name"], response.Data.AccountName, "data.account_name should match")
+	assert.Equal(t, rawDataObj["account_number"], response.Data.AccountNumber, "data.account_number should match")
+	assert.Equal(t, rawDataObj["currency"], string(response.Data.Currency), "data.currency should match")
+	assert.Equal(t, rawDataObj["assigned"], response.Data.Assigned, "data.assigned should match")
+	assert.Equal(t, rawDataObj["active"], response.Data.Active, "data.active should match")
+
+	// Validate timestamps
+	expectedCreatedAt := rawDataObj["created_at"].(string)
+	expectedUpdatedAt := rawDataObj["updated_at"].(string)
+	assert.Equal(t, expectedCreatedAt, response.Data.CreatedAt.Time.Format("2006-01-02T15:04:05.000Z"), "data.created_at should match")
+	assert.Equal(t, expectedUpdatedAt, response.Data.UpdatedAt.Time.Format("2006-01-02T15:04:05.000Z"), "data.updated_at should match")
+
+	// Validate bank object
+	rawBank := rawDataObj["bank"].(map[string]any)
+	assert.Equal(t, int(rawBank["id"].(float64)), response.Data.Bank.ID, "data.bank.id should match")
+	assert.Equal(t, rawBank["name"], response.Data.Bank.Name, "data.bank.name should match")
+	assert.Equal(t, rawBank["slug"], response.Data.Bank.Slug, "data.bank.slug should match")
+
+	// Validate customer object
+	rawCustomer := rawDataObj["customer"].(map[string]any)
+	assert.NotNil(t, response.Data.Customer, "data.customer should not be nil")
+	assert.Equal(t, uint64(rawCustomer["id"].(float64)), response.Data.Customer.ID, "data.customer.id should match")
+	if response.Data.Customer.FirstName != nil && rawCustomer["first_name"] != nil {
+		assert.Equal(t, rawCustomer["first_name"], *response.Data.Customer.FirstName, "data.customer.first_name should match")
+	}
+	if response.Data.Customer.LastName != nil && rawCustomer["last_name"] != nil {
+		assert.Equal(t, rawCustomer["last_name"], *response.Data.Customer.LastName, "data.customer.last_name should match")
+	}
+	assert.Equal(t, rawCustomer["email"], response.Data.Customer.Email, "data.customer.email should match")
+	assert.Equal(t, rawCustomer["customer_code"], response.Data.Customer.CustomerCode, "data.customer.customer_code should match")
+
+	// Validate assignment object
+	rawAssignment := rawDataObj["assignment"].(map[string]any)
+	assert.NotNil(t, response.Data.Assignment, "data.assignment should not be nil")
+	assert.Equal(t, int(rawAssignment["integration"].(float64)), response.Data.Assignment.Integration, "data.assignment.integration should match")
+	assert.Equal(t, int(rawAssignment["assignee_id"].(float64)), response.Data.Assignment.AssigneeID, "data.assignment.assignee_id should match")
+	assert.Equal(t, rawAssignment["assignee_type"], response.Data.Assignment.AssigneeType, "data.assignment.assignee_type should match")
+	assert.Equal(t, rawAssignment["account_type"], response.Data.Assignment.AccountType, "data.assignment.account_type should match")
+	assert.Equal(t, rawAssignment["expired"], response.Data.Assignment.Expired, "data.assignment.expired should match")
+
+	// Validate assignment timestamps
+	expectedAssignedAt := rawAssignment["assigned_at"].(string)
+	assert.Equal(t, expectedAssignedAt, response.Data.Assignment.AssignedAt.Time.Format("2006-01-02T15:04:05.000Z"), "data.assignment.assigned_at should match")
+
+	// Validate split_config object
+	rawSplitConfig := rawDataObj["split_config"].(map[string]any)
+	assert.NotNil(t, response.Data.SplitConfig, "data.split_config should not be nil")
+	splitConfigMap := *response.Data.SplitConfig
+	assert.Equal(t, rawSplitConfig["split_code"], splitConfigMap["split_code"], "data.split_config.split_code should match")
+
+	// Test round-trip serialization
+	serialized, err := json.Marshal(response)
+	require.NoError(t, err, "should marshal back to JSON without error")
+
+	var roundTripResponse SplitTransactionResponse
+	err = json.Unmarshal(serialized, &roundTripResponse)
+	require.NoError(t, err, "should unmarshal round-trip JSON without error")
+
+	// Verify round-trip integrity
+	assert.Equal(t, response.Status.Bool(), roundTripResponse.Status.Bool(), "round-trip status should match")
+	assert.Equal(t, response.Message, roundTripResponse.Message, "round-trip message should match")
+	assert.Equal(t, response.Data.ID, roundTripResponse.Data.ID, "round-trip data.id should match")
+	assert.Equal(t, response.Data.AccountName, roundTripResponse.Data.AccountName, "round-trip data.account_name should match")
+	assert.Equal(t, response.Data.AccountNumber, roundTripResponse.Data.AccountNumber, "round-trip data.account_number should match")
+	assert.Equal(t, response.Data.Currency, roundTripResponse.Data.Currency, "round-trip data.currency should match")
+	assert.Equal(t, response.Data.Bank.Name, roundTripResponse.Data.Bank.Name, "round-trip data.bank.name should match")
+	assert.Equal(t, response.Data.Customer.Email, roundTripResponse.Data.Customer.Email, "round-trip data.customer.email should match")
+}

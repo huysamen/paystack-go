@@ -5,6 +5,7 @@ import (
 	"os"
 	"path/filepath"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -163,4 +164,111 @@ func TestListRequest_QueryGeneration(t *testing.T) {
 
 		assert.Equal(t, "active=false", query, "query should match")
 	})
+}
+
+func TestListResponse_FieldByFieldValidation(t *testing.T) {
+	// Read the list_200.json file
+	responseFilePath := filepath.Join("..", "..", "resources", "examples", "responses", "dedicatedvirtualaccounts", "list_200.json")
+	responseData, err := os.ReadFile(responseFilePath)
+	require.NoError(t, err, "failed to read list_200.json")
+
+	// Parse the raw JSON to get the original values
+	var rawResponse map[string]any
+	err = json.Unmarshal(responseData, &rawResponse)
+	require.NoError(t, err, "failed to unmarshal raw JSON response")
+
+	// Deserialize into the ListResponse struct
+	var response ListResponse
+	err = json.Unmarshal(responseData, &response)
+	require.NoError(t, err, "failed to unmarshal into ListResponse struct")
+
+	// Validate top-level fields against the raw JSON
+	assert.Equal(t, rawResponse["status"], response.Status.Bool(), "status field should match")
+	assert.Equal(t, rawResponse["message"], response.Message, "message field should match")
+
+	// Validate data array
+	rawData, hasData := rawResponse["data"]
+	require.True(t, hasData, "data field should exist")
+	rawDataArray, ok := rawData.([]any)
+	require.True(t, ok, "data should be an array")
+	require.Len(t, rawDataArray, 1, "should have 1 item")
+	require.Len(t, response.Data, 1, "response data should have 1 item")
+
+	// Validate first account
+	rawAccount := rawDataArray[0].(map[string]any)
+	account := response.Data[0]
+
+	// Basic account fields
+	assert.Equal(t, rawAccount["account_name"], account.AccountName, "account_name should match")
+	assert.Equal(t, rawAccount["account_number"], account.AccountNumber, "account_number should match")
+	assert.Equal(t, rawAccount["assigned"], account.Assigned, "assigned should match")
+	assert.Equal(t, rawAccount["currency"], string(account.Currency), "currency should match")
+	assert.Equal(t, rawAccount["active"], account.Active, "active should match")
+	assert.Equal(t, rawAccount["id"], float64(account.ID), "id should match")
+
+	// Bank object validation
+	rawBank := rawAccount["bank"].(map[string]any)
+	bank := account.Bank
+	assert.Equal(t, rawBank["name"], bank.Name, "bank.name should match")
+	assert.Equal(t, rawBank["id"], float64(bank.ID), "bank.id should match")
+	assert.Equal(t, rawBank["slug"], bank.Slug, "bank.slug should match")
+
+	// Customer object validation
+	rawCustomer := rawAccount["customer"].(map[string]any)
+	customer := account.Customer
+	require.NotNil(t, customer, "customer should not be nil")
+	assert.Equal(t, rawCustomer["id"], float64(customer.ID), "customer.id should match")
+	assert.Equal(t, rawCustomer["first_name"], *customer.FirstName, "customer.first_name should match")
+	assert.Equal(t, rawCustomer["last_name"], *customer.LastName, "customer.last_name should match")
+	assert.Equal(t, rawCustomer["email"], customer.Email, "customer.email should match")
+	assert.Equal(t, rawCustomer["customer_code"], customer.CustomerCode, "customer.customer_code should match")
+	assert.Equal(t, rawCustomer["phone"], *customer.Phone, "customer.phone should match")
+	assert.Equal(t, rawCustomer["risk_action"], customer.RiskAction, "customer.risk_action should match")
+
+	// international_format_phone is null
+	assert.Equal(t, rawCustomer["international_format_phone"], nil, "international_format_phone should be null")
+
+	// split_config object validation (is a map in this response)
+	rawSplitConfig := rawAccount["split_config"].(map[string]any)
+	assert.NotNil(t, account.SplitConfig, "split_config should not be nil")
+	assert.NotEmpty(t, rawSplitConfig, "split_config should not be empty")
+
+	// Timestamp validation using MultiDateTime
+	createdAtStr, ok := rawAccount["created_at"].(string)
+	require.True(t, ok, "created_at should be a string")
+	parsedCreatedAt, err := time.Parse("2006-01-02T15:04:05.000Z", createdAtStr)
+	require.NoError(t, err, "should parse created_at timestamp")
+	assert.Equal(t, 2019, parsedCreatedAt.Year(), "created_at year should be 2019")
+	assert.Equal(t, 2019, account.CreatedAt.Time.Year(), "account CreatedAt year should match")
+
+	updatedAtStr, ok := rawAccount["updated_at"].(string)
+	require.True(t, ok, "updated_at should be a string")
+	parsedUpdatedAt, err := time.Parse("2006-01-02T15:04:05.000Z", updatedAtStr)
+	require.NoError(t, err, "should parse updated_at timestamp")
+	assert.Equal(t, 2020, parsedUpdatedAt.Year(), "updated_at year should be 2020")
+	assert.Equal(t, 2020, account.UpdatedAt.Time.Year(), "account UpdatedAt year should match")
+
+	// Validate meta fields
+	rawMeta := rawResponse["meta"].(map[string]any)
+	require.NotNil(t, response.Meta, "meta should not be nil")
+	meta := response.Meta
+	assert.Equal(t, rawMeta["total"], float64(*meta.Total), "meta.total should match")
+	assert.Equal(t, rawMeta["skipped"], float64(*meta.Skipped), "meta.skipped should match")
+	assert.Equal(t, rawMeta["perPage"], float64(meta.PerPage), "meta.perPage should match")
+	assert.Equal(t, rawMeta["page"], float64(*meta.Page), "meta.page should match")
+	assert.Equal(t, rawMeta["pageCount"], float64(*meta.PageCount), "meta.pageCount should match")
+
+	// Test round-trip serialization
+	serialized, err := json.Marshal(response)
+	require.NoError(t, err, "failed to marshal response back to JSON")
+
+	var roundTripResponse ListResponse
+	err = json.Unmarshal(serialized, &roundTripResponse)
+	require.NoError(t, err, "failed to unmarshal round-trip JSON")
+
+	// Verify core fields survive round-trip
+	assert.Equal(t, response.Status.Bool(), roundTripResponse.Status.Bool(), "status should survive round-trip")
+	assert.Equal(t, response.Message, roundTripResponse.Message, "message should survive round-trip")
+	assert.Equal(t, len(response.Data), len(roundTripResponse.Data), "data array length should survive round-trip")
+	assert.Equal(t, response.Data[0].AccountNumber, roundTripResponse.Data[0].AccountNumber, "account_number should survive round-trip")
 }

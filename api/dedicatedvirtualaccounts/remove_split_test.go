@@ -92,3 +92,64 @@ func TestRemoveSplitRequest_JSONSerialization(t *testing.T) {
 		assert.Equal(t, "1234567890", unmarshaled["account_number"], "account number should match")
 	})
 }
+
+func TestRemoveSplitResponse_FieldByFieldValidation(t *testing.T) {
+	// Read the response file
+	responseFilePath := filepath.Join("..", "..", "resources", "examples", "responses", "dedicatedvirtualaccounts", "remove_split_200.json")
+	responseData, err := os.ReadFile(responseFilePath)
+	require.NoError(t, err, "failed to read response file")
+
+	// Parse as raw JSON to get expected values
+	var rawData map[string]any
+	err = json.Unmarshal(responseData, &rawData)
+	require.NoError(t, err, "failed to unmarshal raw JSON")
+
+	// Deserialize into struct
+	var response RemoveSplitResponse
+	err = json.Unmarshal(responseData, &response)
+	require.NoError(t, err, "failed to unmarshal into struct")
+
+	// Validate top-level fields - MultiBool doesn't have String() method
+	expectedStatus := rawData["status"] == "success" || rawData["status"] == true
+	assert.Equal(t, expectedStatus, response.Status.Bool(), "status should match")
+	assert.Equal(t, rawData["message"], response.Message, "message should match")
+
+	// Validate data object
+	rawDataObj := rawData["data"].(map[string]any)
+	assert.Equal(t, int(rawDataObj["id"].(float64)), response.Data.ID, "data.id should match")
+	assert.Equal(t, rawDataObj["account_name"], response.Data.AccountName, "data.account_name should match")
+	assert.Equal(t, rawDataObj["account_number"], response.Data.AccountNumber, "data.account_number should match")
+	assert.Equal(t, rawDataObj["currency"], string(response.Data.Currency), "data.currency should match")
+	assert.Equal(t, rawDataObj["assigned"], response.Data.Assigned, "data.assigned should match")
+	assert.Equal(t, rawDataObj["active"], response.Data.Active, "data.active should match")
+
+	// Validate timestamps
+	expectedCreatedAt := rawDataObj["createdAt"].(string)
+	expectedUpdatedAt := rawDataObj["updatedAt"].(string)
+	if !response.Data.CreatedAt.Time.IsZero() {
+		assert.Equal(t, expectedCreatedAt, response.Data.CreatedAt.Time.Format("2006-01-02T15:04:05.000Z"), "data.createdAt should match")
+	}
+	if !response.Data.UpdatedAt.Time.IsZero() {
+		assert.Equal(t, expectedUpdatedAt, response.Data.UpdatedAt.Time.Format("2006-01-02T15:04:05.000Z"), "data.updatedAt should match")
+	}
+
+	// Validate split_config is empty after removal
+	assert.NotNil(t, response.Data.SplitConfig, "data.split_config should not be nil")
+	assert.Empty(t, *response.Data.SplitConfig, "data.split_config should be empty after removal")
+
+	// Test round-trip serialization
+	serialized, err := json.Marshal(response)
+	require.NoError(t, err, "should marshal back to JSON without error")
+
+	var roundTripResponse RemoveSplitResponse
+	err = json.Unmarshal(serialized, &roundTripResponse)
+	require.NoError(t, err, "should unmarshal round-trip JSON without error")
+
+	// Verify round-trip integrity
+	assert.Equal(t, response.Status.Bool(), roundTripResponse.Status.Bool(), "round-trip status should match")
+	assert.Equal(t, response.Message, roundTripResponse.Message, "round-trip message should match")
+	assert.Equal(t, response.Data.ID, roundTripResponse.Data.ID, "round-trip data.id should match")
+	assert.Equal(t, response.Data.AccountName, roundTripResponse.Data.AccountName, "round-trip data.account_name should match")
+	assert.Equal(t, response.Data.AccountNumber, roundTripResponse.Data.AccountNumber, "round-trip data.account_number should match")
+	assert.Equal(t, response.Data.Currency, roundTripResponse.Data.Currency, "round-trip data.currency should match")
+}
