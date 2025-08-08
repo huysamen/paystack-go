@@ -29,9 +29,9 @@ func TestFetchMandateAuthorizationsResponse_JSONDeserialization(t *testing.T) {
 	require.NotNil(t, response.Data)
 	require.Len(t, response.Data, 1, "should have 1 mandate authorization")
 
-	// Validate metadata - note: JSON field naming doesn't match struct tags
-	// The JSON uses "per_page" but struct expects "perPage", so PerPage will be 0
-	assert.Equal(t, 0, response.Meta.PerPage, "PerPage will be 0 due to field name mismatch")
+	// Validate metadata - now properly handles both per_page and perPage field names
+	// The JSON uses "per_page" which is now correctly parsed into PerPage
+	assert.Equal(t, 50, response.Meta.PerPage, "PerPage should be parsed from per_page field")
 	assert.Nil(t, response.Meta.Next)
 	require.NotNil(t, response.Meta.Total)
 	assert.Equal(t, 1, *response.Meta.Total)
@@ -93,10 +93,11 @@ func TestFetchMandateAuthorizationsResponse_FieldByFieldValidation(t *testing.T)
 	assert.Equal(t, 2024, parsedTime.Year(), "year should be 2024")
 	assert.Equal(t, time.September, parsedTime.Month(), "month should be September")
 
-	// Validate meta fields - note: field naming mismatches between JSON and struct
+	// Validate meta fields - now properly handles both per_page and perPage field names
 	rawMeta := rawResponse["meta"].(map[string]any)
-	// per_page in JSON doesn't match perPage in struct, so it will be 0
-	assert.Equal(t, float64(0), float64(response.Meta.PerPage), "PerPage will be 0 due to field mismatch")
+	// per_page field should now be properly parsed into PerPage
+	expectedPerPage := int(rawMeta["per_page"].(float64))
+	assert.Equal(t, expectedPerPage, response.Meta.PerPage, "PerPage should be parsed from per_page field")
 	// next field comparisons - null vs nil pointer handling
 	if rawMeta["next"] == nil {
 		assert.Nil(t, response.Meta.Next, "Next should be nil when null in JSON")

@@ -25,6 +25,29 @@ type Meta struct {
 	PageCount *int    `json:"pageCount,omitempty"`
 }
 
+// UnmarshalJSON implements custom JSON unmarshaling to handle both perPage and per_page field names
+func (m *Meta) UnmarshalJSON(data []byte) error {
+	// Create a temporary struct to unmarshal into
+	type Alias Meta
+	aux := &struct {
+		PerPageAlt int `json:"per_page,omitempty"`
+		*Alias
+	}{
+		Alias: (*Alias)(m),
+	}
+
+	if err := json.Unmarshal(data, &aux); err != nil {
+		return err
+	}
+
+	// If per_page was provided but perPage wasn't, use per_page value
+	if aux.PerPageAlt > 0 && m.PerPage == 0 {
+		m.PerPage = aux.PerPageAlt
+	}
+
+	return nil
+}
+
 // ID represents various ID types used across the API
 type ID interface {
 	~int | ~int64 | ~uint | ~uint64 | ~string
