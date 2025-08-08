@@ -38,7 +38,7 @@ func (b *UpdateRequestBuilder) Build() *updateRequest {
 	return b.request
 }
 
-type UpdateResponseData = types.Dispute
+type UpdateResponseData = []types.Dispute
 type UpdateResponse = types.Response[UpdateResponseData]
 
 func (c *Client) Update(ctx context.Context, disputeID string, builder *UpdateRequestBuilder) (*UpdateResponse, error) {

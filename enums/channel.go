@@ -41,6 +41,9 @@ func (c *Channel) UnmarshalJSON(data []byte) error {
 		ChannelMobileMoney, ChannelBankTransfer, ChannelEFT:
 		*c = channel
 		return nil
+	case "": // Allow empty string for backward compatibility with old data
+		*c = channel
+		return nil
 	default:
 		return fmt.Errorf("invalid Channel value: %s", s)
 	}
@@ -50,7 +53,7 @@ func (c *Channel) UnmarshalJSON(data []byte) error {
 func (c Channel) IsValid() bool {
 	switch c {
 	case ChannelCard, ChannelBank, ChannelUSSD, ChannelQR,
-		ChannelMobileMoney, ChannelBankTransfer, ChannelEFT:
+		ChannelMobileMoney, ChannelBankTransfer, ChannelEFT, "":
 		return true
 	default:
 		return false
