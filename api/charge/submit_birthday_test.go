@@ -65,7 +65,7 @@ func TestSubmitBirthdayResponse_JSONDeserialization(t *testing.T) {
 			err = json.Unmarshal(responseData, &response)
 			require.NoError(t, err, "failed to unmarshal JSON response")
 
-			assert.Equal(t, tt.expectedStatus, response.Status, "status should match")
+			assert.Equal(t, tt.expectedStatus, response.Status.Bool(), "status should match")
 			assert.Equal(t, tt.expectedMessage, response.Message, "message should match")
 
 			if tt.expectedStatus {

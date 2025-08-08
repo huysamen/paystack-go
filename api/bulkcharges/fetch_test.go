@@ -40,7 +40,7 @@ func TestFetchResponse_JSONDeserialization(t *testing.T) {
 			require.NoError(t, err, "failed to unmarshal JSON response")
 
 			// Verify the response structure
-			assert.Equal(t, tt.expectedStatus, response.Status, "status should match")
+			assert.Equal(t, tt.expectedStatus, response.Status.Bool(), "status should match")
 			assert.Equal(t, tt.expectedMessage, response.Message, "message should match")
 
 			// Verify the data structure
