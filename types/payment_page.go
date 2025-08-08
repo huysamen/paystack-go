@@ -4,10 +4,10 @@ import "github.com/huysamen/paystack-go/enums"
 
 // CustomFilters represents filters for customizing payment options
 type CustomFilters struct {
-	Recurring                     bool              `json:"recurring,omitempty"`
-	Banks                         []string          `json:"banks,omitempty"`
-	CardBrands                    []enums.CardBrand `json:"card_brands,omitempty"`
-	SupportedMobileMoneyProviders []enums.MoMo      `json:"supported_mobile_money_providers,omitempty"`
+	Recurring                     bool         `json:"recurring,omitempty"`
+	Banks                         []string     `json:"banks,omitempty"`
+	CardBrands                    []string     `json:"card_brands,omitempty"`
+	SupportedMobileMoneyProviders []enums.MoMo `json:"supported_mobile_money_providers,omitempty"`
 }
 
 // PaymentPage represents a payment page
