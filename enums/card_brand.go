@@ -9,9 +9,11 @@ import (
 type CardBrand string
 
 const (
-	CardBrandVisa       CardBrand = "visa"
-	CardBrandMasterCard CardBrand = "mastercard"
-	CardBrandVerve      CardBrand = "verve"
+	CardBrandVisa           CardBrand = "visa"
+	CardBrandMasterCard     CardBrand = "mastercard"
+	CardBrandVerve          CardBrand = "verve"
+	CardBrandMtnMobileMoney CardBrand = "Mtn mobile money"
+	CardBrandZenithEmandate CardBrand = "Zenith Emandate"
 )
 
 // String returns the string representation of the card brand
@@ -33,7 +35,7 @@ func (c *CardBrand) UnmarshalJSON(data []byte) error {
 
 	brand := CardBrand(s)
 	switch brand {
-	case CardBrandVisa, CardBrandMasterCard, CardBrandVerve:
+	case CardBrandVisa, CardBrandMasterCard, CardBrandVerve, CardBrandMtnMobileMoney, CardBrandZenithEmandate:
 		*c = brand
 		return nil
 	default:
@@ -44,7 +46,7 @@ func (c *CardBrand) UnmarshalJSON(data []byte) error {
 // IsValid returns true if the card brand is a valid known value
 func (c CardBrand) IsValid() bool {
 	switch c {
-	case CardBrandVisa, CardBrandMasterCard, CardBrandVerve:
+	case CardBrandVisa, CardBrandMasterCard, CardBrandVerve, CardBrandMtnMobileMoney, CardBrandZenithEmandate:
 		return true
 	default:
 		return false
@@ -57,5 +59,7 @@ func AllCardBrands() []CardBrand {
 		CardBrandVisa,
 		CardBrandMasterCard,
 		CardBrandVerve,
+		CardBrandMtnMobileMoney,
+		CardBrandZenithEmandate,
 	}
 }

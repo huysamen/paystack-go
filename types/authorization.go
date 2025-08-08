@@ -1,16 +1,50 @@
 package types
 
 import (
+	"encoding/json"
+	"fmt"
+	"strconv"
+
 	"github.com/huysamen/paystack-go/enums"
 )
+
+// FlexibleString handles both string and number JSON values
+type FlexibleString string
+
+// UnmarshalJSON implements json.Unmarshaler for FlexibleString
+func (fs *FlexibleString) UnmarshalJSON(data []byte) error {
+	var s string
+	if err := json.Unmarshal(data, &s); err == nil {
+		*fs = FlexibleString(s)
+		return nil
+	}
+
+	var n float64
+	if err := json.Unmarshal(data, &n); err == nil {
+		*fs = FlexibleString(strconv.FormatFloat(n, 'f', 0, 64))
+		return nil
+	}
+
+	return fmt.Errorf("cannot unmarshal %s into FlexibleString", string(data))
+}
+
+// String returns the string representation
+func (fs FlexibleString) String() string {
+	return string(fs)
+}
+
+// MarshalJSON implements json.Marshaler
+func (fs FlexibleString) MarshalJSON() ([]byte, error) {
+	return json.Marshal(string(fs))
+}
 
 // Authorization represents a payment authorization
 type Authorization struct {
 	AuthorizationCode         string          `json:"authorization_code"`
 	Bin                       string          `json:"bin"`
 	Last4                     string          `json:"last4"`
-	ExpMonth                  string          `json:"exp_month"`
-	ExpYear                   string          `json:"exp_year"`
+	ExpMonth                  FlexibleString  `json:"exp_month"`
+	ExpYear                   FlexibleString  `json:"exp_year"`
 	Channel                   enums.Channel   `json:"channel"`
 	CardType                  string          `json:"card_type"`
 	Brand                     enums.CardBrand `json:"brand"`
