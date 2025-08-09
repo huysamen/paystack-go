@@ -15,6 +15,8 @@ type Float float64
 func (f *Float) UnmarshalJSON(data []byte) error {
 	// Handle null - convert to zero
 	if data == nil || string(data) == "null" {
+		// TODO: Remove this debug print statement after testing
+		fmt.Printf("[DEBUG] Float.UnmarshalJSON: received null value, converting to 0.0\n")
 		*f = 0
 		return nil
 	}
@@ -41,6 +43,8 @@ func (f *Float) UnmarshalJSON(data []byte) error {
 	if err := json.Unmarshal(data, &s); err == nil {
 		// Handle empty string and "null" string as zero
 		if s == "" || s == "null" {
+			// TODO: Remove this debug print statement after testing
+			fmt.Printf("[DEBUG] Float.UnmarshalJSON: received null/empty string value, converting to 0.0\n")
 			*f = 0
 			return nil
 		}

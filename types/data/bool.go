@@ -16,6 +16,8 @@ type Bool bool
 func (b *Bool) UnmarshalJSON(data []byte) error {
 	// Handle null - convert to false
 	if data == nil || string(data) == "null" {
+		// TODO: Remove this debug print statement after testing
+		fmt.Printf("[DEBUG] Bool.UnmarshalJSON: received null value, converting to false\n")
 		*b = false
 		return nil
 	}
@@ -34,6 +36,8 @@ func (b *Bool) UnmarshalJSON(data []byte) error {
 	if err := json.Unmarshal(data, &s); err == nil {
 		// Handle empty string and "null" string as false
 		if s == "" || s == "null" {
+			// TODO: Remove this debug print statement after testing
+			fmt.Printf("[DEBUG] Bool.UnmarshalJSON: received null/empty string value, converting to false\n")
 			*b = false
 			return nil
 		}
