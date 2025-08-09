@@ -22,7 +22,7 @@ type VirtualTerminal struct {
 	PaymentMethods []data.String                `json:"paymentMethods"`
 	Active         data.Bool                    `json:"active"`
 	CreatedAt      data.NullTime                `json:"created_at,omitempty"` // Change to NullTime
-	Metadata       *Metadata                    `json:"metadata,omitempty"`
+	Metadata       Metadata                     `json:"metadata,omitempty"`
 	Destinations   []VirtualTerminalDestination `json:"destinations,omitempty"`
 	Currency       data.String                  `json:"currency"`
 	CustomFields   []VirtualTerminalCustomField `json:"custom_fields,omitempty"`

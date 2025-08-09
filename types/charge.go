@@ -19,8 +19,8 @@ type Charge struct {
 	Channel         enums.Channel  `json:"channel"`
 	Currency        enums.Currency `json:"currency"`
 	IPAddress       data.String    `json:"ip_address"`
-	Metadata        *Metadata      `json:"metadata"`
-	Log             *Metadata      `json:"log"`
+	Metadata        Metadata       `json:"metadata"`
+	Log             Metadata       `json:"log"`
 	Fees            data.Int       `json:"fees"`
 	RequestedAmount data.Int       `json:"requested_amount"`
 	TransactionDate data.NullTime  `json:"transaction_date"`

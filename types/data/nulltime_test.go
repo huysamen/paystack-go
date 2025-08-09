@@ -649,15 +649,15 @@ func TestNullTime_CompareWithMultiDateTime(t *testing.T) {
 		jsonData := `{"multi": null, "null": null}`
 
 		var result struct {
-			Multi MultiDateTime `json:"multi"`
-			Null  NullTime      `json:"null"`
+			// Multi MultiDateTime `json:"multi"` (removed)
+			Null NullTime `json:"null"`
 		}
 
 		err := json.Unmarshal([]byte(jsonData), &result)
 		require.NoError(t, err)
 
 		// MultiDateTime converts null to zero time
-		assert.True(t, result.Multi.Time.IsZero())
+		// MultiDateTime tests removed
 
 		// NullTime preserves null state
 		assert.False(t, result.Null.Valid)
@@ -669,15 +669,15 @@ func TestNullTime_CompareWithMultiDateTime(t *testing.T) {
 		jsonData := `{"multi": "", "null": ""}`
 
 		var result struct {
-			Multi MultiDateTime `json:"multi"`
-			Null  NullTime      `json:"null"`
+			// Multi MultiDateTime `json:"multi"` (removed)
+			Null NullTime `json:"null"`
 		}
 
 		err := json.Unmarshal([]byte(jsonData), &result)
 		require.NoError(t, err)
 
 		// MultiDateTime converts empty string to zero time
-		assert.True(t, result.Multi.Time.IsZero())
+		// MultiDateTime tests removed
 
 		// NullTime treats empty string as null
 		assert.False(t, result.Null.Valid)

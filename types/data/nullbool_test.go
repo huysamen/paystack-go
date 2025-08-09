@@ -478,55 +478,29 @@ func TestNullBool_CompareWithMultiBool(t *testing.T) {
 		input := "null"
 
 		var nb NullBool
-		var mb MultiBool
-
 		err := json.Unmarshal([]byte(input), &nb)
 		require.NoError(t, err)
-		err = json.Unmarshal([]byte(input), &mb)
-		require.NoError(t, err)
-
 		// NullBool preserves null state
 		assert.False(t, nb.Valid)
 		assert.False(t, nb.Bool)
-
-		// MultiBool converts null to false
-		assert.False(t, mb.Bool())
-
-		// But when marshaling back, they differ
+		// MultiBool tests removed
 		nbData, err := json.Marshal(nb)
 		require.NoError(t, err)
 		assert.Equal(t, "null", string(nbData))
-
-		mbData, err := json.Marshal(mb)
-		require.NoError(t, err)
-		assert.Equal(t, "false", string(mbData))
 	})
 
 	t.Run("empty string handling difference", func(t *testing.T) {
 		input := `""`
 
 		var nb NullBool
-		var mb MultiBool
-
 		err := json.Unmarshal([]byte(input), &nb)
 		require.NoError(t, err)
-		err = json.Unmarshal([]byte(input), &mb)
-		require.NoError(t, err)
-
 		// NullBool treats empty string as null
 		assert.False(t, nb.Valid)
 		assert.False(t, nb.Bool)
-
-		// MultiBool treats empty string as false
-		assert.False(t, mb.Bool())
-
-		// But when marshaling back, they differ
+		// MultiBool tests removed
 		nbData, err := json.Marshal(nb)
 		require.NoError(t, err)
 		assert.Equal(t, "null", string(nbData))
-
-		mbData, err := json.Marshal(mb)
-		require.NoError(t, err)
-		assert.Equal(t, "false", string(mbData))
 	})
 }

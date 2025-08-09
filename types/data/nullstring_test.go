@@ -500,15 +500,15 @@ func TestNullString_CompareWithMultiString(t *testing.T) {
 		jsonData := `{"multi": null, "null": null}`
 
 		var result struct {
-			Multi MultiString `json:"multi"`
-			Null  NullString  `json:"null"`
+			// Multi MultiString `json:"multi"` (removed)
+			Null NullString `json:"null"`
 		}
 
 		err := json.Unmarshal([]byte(jsonData), &result)
 		require.NoError(t, err)
 
 		// MultiString converts null to empty string
-		assert.Equal(t, "", string(result.Multi))
+		// MultiString tests removed
 
 		// NullString preserves null state
 		assert.False(t, result.Null.Valid)
@@ -520,15 +520,15 @@ func TestNullString_CompareWithMultiString(t *testing.T) {
 		jsonData := `{"multi": "", "null": ""}`
 
 		var result struct {
-			Multi MultiString `json:"multi"`
-			Null  NullString  `json:"null"`
+			// Multi MultiString `json:"multi"` (removed)
+			Null NullString `json:"null"`
 		}
 
 		err := json.Unmarshal([]byte(jsonData), &result)
 		require.NoError(t, err)
 
 		// MultiString keeps empty string as is
-		assert.Equal(t, "", string(result.Multi))
+		// MultiString tests removed
 
 		// NullString treats empty string as null
 		assert.False(t, result.Null.Valid)

@@ -18,7 +18,7 @@ type Subaccount struct {
 	PrimaryContactName   data.NullString `json:"primary_contact_name"`
 	PrimaryContactEmail  data.NullString `json:"primary_contact_email"`
 	PrimaryContactPhone  data.NullString `json:"primary_contact_phone"`
-	Metadata             *Metadata       `json:"metadata"`
+	Metadata             Metadata        `json:"metadata"`
 	PercentageCharge     data.Float      `json:"percentage_charge"`
 	IsVerified           data.Bool       `json:"is_verified"`
 	SettlementBank       data.String     `json:"settlement_bank"`

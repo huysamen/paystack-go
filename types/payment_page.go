@@ -36,7 +36,7 @@ type PaymentPage struct {
 	SplitCode         data.NullString `json:"split_code,omitempty"`
 	Plan              data.NullInt    `json:"plan,omitempty"`
 	Products          []PageProduct   `json:"products,omitempty"`
-	Metadata          *Metadata       `json:"metadata,omitempty"`
+	Metadata          Metadata        `json:"metadata,omitempty"`
 	CreatedAt         data.NullTime   `json:"createdAt,omitempty"`
 	UpdatedAt         data.NullTime   `json:"updatedAt,omitempty"`
 }
@@ -52,7 +52,7 @@ type PageProduct struct {
 	Currency    enums.Currency `json:"currency"`
 	Quantity    data.Int       `json:"quantity"`
 	Type        data.String    `json:"type"`
-	Features    *Metadata      `json:"features"`
+	Features    Metadata       `json:"features"`
 	IsShippable data.Int       `json:"is_shippable"` // 0 or 1
 	Domain      data.String    `json:"domain"`
 	Integration data.Int       `json:"integration"`

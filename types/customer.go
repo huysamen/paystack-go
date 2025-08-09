@@ -22,7 +22,7 @@ type Customer struct {
 	TotalTransactionValue []any                    `json:"total_transaction_value,omitempty"`
 	DedicatedAccount      *DedicatedVirtualAccount `json:"dedicated_account,omitempty"`
 	Identified            data.Bool                `json:"identified,omitempty"`
-	Identifications       *Metadata                `json:"identifications,omitempty"`
+	Identifications       Metadata                 `json:"identifications,omitempty"`
 
 	// Alternative field names that also appear in responses
 	CreatedAtSnake data.NullTime `json:"created_at,omitempty"`

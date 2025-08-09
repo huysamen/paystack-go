@@ -14,7 +14,7 @@ type Transaction struct {
 	Amount             data.Int            `json:"amount"`
 	Message            data.NullString     `json:"message"`
 	GatewayResponse    data.String         `json:"gateway_response"`
-	PaidAt             *data.NullTime      `json:"paid_at,omitempty"`
+	PaidAt             data.NullTime       `json:"paid_at,omitempty"`
 	CreatedAt          data.Time           `json:"created_at"`
 	Channel            enums.Channel       `json:"channel"`
 	Currency           enums.Currency      `json:"currency"`

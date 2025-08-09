@@ -8,7 +8,7 @@ type Country struct {
 	Name                data.String          `json:"name"`
 	ISOCode             data.String          `json:"iso_code"`
 	DefaultCurrencyCode data.String          `json:"default_currency_code"`
-	IntegrationDefaults *Metadata            `json:"integration_defaults"`
+	IntegrationDefaults Metadata             `json:"integration_defaults"`
 	Relationships       CountryRelationships `json:"relationships"`
 }
 

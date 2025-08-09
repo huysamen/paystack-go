@@ -54,7 +54,7 @@ type PaymentRequest struct {
 	Status           data.String       `json:"status"`
 	Paid             data.Bool         `json:"paid"`
 	PaidAt           data.NullTime     `json:"paid_at"`
-	Metadata         *Metadata         `json:"metadata"`
+	Metadata         Metadata          `json:"metadata"`
 	Notifications    []Notification    `json:"notifications"`
 	OfflineReference data.String       `json:"offline_reference"`
 	Customer         Customer          `json:"customer"`

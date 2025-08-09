@@ -420,27 +420,19 @@ func TestNullInt_CompareWithMultiInt(t *testing.T) {
 		input := "null"
 
 		var ni NullInt
-		var mi MultiInt
 
 		err := json.Unmarshal([]byte(input), &ni)
-		require.NoError(t, err)
-		err = json.Unmarshal([]byte(input), &mi)
 		require.NoError(t, err)
 
 		// NullInt preserves null state
 		assert.False(t, ni.Valid)
 		assert.Equal(t, int64(0), ni.Int)
 
-		// MultiInt converts null to zero
-		assert.Equal(t, 0, mi.Int())
-
 		// But when marshaling back, they differ
 		niData, err := json.Marshal(ni)
 		require.NoError(t, err)
 		assert.Equal(t, "null", string(niData))
 
-		miData, err := json.Marshal(mi)
-		require.NoError(t, err)
-		assert.Equal(t, "0", string(miData))
+		// MultiInt tests removed
 	})
 }

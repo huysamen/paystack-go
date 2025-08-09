@@ -19,15 +19,15 @@ type Product struct {
 	Type               data.String     `json:"type,omitempty"` // good, service
 	ImagePath          data.NullString `json:"image_path,omitempty"`
 	FilePath           data.NullString `json:"file_path,omitempty"`
-	Files              *Metadata       `json:"files,omitempty"`
+	Files              Metadata        `json:"files,omitempty"`
 	IsShippable        data.Bool       `json:"is_shippable,omitempty"`
-	ShippingFields     *Metadata       `json:"shipping_fields,omitempty"`
+	ShippingFields     Metadata        `json:"shipping_fields,omitempty"`
 	Unlimited          data.Bool       `json:"unlimited,omitempty"`
 	Domain             data.String     `json:"domain,omitempty"`
 	Active             data.Bool       `json:"active,omitempty"`
-	Features           *Metadata       `json:"features,omitempty"`
+	Features           Metadata        `json:"features,omitempty"`
 	InStock            data.Bool       `json:"in_stock,omitempty"`
-	Metadata           *Metadata       `json:"metadata,omitempty"`
+	Metadata           Metadata        `json:"metadata,omitempty"`
 	Slug               data.String     `json:"slug,omitempty"`
 	SuccessMessage     data.NullString `json:"success_message,omitempty"`
 	RedirectURL        data.NullString `json:"redirect_url,omitempty"`

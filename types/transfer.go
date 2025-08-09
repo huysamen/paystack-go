@@ -13,10 +13,10 @@ type Transfer struct {
 	Amount        data.Int        `json:"amount"`
 	Currency      enums.Currency  `json:"currency"`
 	Source        data.String     `json:"source"`
-	SourceDetails *Metadata       `json:"source_details"`
+	SourceDetails Metadata        `json:"source_details"`
 	Reason        data.String     `json:"reason"`
 	Status        data.String     `json:"status"`
-	Failures      *Metadata       `json:"failures"`
+	Failures      Metadata        `json:"failures"`
 	TransferCode  data.String     `json:"transfer_code"`
 	TitanCode     data.NullString `json:"titan_code"`
 	TransferredAt data.NullTime   `json:"transferred_at,omitempty"`
@@ -36,7 +36,7 @@ type Recipient struct {
 	Name          data.String      `json:"name"`
 	Details       RecipientDetails `json:"details"`
 	Description   data.String      `json:"description"`
-	Metadata      *Metadata        `json:"metadata"`
+	Metadata      Metadata         `json:"metadata"`
 	RecipientCode data.String      `json:"recipient_code"`
 	Active        data.Bool        `json:"active"`
 	Email         data.NullString  `json:"email"`
@@ -84,7 +84,7 @@ type BulkRecipientItem struct {
 	Currency      enums.Currency `json:"currency"`
 	Description   data.String    `json:"description,omitempty"`
 	Email         data.String    `json:"email,omitempty"`
-	Metadata      *Metadata      `json:"metadata,omitempty"`
+	Metadata      Metadata       `json:"metadata,omitempty"`
 }
 
 // BulkCreateResult represents the result of bulk recipient creation

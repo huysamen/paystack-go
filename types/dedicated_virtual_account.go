@@ -29,12 +29,12 @@ type DedicatedVirtualAccount struct {
 	AccountNumber data.String                        `json:"account_number"`
 	Assigned      data.Bool                          `json:"assigned"`
 	Currency      enums.Currency                     `json:"currency"`
-	Metadata      *Metadata                          `json:"metadata,omitempty"`
+	Metadata      Metadata                           `json:"metadata,omitempty"`
 	Active        data.Bool                          `json:"active"`
 	Bank          DedicatedVirtualAccountBank        `json:"bank"`
 	Customer      *Customer                          `json:"customer,omitempty"`
 	Assignment    *DedicatedVirtualAccountAssignment `json:"assignment,omitempty"`
 	CreatedAt     data.Time                          `json:"created_at,omitempty"`
 	UpdatedAt     data.Time                          `json:"updated_at,omitempty"`
-	SplitConfig   *Metadata                          `json:"split_config,omitempty"`
+	SplitConfig   Metadata                           `json:"split_config,omitempty"`
 }

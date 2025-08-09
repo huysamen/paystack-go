@@ -53,35 +53,6 @@ type ID interface {
 	~int | ~int64 | ~uint | ~uint64 | ~string
 }
 
-// Metadata represents arbitrary key-value pairs that can handle both object and string
-type Metadata map[string]any
-
-// UnmarshalJSON implements json.Unmarshaler for Metadata
-func (m *Metadata) UnmarshalJSON(data []byte) error {
-	// Try to unmarshal as string first (empty metadata case)
-	var s string
-	if err := json.Unmarshal(data, &s); err == nil {
-		if s == "" {
-			*m = make(Metadata)
-		}
-		return nil
-	}
-
-	// Try to unmarshal as object
-	var obj map[string]any
-	if err := json.Unmarshal(data, &obj); err == nil {
-		*m = Metadata(obj)
-		return nil
-	}
-
-	return nil // Be lenient, just return empty metadata if we can't parse
-}
-
-// IsEmpty returns true if metadata is nil or empty
-func (m Metadata) IsEmpty() bool {
-	return len(m) == 0
-}
-
 // CustomField represents a custom field in metadata
 type CustomField struct {
 	DisplayName  string `json:"display_name"`
