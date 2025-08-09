@@ -1,11 +1,13 @@
 package types
 
+import "github.com/huysamen/paystack-go/types/data"
+
 // Country represents a country supported by Paystack
 type Country struct {
-	ID                  int                  `json:"id"`
-	Name                string               `json:"name"`
-	ISOCode             string               `json:"iso_code"`
-	DefaultCurrencyCode string               `json:"default_currency_code"`
+	ID                  data.Int             `json:"id"`
+	Name                data.String          `json:"name"`
+	ISOCode             data.String          `json:"iso_code"`
+	DefaultCurrencyCode data.String          `json:"default_currency_code"`
 	IntegrationDefaults *Metadata            `json:"integration_defaults"`
 	Relationships       CountryRelationships `json:"relationships"`
 }
@@ -19,13 +21,13 @@ type CountryRelationships struct {
 
 // CountryRelationshipData represents relationship data
 type CountryRelationshipData struct {
-	Type string `json:"type"`
-	Data []any  `json:"data"`
+	Type data.String `json:"type"`
+	Data []any       `json:"data"`
 }
 
 // State represents a state for address verification
 type State struct {
-	Name         string `json:"name"`
-	Slug         string `json:"slug"`
-	Abbreviation string `json:"abbreviation"`
+	Name         data.String `json:"name"`
+	Slug         data.String `json:"slug"`
+	Abbreviation data.String `json:"abbreviation"`
 }

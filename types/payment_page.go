@@ -7,29 +7,29 @@ import (
 
 // CustomFilters represents filters for customizing payment options
 type CustomFilters struct {
-	Recurring                     bool         `json:"recurring,omitempty"`
-	Banks                         []string     `json:"banks,omitempty"`
-	CardBrands                    []string     `json:"card_brands,omitempty"`
-	SupportedMobileMoneyProviders []enums.MoMo `json:"supported_mobile_money_providers,omitempty"`
+	Recurring                     data.Bool     `json:"recurring,omitempty"`
+	Banks                         []data.String `json:"banks,omitempty"`
+	CardBrands                    []data.String `json:"card_brands,omitempty"`
+	SupportedMobileMoneyProviders []enums.MoMo  `json:"supported_mobile_money_providers,omitempty"`
 }
 
 // PaymentPage represents a payment page
 type PaymentPage struct {
-	ID                int                `json:"id"`
-	Integration       int                `json:"integration"`
-	Domain            string             `json:"domain"`
-	Name              string             `json:"name"`
+	ID                data.Int           `json:"id"`
+	Integration       data.Int           `json:"integration"`
+	Domain            data.String        `json:"domain"`
+	Name              data.String        `json:"name"`
 	Description       data.NullString    `json:"description,omitempty"`
 	Amount            data.NullInt       `json:"amount,omitempty"`
 	Currency          enums.Currency     `json:"currency"`
-	Slug              string             `json:"slug"`
+	Slug              data.String        `json:"slug"`
 	Type              data.NullString    `json:"type,omitempty"`
 	FixedAmount       data.NullBool      `json:"fixed_amount,omitempty"`
 	RedirectURL       data.NullString    `json:"redirect_url,omitempty"`
 	SuccessMessage    data.NullString    `json:"success_message,omitempty"`
 	NotificationEmail data.NullString    `json:"notification_email,omitempty"`
 	CollectPhone      data.NullBool      `json:"collect_phone,omitempty"`
-	Active            bool               `json:"active"`
+	Active            data.Bool          `json:"active"`
 	Published         data.NullBool      `json:"published,omitempty"`
 	Migrate           data.NullBool      `json:"migrate,omitempty"`
 	CustomFields      []CustomField      `json:"custom_fields,omitempty"`
@@ -43,19 +43,19 @@ type PaymentPage struct {
 
 // PageProduct represents a product within a payment page
 type PageProduct struct {
-	ProductID   int            `json:"product_id"`
-	Name        string         `json:"name"`
-	Description string         `json:"description"`
-	ProductCode string         `json:"product_code"`
-	Page        int            `json:"page"`
-	Price       int            `json:"price"`
+	ProductID   data.Int       `json:"product_id"`
+	Name        data.String    `json:"name"`
+	Description data.String    `json:"description"`
+	ProductCode data.String    `json:"product_code"`
+	Page        data.Int       `json:"page"`
+	Price       data.Int       `json:"price"`
 	Currency    enums.Currency `json:"currency"`
-	Quantity    int            `json:"quantity"`
-	Type        string         `json:"type"`
+	Quantity    data.Int       `json:"quantity"`
+	Type        data.String    `json:"type"`
 	Features    *Metadata      `json:"features"`
-	IsShippable int            `json:"is_shippable"` // 0 or 1
-	Domain      string         `json:"domain"`
-	Integration int            `json:"integration"`
-	Active      int            `json:"active"`   // 0 or 1
-	InStock     int            `json:"in_stock"` // 0 or 1
+	IsShippable data.Int       `json:"is_shippable"` // 0 or 1
+	Domain      data.String    `json:"domain"`
+	Integration data.Int       `json:"integration"`
+	Active      data.Int       `json:"active"`   // 0 or 1
+	InStock     data.Int       `json:"in_stock"` // 0 or 1
 }

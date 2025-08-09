@@ -7,59 +7,59 @@ import (
 
 // Subaccount represents a Paystack subaccount
 type Subaccount struct {
-	ID                   uint64             `json:"id"`
-	Integration          int                `json:"integration"`
+	ID                   data.Uint          `json:"id"`
+	Integration          data.Int           `json:"integration"`
 	Bank                 data.NullInt       `json:"bank"`
-	ManagedByIntegration int                `json:"managed_by_integration"`
-	Domain               string             `json:"domain"`
-	SubaccountCode       string             `json:"subaccount_code"`
-	BusinessName         string             `json:"business_name"`
+	ManagedByIntegration data.Int           `json:"managed_by_integration"`
+	Domain               data.String        `json:"domain"`
+	SubaccountCode       data.String        `json:"subaccount_code"`
+	BusinessName         data.String        `json:"business_name"`
 	Description          data.NullString    `json:"description"`
 	PrimaryContactName   data.NullString    `json:"primary_contact_name"`
 	PrimaryContactEmail  data.NullString    `json:"primary_contact_email"`
 	PrimaryContactPhone  data.NullString    `json:"primary_contact_phone"`
 	Metadata             *Metadata          `json:"metadata"`
-	PercentageCharge     float64            `json:"percentage_charge"`
-	IsVerified           bool               `json:"is_verified"`
-	SettlementBank       string             `json:"settlement_bank"`
-	AccountNumber        string             `json:"account_number"`
-	SettlementSchedule   string             `json:"settlement_schedule"`
-	Active               bool               `json:"active"`
-	Migrate              bool               `json:"migrate"`
+	PercentageCharge     data.Float         `json:"percentage_charge"`
+	IsVerified           data.Bool          `json:"is_verified"`
+	SettlementBank       data.String        `json:"settlement_bank"`
+	AccountNumber        data.String        `json:"account_number"`
+	SettlementSchedule   data.String        `json:"settlement_schedule"`
+	Active               data.Bool          `json:"active"`
+	Migrate              data.Bool          `json:"migrate"`
 	Currency             enums.Currency     `json:"currency"`
-	AccountName          string             `json:"account_name"`
-	Product              string             `json:"product"`
+	AccountName          data.String        `json:"account_name"`
+	Product              data.String        `json:"product"`
 	CreatedAt            data.MultiDateTime `json:"createdAt"`
 	UpdatedAt            data.MultiDateTime `json:"updatedAt"`
 }
 
 // TransactionSplit represents a Paystack transaction split
 type TransactionSplit struct {
-	ID               uint64             `json:"id"`
-	Name             string             `json:"name"`
-	Type             string             `json:"type"` // percentage, flat
+	ID               data.Uint          `json:"id"`
+	Name             data.String        `json:"name"`
+	Type             data.String        `json:"type"` // percentage, flat
 	Currency         enums.Currency     `json:"currency"`
-	Integration      int                `json:"integration"`
-	Domain           string             `json:"domain"`
-	SplitCode        string             `json:"split_code"`
-	Active           bool               `json:"active"`
-	BearerType       string             `json:"bearer_type"` // all, account, subaccount
+	Integration      data.Int           `json:"integration"`
+	Domain           data.String        `json:"domain"`
+	SplitCode        data.String        `json:"split_code"`
+	Active           data.Bool          `json:"active"`
+	BearerType       data.String        `json:"bearer_type"` // all, account, subaccount
 	BearerSubaccount data.NullString    `json:"bearer_subaccount"`
 	CreatedAt        data.MultiDateTime `json:"createdAt"`
 	UpdatedAt        data.MultiDateTime `json:"updatedAt"`
-	IsDynamic        bool               `json:"is_dynamic"`
+	IsDynamic        data.Bool          `json:"is_dynamic"`
 	Subaccounts      []SplitSubaccount  `json:"subaccounts"`
-	TotalSubaccounts int                `json:"total_subaccounts"`
+	TotalSubaccounts data.Int           `json:"total_subaccounts"`
 }
 
 // SplitSubaccount represents a subaccount within a split
 type SplitSubaccount struct {
 	Subaccount Subaccount `json:"subaccount"`
-	Share      float64    `json:"share"`
+	Share      data.Float `json:"share"`
 }
 
 // TransactionSplitSubaccount represents a subaccount for creating transaction splits
 type TransactionSplitSubaccount struct {
-	Subaccount string `json:"subaccount"`
-	Share      int    `json:"share"`
+	Subaccount data.String `json:"subaccount"`
+	Share      data.Int    `json:"share"`
 }

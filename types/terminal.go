@@ -7,13 +7,13 @@ import (
 
 // Terminal represents a Paystack terminal device
 type Terminal struct {
-	ID           uint64               `json:"id"`
-	SerialNumber string               `json:"serial_number"`
+	ID           data.Uint            `json:"id"`
+	SerialNumber data.String          `json:"serial_number"`
 	DeviceMake   data.NullString      `json:"device_make"`
-	TerminalID   string               `json:"terminal_id"`
-	Integration  uint64               `json:"integration"`
-	Domain       string               `json:"domain"`
-	Name         string               `json:"name"`
+	TerminalID   data.String          `json:"terminal_id"`
+	Integration  data.Uint            `json:"integration"`
+	Domain       data.String          `json:"domain"`
+	Name         data.String          `json:"name"`
 	Address      data.NullString      `json:"address"`
 	Status       enums.TerminalStatus `json:"status"`
 }
@@ -23,16 +23,16 @@ type TerminalEventData map[string]any
 
 // TerminalEventResult represents the result of sending an event
 type TerminalEventResult struct {
-	ID string `json:"id"` // Event ID
+	ID data.String `json:"id"` // Event ID
 }
 
 // TerminalEventStatus represents the status of a terminal event
 type TerminalEventStatus struct {
-	Delivered bool `json:"delivered"` // Whether event was delivered to terminal
+	Delivered data.Bool `json:"delivered"` // Whether event was delivered to terminal
 }
 
 // TerminalPresenceStatus represents the presence status of a terminal
 type TerminalPresenceStatus struct {
-	Online    bool `json:"online"`    // Whether terminal is online
-	Available bool `json:"available"` // Whether terminal is available for events
+	Online    data.Bool `json:"online"`    // Whether terminal is online
+	Available data.Bool `json:"available"` // Whether terminal is available for events
 }

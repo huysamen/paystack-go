@@ -1,37 +1,40 @@
 package types
-import "github.com/huysamen/paystack-go/types/data"
-import "github.com/huysamen/paystack-go/enums"
+
+import (
+	"github.com/huysamen/paystack-go/enums"
+	"github.com/huysamen/paystack-go/types/data"
+)
 
 // DedicatedVirtualAccountBank represents a bank provider for dedicated virtual accounts
 type DedicatedVirtualAccountBank struct {
-	ID   int    `json:"id"`
-	Name string `json:"name"`
-	Slug string `json:"slug"`
+	ID   data.Int    `json:"id"`
+	Name data.String `json:"name"`
+	Slug data.String `json:"slug"`
 }
 
 // DedicatedVirtualAccountAssignment represents the assignment details of a dedicated virtual account
 type DedicatedVirtualAccountAssignment struct {
-	Integration  int      `json:"integration"`
-	AssigneeID   int      `json:"assignee_id"`
-	AssigneeType string   `json:"assignee_type"`
-	Expired      bool     `json:"expired"`
-	AccountType  string   `json:"account_type"`
+	Integration  data.Int           `json:"integration"`
+	AssigneeID   data.Int           `json:"assignee_id"`
+	AssigneeType data.String        `json:"assignee_type"`
+	Expired      data.Bool          `json:"expired"`
+	AccountType  data.String        `json:"account_type"`
 	AssignedAt   data.MultiDateTime `json:"assigned_at"`
 }
 
 // DedicatedVirtualAccount represents a dedicated virtual account
 type DedicatedVirtualAccount struct {
-	ID            int                                `json:"id"`
-	AccountName   string                             `json:"account_name"`
-	AccountNumber string                             `json:"account_number"`
-	Assigned      bool                               `json:"assigned"`
+	ID            data.Int                           `json:"id"`
+	AccountName   data.String                        `json:"account_name"`
+	AccountNumber data.String                        `json:"account_number"`
+	Assigned      data.Bool                          `json:"assigned"`
 	Currency      enums.Currency                     `json:"currency"`
 	Metadata      *Metadata                          `json:"metadata,omitempty"`
-	Active        bool                               `json:"active"`
+	Active        data.Bool                          `json:"active"`
 	Bank          DedicatedVirtualAccountBank        `json:"bank"`
 	Customer      *Customer                          `json:"customer,omitempty"`
 	Assignment    *DedicatedVirtualAccountAssignment `json:"assignment,omitempty"`
-	CreatedAt     data.MultiDateTime                           `json:"created_at,omitempty"`
-	UpdatedAt     data.MultiDateTime                           `json:"updated_at,omitempty"`
+	CreatedAt     data.MultiDateTime                 `json:"created_at,omitempty"`
+	UpdatedAt     data.MultiDateTime                 `json:"updated_at,omitempty"`
 	SplitConfig   *Metadata                          `json:"split_config,omitempty"`
 }
