@@ -6,6 +6,7 @@ import (
 	"github.com/huysamen/paystack-go/enums"
 	"github.com/huysamen/paystack-go/net"
 	"github.com/huysamen/paystack-go/types"
+	"github.com/huysamen/paystack-go/types/data"
 )
 
 type createRequest struct {
@@ -37,8 +38,8 @@ func NewCreateRequest(name string, splitType enums.TransactionSplitType, currenc
 
 func (b *CreateRequestBuilder) AddSubaccount(subaccount string, share int) *CreateRequestBuilder {
 	b.subaccounts = append(b.subaccounts, types.TransactionSplitSubaccount{
-		Subaccount: subaccount,
-		Share:      share,
+		Subaccount: data.NewString(subaccount),
+		Share:      data.NewInt(int64(share)),
 	})
 	return b
 }

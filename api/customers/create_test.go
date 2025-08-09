@@ -27,11 +27,11 @@ func TestCreateResponse_JSONDeserialization(t *testing.T) {
 	assert.NotNil(t, response.Data)
 
 	// Validate customer data
-	assert.Equal(t, "customer@email.com", response.Data.Email)
-	assert.Equal(t, "CUS_xnxdt6s1zg1f4nx", response.Data.CustomerCode)
-	assert.Equal(t, uint64(1173), response.Data.ID)
-	assert.False(t, response.Data.Identified)
-	assert.Equal(t, "test", response.Data.Domain)
+	assert.Equal(t, "customer@email.com", response.Data.Email.String())
+	assert.Equal(t, "CUS_xnxdt6s1zg1f4nx", response.Data.CustomerCode.String())
+	assert.Equal(t, uint64(1173), response.Data.ID.Uint64())
+	assert.False(t, response.Data.Identified.Bool())
+	assert.Equal(t, "test", response.Data.Domain.String())
 }
 
 func TestCreateRequestBuilder(t *testing.T) {
@@ -135,28 +135,30 @@ func TestCreateResponse_FieldByFieldValidation(t *testing.T) {
 
 	// Validate data object fields
 	rawData := rawResponse["data"].(map[string]any)
-	assert.Equal(t, rawData["email"], response.Data.Email, "email should match")
-	assert.Equal(t, int(rawData["integration"].(float64)), *response.Data.Integration, "integration should match")
-	assert.Equal(t, rawData["domain"], response.Data.Domain, "domain should match")
-	assert.Equal(t, rawData["customer_code"], response.Data.CustomerCode, "customer_code should match")
-	assert.Equal(t, uint64(rawData["id"].(float64)), response.Data.ID, "id should match")
-	assert.Equal(t, rawResponse["data"].(map[string]any)["identified"], response.Data.Identified, "identified should match")
+	assert.Equal(t, rawData["email"], response.Data.Email.String(), "email should match")
+	if response.Data.Integration.Valid {
+		assert.Equal(t, int(rawData["integration"].(float64)), int(response.Data.Integration.Int), "integration should match")
+	}
+	assert.Equal(t, rawData["domain"], response.Data.Domain.String(), "domain should match")
+	assert.Equal(t, rawData["customer_code"], response.Data.CustomerCode.String(), "customer_code should match")
+	assert.Equal(t, uint64(rawData["id"].(float64)), response.Data.ID.Uint64(), "id should match")
+	assert.Equal(t, rawResponse["data"].(map[string]any)["identified"], response.Data.Identified.Bool(), "identified should match")
 
 	// Handle null identifications field
 	if rawData["identifications"] == nil {
-		assert.Nil(t, response.Data.Identifications, "identifications should be nil")
+		assert.False(t, response.Data.Identifications.Valid, "identifications should be invalid")
 	} else {
-		assert.NotNil(t, response.Data.Identifications, "identifications should not be nil when present in JSON")
+		assert.True(t, response.Data.Identifications.Valid, "identifications should be valid when present in JSON")
 	}
 
 	// For timestamp comparisons, parse both and compare the actual time values
 	expectedCreatedAt, err := time.Parse(time.RFC3339, rawData["createdAt"].(string))
 	require.NoError(t, err, "should parse expected createdAt")
-	assert.True(t, expectedCreatedAt.Equal(response.Data.CreatedAt.Time), "createdAt should represent the same moment")
+	assert.True(t, expectedCreatedAt.Equal(response.Data.CreatedAt.Time()), "createdAt should represent the same moment")
 
 	expectedUpdatedAt, err := time.Parse(time.RFC3339, rawData["updatedAt"].(string))
 	require.NoError(t, err, "should parse expected updatedAt")
-	assert.True(t, expectedUpdatedAt.Equal(response.Data.UpdatedAt.Time), "updatedAt should represent the same moment")
+	assert.True(t, expectedUpdatedAt.Equal(response.Data.UpdatedAt.Time()), "updatedAt should represent the same moment")
 
 	// Test round-trip serialization
 	serialized, err := json.Marshal(response)

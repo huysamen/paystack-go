@@ -61,36 +61,36 @@ func TestListCountriesResponse_FieldByFieldValidation(t *testing.T) {
 
 	// Validate Nigeria (first country)
 	nigeria := response.Data[0]
-	assert.Equal(t, 1, nigeria.ID)
-	assert.Equal(t, "Nigeria", nigeria.Name)
-	assert.Equal(t, "NG", nigeria.ISOCode)
-	assert.Equal(t, "NGN", nigeria.DefaultCurrencyCode)
+	assert.Equal(t, int64(1), nigeria.ID.Int64())
+	assert.Equal(t, "Nigeria", nigeria.Name.String())
+	assert.Equal(t, "NG", nigeria.ISOCode.String())
+	assert.Equal(t, "NGN", nigeria.DefaultCurrencyCode.String())
 	require.NotNil(t, nigeria.Relationships)
 
 	// Validate Nigeria currency relationships
 	require.NotNil(t, nigeria.Relationships.Currency)
-	assert.Equal(t, "currency", nigeria.Relationships.Currency.Type)
+	assert.Equal(t, "currency", nigeria.Relationships.Currency.Type.String())
 	assert.Contains(t, nigeria.Relationships.Currency.Data, "NGN")
 	assert.Contains(t, nigeria.Relationships.Currency.Data, "USD")
 
 	// Validate Nigeria integration type relationships
 	require.NotNil(t, nigeria.Relationships.IntegrationType)
-	assert.Equal(t, "integration_type", nigeria.Relationships.IntegrationType.Type)
+	assert.Equal(t, "integration_type", nigeria.Relationships.IntegrationType.Type.String())
 	assert.Contains(t, nigeria.Relationships.IntegrationType.Data, "ITYPE_001")
 	assert.Contains(t, nigeria.Relationships.IntegrationType.Data, "ITYPE_002")
 	assert.Contains(t, nigeria.Relationships.IntegrationType.Data, "ITYPE_003")
 
 	// Validate Ghana (second country)
 	ghana := response.Data[1]
-	assert.Equal(t, 2, ghana.ID)
-	assert.Equal(t, "Ghana", ghana.Name)
-	assert.Equal(t, "GH", ghana.ISOCode)
-	assert.Equal(t, "GHS", ghana.DefaultCurrencyCode)
+	assert.Equal(t, int64(2), ghana.ID.Int64())
+	assert.Equal(t, "Ghana", ghana.Name.String())
+	assert.Equal(t, "GH", ghana.ISOCode.String())
+	assert.Equal(t, "GHS", ghana.DefaultCurrencyCode.String())
 	require.NotNil(t, ghana.Relationships)
 
 	// Validate Ghana currency relationships
 	require.NotNil(t, ghana.Relationships.Currency)
-	assert.Equal(t, "currency", ghana.Relationships.Currency.Type)
+	assert.Equal(t, "currency", ghana.Relationships.Currency.Type.String())
 	assert.Contains(t, ghana.Relationships.Currency.Data, "GHS")
 	assert.Contains(t, ghana.Relationships.Currency.Data, "USD")
 

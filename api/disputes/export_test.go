@@ -200,9 +200,9 @@ func TestExportResponse_FieldByFieldValidation(t *testing.T) {
 	assert.Contains(t, data.Path, ".csv", "export path should be CSV file")
 
 	// Validate expiration date if present
-	if data.ExpiresAt != nil {
+	if data.ExpiresAt.Valid {
 		// Should be a valid datetime
-		assert.NotNil(t, data.ExpiresAt, "expires_at should be present")
+		assert.True(t, data.ExpiresAt.Valid, "expires_at should be present")
 	}
 
 	// Test JSON round-trip

@@ -333,23 +333,23 @@ func TestListBanksResponse_FieldByFieldValidation(t *testing.T) {
 
 	// Validate first bank structure
 	bank := response.Data[0]
-	assert.Equal(t, "Abbey Mortgage Bank", bank.Name)
-	assert.Equal(t, "abbey-mortgage-bank", bank.Slug)
-	assert.Equal(t, "801", bank.Code)
-	assert.Equal(t, "", bank.LongCode)
-	assert.Nil(t, bank.Gateway)
-	assert.False(t, bank.PayWithBank)
-	assert.True(t, bank.Active)
-	assert.Equal(t, "Nigeria", bank.Country)
+	assert.Equal(t, "Abbey Mortgage Bank", bank.Name.String())
+	assert.Equal(t, "abbey-mortgage-bank", bank.Slug.String())
+	assert.Equal(t, "801", bank.Code.String())
+	assert.Equal(t, "", bank.LongCode.String())
+	assert.False(t, bank.Gateway.Valid)
+	assert.False(t, bank.PayWithBank.Bool())
+	assert.True(t, bank.Active.Bool())
+	assert.Equal(t, "Nigeria", bank.Country.String())
 	assert.Equal(t, "NGN", string(bank.Currency))
-	assert.Equal(t, "nuban", bank.Type)
-	assert.Equal(t, 174, bank.ID)
+	assert.Equal(t, "nuban", bank.Type.String())
+	assert.Equal(t, int64(174), bank.ID.Int64())
 
 	// Validate metadata if present
 	if response.Meta != nil {
 		meta := response.Meta
 		assert.NotEmpty(t, meta.Next, "next cursor should be present")
-		assert.Nil(t, meta.Previous, "previous cursor should be nil for first page")
+		assert.False(t, meta.Previous.Valid, "previous cursor should be nil for first page")
 		assert.Equal(t, 5, meta.PerPage, "per page should match")
 	}
 

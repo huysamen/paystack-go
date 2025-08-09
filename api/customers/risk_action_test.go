@@ -145,27 +145,34 @@ func TestRiskActionResponse_FieldByFieldValidation(t *testing.T) {
 	rawData := rawResponse["data"].(map[string]any)
 	customer := response.Data
 
-	// Validate key customer fields - handling pointer fields correctly
-	assert.Equal(t, rawData["first_name"], *customer.FirstName, "first_name should match")
-	assert.Equal(t, rawData["last_name"], *customer.LastName, "last_name should match")
-	assert.Equal(t, rawData["email"], customer.Email, "email should match")
-	// phone is null in JSON but becomes nil pointer in struct
-	if rawData["phone"] == nil {
-		assert.Nil(t, customer.Phone, "phone should be nil when null in JSON")
-	} else {
-		assert.Equal(t, rawData["phone"], *customer.Phone, "phone should match")
+	// Validate key customer fields - handling NullString fields correctly
+	if customer.FirstName.Valid {
+		assert.Equal(t, rawData["first_name"], customer.FirstName.String(), "first_name should match")
 	}
-	assert.Equal(t, rawData["customer_code"], customer.CustomerCode, "customer_code should match")
-	assert.Equal(t, rawData["risk_action"], customer.RiskAction, "risk_action should match")
-	assert.Equal(t, rawData["id"], float64(customer.ID), "id should match")
-	assert.Equal(t, rawData["integration"], float64(*customer.Integration), "integration should match")
-	assert.Equal(t, rawData["domain"], customer.Domain, "domain should match")
-	assert.Equal(t, rawData["identified"], customer.Identified, "identified should match")
+	if customer.LastName.Valid {
+		assert.Equal(t, rawData["last_name"], customer.LastName.String(), "last_name should match")
+	}
+	assert.Equal(t, rawData["email"], customer.Email.String(), "email should match")
+	// phone is null in JSON
+	if rawData["phone"] == nil {
+		assert.False(t, customer.Phone.Valid, "phone should be invalid when null in JSON")
+	} else {
+		assert.Equal(t, rawData["phone"], customer.Phone.String(), "phone should match")
+	}
+	assert.Equal(t, rawData["customer_code"], customer.CustomerCode.String(), "customer_code should match")
+	assert.Equal(t, rawData["risk_action"], customer.RiskAction.String(), "risk_action should match")
+	assert.Equal(t, rawData["id"], float64(customer.ID.Uint64()), "id should match")
+	if customer.Integration.Valid {
+		assert.Equal(t, rawData["integration"], float64(customer.Integration.Int), "integration should match")
+	}
+	assert.Equal(t, rawData["domain"], customer.Domain.String(), "domain should match")
+	assert.Equal(t, rawData["identified"], customer.Identified.Bool(), "identified should match")
 	// identifications is null in JSON
 	if rawData["identifications"] == nil {
-		assert.Nil(t, customer.Identifications, "identifications should be nil when null in JSON")
+		assert.False(t, customer.Identifications.Valid, "identifications should be invalid when null in JSON")
 	} else {
-		assert.Equal(t, rawData["identifications"], customer.Identifications, "identifications should match")
+		assert.True(t, customer.Identifications.Valid, "identifications should be valid")
+		assert.Equal(t, rawData["identifications"], map[string]any(customer.Identifications.Metadata), "identifications should match")
 	}
 
 	// Validate timestamp fields using MultiDateTime
@@ -174,14 +181,14 @@ func TestRiskActionResponse_FieldByFieldValidation(t *testing.T) {
 	parsedCreatedAt, err := time.Parse("2006-01-02T15:04:05.000Z", createdAtStr)
 	require.NoError(t, err, "should parse createdAt timestamp")
 	assert.Equal(t, 2016, parsedCreatedAt.Year(), "createdAt year should be 2016")
-	assert.Equal(t, 2016, customer.CreatedAt.Time.Year(), "customer CreatedAt year should match")
+	assert.Equal(t, 2016, customer.CreatedAt.Time().Year(), "customer CreatedAt year should match")
 
 	updatedAtStr, ok := rawData["updatedAt"].(string)
 	require.True(t, ok, "updatedAt should be a string")
 	parsedUpdatedAt, err := time.Parse("2006-01-02T15:04:05.000Z", updatedAtStr)
 	require.NoError(t, err, "should parse updatedAt timestamp")
 	assert.Equal(t, 2016, parsedUpdatedAt.Year(), "updatedAt year should be 2016")
-	assert.Equal(t, 2016, customer.UpdatedAt.Time.Year(), "customer UpdatedAt year should match")
+	assert.Equal(t, 2016, customer.UpdatedAt.Time().Year(), "customer UpdatedAt year should match")
 
 	// Validate metadata field (should be empty object)
 	metadata := rawData["metadata"].(map[string]any)

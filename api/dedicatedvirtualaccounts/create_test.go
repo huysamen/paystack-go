@@ -47,26 +47,26 @@ func TestCreateResponse_JSONDeserialization(t *testing.T) {
 				assert.NotEmpty(t, response.Data.AccountNumber, "account number should not be empty")
 				assert.NotEmpty(t, response.Data.AccountName, "account name should not be empty")
 				assert.NotEmpty(t, response.Data.Currency, "currency should not be empty")
-				assert.True(t, response.Data.Active, "account should be active")
-				assert.True(t, response.Data.Assigned, "account should be assigned")
+				assert.True(t, response.Data.Active.Bool(), "account should be active")
+				assert.True(t, response.Data.Assigned.Bool(), "account should be assigned")
 
 				// Verify bank data
 				assert.NotEmpty(t, response.Data.Bank.Name, "bank name should not be empty")
 				assert.NotEmpty(t, response.Data.Bank.Slug, "bank slug should not be empty")
-				assert.Greater(t, response.Data.Bank.ID, 0, "bank ID should be greater than 0")
+				assert.Greater(t, response.Data.Bank.ID.Int64(), int64(0), "bank ID should be greater than 0")
 
 				// Verify customer data
 				if response.Data.Customer != nil {
 					assert.NotEmpty(t, response.Data.Customer.Email, "customer email should not be empty")
 					assert.NotEmpty(t, response.Data.Customer.CustomerCode, "customer code should not be empty")
-					assert.Greater(t, response.Data.Customer.ID, uint64(0), "customer ID should be greater than 0")
+					assert.Greater(t, response.Data.Customer.ID.Uint64(), uint64(0), "customer ID should be greater than 0")
 				}
 
 				// Verify assignment data
 				if response.Data.Assignment != nil {
 					assert.NotEmpty(t, response.Data.Assignment.AccountType, "assignment account type should not be empty")
-					assert.Greater(t, response.Data.Assignment.Integration, 0, "assignment integration should be greater than 0")
-					assert.Greater(t, response.Data.Assignment.AssigneeID, 0, "assignment assignee ID should be greater than 0")
+					assert.Greater(t, response.Data.Assignment.Integration.Int64(), int64(0), "assignment integration should be greater than 0")
+					assert.Greater(t, response.Data.Assignment.AssigneeID.Int64(), int64(0), "assignment assignee ID should be greater than 0")
 				}
 			}
 		})
@@ -190,48 +190,48 @@ func TestCreateResponse_FieldByFieldValidation(t *testing.T) {
 	data := response.Data
 
 	// Basic account fields
-	assert.Equal(t, rawData["account_name"], data.AccountName, "account_name should match")
-	assert.Equal(t, rawData["account_number"], data.AccountNumber, "account_number should match")
-	assert.Equal(t, rawData["assigned"], data.Assigned, "assigned should match")
-	assert.Equal(t, rawData["currency"], string(data.Currency), "currency should match")
-	assert.Equal(t, rawData["active"], data.Active, "active should match")
-	assert.Equal(t, rawData["id"], float64(data.ID), "id should match")
+	assert.Equal(t, rawData["account_name"], data.AccountName.String(), "account_name should match")
+	assert.Equal(t, rawData["account_number"], data.AccountNumber.String(), "account_number should match")
+	assert.Equal(t, rawData["assigned"], data.Assigned.Bool(), "assigned should match")
+	assert.Equal(t, rawData["currency"], data.Currency.String(), "currency should match")
+	assert.Equal(t, rawData["active"], data.Active.Bool(), "active should match")
+	assert.Equal(t, rawData["id"], float64(data.ID.Int64()), "id should match")
 
 	// Metadata field (null in JSON)
 	if rawData["metadata"] == nil {
-		assert.Nil(t, data.Metadata, "metadata should be nil when null in JSON")
+		assert.False(t, data.Metadata.Valid, "metadata should be invalid when null in JSON")
 	} else {
-		assert.Equal(t, rawData["metadata"], data.Metadata, "metadata should match")
+		assert.Equal(t, rawData["metadata"], data.Metadata.Metadata, "metadata should match")
 	}
 
 	// Bank object validation
 	rawBank := rawData["bank"].(map[string]any)
 	bank := data.Bank
-	assert.Equal(t, rawBank["name"], bank.Name, "bank.name should match")
+	assert.Equal(t, rawBank["name"], bank.Name.String(), "bank.name should match")
 	assert.Equal(t, rawBank["id"], float64(bank.ID), "bank.id should match")
-	assert.Equal(t, rawBank["slug"], bank.Slug, "bank.slug should match")
+	assert.Equal(t, rawBank["slug"], bank.Slug.String(), "bank.slug should match")
 
 	// Customer object validation
 	rawCustomer := rawData["customer"].(map[string]any)
 	customer := data.Customer
 	require.NotNil(t, customer, "customer should not be nil")
-	assert.Equal(t, rawCustomer["id"], float64(customer.ID), "customer.id should match")
-	assert.Equal(t, rawCustomer["first_name"], *customer.FirstName, "customer.first_name should match")
-	assert.Equal(t, rawCustomer["last_name"], *customer.LastName, "customer.last_name should match")
-	assert.Equal(t, rawCustomer["email"], customer.Email, "customer.email should match")
-	assert.Equal(t, rawCustomer["customer_code"], customer.CustomerCode, "customer.customer_code should match")
-	assert.Equal(t, rawCustomer["phone"], *customer.Phone, "customer.phone should match")
-	assert.Equal(t, rawCustomer["risk_action"], customer.RiskAction, "customer.risk_action should match")
+	assert.Equal(t, rawCustomer["id"], float64(customer.ID.Uint64()), "customer.id should match")
+	assert.Equal(t, rawCustomer["first_name"], customer.FirstName.String(), "customer.first_name should match")
+	assert.Equal(t, rawCustomer["last_name"], customer.LastName.String(), "customer.last_name should match")
+	assert.Equal(t, rawCustomer["email"], customer.Email.String(), "customer.email should match")
+	assert.Equal(t, rawCustomer["customer_code"], customer.CustomerCode.String(), "customer.customer_code should match")
+	assert.Equal(t, rawCustomer["phone"], customer.Phone.String(), "customer.phone should match")
+	assert.Equal(t, rawCustomer["risk_action"], customer.RiskAction.String(), "customer.risk_action should match")
 
 	// Assignment object validation
 	rawAssignment := rawData["assignment"].(map[string]any)
 	assignment := data.Assignment
 	require.NotNil(t, assignment, "assignment should not be nil")
-	assert.Equal(t, rawAssignment["integration"], float64(assignment.Integration), "assignment.integration should match")
-	assert.Equal(t, rawAssignment["assignee_id"], float64(assignment.AssigneeID), "assignment.assignee_id should match")
-	assert.Equal(t, rawAssignment["assignee_type"], assignment.AssigneeType, "assignment.assignee_type should match")
-	assert.Equal(t, rawAssignment["expired"], assignment.Expired, "assignment.expired should match")
-	assert.Equal(t, rawAssignment["account_type"], assignment.AccountType, "assignment.account_type should match")
+	assert.Equal(t, rawAssignment["integration"], float64(assignment.Integration.Int64()), "assignment.integration should match")
+	assert.Equal(t, rawAssignment["assignee_id"], float64(assignment.AssigneeID.Int64()), "assignment.assignee_id should match")
+	assert.Equal(t, rawAssignment["assignee_type"], assignment.AssigneeType.String(), "assignment.assignee_type should match")
+	assert.Equal(t, rawAssignment["expired"], assignment.Expired.Bool(), "assignment.expired should match")
+	assert.Equal(t, rawAssignment["account_type"], assignment.AccountType.String(), "assignment.account_type should match")
 
 	// Timestamp validation using MultiDateTime
 	createdAtStr, ok := rawData["created_at"].(string)
@@ -239,14 +239,14 @@ func TestCreateResponse_FieldByFieldValidation(t *testing.T) {
 	parsedCreatedAt, err := time.Parse("2006-01-02T15:04:05.000Z", createdAtStr)
 	require.NoError(t, err, "should parse created_at timestamp")
 	assert.Equal(t, 2019, parsedCreatedAt.Year(), "created_at year should be 2019")
-	assert.Equal(t, 2019, data.CreatedAt.Time.Year(), "data CreatedAt year should match")
+	assert.Equal(t, 2019, data.CreatedAt.Time().Year(), "data CreatedAt year should match")
 
 	updatedAtStr, ok := rawData["updated_at"].(string)
 	require.True(t, ok, "updated_at should be a string")
 	parsedUpdatedAt, err := time.Parse("2006-01-02T15:04:05.000Z", updatedAtStr)
 	require.NoError(t, err, "should parse updated_at timestamp")
 	assert.Equal(t, 2020, parsedUpdatedAt.Year(), "updated_at year should be 2020")
-	assert.Equal(t, 2020, data.UpdatedAt.Time.Year(), "data UpdatedAt year should match")
+	assert.Equal(t, 2020, data.UpdatedAt.Time().Year(), "data UpdatedAt year should match")
 
 	// Assignment timestamp validation
 	assignedAtStr, ok := rawAssignment["assigned_at"].(string)

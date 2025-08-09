@@ -140,15 +140,15 @@ func TestListStatesResponse_FieldByFieldValidation(t *testing.T) {
 
 	// Validate Alberta (first state)
 	alberta := response.Data[0]
-	assert.Equal(t, "Alberta", alberta.Name)
-	assert.Equal(t, "alberta", alberta.Slug)
-	assert.Equal(t, "AB", alberta.Abbreviation)
+	assert.Equal(t, "Alberta", alberta.Name.String())
+	assert.Equal(t, "alberta", alberta.Slug.String())
+	assert.Equal(t, "AB", alberta.Abbreviation.String())
 
 	// Validate British Columbia (second state)
 	bc := response.Data[1]
-	assert.Equal(t, "British Columbia", bc.Name)
-	assert.Equal(t, "british-columbia", bc.Slug)
-	assert.Equal(t, "BC", bc.Abbreviation)
+	assert.Equal(t, "British Columbia", bc.Name.String())
+	assert.Equal(t, "british-columbia", bc.Slug.String())
+	assert.Equal(t, "BC", bc.Abbreviation.String())
 
 	// Test JSON round-trip
 	marshaled, err := json.Marshal(response)

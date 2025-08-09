@@ -32,9 +32,9 @@ func TestFetchMandateAuthorizationsResponse_JSONDeserialization(t *testing.T) {
 	// Validate metadata - now properly handles both per_page and perPage field names
 	// The JSON uses "per_page" which is now correctly parsed into PerPage
 	assert.Equal(t, 50, response.Meta.PerPage, "PerPage should be parsed from per_page field")
-	assert.Nil(t, response.Meta.Next)
-	require.NotNil(t, response.Meta.Total)
-	assert.Equal(t, 1, *response.Meta.Total)
+	assert.False(t, response.Meta.Next.Valid, "Next should be null")
+	require.True(t, response.Meta.Total.Valid, "Total should not be null")
+	assert.Equal(t, int64(1), response.Meta.Total.Int)
 }
 
 func TestFetchMandateAuthorizationsResponse_FieldByFieldValidation(t *testing.T) {
@@ -74,15 +74,15 @@ func TestFetchMandateAuthorizationsResponse_FieldByFieldValidation(t *testing.T)
 	assert.Equal(t, rawAuth["status"], string(auth.Status), "status should match")
 	assert.Equal(t, rawAuth["mandate_id"], float64(auth.MandateID), "mandate_id should match")
 	assert.Equal(t, rawAuth["authorization_id"], float64(auth.AuthorizationID), "authorization_id should match")
-	assert.Equal(t, rawAuth["authorization_code"], auth.AuthorizationCode, "authorization_code should match")
+	assert.Equal(t, rawAuth["authorization_code"], auth.AuthorizationCode.String(), "authorization_code should match")
 	assert.Equal(t, rawAuth["integration_id"], float64(auth.IntegrationID), "integration_id should match")
-	assert.Equal(t, rawAuth["account_number"], auth.AccountNumber, "account_number should match")
-	assert.Equal(t, rawAuth["bank_code"], auth.BankCode, "bank_code should match")
+	assert.Equal(t, rawAuth["account_number"], auth.AccountNumber.String(), "account_number should match")
+	assert.Equal(t, rawAuth["bank_code"], auth.BankCode.String(), "bank_code should match")
 	// bank_name is null in JSON but becomes empty string in struct
 	if rawAuth["bank_name"] == nil {
-		assert.Empty(t, auth.BankName, "bank_name should be empty when null in JSON")
+		assert.Empty(t, auth.BankName.String(), "bank_name should be empty when null in JSON")
 	} else {
-		assert.Equal(t, rawAuth["bank_name"], auth.BankName, "bank_name should match")
+		assert.Equal(t, rawAuth["bank_name"], auth.BankName.String(), "bank_name should match")
 	}
 
 	// Additional timestamp parsing validation
@@ -100,12 +100,12 @@ func TestFetchMandateAuthorizationsResponse_FieldByFieldValidation(t *testing.T)
 	assert.Equal(t, expectedPerPage, response.Meta.PerPage, "PerPage should be parsed from per_page field")
 	// next field comparisons - null vs nil pointer handling
 	if rawMeta["next"] == nil {
-		assert.Nil(t, response.Meta.Next, "Next should be nil when null in JSON")
+		assert.False(t, response.Meta.Next.Valid, "Next should be invalid when null in JSON")
 	} else {
-		assert.Equal(t, rawMeta["next"], *response.Meta.Next, "Next should match")
+		assert.Equal(t, rawMeta["next"], response.Meta.Next.String, "Next should match")
 	}
 	// Note: The response JSON has "count" but our Meta struct only has "total"
-	assert.Equal(t, rawMeta["total"], float64(*response.Meta.Total), "meta.total should match")
+	assert.Equal(t, rawMeta["total"], float64(response.Meta.Total.Int), "meta.total should match")
 
 	// Test round-trip serialization
 	serialized, err := json.Marshal(response)

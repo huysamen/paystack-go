@@ -43,30 +43,30 @@ func TestSplitTransactionResponse_JSONDeserialization(t *testing.T) {
 
 			// Only verify data structure for successful responses
 			if tt.expectedStatus {
-				assert.NotEmpty(t, response.Data.AccountNumber, "account number should not be empty")
-				assert.NotEmpty(t, response.Data.AccountName, "account name should not be empty")
-				assert.NotEmpty(t, response.Data.Currency, "currency should not be empty")
-				assert.Greater(t, response.Data.ID, 0, "account ID should be greater than 0")
-				assert.True(t, response.Data.Active, "account should be active")
-				assert.True(t, response.Data.Assigned, "account should be assigned")
+				assert.NotEmpty(t, response.Data.AccountNumber.String(), "account number should not be empty")
+				assert.NotEmpty(t, response.Data.AccountName.String(), "account name should not be empty")
+				assert.NotEmpty(t, response.Data.Currency.String(), "currency should not be empty")
+				assert.Greater(t, response.Data.ID.Int64(), int64(0), "account ID should be greater than 0")
+				assert.True(t, response.Data.Active.Bool(), "account should be active")
+				assert.True(t, response.Data.Assigned.Bool(), "account should be assigned")
 
 				// Verify bank data
-				assert.NotEmpty(t, response.Data.Bank.Name, "bank name should not be empty")
-				assert.NotEmpty(t, response.Data.Bank.Slug, "bank slug should not be empty")
-				assert.Greater(t, response.Data.Bank.ID, 0, "bank ID should be greater than 0")
+				assert.NotEmpty(t, response.Data.Bank.Name.String(), "bank name should not be empty")
+				assert.NotEmpty(t, response.Data.Bank.Slug.String(), "bank slug should not be empty")
+				assert.Greater(t, response.Data.Bank.ID.Int64(), int64(0), "bank ID should be greater than 0")
 
 				// Verify customer data
 				if response.Data.Customer != nil {
-					assert.NotEmpty(t, response.Data.Customer.Email, "customer email should not be empty")
-					assert.NotEmpty(t, response.Data.Customer.CustomerCode, "customer code should not be empty")
-					assert.Greater(t, response.Data.Customer.ID, uint64(0), "customer ID should be greater than 0")
+					assert.NotEmpty(t, response.Data.Customer.Email.String(), "customer email should not be empty")
+					assert.NotEmpty(t, response.Data.Customer.CustomerCode.String(), "customer code should not be empty")
+					assert.Greater(t, response.Data.Customer.ID.Uint64(), uint64(0), "customer ID should be greater than 0")
 				}
 
 				// Verify assignment data
 				if response.Data.Assignment != nil {
-					assert.NotEmpty(t, response.Data.Assignment.AccountType, "assignment account type should not be empty")
-					assert.Greater(t, response.Data.Assignment.Integration, 0, "assignment integration should be greater than 0")
-					assert.Greater(t, response.Data.Assignment.AssigneeID, 0, "assignment assignee ID should be greater than 0")
+					assert.NotEmpty(t, response.Data.Assignment.AccountType.String(), "assignment account type should not be empty")
+					assert.Greater(t, response.Data.Assignment.Integration.Int64(), int64(0), "assignment integration should be greater than 0")
+					assert.Greater(t, response.Data.Assignment.AssigneeID.Int64(), int64(0), "assignment assignee ID should be greater than 0")
 				}
 
 				// Verify split config (should be present for split transaction)
@@ -181,55 +181,55 @@ func TestSplitTransactionResponse_FieldByFieldValidation(t *testing.T) {
 
 	// Validate data object
 	rawDataObj := rawData["data"].(map[string]any)
-	assert.Equal(t, int(rawDataObj["id"].(float64)), response.Data.ID, "data.id should match")
-	assert.Equal(t, rawDataObj["account_name"], response.Data.AccountName, "data.account_name should match")
-	assert.Equal(t, rawDataObj["account_number"], response.Data.AccountNumber, "data.account_number should match")
-	assert.Equal(t, rawDataObj["currency"], string(response.Data.Currency), "data.currency should match")
-	assert.Equal(t, rawDataObj["assigned"], response.Data.Assigned, "data.assigned should match")
-	assert.Equal(t, rawDataObj["active"], response.Data.Active, "data.active should match")
+	assert.Equal(t, int64(rawDataObj["id"].(float64)), response.Data.ID.Int64(), "data.id should match")
+	assert.Equal(t, rawDataObj["account_name"], response.Data.AccountName.String(), "data.account_name should match")
+	assert.Equal(t, rawDataObj["account_number"], response.Data.AccountNumber.String(), "data.account_number should match")
+	assert.Equal(t, rawDataObj["currency"], response.Data.Currency.String(), "data.currency should match")
+	assert.Equal(t, rawDataObj["assigned"], response.Data.Assigned.Bool(), "data.assigned should match")
+	assert.Equal(t, rawDataObj["active"], response.Data.Active.Bool(), "data.active should match")
 
 	// Validate timestamps
 	expectedCreatedAt := rawDataObj["created_at"].(string)
 	expectedUpdatedAt := rawDataObj["updated_at"].(string)
-	assert.Equal(t, expectedCreatedAt, response.Data.CreatedAt.Time.Format("2006-01-02T15:04:05.000Z"), "data.created_at should match")
-	assert.Equal(t, expectedUpdatedAt, response.Data.UpdatedAt.Time.Format("2006-01-02T15:04:05.000Z"), "data.updated_at should match")
+	assert.Equal(t, expectedCreatedAt, response.Data.CreatedAt.Time().Format("2006-01-02T15:04:05.000Z"), "data.created_at should match")
+	assert.Equal(t, expectedUpdatedAt, response.Data.UpdatedAt.Time().Format("2006-01-02T15:04:05.000Z"), "data.updated_at should match")
 
 	// Validate bank object
 	rawBank := rawDataObj["bank"].(map[string]any)
-	assert.Equal(t, int(rawBank["id"].(float64)), response.Data.Bank.ID, "data.bank.id should match")
-	assert.Equal(t, rawBank["name"], response.Data.Bank.Name, "data.bank.name should match")
-	assert.Equal(t, rawBank["slug"], response.Data.Bank.Slug, "data.bank.slug should match")
+	assert.Equal(t, int64(rawBank["id"].(float64)), response.Data.Bank.ID.Int64(), "data.bank.id should match")
+	assert.Equal(t, rawBank["name"], response.Data.Bank.Name.String(), "data.bank.name should match")
+	assert.Equal(t, rawBank["slug"], response.Data.Bank.Slug.String(), "data.bank.slug should match")
 
 	// Validate customer object
 	rawCustomer := rawDataObj["customer"].(map[string]any)
 	assert.NotNil(t, response.Data.Customer, "data.customer should not be nil")
-	assert.Equal(t, uint64(rawCustomer["id"].(float64)), response.Data.Customer.ID, "data.customer.id should match")
-	if response.Data.Customer.FirstName != nil && rawCustomer["first_name"] != nil {
-		assert.Equal(t, rawCustomer["first_name"], *response.Data.Customer.FirstName, "data.customer.first_name should match")
+	assert.Equal(t, uint64(rawCustomer["id"].(float64)), response.Data.Customer.ID.Uint64(), "data.customer.id should match")
+	if response.Data.Customer.FirstName.Valid && rawCustomer["first_name"] != nil {
+		assert.Equal(t, rawCustomer["first_name"], response.Data.Customer.FirstName.String(), "data.customer.first_name should match")
 	}
-	if response.Data.Customer.LastName != nil && rawCustomer["last_name"] != nil {
-		assert.Equal(t, rawCustomer["last_name"], *response.Data.Customer.LastName, "data.customer.last_name should match")
+	if response.Data.Customer.LastName.Valid && rawCustomer["last_name"] != nil {
+		assert.Equal(t, rawCustomer["last_name"], response.Data.Customer.LastName.String(), "data.customer.last_name should match")
 	}
-	assert.Equal(t, rawCustomer["email"], response.Data.Customer.Email, "data.customer.email should match")
-	assert.Equal(t, rawCustomer["customer_code"], response.Data.Customer.CustomerCode, "data.customer.customer_code should match")
+	assert.Equal(t, rawCustomer["email"], response.Data.Customer.Email.String(), "data.customer.email should match")
+	assert.Equal(t, rawCustomer["customer_code"], response.Data.Customer.CustomerCode.String(), "data.customer.customer_code should match")
 
 	// Validate assignment object
 	rawAssignment := rawDataObj["assignment"].(map[string]any)
 	assert.NotNil(t, response.Data.Assignment, "data.assignment should not be nil")
-	assert.Equal(t, int(rawAssignment["integration"].(float64)), response.Data.Assignment.Integration, "data.assignment.integration should match")
-	assert.Equal(t, int(rawAssignment["assignee_id"].(float64)), response.Data.Assignment.AssigneeID, "data.assignment.assignee_id should match")
-	assert.Equal(t, rawAssignment["assignee_type"], response.Data.Assignment.AssigneeType, "data.assignment.assignee_type should match")
-	assert.Equal(t, rawAssignment["account_type"], response.Data.Assignment.AccountType, "data.assignment.account_type should match")
-	assert.Equal(t, rawAssignment["expired"], response.Data.Assignment.Expired, "data.assignment.expired should match")
+	assert.Equal(t, int64(rawAssignment["integration"].(float64)), response.Data.Assignment.Integration.Int64(), "data.assignment.integration should match")
+	assert.Equal(t, int64(rawAssignment["assignee_id"].(float64)), response.Data.Assignment.AssigneeID.Int64(), "data.assignment.assignee_id should match")
+	assert.Equal(t, rawAssignment["assignee_type"], response.Data.Assignment.AssigneeType.String(), "data.assignment.assignee_type should match")
+	assert.Equal(t, rawAssignment["account_type"], response.Data.Assignment.AccountType.String(), "data.assignment.account_type should match")
+	assert.Equal(t, rawAssignment["expired"], response.Data.Assignment.Expired.Bool(), "data.assignment.expired should match")
 
 	// Validate assignment timestamps
 	expectedAssignedAt := rawAssignment["assigned_at"].(string)
-	assert.Equal(t, expectedAssignedAt, response.Data.Assignment.AssignedAt.Time.Format("2006-01-02T15:04:05.000Z"), "data.assignment.assigned_at should match")
+	assert.Equal(t, expectedAssignedAt, response.Data.Assignment.AssignedAt.Time().Format("2006-01-02T15:04:05.000Z"), "data.assignment.assigned_at should match")
 
 	// Validate split_config object
 	rawSplitConfig := rawDataObj["split_config"].(map[string]any)
 	assert.NotNil(t, response.Data.SplitConfig, "data.split_config should not be nil")
-	splitConfigMap := *response.Data.SplitConfig
+	splitConfigMap := response.Data.SplitConfig.Metadata
 	assert.Equal(t, rawSplitConfig["split_code"], splitConfigMap["split_code"], "data.split_config.split_code should match")
 
 	// Test round-trip serialization
@@ -243,10 +243,10 @@ func TestSplitTransactionResponse_FieldByFieldValidation(t *testing.T) {
 	// Verify round-trip integrity
 	assert.Equal(t, response.Status.Bool(), roundTripResponse.Status.Bool(), "round-trip status should match")
 	assert.Equal(t, response.Message, roundTripResponse.Message, "round-trip message should match")
-	assert.Equal(t, response.Data.ID, roundTripResponse.Data.ID, "round-trip data.id should match")
-	assert.Equal(t, response.Data.AccountName, roundTripResponse.Data.AccountName, "round-trip data.account_name should match")
-	assert.Equal(t, response.Data.AccountNumber, roundTripResponse.Data.AccountNumber, "round-trip data.account_number should match")
-	assert.Equal(t, response.Data.Currency, roundTripResponse.Data.Currency, "round-trip data.currency should match")
-	assert.Equal(t, response.Data.Bank.Name, roundTripResponse.Data.Bank.Name, "round-trip data.bank.name should match")
-	assert.Equal(t, response.Data.Customer.Email, roundTripResponse.Data.Customer.Email, "round-trip data.customer.email should match")
+	assert.Equal(t, response.Data.ID.Int64(), roundTripResponse.Data.ID.Int64(), "round-trip data.id should match")
+	assert.Equal(t, response.Data.AccountName.String(), roundTripResponse.Data.AccountName.String(), "round-trip data.account_name should match")
+	assert.Equal(t, response.Data.AccountNumber.String(), roundTripResponse.Data.AccountNumber.String(), "round-trip data.account_number should match")
+	assert.Equal(t, response.Data.Currency.String(), roundTripResponse.Data.Currency.String(), "round-trip data.currency should match")
+	assert.Equal(t, response.Data.Bank.Name.String(), roundTripResponse.Data.Bank.Name.String(), "round-trip data.bank.name should match")
+	assert.Equal(t, response.Data.Customer.Email.String(), roundTripResponse.Data.Customer.Email.String(), "round-trip data.customer.email should match")
 }

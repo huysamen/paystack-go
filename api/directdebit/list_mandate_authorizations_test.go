@@ -51,23 +51,23 @@ func TestListMandateAuthorizationsResponse_JSONDeserialization(t *testing.T) {
 
 				if len(response.Data) > 0 {
 					mandateAuth := response.Data[0]
-					assert.Greater(t, mandateAuth.ID, 0, "mandate authorization ID should be greater than 0")
+					assert.Greater(t, mandateAuth.ID.Int64(), int64(0), "mandate authorization ID should be greater than 0")
 					assert.NotEmpty(t, mandateAuth.Status, "status should not be empty")
 					assert.True(t, mandateAuth.Status.IsValid(), "status should be valid")
-					assert.Greater(t, mandateAuth.MandateID, 0, "mandate ID should be greater than 0")
-					assert.Greater(t, mandateAuth.AuthorizationID, 0, "authorization ID should be greater than 0")
-					assert.NotEmpty(t, mandateAuth.AuthorizationCode, "authorization code should not be empty")
-					assert.Greater(t, mandateAuth.IntegrationID, 0, "integration ID should be greater than 0")
-					assert.NotEmpty(t, mandateAuth.AccountNumber, "account number should not be empty")
-					assert.NotEmpty(t, mandateAuth.BankCode, "bank code should not be empty")
-					assert.NotEmpty(t, mandateAuth.BankName, "bank name should not be empty")
+					assert.Greater(t, mandateAuth.MandateID.Int64(), int64(0), "mandate ID should be greater than 0")
+					assert.Greater(t, mandateAuth.AuthorizationID.Int64(), int64(0), "authorization ID should be greater than 0")
+					assert.NotEmpty(t, mandateAuth.AuthorizationCode.String(), "authorization code should not be empty")
+					assert.Greater(t, mandateAuth.IntegrationID.Int64(), int64(0), "integration ID should be greater than 0")
+					assert.NotEmpty(t, mandateAuth.AccountNumber.String(), "account number should not be empty")
+					assert.NotEmpty(t, mandateAuth.BankCode.String(), "bank code should not be empty")
+					assert.NotEmpty(t, mandateAuth.BankName.String(), "bank name should not be empty")
 				}
 
 				// Verify meta object if present
 				if response.Meta != nil {
 					assert.Greater(t, response.Meta.PerPage, 0, "per_page should be greater than 0")
-					if response.Meta.Total != nil {
-						assert.Greater(t, *response.Meta.Total, 0, "total should be greater than 0")
+					if response.Meta.Total.Valid {
+						assert.Greater(t, response.Meta.Total.Int, int64(0), "total should be greater than 0")
 					}
 				}
 			}
@@ -206,15 +206,15 @@ func TestListMandateAuthorizationsResponse_FieldByFieldValidation(t *testing.T) 
 		mandateAuth := response.Data[0]
 
 		// Validate mandate authorization fields
-		assert.Equal(t, int(rawMandateAuth["id"].(float64)), mandateAuth.ID, "id should match")
+		assert.Equal(t, int64(rawMandateAuth["id"].(float64)), mandateAuth.ID.Int64(), "id should match")
 		assert.Equal(t, rawMandateAuth["status"], string(mandateAuth.Status), "status should match")
-		assert.Equal(t, int(rawMandateAuth["mandate_id"].(float64)), mandateAuth.MandateID, "mandate_id should match")
-		assert.Equal(t, int(rawMandateAuth["authorization_id"].(float64)), mandateAuth.AuthorizationID, "authorization_id should match")
-		assert.Equal(t, rawMandateAuth["authorization_code"], mandateAuth.AuthorizationCode, "authorization_code should match")
-		assert.Equal(t, int(rawMandateAuth["integration_id"].(float64)), mandateAuth.IntegrationID, "integration_id should match")
-		assert.Equal(t, rawMandateAuth["account_number"], mandateAuth.AccountNumber, "account_number should match")
-		assert.Equal(t, rawMandateAuth["bank_code"], mandateAuth.BankCode, "bank_code should match")
-		assert.Equal(t, rawMandateAuth["bank_name"], mandateAuth.BankName, "bank_name should match")
+		assert.Equal(t, int64(rawMandateAuth["mandate_id"].(float64)), mandateAuth.MandateID.Int64(), "mandate_id should match")
+		assert.Equal(t, int64(rawMandateAuth["authorization_id"].(float64)), mandateAuth.AuthorizationID.Int64(), "authorization_id should match")
+		assert.Equal(t, rawMandateAuth["authorization_code"], mandateAuth.AuthorizationCode.String(), "authorization_code should match")
+		assert.Equal(t, int64(rawMandateAuth["integration_id"].(float64)), mandateAuth.IntegrationID.Int64(), "integration_id should match")
+		assert.Equal(t, rawMandateAuth["account_number"], mandateAuth.AccountNumber.String(), "account_number should match")
+		assert.Equal(t, rawMandateAuth["bank_code"], mandateAuth.BankCode.String(), "bank_code should match")
+		assert.Equal(t, rawMandateAuth["bank_name"], mandateAuth.BankName.String(), "bank_name should match")
 
 		// Note: The JSON contains additional fields (customer, authorized_at) that aren't in the Go struct
 		// This suggests the Go struct may need updating, but we'll test what's currently defined
@@ -228,11 +228,11 @@ func TestListMandateAuthorizationsResponse_FieldByFieldValidation(t *testing.T) 
 		// Now that Meta struct supports both per_page and perPage, this should work correctly
 		assert.Equal(t, int(rawMeta["per_page"].(float64)), response.Meta.PerPage, "meta.per_page should match")
 
-		if rawMeta["total"] != nil && response.Meta.Total != nil {
-			assert.Equal(t, int(rawMeta["total"].(float64)), *response.Meta.Total, "meta.total should match")
+		if rawMeta["total"] != nil && response.Meta.Total.Valid {
+			assert.Equal(t, int64(rawMeta["total"].(float64)), response.Meta.Total.Int, "meta.total should match")
 		}
-		if rawMeta["next"] != nil && response.Meta.Next != nil {
-			assert.Equal(t, rawMeta["next"], *response.Meta.Next, "meta.next should match")
+		if rawMeta["next"] != nil && response.Meta.Next.Valid {
+			assert.Equal(t, rawMeta["next"], response.Meta.Next.String(), "meta.next should match")
 		}
 	} // Test round-trip serialization
 	serialized, err := json.Marshal(response)
@@ -246,8 +246,8 @@ func TestListMandateAuthorizationsResponse_FieldByFieldValidation(t *testing.T) 
 	assert.Equal(t, response.Status.Bool(), roundTripResponse.Status.Bool(), "round-trip status should match")
 	assert.Equal(t, response.Message, roundTripResponse.Message, "round-trip message should match")
 	if len(response.Data) > 0 && len(roundTripResponse.Data) > 0 {
-		assert.Equal(t, response.Data[0].ID, roundTripResponse.Data[0].ID, "round-trip data[0].id should match")
+		assert.Equal(t, response.Data[0].ID.Int64(), roundTripResponse.Data[0].ID.Int64(), "round-trip data[0].id should match")
 		assert.Equal(t, response.Data[0].Status, roundTripResponse.Data[0].Status, "round-trip data[0].status should match")
-		assert.Equal(t, response.Data[0].AuthorizationCode, roundTripResponse.Data[0].AuthorizationCode, "round-trip data[0].authorization_code should match")
+		assert.Equal(t, response.Data[0].AuthorizationCode.String(), roundTripResponse.Data[0].AuthorizationCode.String(), "round-trip data[0].authorization_code should match")
 	}
 }

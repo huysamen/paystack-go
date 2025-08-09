@@ -52,28 +52,28 @@ func TestListResponse_JSONDeserialization(t *testing.T) {
 				assert.NotEmpty(t, account.AccountNumber, "account number should not be empty")
 				assert.NotEmpty(t, account.AccountName, "account name should not be empty")
 				assert.NotEmpty(t, account.Currency, "currency should not be empty")
-				assert.Greater(t, account.ID, 0, "account ID should be greater than 0")
+				assert.Greater(t, account.ID.Int64(), int64(0), "account ID should be greater than 0")
 
 				// Verify bank data
 				assert.NotEmpty(t, account.Bank.Name, "bank name should not be empty")
 				assert.NotEmpty(t, account.Bank.Slug, "bank slug should not be empty")
-				assert.Greater(t, account.Bank.ID, 0, "bank ID should be greater than 0")
+				assert.Greater(t, account.Bank.ID.Int64(), int64(0), "bank ID should be greater than 0")
 
 				// Verify customer data if present
 				if account.Customer != nil {
 					assert.NotEmpty(t, account.Customer.Email, "customer email should not be empty")
 					assert.NotEmpty(t, account.Customer.CustomerCode, "customer code should not be empty")
-					assert.Greater(t, account.Customer.ID, uint64(0), "customer ID should be greater than 0")
+					assert.Greater(t, account.Customer.ID.Uint64(), uint64(0), "customer ID should be greater than 0")
 				}
 
 				// Verify meta data if present
 				if response.Meta != nil {
-					if response.Meta.Total != nil {
-						assert.Greater(t, *response.Meta.Total, 0, "meta total should be greater than 0")
+					if response.Meta.Total.Valid {
+						assert.Greater(t, response.Meta.Total.Int, int64(0), "meta total should be greater than 0")
 					}
 					assert.Greater(t, response.Meta.PerPage, 0, "meta per page should be greater than 0")
-					if response.Meta.Page != nil {
-						assert.GreaterOrEqual(t, *response.Meta.Page, 1, "meta page should be at least 1")
+					if response.Meta.Page.Valid {
+						assert.GreaterOrEqual(t, response.Meta.Page.Int, int64(1), "meta page should be at least 1")
 					}
 				}
 			}
@@ -199,31 +199,31 @@ func TestListResponse_FieldByFieldValidation(t *testing.T) {
 	account := response.Data[0]
 
 	// Basic account fields
-	assert.Equal(t, rawAccount["account_name"], account.AccountName, "account_name should match")
-	assert.Equal(t, rawAccount["account_number"], account.AccountNumber, "account_number should match")
-	assert.Equal(t, rawAccount["assigned"], account.Assigned, "assigned should match")
-	assert.Equal(t, rawAccount["currency"], string(account.Currency), "currency should match")
-	assert.Equal(t, rawAccount["active"], account.Active, "active should match")
-	assert.Equal(t, rawAccount["id"], float64(account.ID), "id should match")
+	assert.Equal(t, rawAccount["account_name"], account.AccountName.String(), "account_name should match")
+	assert.Equal(t, rawAccount["account_number"], account.AccountNumber.String(), "account_number should match")
+	assert.Equal(t, rawAccount["assigned"], account.Assigned.Bool(), "assigned should match")
+	assert.Equal(t, rawAccount["currency"], account.Currency.String(), "currency should match")
+	assert.Equal(t, rawAccount["active"], account.Active.Bool(), "active should match")
+	assert.Equal(t, rawAccount["id"], float64(account.ID.Int64()), "id should match")
 
 	// Bank object validation
 	rawBank := rawAccount["bank"].(map[string]any)
 	bank := account.Bank
-	assert.Equal(t, rawBank["name"], bank.Name, "bank.name should match")
-	assert.Equal(t, rawBank["id"], float64(bank.ID), "bank.id should match")
-	assert.Equal(t, rawBank["slug"], bank.Slug, "bank.slug should match")
+	assert.Equal(t, rawBank["name"], bank.Name.String(), "bank.name should match")
+	assert.Equal(t, rawBank["id"], float64(bank.ID.Int64()), "bank.id should match")
+	assert.Equal(t, rawBank["slug"], bank.Slug.String(), "bank.slug should match")
 
 	// Customer object validation
 	rawCustomer := rawAccount["customer"].(map[string]any)
 	customer := account.Customer
 	require.NotNil(t, customer, "customer should not be nil")
-	assert.Equal(t, rawCustomer["id"], float64(customer.ID), "customer.id should match")
-	assert.Equal(t, rawCustomer["first_name"], *customer.FirstName, "customer.first_name should match")
-	assert.Equal(t, rawCustomer["last_name"], *customer.LastName, "customer.last_name should match")
-	assert.Equal(t, rawCustomer["email"], customer.Email, "customer.email should match")
-	assert.Equal(t, rawCustomer["customer_code"], customer.CustomerCode, "customer.customer_code should match")
-	assert.Equal(t, rawCustomer["phone"], *customer.Phone, "customer.phone should match")
-	assert.Equal(t, rawCustomer["risk_action"], customer.RiskAction, "customer.risk_action should match")
+	assert.Equal(t, rawCustomer["id"], float64(customer.ID.Uint64()), "customer.id should match")
+	assert.Equal(t, rawCustomer["first_name"], customer.FirstName.String(), "customer.first_name should match")
+	assert.Equal(t, rawCustomer["last_name"], customer.LastName.String(), "customer.last_name should match")
+	assert.Equal(t, rawCustomer["email"], customer.Email.String(), "customer.email should match")
+	assert.Equal(t, rawCustomer["customer_code"], customer.CustomerCode.String(), "customer.customer_code should match")
+	assert.Equal(t, rawCustomer["phone"], customer.Phone.String(), "customer.phone should match")
+	assert.Equal(t, rawCustomer["risk_action"], customer.RiskAction.String(), "customer.risk_action should match")
 
 	// international_format_phone is null
 	assert.Equal(t, rawCustomer["international_format_phone"], nil, "international_format_phone should be null")
@@ -239,24 +239,24 @@ func TestListResponse_FieldByFieldValidation(t *testing.T) {
 	parsedCreatedAt, err := time.Parse("2006-01-02T15:04:05.000Z", createdAtStr)
 	require.NoError(t, err, "should parse created_at timestamp")
 	assert.Equal(t, 2019, parsedCreatedAt.Year(), "created_at year should be 2019")
-	assert.Equal(t, 2019, account.CreatedAt.Time.Year(), "account CreatedAt year should match")
+	assert.Equal(t, 2019, account.CreatedAt.Time().Year(), "account CreatedAt year should match")
 
 	updatedAtStr, ok := rawAccount["updated_at"].(string)
 	require.True(t, ok, "updated_at should be a string")
 	parsedUpdatedAt, err := time.Parse("2006-01-02T15:04:05.000Z", updatedAtStr)
 	require.NoError(t, err, "should parse updated_at timestamp")
 	assert.Equal(t, 2020, parsedUpdatedAt.Year(), "updated_at year should be 2020")
-	assert.Equal(t, 2020, account.UpdatedAt.Time.Year(), "account UpdatedAt year should match")
+	assert.Equal(t, 2020, account.UpdatedAt.Time().Year(), "account UpdatedAt year should match")
 
 	// Validate meta fields
 	rawMeta := rawResponse["meta"].(map[string]any)
 	require.NotNil(t, response.Meta, "meta should not be nil")
 	meta := response.Meta
-	assert.Equal(t, rawMeta["total"], float64(*meta.Total), "meta.total should match")
-	assert.Equal(t, rawMeta["skipped"], float64(*meta.Skipped), "meta.skipped should match")
+	assert.Equal(t, rawMeta["total"], float64(meta.Total.Int), "meta.total should match")
+	assert.Equal(t, rawMeta["skipped"], float64(meta.Skipped.Int), "meta.skipped should match")
 	assert.Equal(t, rawMeta["perPage"], float64(meta.PerPage), "meta.perPage should match")
-	assert.Equal(t, rawMeta["page"], float64(*meta.Page), "meta.page should match")
-	assert.Equal(t, rawMeta["pageCount"], float64(*meta.PageCount), "meta.pageCount should match")
+	assert.Equal(t, rawMeta["page"], float64(meta.Page.Int), "meta.page should match")
+	assert.Equal(t, rawMeta["pageCount"], float64(meta.PageCount.Int), "meta.pageCount should match")
 
 	// Test round-trip serialization
 	serialized, err := json.Marshal(response)

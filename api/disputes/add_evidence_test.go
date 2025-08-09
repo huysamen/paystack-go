@@ -48,12 +48,12 @@ func TestAddEvidenceResponse_JSONDeserialization(t *testing.T) {
 
 				// Verify evidence structure
 				evidence := response.Data
-				assert.Greater(t, evidence.ID, 0, "evidence ID should be positive")
-				assert.NotEmpty(t, evidence.CustomerEmail, "customer email should not be empty")
-				assert.NotEmpty(t, evidence.CustomerName, "customer name should not be empty")
-				assert.NotEmpty(t, evidence.CustomerPhone, "customer phone should not be empty")
-				assert.NotEmpty(t, evidence.ServiceDetails, "service details should not be empty")
-				assert.Greater(t, evidence.Dispute, 0, "dispute ID should be positive")
+				assert.Greater(t, evidence.ID.Int64(), int64(0), "evidence ID should be positive")
+				assert.NotEmpty(t, evidence.CustomerEmail.String(), "customer email should not be empty")
+				assert.NotEmpty(t, evidence.CustomerName.String(), "customer name should not be empty")
+				assert.NotEmpty(t, evidence.CustomerPhone.String(), "customer phone should not be empty")
+				assert.NotEmpty(t, evidence.ServiceDetails.String(), "service details should not be empty")
+				assert.Greater(t, evidence.Dispute.Int64(), int64(0), "dispute ID should be positive")
 			}
 		})
 	}
@@ -208,14 +208,14 @@ func TestAddEvidenceResponse_FieldByFieldValidation(t *testing.T) {
 
 	// Validate evidence details
 	evidence := response.Data
-	assert.Equal(t, 21, evidence.ID)
-	assert.Equal(t, "cus@gmail.com", evidence.CustomerEmail)
-	assert.Equal(t, "Mensah King", evidence.CustomerName)
-	assert.Equal(t, "0802345167", evidence.CustomerPhone)
-	assert.Equal(t, "claim for buying product", evidence.ServiceDetails)
-	require.NotNil(t, evidence.DeliveryAddress)
-	assert.Equal(t, "3a ladoke street ogbomoso", *evidence.DeliveryAddress)
-	assert.Equal(t, 624, evidence.Dispute)
+	assert.Equal(t, int64(21), evidence.ID.Int64())
+	assert.Equal(t, "cus@gmail.com", evidence.CustomerEmail.String())
+	assert.Equal(t, "Mensah King", evidence.CustomerName.String())
+	assert.Equal(t, "0802345167", evidence.CustomerPhone.String())
+	assert.Equal(t, "claim for buying product", evidence.ServiceDetails.String())
+	require.True(t, evidence.DeliveryAddress.Valid)
+	assert.Equal(t, "3a ladoke street ogbomoso", evidence.DeliveryAddress.String())
+	assert.Equal(t, int64(624), evidence.Dispute.Int64())
 
 	// Test JSON round-trip
 	marshaled, err := json.Marshal(response)
@@ -225,7 +225,7 @@ func TestAddEvidenceResponse_FieldByFieldValidation(t *testing.T) {
 	err = json.Unmarshal(marshaled, &roundTrip)
 	require.NoError(t, err)
 
-	assert.Equal(t, response.Status, roundTrip.Status)
+	assert.Equal(t, response.Status.Bool(), roundTrip.Status.Bool())
 	assert.Equal(t, response.Message, roundTrip.Message)
-	assert.Equal(t, response.Data.ID, roundTrip.Data.ID)
+	assert.Equal(t, response.Data.ID.Int64(), roundTrip.Data.ID.Int64())
 }

@@ -50,21 +50,21 @@ func TestListResponse_JSONDeserialization(t *testing.T) {
 
 				// Verify first dispute structure
 				dispute := response.Data[0]
-				assert.Greater(t, dispute.ID, 0, "dispute ID should be positive")
+				assert.Greater(t, dispute.ID.Int64(), int64(0), "dispute ID should be positive")
 				assert.Equal(t, enums.DisputeStatusArchived, dispute.Status, "status should be archived")
-				assert.Equal(t, "test", dispute.Domain, "domain should match")
+				assert.Equal(t, "test", dispute.Domain.String(), "domain should match")
 
 				// Verify transaction is present and has required fields
 				if dispute.Transaction != nil {
-					assert.Greater(t, dispute.Transaction.ID, uint64(0), "transaction ID should be positive")
-					assert.NotEmpty(t, dispute.Transaction.Reference, "transaction reference should not be empty")
-					assert.Greater(t, dispute.Transaction.Amount, 0, "transaction amount should be positive")
+					assert.Greater(t, dispute.Transaction.ID.Uint64(), uint64(0), "transaction ID should be positive")
+					assert.NotEmpty(t, dispute.Transaction.Reference.String(), "transaction reference should not be empty")
+					assert.Greater(t, dispute.Transaction.Amount.Int64(), int64(0), "transaction amount should be positive")
 				}
 
 				// Verify customer details
 				if dispute.Customer != nil {
-					assert.Greater(t, dispute.Customer.ID, uint64(0), "customer ID should be positive")
-					assert.NotEmpty(t, dispute.Customer.Email, "customer email should not be empty")
+					assert.Greater(t, dispute.Customer.ID.Uint64(), uint64(0), "customer ID should be positive")
+					assert.NotEmpty(t, dispute.Customer.Email.String(), "customer email should not be empty")
 				}
 
 				// Verify history and messages arrays
@@ -74,12 +74,12 @@ func TestListResponse_JSONDeserialization(t *testing.T) {
 
 			// Verify meta information
 			if response.Meta != nil {
-				if response.Meta.Total != nil {
-					assert.GreaterOrEqual(t, *response.Meta.Total, 0, "total should be non-negative")
+				if response.Meta.Total.Valid {
+					assert.GreaterOrEqual(t, response.Meta.Total.Int, int64(0), "total should be non-negative")
 				}
 				assert.GreaterOrEqual(t, response.Meta.PerPage, 0, "per_page should be non-negative")
-				if response.Meta.Page != nil {
-					assert.Greater(t, *response.Meta.Page, 0, "page should be positive")
+				if response.Meta.Page.Valid {
+					assert.Greater(t, response.Meta.Page.Int, int64(0), "page should be positive")
 				}
 			}
 		})

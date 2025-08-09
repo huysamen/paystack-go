@@ -43,12 +43,12 @@ func TestRemoveSplitResponse_JSONDeserialization(t *testing.T) {
 
 			// Only verify data structure for successful responses
 			if tt.expectedStatus {
-				assert.NotEmpty(t, response.Data.AccountNumber, "account number should not be empty")
-				assert.NotEmpty(t, response.Data.AccountName, "account name should not be empty")
-				assert.NotEmpty(t, response.Data.Currency, "currency should not be empty")
-				assert.Greater(t, response.Data.ID, 0, "account ID should be greater than 0")
-				assert.True(t, response.Data.Active, "account should be active")
-				assert.True(t, response.Data.Assigned, "account should be assigned")
+				assert.NotEmpty(t, response.Data.AccountNumber.String(), "account number should not be empty")
+				assert.NotEmpty(t, response.Data.AccountName.String(), "account name should not be empty")
+				assert.NotEmpty(t, response.Data.Currency.String(), "currency should not be empty")
+				assert.Greater(t, response.Data.ID.Int64(), int64(0), "account ID should be greater than 0")
+				assert.True(t, response.Data.Active.Bool(), "account should be active")
+				assert.True(t, response.Data.Assigned.Bool(), "account should be assigned")
 
 				// Verify split config is empty/removed
 				assert.NotNil(t, response.Data.SplitConfig, "split config should not be nil but should be empty")
@@ -116,26 +116,26 @@ func TestRemoveSplitResponse_FieldByFieldValidation(t *testing.T) {
 
 	// Validate data object
 	rawDataObj := rawData["data"].(map[string]any)
-	assert.Equal(t, int(rawDataObj["id"].(float64)), response.Data.ID, "data.id should match")
-	assert.Equal(t, rawDataObj["account_name"], response.Data.AccountName, "data.account_name should match")
-	assert.Equal(t, rawDataObj["account_number"], response.Data.AccountNumber, "data.account_number should match")
-	assert.Equal(t, rawDataObj["currency"], string(response.Data.Currency), "data.currency should match")
-	assert.Equal(t, rawDataObj["assigned"], response.Data.Assigned, "data.assigned should match")
-	assert.Equal(t, rawDataObj["active"], response.Data.Active, "data.active should match")
+	assert.Equal(t, int64(rawDataObj["id"].(float64)), response.Data.ID.Int64(), "data.id should match")
+	assert.Equal(t, rawDataObj["account_name"], response.Data.AccountName.String(), "data.account_name should match")
+	assert.Equal(t, rawDataObj["account_number"], response.Data.AccountNumber.String(), "data.account_number should match")
+	assert.Equal(t, rawDataObj["currency"], response.Data.Currency.String(), "data.currency should match")
+	assert.Equal(t, rawDataObj["assigned"], response.Data.Assigned.Bool(), "data.assigned should match")
+	assert.Equal(t, rawDataObj["active"], response.Data.Active.Bool(), "data.active should match")
 
 	// Validate timestamps
 	expectedCreatedAt := rawDataObj["createdAt"].(string)
 	expectedUpdatedAt := rawDataObj["updatedAt"].(string)
-	if !response.Data.CreatedAt.Time.IsZero() {
-		assert.Equal(t, expectedCreatedAt, response.Data.CreatedAt.Time.Format("2006-01-02T15:04:05.000Z"), "data.createdAt should match")
+	if !response.Data.CreatedAt.Time().IsZero() {
+		assert.Equal(t, expectedCreatedAt, response.Data.CreatedAt.Time().Format("2006-01-02T15:04:05.000Z"), "data.createdAt should match")
 	}
-	if !response.Data.UpdatedAt.Time.IsZero() {
-		assert.Equal(t, expectedUpdatedAt, response.Data.UpdatedAt.Time.Format("2006-01-02T15:04:05.000Z"), "data.updatedAt should match")
+	if !response.Data.UpdatedAt.Time().IsZero() {
+		assert.Equal(t, expectedUpdatedAt, response.Data.UpdatedAt.Time().Format("2006-01-02T15:04:05.000Z"), "data.updatedAt should match")
 	}
 
 	// Validate split_config is empty after removal
 	assert.NotNil(t, response.Data.SplitConfig, "data.split_config should not be nil")
-	assert.Empty(t, *response.Data.SplitConfig, "data.split_config should be empty after removal")
+	assert.Empty(t, response.Data.SplitConfig.Metadata, "data.split_config should be empty after removal")
 
 	// Test round-trip serialization
 	serialized, err := json.Marshal(response)
@@ -148,8 +148,8 @@ func TestRemoveSplitResponse_FieldByFieldValidation(t *testing.T) {
 	// Verify round-trip integrity
 	assert.Equal(t, response.Status.Bool(), roundTripResponse.Status.Bool(), "round-trip status should match")
 	assert.Equal(t, response.Message, roundTripResponse.Message, "round-trip message should match")
-	assert.Equal(t, response.Data.ID, roundTripResponse.Data.ID, "round-trip data.id should match")
-	assert.Equal(t, response.Data.AccountName, roundTripResponse.Data.AccountName, "round-trip data.account_name should match")
-	assert.Equal(t, response.Data.AccountNumber, roundTripResponse.Data.AccountNumber, "round-trip data.account_number should match")
-	assert.Equal(t, response.Data.Currency, roundTripResponse.Data.Currency, "round-trip data.currency should match")
+	assert.Equal(t, response.Data.ID.Int64(), roundTripResponse.Data.ID.Int64(), "round-trip data.id should match")
+	assert.Equal(t, response.Data.AccountName.String(), roundTripResponse.Data.AccountName.String(), "round-trip data.account_name should match")
+	assert.Equal(t, response.Data.AccountNumber.String(), roundTripResponse.Data.AccountNumber.String(), "round-trip data.account_number should match")
+	assert.Equal(t, response.Data.Currency.String(), roundTripResponse.Data.Currency.String(), "round-trip data.currency should match")
 }

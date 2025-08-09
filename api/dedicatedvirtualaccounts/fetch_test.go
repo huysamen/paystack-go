@@ -47,20 +47,20 @@ func TestFetchResponse_JSONDeserialization(t *testing.T) {
 				assert.NotEmpty(t, response.Data.AccountNumber, "account number should not be empty")
 				assert.NotEmpty(t, response.Data.AccountName, "account name should not be empty")
 				assert.NotEmpty(t, response.Data.Currency, "currency should not be empty")
-				assert.Greater(t, response.Data.ID, 0, "account ID should be greater than 0")
-				assert.True(t, response.Data.Active, "account should be active")
-				assert.True(t, response.Data.Assigned, "account should be assigned")
+				assert.Greater(t, response.Data.ID.Int64(), int64(0), "account ID should be greater than 0")
+				assert.True(t, response.Data.Active.Bool(), "account should be active")
+				assert.True(t, response.Data.Assigned.Bool(), "account should be assigned")
 
 				// Verify bank data
 				assert.NotEmpty(t, response.Data.Bank.Name, "bank name should not be empty")
 				assert.NotEmpty(t, response.Data.Bank.Slug, "bank slug should not be empty")
-				assert.Greater(t, response.Data.Bank.ID, 0, "bank ID should be greater than 0")
+				assert.Greater(t, response.Data.Bank.ID.Int64(), int64(0), "bank ID should be greater than 0")
 
 				// Verify customer data
 				if response.Data.Customer != nil {
 					assert.NotEmpty(t, response.Data.Customer.Email, "customer email should not be empty")
 					assert.NotEmpty(t, response.Data.Customer.CustomerCode, "customer code should not be empty")
-					assert.Greater(t, response.Data.Customer.ID, uint64(0), "customer ID should be greater than 0")
+					assert.Greater(t, response.Data.Customer.ID.Uint64(), uint64(0), "customer ID should be greater than 0")
 				}
 			}
 		})
@@ -92,12 +92,12 @@ func TestFetchResponse_FieldByFieldValidation(t *testing.T) {
 	data := response.Data
 
 	// Basic account fields
-	assert.Equal(t, rawData["account_name"], data.AccountName, "account_name should match")
-	assert.Equal(t, rawData["account_number"], data.AccountNumber, "account_number should match")
-	assert.Equal(t, rawData["assigned"], data.Assigned, "assigned should match")
-	assert.Equal(t, rawData["currency"], string(data.Currency), "currency should match")
-	assert.Equal(t, rawData["active"], data.Active, "active should match")
-	assert.Equal(t, rawData["id"], float64(data.ID), "id should match")
+	assert.Equal(t, rawData["account_name"], data.AccountName.String(), "account_name should match")
+	assert.Equal(t, rawData["account_number"], data.AccountNumber.String(), "account_number should match")
+	assert.Equal(t, rawData["assigned"], data.Assigned.Bool(), "assigned should match")
+	assert.Equal(t, rawData["currency"], data.Currency.String(), "currency should match")
+	assert.Equal(t, rawData["active"], data.Active.Bool(), "active should match")
+	assert.Equal(t, rawData["id"], float64(data.ID.Int64()), "id should match")
 
 	// split_config field (JSON string in response)
 	if rawData["split_config"] != nil {
@@ -109,21 +109,21 @@ func TestFetchResponse_FieldByFieldValidation(t *testing.T) {
 	// Bank object validation
 	rawBank := rawData["bank"].(map[string]any)
 	bank := data.Bank
-	assert.Equal(t, rawBank["name"], bank.Name, "bank.name should match")
-	assert.Equal(t, rawBank["id"], float64(bank.ID), "bank.id should match")
-	assert.Equal(t, rawBank["slug"], bank.Slug, "bank.slug should match")
+	assert.Equal(t, rawBank["name"], bank.Name.String(), "bank.name should match")
+	assert.Equal(t, rawBank["id"], float64(bank.ID.Int64()), "bank.id should match")
+	assert.Equal(t, rawBank["slug"], bank.Slug.String(), "bank.slug should match")
 
 	// Customer object validation
 	rawCustomer := rawData["customer"].(map[string]any)
 	customer := data.Customer
 	require.NotNil(t, customer, "customer should not be nil")
-	assert.Equal(t, rawCustomer["id"], float64(customer.ID), "customer.id should match")
-	assert.Equal(t, rawCustomer["first_name"], *customer.FirstName, "customer.first_name should match")
-	assert.Equal(t, rawCustomer["last_name"], *customer.LastName, "customer.last_name should match")
-	assert.Equal(t, rawCustomer["email"], customer.Email, "customer.email should match")
-	assert.Equal(t, rawCustomer["customer_code"], customer.CustomerCode, "customer.customer_code should match")
-	assert.Equal(t, rawCustomer["phone"], *customer.Phone, "customer.phone should match")
-	assert.Equal(t, rawCustomer["risk_action"], customer.RiskAction, "customer.risk_action should match")
+	assert.Equal(t, rawCustomer["id"], float64(customer.ID.Uint64()), "customer.id should match")
+	assert.Equal(t, rawCustomer["first_name"], customer.FirstName.String(), "customer.first_name should match")
+	assert.Equal(t, rawCustomer["last_name"], customer.LastName.String(), "customer.last_name should match")
+	assert.Equal(t, rawCustomer["email"], customer.Email.String(), "customer.email should match")
+	assert.Equal(t, rawCustomer["customer_code"], customer.CustomerCode.String(), "customer.customer_code should match")
+	assert.Equal(t, rawCustomer["phone"], customer.Phone.String(), "customer.phone should match")
+	assert.Equal(t, rawCustomer["risk_action"], customer.RiskAction.String(), "customer.risk_action should match")
 
 	// Customer metadata (object in this response)
 	rawCustomerMetadata := rawCustomer["metadata"].(map[string]any)
@@ -139,14 +139,14 @@ func TestFetchResponse_FieldByFieldValidation(t *testing.T) {
 	parsedCreatedAt, err := time.Parse("2006-01-02T15:04:05.000Z", createdAtStr)
 	require.NoError(t, err, "should parse created_at timestamp")
 	assert.Equal(t, 2021, parsedCreatedAt.Year(), "created_at year should be 2021")
-	assert.Equal(t, 2021, data.CreatedAt.Time.Year(), "data CreatedAt year should match")
+	assert.Equal(t, 2021, data.CreatedAt.Time().Year(), "data CreatedAt year should match")
 
 	updatedAtStr, ok := rawData["updated_at"].(string)
 	require.True(t, ok, "updated_at should be a string")
 	parsedUpdatedAt, err := time.Parse("2006-01-02T15:04:05.000Z", updatedAtStr)
 	require.NoError(t, err, "should parse updated_at timestamp")
 	assert.Equal(t, 2021, parsedUpdatedAt.Year(), "updated_at year should be 2021")
-	assert.Equal(t, 2021, data.UpdatedAt.Time.Year(), "data UpdatedAt year should match")
+	assert.Equal(t, 2021, data.UpdatedAt.Time().Year(), "data UpdatedAt year should match")
 
 	// Test round-trip serialization
 	serialized, err := json.Marshal(response)

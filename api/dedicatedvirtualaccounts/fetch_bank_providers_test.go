@@ -48,16 +48,16 @@ func TestFetchBankProvidersResponse_JSONDeserialization(t *testing.T) {
 
 				// Verify first provider structure
 				provider := response.Data[0]
-				assert.Greater(t, provider.ID, 0, "provider ID should be greater than 0")
+				assert.Greater(t, provider.ID.Int64(), int64(0), "provider ID should be greater than 0")
 				assert.NotEmpty(t, provider.ProviderSlug, "provider slug should not be empty")
-				assert.Greater(t, provider.BankID, 0, "bank ID should be greater than 0")
+				assert.Greater(t, provider.BankID.Int64(), int64(0), "bank ID should be greater than 0")
 				assert.NotEmpty(t, provider.BankName, "bank name should not be empty")
 
 				// Verify all providers have required fields
 				for _, p := range response.Data {
-					assert.Greater(t, p.ID, 0, "each provider ID should be greater than 0")
+					assert.Greater(t, p.ID.Int64(), int64(0), "each provider ID should be greater than 0")
 					assert.NotEmpty(t, p.ProviderSlug, "each provider slug should not be empty")
-					assert.Greater(t, p.BankID, 0, "each bank ID should be greater than 0")
+					assert.Greater(t, p.BankID.Int64(), int64(0), "each bank ID should be greater than 0")
 					assert.NotEmpty(t, p.BankName, "each bank name should not be empty")
 				}
 			}
@@ -96,18 +96,18 @@ func TestFetchBankProvidersResponse_FieldByFieldValidation(t *testing.T) {
 	// Validate first provider (Access Bank)
 	rawProvider1 := rawDataArray[0].(map[string]any)
 	provider1 := response.Data[0]
-	assert.Equal(t, rawProvider1["provider_slug"], provider1.ProviderSlug, "provider1.provider_slug should match")
-	assert.Equal(t, rawProvider1["bank_id"], float64(provider1.BankID), "provider1.bank_id should match")
-	assert.Equal(t, rawProvider1["bank_name"], provider1.BankName, "provider1.bank_name should match")
-	assert.Equal(t, rawProvider1["id"], float64(provider1.ID), "provider1.id should match")
+	assert.Equal(t, rawProvider1["provider_slug"], provider1.ProviderSlug.String(), "provider1.provider_slug should match")
+	assert.Equal(t, rawProvider1["bank_id"], float64(provider1.BankID.Int64()), "provider1.bank_id should match")
+	assert.Equal(t, rawProvider1["bank_name"], provider1.BankName.String(), "provider1.bank_name should match")
+	assert.Equal(t, rawProvider1["id"], float64(provider1.ID.Int64()), "provider1.id should match")
 
 	// Validate second provider (Wema Bank)
 	rawProvider2 := rawDataArray[1].(map[string]any)
 	provider2 := response.Data[1]
-	assert.Equal(t, rawProvider2["provider_slug"], provider2.ProviderSlug, "provider2.provider_slug should match")
-	assert.Equal(t, rawProvider2["bank_id"], float64(provider2.BankID), "provider2.bank_id should match")
-	assert.Equal(t, rawProvider2["bank_name"], provider2.BankName, "provider2.bank_name should match")
-	assert.Equal(t, rawProvider2["id"], float64(provider2.ID), "provider2.id should match")
+	assert.Equal(t, rawProvider2["provider_slug"], provider2.ProviderSlug.String(), "provider2.provider_slug should match")
+	assert.Equal(t, rawProvider2["bank_id"], float64(provider2.BankID.Int64()), "provider2.bank_id should match")
+	assert.Equal(t, rawProvider2["bank_name"], provider2.BankName.String(), "provider2.bank_name should match")
+	assert.Equal(t, rawProvider2["id"], float64(provider2.ID.Int64()), "provider2.id should match")
 
 	// Test round-trip serialization
 	serialized, err := json.Marshal(response)

@@ -29,21 +29,21 @@ func TestListResponse_JSONDeserialization(t *testing.T) {
 
 	// Validate first customer
 	firstCustomer := response.Data[0]
-	assert.Equal(t, "dom@gmail.com", firstCustomer.Email)
-	assert.Equal(t, "CUS_c6wqvwmvwopw4ms", firstCustomer.CustomerCode)
-	assert.Equal(t, uint64(90758908), firstCustomer.ID)
+	assert.Equal(t, "dom@gmail.com", firstCustomer.Email.String())
+	assert.Equal(t, "CUS_c6wqvwmvwopw4ms", firstCustomer.CustomerCode.String())
+	assert.Equal(t, uint64(90758908), firstCustomer.ID.Uint64())
 
 	// Validate second customer (has names and phone)
 	secondCustomer := response.Data[1]
-	assert.Equal(t, "okiki@sample.com", secondCustomer.Email)
-	assert.Equal(t, "CUS_rki2ccocw7g8lsj", secondCustomer.CustomerCode)
-	assert.Equal(t, uint64(90758301), secondCustomer.ID)
-	assert.NotNil(t, secondCustomer.FirstName)
-	assert.Equal(t, "Okiki", *secondCustomer.FirstName)
-	assert.NotNil(t, secondCustomer.LastName)
-	assert.Equal(t, "Sample", *secondCustomer.LastName)
-	assert.NotNil(t, secondCustomer.Phone)
-	assert.Equal(t, "09048829123", *secondCustomer.Phone)
+	assert.Equal(t, "okiki@sample.com", secondCustomer.Email.String())
+	assert.Equal(t, "CUS_rki2ccocw7g8lsj", secondCustomer.CustomerCode.String())
+	assert.Equal(t, uint64(90758301), secondCustomer.ID.Uint64())
+	assert.True(t, secondCustomer.FirstName.Valid)
+	assert.Equal(t, "Okiki", secondCustomer.FirstName.String())
+	assert.True(t, secondCustomer.LastName.Valid)
+	assert.Equal(t, "Sample", secondCustomer.LastName.String())
+	assert.True(t, secondCustomer.Phone.Valid)
+	assert.Equal(t, "09048829123", secondCustomer.Phone.String())
 }
 
 func TestListRequestBuilder(t *testing.T) {
@@ -159,47 +159,48 @@ func TestListResponse_FieldByFieldValidation(t *testing.T) {
 		customer := response.Data[i]
 
 		// Basic fields
-		assert.Equal(t, customerData["email"], customer.Email, "email should match for customer %d", i)
-		assert.Equal(t, int(customerData["integration"].(float64)), *customer.Integration, "integration should match for customer %d", i)
-		assert.Equal(t, customerData["domain"], customer.Domain, "domain should match for customer %d", i)
-		assert.Equal(t, customerData["customer_code"], customer.CustomerCode, "customer_code should match for customer %d", i)
-		assert.Equal(t, uint64(customerData["id"].(float64)), customer.ID, "id should match for customer %d", i)
-		assert.Equal(t, customerData["risk_action"], customer.RiskAction, "risk_action should match for customer %d", i)
+		assert.Equal(t, customerData["email"], customer.Email.String(), "email should match for customer %d", i)
+		assert.Equal(t, int(customerData["integration"].(float64)), int(customer.Integration.Int), "integration should match for customer %d", i)
+		assert.Equal(t, customerData["domain"], customer.Domain.String(), "domain should match for customer %d", i)
+		assert.Equal(t, customerData["customer_code"], customer.CustomerCode.String(), "customer_code should match for customer %d", i)
+		assert.Equal(t, uint64(customerData["id"].(float64)), customer.ID.Uint64(), "id should match for customer %d", i)
+		assert.Equal(t, customerData["risk_action"], customer.RiskAction.String(), "risk_action should match for customer %d", i)
 
 		// Handle nullable fields
 		if customerData["first_name"] == nil {
-			assert.Nil(t, customer.FirstName, "first_name should be nil for customer %d", i)
+			assert.False(t, customer.FirstName.Valid, "first_name should be invalid for customer %d", i)
 		} else {
-			assert.Equal(t, customerData["first_name"], *customer.FirstName, "first_name should match for customer %d", i)
+			assert.Equal(t, customerData["first_name"], customer.FirstName.String(), "first_name should match for customer %d", i)
 		}
 
 		if customerData["last_name"] == nil {
-			assert.Nil(t, customer.LastName, "last_name should be nil for customer %d", i)
+			assert.False(t, customer.LastName.Valid, "last_name should be invalid for customer %d", i)
 		} else {
-			assert.Equal(t, customerData["last_name"], *customer.LastName, "last_name should match for customer %d", i)
+			assert.Equal(t, customerData["last_name"], customer.LastName.String(), "last_name should match for customer %d", i)
 		}
 
 		if customerData["phone"] == nil {
-			assert.Nil(t, customer.Phone, "phone should be nil for customer %d", i)
+			assert.False(t, customer.Phone.Valid, "phone should be invalid for customer %d", i)
 		} else {
-			assert.Equal(t, customerData["phone"], *customer.Phone, "phone should match for customer %d", i)
+			assert.Equal(t, customerData["phone"], customer.Phone.String(), "phone should match for customer %d", i)
 		}
 
 		// Handle metadata - null or empty object in JSON becomes empty struct
 		if customerData["metadata"] == nil {
-			assert.Equal(t, map[string]any{}, map[string]any(customer.Metadata), "metadata should be empty for null for customer %d", i)
+			assert.False(t, customer.Metadata.Valid, "metadata should be invalid for null for customer %d", i)
 		} else {
-			assert.Equal(t, customerData["metadata"], map[string]any(customer.Metadata), "metadata should match for customer %d", i)
+			assert.True(t, customer.Metadata.Valid, "metadata should be valid for customer %d", i)
+			assert.Equal(t, customerData["metadata"], map[string]any(customer.Metadata.Metadata), "metadata should match for customer %d", i)
 		}
 
 		// For timestamp comparisons, parse both and compare the actual time values
 		expectedCreatedAt, err := time.Parse(time.RFC3339, customerData["createdAt"].(string))
 		require.NoError(t, err, "should parse expected createdAt for customer %d", i)
-		assert.True(t, expectedCreatedAt.Equal(customer.CreatedAt.Time), "createdAt should represent the same moment for customer %d", i)
+		assert.True(t, expectedCreatedAt.Equal(customer.CreatedAt.Time()), "createdAt should represent the same moment for customer %d", i)
 
 		expectedUpdatedAt, err := time.Parse(time.RFC3339, customerData["updatedAt"].(string))
 		require.NoError(t, err, "should parse expected updatedAt for customer %d", i)
-		assert.True(t, expectedUpdatedAt.Equal(customer.UpdatedAt.Time), "updatedAt should represent the same moment for customer %d", i)
+		assert.True(t, expectedUpdatedAt.Equal(customer.UpdatedAt.Time()), "updatedAt should represent the same moment for customer %d", i)
 	}
 
 	// Validate meta object if present

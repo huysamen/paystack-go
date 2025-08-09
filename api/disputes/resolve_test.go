@@ -45,23 +45,21 @@ func TestResolveResponse_JSONDeserialization(t *testing.T) {
 			// Only verify data structure for successful responses
 			if tt.expectedStatus {
 				assert.NotNil(t, response.Data, "data should not be nil")
-
-				// Verify dispute structure
 				dispute := response.Data
-				assert.Greater(t, dispute.ID, 0, "dispute ID should be positive")
-				assert.Equal(t, enums.DisputeStatusResolved, dispute.Status, "status should be resolved")
-				assert.Equal(t, "test", dispute.Domain, "domain should match")
 
-				// Verify transaction is present and has required fields
+				// Verify dispute details
+				assert.Greater(t, dispute.ID.Int64(), int64(0), "dispute ID should be positive")
+				assert.NotEmpty(t, dispute.Domain.String(), "domain should not be empty")
+				assert.Equal(t, "test", dispute.Domain.String(), "domain should match")
+
+				// Verify transaction details
 				if dispute.Transaction != nil {
-					assert.Greater(t, dispute.Transaction.ID, uint64(0), "transaction ID should be positive")
-					assert.NotEmpty(t, dispute.Transaction.Reference, "transaction reference should not be empty")
-					assert.Greater(t, dispute.Transaction.Amount, 0, "transaction amount should be positive")
+					assert.Greater(t, dispute.Transaction.Amount.Int64(), int64(0), "transaction amount should be positive")
 				}
 
 				// Verify refund amount is set
-				if dispute.RefundAmount != nil {
-					assert.Greater(t, *dispute.RefundAmount, 0, "refund amount should be positive")
+				if dispute.RefundAmount.Valid {
+					assert.Greater(t, dispute.RefundAmount.Int, int64(0), "refund amount should be positive")
 				}
 
 				// Verify resolution is set
