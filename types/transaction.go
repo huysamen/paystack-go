@@ -12,7 +12,7 @@ type Transaction struct {
 	Status             string              `json:"status"`
 	Reference          string              `json:"reference"`
 	Amount             int                 `json:"amount"`
-	Message            *string             `json:"message"`
+	Message            data.NullString     `json:"message"`
 	GatewayResponse    string              `json:"gateway_response"`
 	PaidAt             *data.MultiDateTime `json:"paid_at,omitempty"`
 	CreatedAt          data.MultiDateTime  `json:"created_at"`
@@ -28,7 +28,7 @@ type Transaction struct {
 	Plan               *Plan               `json:"plan,omitempty"`
 	Split              *TransactionSplit   `json:"split,omitempty"`
 	Subaccount         *Subaccount         `json:"subaccount,omitempty"`
-	OrderID            *string             `json:"order_id,omitempty"`
+	OrderID            data.NullString     `json:"order_id,omitempty"`
 	RequestedAmount    int                 `json:"requested_amount"`
 	Source             *TransactionSource  `json:"source,omitempty"`
 	Connect            *ConnectData        `json:"connect,omitempty"`
@@ -71,24 +71,24 @@ type FeesSplitParams struct {
 
 // TransactionSource represents the source of a transaction
 type TransactionSource struct {
-	Source     string  `json:"source"`
-	Type       string  `json:"type"`
-	Identifier *string `json:"identifier"`
-	EntryPoint string  `json:"entry_point"`
+	Source     string          `json:"source"`
+	Type       string          `json:"type"`
+	Identifier data.NullString `json:"identifier"`
+	EntryPoint string          `json:"entry_point"`
 }
 
 // ConnectData represents connect-related transaction data
 type ConnectData struct {
-	ConnectAccountID *string `json:"connect_account_id,omitempty"`
-	Provider         *string `json:"provider,omitempty"`
-	ExternalID       *string `json:"external_id,omitempty"`
+	ConnectAccountID data.NullString `json:"connect_account_id,omitempty"`
+	Provider         data.NullString `json:"provider,omitempty"`
+	ExternalID       data.NullString `json:"external_id,omitempty"`
 }
 
 // POSTransactionData represents point-of-sale transaction data
 type POSTransactionData struct {
 	// Define POS-specific fields based on actual API responses
-	TerminalID  *string `json:"terminal_id,omitempty"`
-	ReceiptData *string `json:"receipt_data,omitempty"`
+	TerminalID  data.NullString `json:"terminal_id,omitempty"`
+	ReceiptData data.NullString `json:"receipt_data,omitempty"`
 }
 
 // TransactionInitializeRequest represents a request to initialize a transaction
@@ -96,15 +96,15 @@ type TransactionInitializeRequest struct {
 	Email             string          `json:"email"`
 	Amount            int             `json:"amount"`
 	Currency          *enums.Currency `json:"currency,omitempty"`
-	Reference         *string         `json:"reference,omitempty"`
-	CallbackURL       *string         `json:"callback_url,omitempty"`
-	Plan              *string         `json:"plan,omitempty"`
-	InvoiceLimit      *int            `json:"invoice_limit,omitempty"`
+	Reference         data.NullString `json:"reference,omitempty"`
+	CallbackURL       data.NullString `json:"callback_url,omitempty"`
+	Plan              data.NullString `json:"plan,omitempty"`
+	InvoiceLimit      data.NullInt    `json:"invoice_limit,omitempty"`
 	Metadata          Metadata        `json:"metadata,omitempty"`
 	Channels          []enums.Channel `json:"channels,omitempty"`
-	SplitCode         *string         `json:"split_code,omitempty"`
-	SubaccountCode    *string         `json:"subaccount,omitempty"`
-	TransactionCharge *int            `json:"transaction_charge,omitempty"`
+	SplitCode         data.NullString `json:"split_code,omitempty"`
+	SubaccountCode    data.NullString `json:"subaccount,omitempty"`
+	TransactionCharge data.NullInt    `json:"transaction_charge,omitempty"`
 	Bearer            *enums.Bearer   `json:"bearer,omitempty"`
 }
 

@@ -5,11 +5,11 @@ import "github.com/huysamen/paystack-go/types/data"
 // Customer represents a Paystack customer
 type Customer struct {
 	ID           uint64             `json:"id"`
-	Integration  *int               `json:"integration,omitempty"`
-	FirstName    *string            `json:"first_name"`
-	LastName     *string            `json:"last_name"`
+	Integration  data.NullInt       `json:"integration,omitempty"`
+	FirstName    data.NullString    `json:"first_name"`
+	LastName     data.NullString    `json:"last_name"`
 	Email        string             `json:"email"`
-	Phone        *string            `json:"phone"`
+	Phone        data.NullString    `json:"phone"`
 	Metadata     Metadata           `json:"metadata"`
 	Domain       string             `json:"domain"`
 	CustomerCode string             `json:"customer_code"`

@@ -8,20 +8,20 @@ import (
 // Dispute represents a dispute
 type Dispute struct {
 	ID                           int                      `json:"id"`
-	RefundAmount                 *int                     `json:"refund_amount"`
+	RefundAmount                 data.NullInt             `json:"refund_amount"`
 	Currency                     *enums.Currency          `json:"currency"`
 	Status                       enums.DisputeStatus      `json:"status"`
 	Resolution                   *enums.DisputeResolution `json:"resolution"`
 	Domain                       string                   `json:"domain"`
 	Transaction                  *Transaction             `json:"transaction"`
-	TransactionReference         *string                  `json:"transaction_reference"`
-	MerchantTransactionReference *string                  `json:"merchant_transaction_reference"`
+	TransactionReference         data.NullString          `json:"transaction_reference"`
+	MerchantTransactionReference data.NullString          `json:"merchant_transaction_reference"`
 	Source                       *enums.DisputeSource     `json:"source"`
 	Category                     *enums.DisputeCategory   `json:"category"`
-	Note                         *string                  `json:"note"`
-	Attachments                  *string                  `json:"attachments"`
-	LastFour                     *string                  `json:"last4"`
-	BIN                          *string                  `json:"bin"`
+	Note                         data.NullString          `json:"note"`
+	Attachments                  data.NullString          `json:"attachments"`
+	LastFour                     data.NullString          `json:"last4"`
+	BIN                          data.NullString          `json:"bin"`
 	Customer                     *Customer                `json:"customer"`
 	CreatedAt                    data.MultiDateTime       `json:"createdAt"`
 	UpdatedAt                    data.MultiDateTime       `json:"updatedAt"`
@@ -39,7 +39,7 @@ type Evidence struct {
 	CustomerName    string              `json:"customer_name"`
 	CustomerPhone   string              `json:"customer_phone"`
 	ServiceDetails  string              `json:"service_details"`
-	DeliveryAddress *string             `json:"delivery_address"`
+	DeliveryAddress data.NullString     `json:"delivery_address"`
 	DeliveryDate    *data.MultiDateTime `json:"delivery_date"`
 	Dispute         int                 `json:"dispute"`
 	CreatedAt       data.MultiDateTime  `json:"created_at"`

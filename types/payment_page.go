@@ -1,6 +1,9 @@
 package types
-import "github.com/huysamen/paystack-go/types/data"
-import "github.com/huysamen/paystack-go/enums"
+
+import (
+	"github.com/huysamen/paystack-go/enums"
+	"github.com/huysamen/paystack-go/types/data"
+)
 
 // CustomFilters represents filters for customizing payment options
 type CustomFilters struct {
@@ -12,30 +15,30 @@ type CustomFilters struct {
 
 // PaymentPage represents a payment page
 type PaymentPage struct {
-	ID                int            `json:"id"`
-	Integration       int            `json:"integration"`
-	Domain            string         `json:"domain"`
-	Name              string         `json:"name"`
-	Description       *string        `json:"description,omitempty"`
-	Amount            *int           `json:"amount,omitempty"`
-	Currency          enums.Currency `json:"currency"`
-	Slug              string         `json:"slug"`
-	Type              *string        `json:"type,omitempty"`
-	FixedAmount       *bool          `json:"fixed_amount,omitempty"`
-	RedirectURL       *string        `json:"redirect_url,omitempty"`
-	SuccessMessage    *string        `json:"success_message,omitempty"`
-	NotificationEmail *string        `json:"notification_email,omitempty"`
-	CollectPhone      *bool          `json:"collect_phone,omitempty"`
-	Active            bool           `json:"active"`
-	Published         *bool          `json:"published,omitempty"`
-	Migrate           *bool          `json:"migrate,omitempty"`
-	CustomFields      []CustomField  `json:"custom_fields,omitempty"`
-	SplitCode         *string        `json:"split_code,omitempty"`
-	Plan              *int           `json:"plan,omitempty"`
-	Products          []PageProduct  `json:"products,omitempty"`
-	Metadata          *Metadata      `json:"metadata,omitempty"`
-	CreatedAt         data.MultiDateTime       `json:"createdAt,omitempty"`
-	UpdatedAt         data.MultiDateTime       `json:"updatedAt,omitempty"`
+	ID                int                `json:"id"`
+	Integration       int                `json:"integration"`
+	Domain            string             `json:"domain"`
+	Name              string             `json:"name"`
+	Description       data.NullString    `json:"description,omitempty"`
+	Amount            data.NullInt       `json:"amount,omitempty"`
+	Currency          enums.Currency     `json:"currency"`
+	Slug              string             `json:"slug"`
+	Type              data.NullString    `json:"type,omitempty"`
+	FixedAmount       data.NullBool      `json:"fixed_amount,omitempty"`
+	RedirectURL       data.NullString    `json:"redirect_url,omitempty"`
+	SuccessMessage    data.NullString    `json:"success_message,omitempty"`
+	NotificationEmail data.NullString    `json:"notification_email,omitempty"`
+	CollectPhone      data.NullBool      `json:"collect_phone,omitempty"`
+	Active            bool               `json:"active"`
+	Published         data.NullBool      `json:"published,omitempty"`
+	Migrate           data.NullBool      `json:"migrate,omitempty"`
+	CustomFields      []CustomField      `json:"custom_fields,omitempty"`
+	SplitCode         data.NullString    `json:"split_code,omitempty"`
+	Plan              data.NullInt       `json:"plan,omitempty"`
+	Products          []PageProduct      `json:"products,omitempty"`
+	Metadata          *Metadata          `json:"metadata,omitempty"`
+	CreatedAt         data.MultiDateTime `json:"createdAt,omitempty"`
+	UpdatedAt         data.MultiDateTime `json:"updatedAt,omitempty"`
 }
 
 // PageProduct represents a product within a payment page

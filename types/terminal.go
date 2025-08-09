@@ -1,17 +1,20 @@
 package types
 
-import "github.com/huysamen/paystack-go/enums"
+import (
+	"github.com/huysamen/paystack-go/enums"
+	"github.com/huysamen/paystack-go/types/data"
+)
 
 // Terminal represents a Paystack terminal device
 type Terminal struct {
 	ID           uint64               `json:"id"`
 	SerialNumber string               `json:"serial_number"`
-	DeviceMake   *string              `json:"device_make"`
+	DeviceMake   data.NullString      `json:"device_make"`
 	TerminalID   string               `json:"terminal_id"`
 	Integration  uint64               `json:"integration"`
 	Domain       string               `json:"domain"`
 	Name         string               `json:"name"`
-	Address      *string              `json:"address"`
+	Address      data.NullString      `json:"address"`
 	Status       enums.TerminalStatus `json:"status"`
 }
 

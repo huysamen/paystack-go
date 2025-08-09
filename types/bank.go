@@ -12,7 +12,7 @@ type Bank struct {
 	Slug        string             `json:"slug"`
 	Code        string             `json:"code"`
 	LongCode    string             `json:"longcode"`
-	Gateway     *string            `json:"gateway"`
+	Gateway     data.NullString    `json:"gateway"`
 	PayWithBank bool               `json:"pay_with_bank"`
 	Active      bool               `json:"active"`
 	IsDeleted   bool               `json:"is_deleted"`

@@ -17,12 +17,12 @@ type Authorization struct {
 	Brand                     string           `json:"brand"`
 	Bank                      string           `json:"bank"`
 	CountryCode               string           `json:"country_code"`
-	CountryName               *string          `json:"country_name,omitempty"`
+	CountryName               data.NullString  `json:"country_name,omitempty"`
 	Reusable                  bool             `json:"reusable"`
 	Signature                 string           `json:"signature"`
-	AccountName               *string          `json:"account_name"`
-	ReceiverBankAccountNumber *string          `json:"receiver_bank_account_number,omitempty"`
-	ReceiverBank              *string          `json:"receiver_bank,omitempty"`
+	AccountName               data.NullString  `json:"account_name"`
+	ReceiverBankAccountNumber data.NullString  `json:"receiver_bank_account_number,omitempty"`
+	ReceiverBank              data.NullString  `json:"receiver_bank,omitempty"`
 }
 
 // MandateAuthorization represents a mandate authorization
@@ -37,6 +37,6 @@ type MandateAuthorization struct {
 	BankCode          string                           `json:"bank_code"`
 	BankName          string                           `json:"bank_name"`
 	CustomerCode      string                           `json:"customer_code"`
-	CreatedAt         data.MultiDateTime                         `json:"created_at"`
-	UpdatedAt         data.MultiDateTime                         `json:"updated_at"`
+	CreatedAt         data.MultiDateTime               `json:"created_at"`
+	UpdatedAt         data.MultiDateTime               `json:"updated_at"`
 }

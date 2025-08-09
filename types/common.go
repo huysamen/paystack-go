@@ -16,13 +16,13 @@ type Response[T any] struct {
 
 // Meta represents pagination and other metadata
 type Meta struct {
-	Next      *string `json:"next,omitempty"`
-	Previous  *string `json:"previous,omitempty"`
-	PerPage   int     `json:"perPage,omitempty"`
-	Total     *int    `json:"total,omitempty"`
-	Skipped   *int    `json:"skipped,omitempty"`
-	Page      *int    `json:"page,omitempty"`
-	PageCount *int    `json:"pageCount,omitempty"`
+	Next      data.NullString `json:"next,omitempty"`
+	Previous  data.NullString `json:"previous,omitempty"`
+	PerPage   int             `json:"perPage,omitempty"`
+	Total     data.NullInt    `json:"total,omitempty"`
+	Skipped   data.NullInt    `json:"skipped,omitempty"`
+	Page      data.NullInt    `json:"page,omitempty"`
+	PageCount data.NullInt    `json:"pageCount,omitempty"`
 }
 
 // UnmarshalJSON implements custom JSON unmarshaling to handle both perPage and per_page field names
