@@ -15,30 +15,30 @@ type CustomFilters struct {
 
 // PaymentPage represents a payment page
 type PaymentPage struct {
-	ID                data.Int           `json:"id"`
-	Integration       data.Int           `json:"integration"`
-	Domain            data.String        `json:"domain"`
-	Name              data.String        `json:"name"`
-	Description       data.NullString    `json:"description,omitempty"`
-	Amount            data.NullInt       `json:"amount,omitempty"`
-	Currency          enums.Currency     `json:"currency"`
-	Slug              data.String        `json:"slug"`
-	Type              data.NullString    `json:"type,omitempty"`
-	FixedAmount       data.NullBool      `json:"fixed_amount,omitempty"`
-	RedirectURL       data.NullString    `json:"redirect_url,omitempty"`
-	SuccessMessage    data.NullString    `json:"success_message,omitempty"`
-	NotificationEmail data.NullString    `json:"notification_email,omitempty"`
-	CollectPhone      data.NullBool      `json:"collect_phone,omitempty"`
-	Active            data.Bool          `json:"active"`
-	Published         data.NullBool      `json:"published,omitempty"`
-	Migrate           data.NullBool      `json:"migrate,omitempty"`
-	CustomFields      []CustomField      `json:"custom_fields,omitempty"`
-	SplitCode         data.NullString    `json:"split_code,omitempty"`
-	Plan              data.NullInt       `json:"plan,omitempty"`
-	Products          []PageProduct      `json:"products,omitempty"`
-	Metadata          *Metadata          `json:"metadata,omitempty"`
-	CreatedAt         data.MultiDateTime `json:"createdAt,omitempty"`
-	UpdatedAt         data.MultiDateTime `json:"updatedAt,omitempty"`
+	ID                data.Int        `json:"id"`
+	Integration       data.Int        `json:"integration"`
+	Domain            data.String     `json:"domain"`
+	Name              data.String     `json:"name"`
+	Description       data.NullString `json:"description,omitempty"`
+	Amount            data.NullInt    `json:"amount,omitempty"`
+	Currency          enums.Currency  `json:"currency"`
+	Slug              data.String     `json:"slug"`
+	Type              data.NullString `json:"type,omitempty"`
+	FixedAmount       data.NullBool   `json:"fixed_amount,omitempty"`
+	RedirectURL       data.NullString `json:"redirect_url,omitempty"`
+	SuccessMessage    data.NullString `json:"success_message,omitempty"`
+	NotificationEmail data.NullString `json:"notification_email,omitempty"`
+	CollectPhone      data.NullBool   `json:"collect_phone,omitempty"`
+	Active            data.Bool       `json:"active"`
+	Published         data.NullBool   `json:"published,omitempty"`
+	Migrate           data.NullBool   `json:"migrate,omitempty"`
+	CustomFields      []CustomField   `json:"custom_fields,omitempty"`
+	SplitCode         data.NullString `json:"split_code,omitempty"`
+	Plan              data.NullInt    `json:"plan,omitempty"`
+	Products          []PageProduct   `json:"products,omitempty"`
+	Metadata          *Metadata       `json:"metadata,omitempty"`
+	CreatedAt         data.NullTime   `json:"createdAt,omitempty"`
+	UpdatedAt         data.NullTime   `json:"updatedAt,omitempty"`
 }
 
 // PageProduct represents a product within a payment page

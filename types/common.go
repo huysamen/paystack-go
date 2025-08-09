@@ -8,10 +8,10 @@ import (
 
 // Response represents the standard Paystack API response wrapper
 type Response[T any] struct {
-	Status  data.MultiBool `json:"status"`
-	Message string         `json:"message"`
-	Data    T              `json:"data"`
-	Meta    *Meta          `json:"meta,omitempty"`
+	Status  data.Bool `json:"status"`
+	Message string    `json:"message"`
+	Data    T         `json:"data"`
+	Meta    *Meta     `json:"meta,omitempty"`
 }
 
 // Meta represents pagination and other metadata

@@ -14,12 +14,12 @@ type DedicatedVirtualAccountBank struct {
 
 // DedicatedVirtualAccountAssignment represents the assignment details of a dedicated virtual account
 type DedicatedVirtualAccountAssignment struct {
-	Integration  data.Int           `json:"integration"`
-	AssigneeID   data.Int           `json:"assignee_id"`
-	AssigneeType data.String        `json:"assignee_type"`
-	Expired      data.Bool          `json:"expired"`
-	AccountType  data.String        `json:"account_type"`
-	AssignedAt   data.MultiDateTime `json:"assigned_at"`
+	Integration  data.Int    `json:"integration"`
+	AssigneeID   data.Int    `json:"assignee_id"`
+	AssigneeType data.String `json:"assignee_type"`
+	Expired      data.Bool   `json:"expired"`
+	AccountType  data.String `json:"account_type"`
+	AssignedAt   data.Time   `json:"assigned_at"`
 }
 
 // DedicatedVirtualAccount represents a dedicated virtual account
@@ -34,7 +34,7 @@ type DedicatedVirtualAccount struct {
 	Bank          DedicatedVirtualAccountBank        `json:"bank"`
 	Customer      *Customer                          `json:"customer,omitempty"`
 	Assignment    *DedicatedVirtualAccountAssignment `json:"assignment,omitempty"`
-	CreatedAt     data.MultiDateTime                 `json:"created_at,omitempty"`
-	UpdatedAt     data.MultiDateTime                 `json:"updated_at,omitempty"`
+	CreatedAt     data.Time                          `json:"created_at,omitempty"`
+	UpdatedAt     data.Time                          `json:"updated_at,omitempty"`
 	SplitConfig   *Metadata                          `json:"split_config,omitempty"`
 }

@@ -20,10 +20,10 @@ type Refund struct {
 	FullyDeducted  data.Bool            `json:"fully_deducted"`
 	Status         enums.RefundStatus   `json:"status"`
 	RefundedBy     data.String          `json:"refunded_by"`
-	RefundedAt     *data.MultiDateTime  `json:"refunded_at"`
-	ExpectedAt     *data.MultiDateTime  `json:"expected_at"`
-	CreatedAt      data.MultiDateTime   `json:"createdAt"`
-	UpdatedAt      data.MultiDateTime   `json:"updatedAt"`
+	RefundedAt     data.NullTime        `json:"refunded_at"`
+	ExpectedAt     data.NullTime        `json:"expected_at"`
+	CreatedAt      data.Time            `json:"createdAt"`
+	UpdatedAt      data.Time            `json:"updatedAt"`
 	CustomerNote   data.NullString      `json:"customer_note"`
 	MerchantNote   data.NullString      `json:"merchant_note"`
 }

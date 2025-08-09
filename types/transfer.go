@@ -7,42 +7,42 @@ import (
 
 // Transfer represents a Paystack transfer
 type Transfer struct {
-	ID            data.Int            `json:"id"`
-	Integration   data.Int            `json:"integration"`
-	Domain        data.String         `json:"domain"`
-	Amount        data.Int            `json:"amount"`
-	Currency      enums.Currency      `json:"currency"`
-	Source        data.String         `json:"source"`
-	SourceDetails *Metadata           `json:"source_details"`
-	Reason        data.String         `json:"reason"`
-	Status        data.String         `json:"status"`
-	Failures      *Metadata           `json:"failures"`
-	TransferCode  data.String         `json:"transfer_code"`
-	TitanCode     data.NullString     `json:"titan_code"`
-	TransferredAt *data.MultiDateTime `json:"transferred_at,omitempty"`
-	Reference     data.String         `json:"reference"`
-	Recipient     Recipient           `json:"recipient"`
-	CreatedAt     data.MultiDateTime  `json:"createdAt"`
-	UpdatedAt     data.MultiDateTime  `json:"updatedAt"`
+	ID            data.Int        `json:"id"`
+	Integration   data.Int        `json:"integration"`
+	Domain        data.String     `json:"domain"`
+	Amount        data.Int        `json:"amount"`
+	Currency      enums.Currency  `json:"currency"`
+	Source        data.String     `json:"source"`
+	SourceDetails *Metadata       `json:"source_details"`
+	Reason        data.String     `json:"reason"`
+	Status        data.String     `json:"status"`
+	Failures      *Metadata       `json:"failures"`
+	TransferCode  data.String     `json:"transfer_code"`
+	TitanCode     data.NullString `json:"titan_code"`
+	TransferredAt data.NullTime   `json:"transferred_at,omitempty"`
+	Reference     data.String     `json:"reference"`
+	Recipient     Recipient       `json:"recipient"`
+	CreatedAt     data.Time       `json:"createdAt"`
+	UpdatedAt     data.Time       `json:"updatedAt"`
 }
 
 // Recipient represents a transfer recipient
 type Recipient struct {
-	ID            data.Int           `json:"id"`
-	Integration   data.Int           `json:"integration"`
-	Domain        data.String        `json:"domain"`
-	Type          data.String        `json:"type"`
-	Currency      enums.Currency     `json:"currency"`
-	Name          data.String        `json:"name"`
-	Details       RecipientDetails   `json:"details"`
-	Description   data.String        `json:"description"`
-	Metadata      *Metadata          `json:"metadata"`
-	RecipientCode data.String        `json:"recipient_code"`
-	Active        data.Bool          `json:"active"`
-	Email         data.NullString    `json:"email"`
-	IsDeleted     data.Bool          `json:"is_deleted"`
-	CreatedAt     data.MultiDateTime `json:"createdAt"`
-	UpdatedAt     data.MultiDateTime `json:"updatedAt"`
+	ID            data.Int         `json:"id"`
+	Integration   data.Int         `json:"integration"`
+	Domain        data.String      `json:"domain"`
+	Type          data.String      `json:"type"`
+	Currency      enums.Currency   `json:"currency"`
+	Name          data.String      `json:"name"`
+	Details       RecipientDetails `json:"details"`
+	Description   data.String      `json:"description"`
+	Metadata      *Metadata        `json:"metadata"`
+	RecipientCode data.String      `json:"recipient_code"`
+	Active        data.Bool        `json:"active"`
+	Email         data.NullString  `json:"email"`
+	IsDeleted     data.Bool        `json:"is_deleted"`
+	CreatedAt     data.Time        `json:"createdAt"`
+	UpdatedAt     data.Time        `json:"updatedAt"`
 }
 
 // RecipientDetails represents recipient account details
@@ -62,17 +62,17 @@ type Balance struct {
 
 // BalanceLedger represents a balance ledger entry
 type BalanceLedger struct {
-	Integration      data.Int           `json:"integration"`
-	Domain           data.String        `json:"domain"`
-	Balance          data.Int           `json:"balance"`
-	Currency         data.String        `json:"currency"`
-	Difference       data.Int           `json:"difference"`
-	Reason           data.String        `json:"reason"`
-	ModelResponsible data.String        `json:"model_responsible"`
-	ModelRow         data.Int           `json:"model_row"`
-	ID               data.Int           `json:"id"`
-	CreatedAt        data.MultiDateTime `json:"createdAt"`
-	UpdatedAt        data.MultiDateTime `json:"updatedAt"`
+	Integration      data.Int    `json:"integration"`
+	Domain           data.String `json:"domain"`
+	Balance          data.Int    `json:"balance"`
+	Currency         data.String `json:"currency"`
+	Difference       data.Int    `json:"difference"`
+	Reason           data.String `json:"reason"`
+	ModelResponsible data.String `json:"model_responsible"`
+	ModelRow         data.Int    `json:"model_row"`
+	ID               data.Int    `json:"id"`
+	CreatedAt        data.Time   `json:"createdAt"`
+	UpdatedAt        data.Time   `json:"updatedAt"`
 }
 
 // BulkRecipientItem represents a recipient item for bulk creation

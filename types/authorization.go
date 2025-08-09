@@ -7,22 +7,22 @@ import (
 
 // Authorization represents a payment authorization
 type Authorization struct {
-	AuthorizationCode         data.String      `json:"authorization_code"`
-	Bin                       data.String      `json:"bin"`
-	Last4                     data.String      `json:"last4"`
-	ExpMonth                  data.MultiString `json:"exp_month"`
-	ExpYear                   data.MultiString `json:"exp_year"`
-	Channel                   enums.Channel    `json:"channel"`
-	CardType                  data.String      `json:"card_type"`
-	Brand                     data.String      `json:"brand"`
-	Bank                      data.String      `json:"bank"`
-	CountryCode               data.String      `json:"country_code"`
-	CountryName               data.NullString  `json:"country_name,omitempty"`
-	Reusable                  data.Bool        `json:"reusable"`
-	Signature                 data.String      `json:"signature"`
-	AccountName               data.NullString  `json:"account_name"`
-	ReceiverBankAccountNumber data.NullString  `json:"receiver_bank_account_number,omitempty"`
-	ReceiverBank              data.NullString  `json:"receiver_bank,omitempty"`
+	AuthorizationCode         data.String     `json:"authorization_code"`
+	Bin                       data.String     `json:"bin"`
+	Last4                     data.String     `json:"last4"`
+	ExpMonth                  data.String     `json:"exp_month"`
+	ExpYear                   data.String     `json:"exp_year"`
+	Channel                   enums.Channel   `json:"channel"`
+	CardType                  data.String     `json:"card_type"`
+	Brand                     data.String     `json:"brand"`
+	Bank                      data.String     `json:"bank"`
+	CountryCode               data.String     `json:"country_code"`
+	CountryName               data.NullString `json:"country_name,omitempty"`
+	Reusable                  data.Bool       `json:"reusable"`
+	Signature                 data.String     `json:"signature"`
+	AccountName               data.NullString `json:"account_name"`
+	ReceiverBankAccountNumber data.NullString `json:"receiver_bank_account_number,omitempty"`
+	ReceiverBank              data.NullString `json:"receiver_bank,omitempty"`
 }
 
 // MandateAuthorization represents a mandate authorization
@@ -37,6 +37,6 @@ type MandateAuthorization struct {
 	BankCode          data.String                      `json:"bank_code"`
 	BankName          data.String                      `json:"bank_name"`
 	CustomerCode      data.String                      `json:"customer_code"`
-	CreatedAt         data.MultiDateTime               `json:"created_at"`
-	UpdatedAt         data.MultiDateTime               `json:"updated_at"`
+	CreatedAt         data.Time                        `json:"created_at"`
+	UpdatedAt         data.Time                        `json:"updated_at"`
 }

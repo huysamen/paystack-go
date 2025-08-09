@@ -23,10 +23,10 @@ type Dispute struct {
 	LastFour                     data.NullString          `json:"last4"`
 	BIN                          data.NullString          `json:"bin"`
 	Customer                     *Customer                `json:"customer"`
-	CreatedAt                    data.MultiDateTime       `json:"createdAt"`
-	UpdatedAt                    data.MultiDateTime       `json:"updatedAt"`
-	DueAt                        *data.MultiDateTime      `json:"dueAt"`
-	ResolvedAt                   *data.MultiDateTime      `json:"resolvedAt"`
+	CreatedAt                    data.Time                `json:"createdAt"`
+	UpdatedAt                    data.Time                `json:"updatedAt"`
+	DueAt                        data.NullTime            `json:"dueAt"`
+	ResolvedAt                   data.NullTime            `json:"resolvedAt"`
 	Evidence                     *Evidence                `json:"evidence"`
 	Messages                     []DisputeMessage         `json:"messages"`
 	History                      []DisputeHistory         `json:"history"`
@@ -34,27 +34,27 @@ type Dispute struct {
 
 // Evidence represents dispute evidence
 type Evidence struct {
-	ID              data.Int            `json:"id"`
-	CustomerEmail   data.String         `json:"customer_email"`
-	CustomerName    data.String         `json:"customer_name"`
-	CustomerPhone   data.String         `json:"customer_phone"`
-	ServiceDetails  data.String         `json:"service_details"`
-	DeliveryAddress data.NullString     `json:"delivery_address"`
-	DeliveryDate    *data.MultiDateTime `json:"delivery_date"`
-	Dispute         data.Int            `json:"dispute"`
-	CreatedAt       data.MultiDateTime  `json:"created_at"`
-	UpdatedAt       data.MultiDateTime  `json:"updated_at"`
+	ID              data.Int        `json:"id"`
+	CustomerEmail   data.String     `json:"customer_email"`
+	CustomerName    data.String     `json:"customer_name"`
+	CustomerPhone   data.String     `json:"customer_phone"`
+	ServiceDetails  data.String     `json:"service_details"`
+	DeliveryAddress data.NullString `json:"delivery_address"`
+	DeliveryDate    data.NullTime   `json:"delivery_date"`
+	Dispute         data.Int        `json:"dispute"`
+	CreatedAt       data.Time       `json:"created_at"`
+	UpdatedAt       data.Time       `json:"updated_at"`
 }
 
 // DisputeMessage represents a dispute message
 type DisputeMessage struct {
-	ID        data.Int           `json:"id"`
-	Sender    data.String        `json:"sender"`
-	Body      data.String        `json:"body"`
-	Dispute   data.Int           `json:"dispute"`
-	IsDeleted data.MultiBool     `json:"is_deleted"`
-	CreatedAt data.MultiDateTime `json:"created_at"`
-	UpdatedAt data.MultiDateTime `json:"updated_at"`
+	ID        data.Int    `json:"id"`
+	Sender    data.String `json:"sender"`
+	Body      data.String `json:"body"`
+	Dispute   data.Int    `json:"dispute"`
+	IsDeleted data.Bool   `json:"is_deleted"`
+	CreatedAt data.Time   `json:"created_at"`
+	UpdatedAt data.Time   `json:"updated_at"`
 }
 
 // DisputeHistory represents dispute history
@@ -63,6 +63,6 @@ type DisputeHistory struct {
 	Dispute   data.Int            `json:"dispute"`
 	Status    enums.DisputeStatus `json:"status"`
 	By        data.String         `json:"by"`
-	CreatedAt data.MultiDateTime  `json:"created_at"`
-	UpdatedAt data.MultiDateTime  `json:"updated_at"`
+	CreatedAt data.Time           `json:"created_at"`
+	UpdatedAt data.Time           `json:"updated_at"`
 }
