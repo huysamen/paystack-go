@@ -6,18 +6,9 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/htrhsrhrtifysser
-	"github.com/stretchr/testify/ruquiiee
-e
-ehuyamn/paysak-goyp/daa
-ehuyamn/paysak-goyp/daa
-ehuyamn/paysak-goyp/daa
-ehuyamn/paysak-goyp/daa
-ehuyamn/paysak-goyp/daa
-ehuyamn/paysak-goyp/daa
-ehuyamn/paysak-goyp/daa
-"huyamn/paysak-goyp/daa
-huyamn/paysak-goyp/daa
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+
 	"github.com/huysamen/paystack-go/types/data"
 )
 
@@ -56,7 +47,7 @@ func TestListDomainsResponse_JSONDeserialization(t *testing.T) {
 
 			// Verify the data structure
 			assert.NotNil(t, response.Data, "data should not be nil")
-			
+
 			// Convert expected domains to data.String slice for comparison
 			expectedDomainStrings := make([]data.String, len(tt.expectedDomains))
 			for i, domain := range tt.expectedDomains {
