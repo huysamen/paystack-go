@@ -6,6 +6,7 @@ import (
 	"github.com/huysamen/paystack-go/enums"
 	"github.com/huysamen/paystack-go/net"
 	"github.com/huysamen/paystack-go/types"
+	"github.com/huysamen/paystack-go/types/data"
 )
 
 type bulkRequest struct {
@@ -57,12 +58,12 @@ func (b *BulkRequestBuilder) Build() *bulkRequest {
 }
 
 type BulkResponseData struct {
-	Reference    string         `json:"reference"`
-	Recipient    string         `json:"recipient"`
-	Amount       int            `json:"amount"`
-	TransferCode string         `json:"transfer_code"`
+	Reference    data.String    `json:"reference"`
+	Recipient    data.String    `json:"recipient"`
+	Amount       data.Int       `json:"amount"`
+	TransferCode data.String    `json:"transfer_code"`
 	Currency     enums.Currency `json:"currency"`
-	Status       string         `json:"status"`
+	Status       data.String    `json:"status"`
 }
 
 type BulkResponse = types.Response[[]BulkResponseData]

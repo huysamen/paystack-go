@@ -103,7 +103,7 @@ func (r *exportRequest) toQuery() string {
 }
 
 type ExportResponseData struct {
-	Path      string        `json:"path"`
+	Path      data.String   `json:"path"`
 	ExpiresAt data.NullTime `json:"expires_at,omitempty"`
 }
 

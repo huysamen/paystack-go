@@ -14,11 +14,11 @@
     "updatedAt": "2021-11-05T11:27:53.131Z",
     "is_deleted": false,
     "details": {
+      "authorization_code": null,
       "account_number": "01000000010",
-      "account_name": null,
+      "account_name": "Tolu Robert",
       "bank_code": "058",
       "bank_name": "Guaranty Trust Bank"
-    },
-    "metadata": null
+    }
   }
 }

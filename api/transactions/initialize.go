@@ -7,6 +7,7 @@ import (
 	"github.com/huysamen/paystack-go/enums"
 	"github.com/huysamen/paystack-go/net"
 	"github.com/huysamen/paystack-go/types"
+	"github.com/huysamen/paystack-go/types/data"
 )
 
 type initializeRequest struct {
@@ -117,9 +118,9 @@ func (b *InitializeRequestBuilder) Build() *initializeRequest {
 }
 
 type InitializeResponseData struct {
-	AuthorizationURL string `json:"authorization_url"`
-	AccessCode       string `json:"access_code"`
-	Reference        string `json:"reference"`
+	AuthorizationURL data.String `json:"authorization_url"`
+	AccessCode       data.String `json:"access_code"`
+	Reference        data.String `json:"reference"`
 }
 
 type InitializeResponse = types.Response[InitializeResponseData]

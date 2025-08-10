@@ -156,8 +156,8 @@ func (r *exportRequest) toQuery() string {
 }
 
 type ExportResponseData struct {
-	Path      string    `json:"path"`
-	ExpiresAt data.Time `json:"expiresAt"`
+	Path      data.String `json:"path"`
+	ExpiresAt data.Time   `json:"expiresAt"`
 }
 
 type ExportResponse = types.Response[ExportResponseData]

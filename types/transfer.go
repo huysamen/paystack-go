@@ -86,12 +86,3 @@ type BulkRecipientItem struct {
 	Email         data.String    `json:"email,omitempty"`
 	Metadata      Metadata       `json:"metadata,omitempty"`
 }
-
-// BulkCreateResult represents the result of bulk recipient creation
-type BulkCreateResult struct {
-	Success []Recipient `json:"success"`
-	Errors  []struct {
-		Error   data.String       `json:"error"`
-		Payload BulkRecipientItem `json:"payload"`
-	} `json:"errors"`
-}

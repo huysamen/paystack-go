@@ -7,6 +7,7 @@ import (
 
 	"github.com/huysamen/paystack-go/net"
 	"github.com/huysamen/paystack-go/types"
+	"github.com/huysamen/paystack-go/types/data"
 )
 
 type listDomainsRequest struct {
@@ -66,7 +67,7 @@ func (r *listDomainsRequest) toQuery() string {
 }
 
 type ListDomainsResponseData struct {
-	DomainNames []string `json:"domainNames"`
+	DomainNames []data.String `json:"domainNames"`
 }
 
 type ListDomainsResponse = types.Response[ListDomainsResponseData]

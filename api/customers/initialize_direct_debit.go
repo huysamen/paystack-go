@@ -6,6 +6,7 @@ import (
 
 	"github.com/huysamen/paystack-go/net"
 	"github.com/huysamen/paystack-go/types"
+	"github.com/huysamen/paystack-go/types/data"
 )
 
 type Account struct {
@@ -49,9 +50,9 @@ func (b *initializeDirectDebitRequestBuilder) Build() *InitializeDirectDebitRequ
 }
 
 type InitializeDirectDebitResponseData struct {
-	RedirectURL string `json:"redirect_url"`
-	AccessCode  string `json:"access_code"`
-	Reference   string `json:"reference"`
+	RedirectURL data.String `json:"redirect_url"`
+	AccessCode  data.String `json:"access_code"`
+	Reference   data.String `json:"reference"`
 }
 
 type InitializeDirectDebitResponse = types.Response[InitializeDirectDebitResponseData]

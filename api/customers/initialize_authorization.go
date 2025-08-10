@@ -5,6 +5,7 @@ import (
 
 	"github.com/huysamen/paystack-go/net"
 	"github.com/huysamen/paystack-go/types"
+	"github.com/huysamen/paystack-go/types/data"
 )
 
 type initializeAuthorizationRequest struct {
@@ -58,9 +59,9 @@ func (b *InitializeAuthorizationRequestBuilder) Build() *initializeAuthorization
 }
 
 type InitializeAuthorizationResponseData struct {
-	RedirectURL string `json:"redirect_url"`
-	AccessCode  string `json:"access_code"`
-	Reference   string `json:"reference"`
+	RedirectURL data.String `json:"redirect_url"`
+	AccessCode  data.String `json:"access_code"`
+	Reference   data.String `json:"reference"`
 }
 
 type InitializeAuthorizationResponse = types.Response[InitializeAuthorizationResponseData]

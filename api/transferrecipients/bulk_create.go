@@ -5,6 +5,7 @@ import (
 
 	"github.com/huysamen/paystack-go/net"
 	"github.com/huysamen/paystack-go/types"
+	"github.com/huysamen/paystack-go/types/data"
 )
 
 type bulkCreateRequest struct {
@@ -39,7 +40,14 @@ func (b *BulkCreateRequestBuilder) Build() *bulkCreateRequest {
 	return &b.req
 }
 
-type BulkCreateResponseData = types.BulkCreateResult
+type BulkCreateResponseData struct {
+	Success []types.Recipient `json:"success"`
+	Errors  []struct {
+		Error   data.String             `json:"error"`
+		Payload types.BulkRecipientItem `json:"payload"`
+	} `json:"errors"`
+}
+
 type BulkCreateResponse = types.Response[BulkCreateResponseData]
 
 func (c *Client) BulkCreate(ctx context.Context, builder BulkCreateRequestBuilder) (*BulkCreateResponse, error) {

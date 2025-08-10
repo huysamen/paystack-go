@@ -54,9 +54,9 @@ func (b *CreateRequestBuilder) Build() *createRequest {
 
 type CreateResponseData struct {
 	Transaction *types.Transaction `json:"transaction"`
-	Amount      int                `json:"amount"`
-	Currency    string             `json:"currency"`
-	RefundedBy  string             `json:"refunded_by"`
+	Amount      data.Int           `json:"amount"`
+	Currency    data.String        `json:"currency"`
+	RefundedBy  data.String        `json:"refunded_by"`
 	RefundedAt  data.NullTime      `json:"refunded_at"`
 	CreatedAt   data.NullTime      `json:"created_at"`
 }

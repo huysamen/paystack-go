@@ -6,6 +6,7 @@ import (
 
 	"github.com/huysamen/paystack-go/net"
 	"github.com/huysamen/paystack-go/types"
+	"github.com/huysamen/paystack-go/types/data"
 )
 
 type getUploadURLRequest struct {
@@ -29,9 +30,9 @@ func (b *GetUploadURLRequestBuilder) Build() *getUploadURLRequest {
 }
 
 type GetUploadURLResponseData struct {
-	SignedURL string `json:"signedUrl"`
-	FileName  string `json:"fileName"`
-	ExpiresIn int    `json:"expiresIn"`
+	SignedURL data.String `json:"signedUrl"`
+	FileName  data.String `json:"fileName"`
+	ExpiresIn data.Int    `json:"expiresIn"`
 }
 
 type GetUploadURLResponse = types.Response[GetUploadURLResponseData]

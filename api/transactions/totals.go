@@ -10,6 +10,7 @@ import (
 	"github.com/huysamen/paystack-go/net"
 	"github.com/huysamen/paystack-go/optional"
 	"github.com/huysamen/paystack-go/types"
+	"github.com/huysamen/paystack-go/types/data"
 )
 
 type totalsRequest struct {
@@ -85,17 +86,17 @@ func (r *totalsRequest) toQuery() string {
 
 type CurrencyTotal struct {
 	Currency enums.Currency `json:"currency"`
-	Amount   int            `json:"amount"`
+	Amount   data.Int       `json:"amount"`
 }
 
 type TotalsResponseData struct {
-	TotalTransactions                    int             `json:"total_transactions"`
-	TotalVolume                          int             `json:"total_volume"`
+	TotalTransactions                    data.Int        `json:"total_transactions"`
+	TotalVolume                          data.Int        `json:"total_volume"`
 	TotalVolumeByCurrency                []CurrencyTotal `json:"total_volume_by_currency"`
-	PendingTransfers                     int             `json:"pending_transfers"`
+	PendingTransfers                     data.Int        `json:"pending_transfers"`
 	PendingTransfersByCurrency           []CurrencyTotal `json:"pending_transfers_by_currency"`
-	UnsettledTransactionCount            int             `json:"unsettled_transaction_count"`
-	UnsettledTransactionVolume           int             `json:"unsettled_transaction_volume"`
+	UnsettledTransactionCount            data.Int        `json:"unsettled_transaction_count"`
+	UnsettledTransactionVolume           data.Int        `json:"unsettled_transaction_volume"`
 	UnsettledTransactionVolumeByCurrency []CurrencyTotal `json:"unsettled_transaction_volume_by_currency"`
 }
 
