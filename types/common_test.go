@@ -16,7 +16,7 @@ func TestMeta_UnmarshalJSON(t *testing.T) {
 		err := json.Unmarshal([]byte(jsonData), &meta)
 		require.NoError(t, err)
 
-		assert.Equal(t, 20, meta.PerPage, "should parse perPage field")
+		assert.Equal(t, int64(20), meta.PerPage.Int64(), "should parse perPage field")
 		assert.Equal(t, int64(100), meta.Total.Int, "should parse total field")
 		assert.True(t, meta.Total.Valid, "total should be valid")
 	})
@@ -28,7 +28,7 @@ func TestMeta_UnmarshalJSON(t *testing.T) {
 		err := json.Unmarshal([]byte(jsonData), &meta)
 		require.NoError(t, err)
 
-		assert.Equal(t, 25, meta.PerPage, "should parse per_page field into PerPage")
+		assert.Equal(t, int64(25), meta.PerPage.Int64(), "should parse per_page field into PerPage")
 		assert.Equal(t, int64(150), meta.Total.Int, "should parse total field")
 		assert.True(t, meta.Total.Valid, "total should be valid")
 	})
@@ -40,7 +40,7 @@ func TestMeta_UnmarshalJSON(t *testing.T) {
 		err := json.Unmarshal([]byte(jsonData), &meta)
 		require.NoError(t, err)
 
-		assert.Equal(t, 30, meta.PerPage, "should prioritize perPage over per_page")
+		assert.Equal(t, int64(30), meta.PerPage.Int64(), "should prioritize perPage over per_page")
 		assert.Equal(t, int64(200), meta.Total.Int, "should parse total field")
 		assert.True(t, meta.Total.Valid, "total should be valid")
 	})
@@ -52,7 +52,7 @@ func TestMeta_UnmarshalJSON(t *testing.T) {
 		err := json.Unmarshal([]byte(jsonData), &meta)
 		require.NoError(t, err)
 
-		assert.Equal(t, 35, meta.PerPage, "should use per_page when perPage is not present")
+		assert.Equal(t, int64(35), meta.PerPage.Int64(), "should use per_page when perPage is not present")
 		assert.Equal(t, int64(250), meta.Total.Int, "should parse total field")
 		assert.True(t, meta.Total.Valid, "total should be valid")
 		assert.Equal(t, "cursor123", meta.Next.Str, "should parse next field")
@@ -66,7 +66,7 @@ func TestMeta_UnmarshalJSON(t *testing.T) {
 		err := json.Unmarshal([]byte(jsonData), &meta)
 		require.NoError(t, err)
 
-		assert.Equal(t, 0, meta.PerPage, "PerPage should be zero for empty JSON")
+		assert.Equal(t, int64(0), meta.PerPage.Int64(), "PerPage should be zero for empty JSON")
 		assert.False(t, meta.Total.Valid, "Total should be invalid for empty JSON")
 		assert.False(t, meta.Next.Valid, "Next should be invalid for empty JSON")
 	})

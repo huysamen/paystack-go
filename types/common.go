@@ -18,7 +18,7 @@ type Response[T any] struct {
 type Meta struct {
 	Next      data.NullString `json:"next,omitempty"`
 	Previous  data.NullString `json:"previous,omitempty"`
-	PerPage   int             `json:"perPage,omitempty"`
+	PerPage   data.Int        `json:"perPage,omitempty"`
 	Total     data.NullInt    `json:"total,omitempty"`
 	Skipped   data.NullInt    `json:"skipped,omitempty"`
 	Page      data.NullInt    `json:"page,omitempty"`
@@ -26,7 +26,7 @@ type Meta struct {
 }
 
 // UnmarshalJSON implements custom JSON unmarshaling to handle both perPage and per_page field names
-func (m *Meta) UnmarshalJSON(data []byte) error {
+func (m *Meta) UnmarshalJSON(jsonData []byte) error {
 	// Create a temporary struct to unmarshal into
 	type Alias Meta
 	aux := &struct {
@@ -36,13 +36,13 @@ func (m *Meta) UnmarshalJSON(data []byte) error {
 		Alias: (*Alias)(m),
 	}
 
-	if err := json.Unmarshal(data, &aux); err != nil {
+	if err := json.Unmarshal(jsonData, &aux); err != nil {
 		return err
 	}
 
 	// If per_page was provided but perPage wasn't, use per_page value
-	if aux.PerPageAlt > 0 && m.PerPage == 0 {
-		m.PerPage = aux.PerPageAlt
+	if aux.PerPageAlt > 0 && m.PerPage.Int64() == 0 {
+		m.PerPage = data.Int(aux.PerPageAlt)
 	}
 
 	return nil
