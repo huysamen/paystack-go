@@ -159,7 +159,7 @@ func TestListResponse_FieldByFieldValidation(t *testing.T) {
 		assert.Equal(t, int64(0), response.Meta.Skipped.Int, "skipped in struct should match")
 
 		assert.Equal(t, float64(50), rawMeta["perPage"], "perPage in JSON should match")
-		assert.Equal(t, 50, response.Meta.PerPage, "perPage in struct should match")
+		assert.Equal(t, int64(50), response.Meta.PerPage.Int64(), "perPage in struct should match")
 
 		assert.Equal(t, float64(1), rawMeta["page"], "page in JSON should match")
 		assert.NotNil(t, response.Meta.Page, "page in struct should not be nil")

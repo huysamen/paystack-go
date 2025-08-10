@@ -350,7 +350,7 @@ func TestListBanksResponse_FieldByFieldValidation(t *testing.T) {
 		meta := response.Meta
 		assert.NotEmpty(t, meta.Next, "next cursor should be present")
 		assert.False(t, meta.Previous.Valid, "previous cursor should be nil for first page")
-		assert.Equal(t, 5, meta.PerPage, "per page should match")
+		assert.Equal(t, int64(5), meta.PerPage.Int64(), "per page should match")
 	}
 
 	// Test JSON round-trip

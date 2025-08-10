@@ -65,7 +65,7 @@ func TestListMandateAuthorizationsResponse_JSONDeserialization(t *testing.T) {
 
 				// Verify meta object if present
 				if response.Meta != nil {
-					assert.Greater(t, response.Meta.PerPage, 0, "per_page should be greater than 0")
+					assert.Greater(t, response.Meta.PerPage.Int64(), int64(0), "per_page should be greater than 0")
 					if response.Meta.Total.Valid {
 						assert.Greater(t, response.Meta.Total.Int, int64(0), "total should be greater than 0")
 					}
@@ -226,7 +226,7 @@ func TestListMandateAuthorizationsResponse_FieldByFieldValidation(t *testing.T) 
 		require.NotNil(t, response.Meta, "meta should not be nil")
 
 		// Now that Meta struct supports both per_page and perPage, this should work correctly
-		assert.Equal(t, int(rawMeta["per_page"].(float64)), response.Meta.PerPage, "meta.per_page should match")
+		assert.Equal(t, int64(rawMeta["per_page"].(float64)), response.Meta.PerPage.Int64(), "meta.per_page should match")
 
 		if rawMeta["total"] != nil && response.Meta.Total.Valid {
 			assert.Equal(t, int64(rawMeta["total"].(float64)), response.Meta.Total.Int, "meta.total should match")

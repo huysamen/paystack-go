@@ -106,8 +106,8 @@ func TestGetUploadURLResponse_FieldByFieldValidation(t *testing.T) {
 
 	// Validate upload URL data
 	data := response.Data
-	assert.Contains(t, data.SignedURL, "https://s3.eu-west-1.amazonaws.com", "signed URL should be AWS S3 URL")
-	assert.Equal(t, "qesp8a4df1xejihd9x5q", data.FileName)
+	assert.Contains(t, data.SignedURL.String(), "https://s3.eu-west-1.amazonaws.com", "signed URL should be AWS S3 URL")
+	assert.Equal(t, "qesp8a4df1xejihd9x5q", data.FileName.String())
 	assert.Greater(t, len(data.SignedURL), 100, "signed URL should be reasonably long")
 
 	// Test JSON round-trip

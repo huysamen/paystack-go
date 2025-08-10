@@ -71,7 +71,7 @@ func TestListResponse_JSONDeserialization(t *testing.T) {
 					if response.Meta.Total.Valid {
 						assert.Greater(t, response.Meta.Total.Int, int64(0), "meta total should be greater than 0")
 					}
-					assert.Greater(t, response.Meta.PerPage, 0, "meta per page should be greater than 0")
+					assert.Greater(t, response.Meta.PerPage.Int64(), int64(0), "meta per page should be greater than 0")
 					if response.Meta.Page.Valid {
 						assert.GreaterOrEqual(t, response.Meta.Page.Int, int64(1), "meta page should be at least 1")
 					}

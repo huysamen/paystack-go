@@ -26,9 +26,9 @@ func TestInitializeAuthorizationResponse_JSONDeserialization(t *testing.T) {
 	assert.NotNil(t, response.Data)
 
 	// Validate response data
-	assert.Equal(t, "https://checkout.paystack.com/82t4mp5b5mfn51h", response.Data.RedirectURL)
-	assert.Equal(t, "82t4mp5b5mfn51h", response.Data.AccessCode)
-	assert.Equal(t, "dfbzfotsrbv4n5s82t4mp5b5mfn51h", response.Data.Reference)
+	assert.Equal(t, "https://checkout.paystack.com/82t4mp5b5mfn51h", response.Data.RedirectURL.String())
+	assert.Equal(t, "82t4mp5b5mfn51h", response.Data.AccessCode.String())
+	assert.Equal(t, "dfbzfotsrbv4n5s82t4mp5b5mfn51h", response.Data.Reference.String())
 }
 
 func TestInitializeAuthorizationRequestBuilder(t *testing.T) {
@@ -181,9 +181,9 @@ func TestInitializeAuthorizationResponse_FieldByFieldValidation(t *testing.T) {
 
 	// Validate data object fields
 	rawData := rawResponse["data"].(map[string]any)
-	assert.Equal(t, rawData["redirect_url"], response.Data.RedirectURL, "redirect_url should match")
-	assert.Equal(t, rawData["access_code"], response.Data.AccessCode, "access_code should match")
-	assert.Equal(t, rawData["reference"], response.Data.Reference, "reference should match")
+	assert.Equal(t, rawData["redirect_url"], response.Data.RedirectURL.String(), "redirect_url should match")
+	assert.Equal(t, rawData["access_code"], response.Data.AccessCode.String(), "access_code should match")
+	assert.Equal(t, rawData["reference"], response.Data.Reference.String(), "reference should match")
 
 	// Test round-trip serialization
 	serialized, err := json.Marshal(response)

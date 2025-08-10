@@ -77,7 +77,7 @@ func TestListResponse_JSONDeserialization(t *testing.T) {
 				if response.Meta.Total.Valid {
 					assert.GreaterOrEqual(t, response.Meta.Total.Int, int64(0), "total should be non-negative")
 				}
-				assert.GreaterOrEqual(t, response.Meta.PerPage, 0, "per_page should be non-negative")
+				assert.GreaterOrEqual(t, response.Meta.PerPage.Int64(), int64(0), "per_page should be non-negative")
 				if response.Meta.Page.Valid {
 					assert.Greater(t, response.Meta.Page.Int, int64(0), "page should be positive")
 				}

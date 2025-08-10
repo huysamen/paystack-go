@@ -31,7 +31,7 @@ func TestFetchMandateAuthorizationsResponse_JSONDeserialization(t *testing.T) {
 
 	// Validate metadata - now properly handles both per_page and perPage field names
 	// The JSON uses "per_page" which is now correctly parsed into PerPage
-	assert.Equal(t, 50, response.Meta.PerPage, "PerPage should be parsed from per_page field")
+	assert.Equal(t, int64(50), response.Meta.PerPage.Int64(), "PerPage should be parsed from per_page field")
 	assert.False(t, response.Meta.Next.Valid, "Next should be null")
 	require.True(t, response.Meta.Total.Valid, "Total should not be null")
 	assert.Equal(t, int64(1), response.Meta.Total.Int)
@@ -96,8 +96,8 @@ func TestFetchMandateAuthorizationsResponse_FieldByFieldValidation(t *testing.T)
 	// Validate meta fields - now properly handles both per_page and perPage field names
 	rawMeta := rawResponse["meta"].(map[string]any)
 	// per_page field should now be properly parsed into PerPage
-	expectedPerPage := int(rawMeta["per_page"].(float64))
-	assert.Equal(t, expectedPerPage, response.Meta.PerPage, "PerPage should be parsed from per_page field")
+	expectedPerPage := int64(rawMeta["per_page"].(float64))
+	assert.Equal(t, expectedPerPage, response.Meta.PerPage.Int64(), "PerPage should be parsed from per_page field")
 	// next field comparisons - null vs nil pointer handling
 	if rawMeta["next"] == nil {
 		assert.False(t, response.Meta.Next.Valid, "Next should be invalid when null in JSON")

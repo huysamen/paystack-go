@@ -6,8 +6,19 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
+	"github.com/htrhsrhrtifysser
+	"github.com/stretchr/testify/ruquiiee
+e
+ehuyamn/paysak-goyp/daa
+ehuyamn/paysak-goyp/daa
+ehuyamn/paysak-goyp/daa
+ehuyamn/paysak-goyp/daa
+ehuyamn/paysak-goyp/daa
+ehuyamn/paysak-goyp/daa
+ehuyamn/paysak-goyp/daa
+"huyamn/paysak-goyp/daa
+huyamn/paysak-goyp/daa
+	"github.com/huysamen/paystack-go/types/data"
 )
 
 func TestListDomainsResponse_JSONDeserialization(t *testing.T) {
@@ -45,7 +56,13 @@ func TestListDomainsResponse_JSONDeserialization(t *testing.T) {
 
 			// Verify the data structure
 			assert.NotNil(t, response.Data, "data should not be nil")
-			assert.Equal(t, tt.expectedDomains, response.Data.DomainNames, "domain names should match")
+			
+			// Convert expected domains to data.String slice for comparison
+			expectedDomainStrings := make([]data.String, len(tt.expectedDomains))
+			for i, domain := range tt.expectedDomains {
+				expectedDomainStrings[i] = data.String(domain)
+			}
+			assert.Equal(t, expectedDomainStrings, response.Data.DomainNames, "domain names should match")
 		})
 	}
 }
@@ -88,9 +105,9 @@ func TestListDomainsResponse_FieldByFieldValidation(t *testing.T) {
 		require.True(t, ok, "domainNames should be an array")
 
 		// Convert raw domain names to string slice for comparison
-		expectedDomainNames := make([]string, len(rawDomainNames))
+		expectedDomainNames := make([]data.String, len(rawDomainNames))
 		for i, domain := range rawDomainNames {
-			expectedDomainNames[i] = domain.(string)
+			expectedDomainNames[i] = data.String(domain.(string))
 		}
 
 		assert.Equal(t, expectedDomainNames, response.Data.DomainNames, "domainNames should match exactly")
@@ -100,7 +117,7 @@ func TestListDomainsResponse_FieldByFieldValidation(t *testing.T) {
 		assert.Len(t, rawDomainNames, 1, "should have exactly 1 domain in JSON")
 		assert.Equal(t, "example.com", rawDomainNames[0].(string), "first domain should be example.com")
 		assert.Len(t, response.Data.DomainNames, 1, "should have exactly 1 domain in struct")
-		assert.Equal(t, "example.com", response.Data.DomainNames[0], "first domain should be example.com")
+		assert.Equal(t, "example.com", response.Data.DomainNames[0].String(), "first domain should be example.com")
 
 		// Verify complete JSON structure matches our struct
 		reconstituted, err := json.Marshal(response)
@@ -181,22 +198,22 @@ func TestListDomainsRequestBuilder(t *testing.T) {
 
 func TestListDomainsResponseData_Structure(t *testing.T) {
 	t.Run("response data has correct field types", func(t *testing.T) {
-		data := ListDomainsResponseData{
-			DomainNames: []string{"test.com", "example.org"},
+		responseData := ListDomainsResponseData{
+			DomainNames: []data.String{data.NewString("test.com"), data.NewString("example.org")},
 		}
 
-		assert.IsType(t, []string{}, data.DomainNames)
-		assert.Len(t, data.DomainNames, 2)
-		assert.Equal(t, "test.com", data.DomainNames[0])
-		assert.Equal(t, "example.org", data.DomainNames[1])
+		assert.IsType(t, []data.String{}, responseData.DomainNames)
+		assert.Len(t, responseData.DomainNames, 2)
+		assert.Equal(t, "test.com", responseData.DomainNames[0].String())
+		assert.Equal(t, "example.org", responseData.DomainNames[1].String())
 	})
 
 	t.Run("response data handles empty domain list", func(t *testing.T) {
-		data := ListDomainsResponseData{
-			DomainNames: []string{},
+		responseData := ListDomainsResponseData{
+			DomainNames: []data.String{},
 		}
 
-		assert.IsType(t, []string{}, data.DomainNames)
-		assert.Empty(t, data.DomainNames)
+		assert.IsType(t, []data.String{}, responseData.DomainNames)
+		assert.Empty(t, responseData.DomainNames)
 	})
 }

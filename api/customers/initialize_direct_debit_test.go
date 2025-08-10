@@ -26,9 +26,9 @@ func TestInitializeDirectDebitResponse_JSONDeserialization(t *testing.T) {
 
 	// Validate data structure
 	require.NotNil(t, response.Data)
-	assert.Equal(t, "https://link.paystack.com/ll6b0szngj1f27k", response.Data.RedirectURL)
-	assert.Equal(t, "ll6b0szngj1f27k", response.Data.AccessCode)
-	assert.Equal(t, "1er945lpy4txyki", response.Data.Reference)
+	assert.Equal(t, "https://link.paystack.com/ll6b0szngj1f27k", response.Data.RedirectURL.String())
+	assert.Equal(t, "ll6b0szngj1f27k", response.Data.AccessCode.String())
+	assert.Equal(t, "1er945lpy4txyki", response.Data.Reference.String())
 }
 
 func TestInitializeDirectDebitRequestBuilder(t *testing.T) {
@@ -154,9 +154,9 @@ func TestInitializeDirectDebitResponse_FieldByFieldValidation(t *testing.T) {
 
 	// Validate data object fields
 	rawData := rawResponse["data"].(map[string]any)
-	assert.Equal(t, rawData["redirect_url"], response.Data.RedirectURL, "redirect_url should match")
-	assert.Equal(t, rawData["access_code"], response.Data.AccessCode, "access_code should match")
-	assert.Equal(t, rawData["reference"], response.Data.Reference, "reference should match")
+	assert.Equal(t, rawData["redirect_url"], response.Data.RedirectURL.String(), "redirect_url should match")
+	assert.Equal(t, rawData["access_code"], response.Data.AccessCode.String(), "access_code should match")
+	assert.Equal(t, rawData["reference"], response.Data.Reference.String(), "reference should match")
 
 	// Test round-trip serialization
 	serialized, err := json.Marshal(response)
