@@ -206,6 +206,7 @@ func TestFetchChargesInBatchResponse_FieldByFieldValidation(t *testing.T) {
 	// Validate first data item fields
 	firstItem := data[0].(map[string]any)
 	assert.Equal(t, float64(100073), firstItem["integration"], "first item integration should match")
+	// structItem.Integration.Int64() for struct comparison
 	assert.Equal(t, float64(18), firstItem["bulkcharge"], "first item bulkcharge should match")
 	assert.Equal(t, "test", firstItem["domain"], "first item domain should match")
 	assert.Equal(t, float64(20500), firstItem["amount"], "first item amount should match")

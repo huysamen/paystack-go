@@ -46,8 +46,8 @@ func TestFetchResponse_JSONDeserialization(t *testing.T) {
 
 			// Verify the data structure
 			assert.NotNil(t, response.Data, "data should not be nil")
-			assert.Equal(t, tt.expectedBatchCode, response.Data.BatchCode, "batch code should match")
-			assert.Greater(t, response.Data.ID, 0, "ID should be greater than 0")
+			assert.Equal(t, tt.expectedBatchCode, response.Data.BatchCode.String(), "batch code should match")
+			assert.Greater(t, response.Data.ID.Int64(), int64(0), "ID should be greater than 0")
 		})
 	}
 }
@@ -86,22 +86,22 @@ func TestFetchResponse_FieldByFieldValidation(t *testing.T) {
 
 		// Validate each data field
 		assert.Equal(t, "test", rawData["domain"], "domain in JSON should match")
-		assert.Equal(t, "test", response.Data.Domain, "domain in struct should match")
+		assert.Equal(t, "test", response.Data.Domain.String(), "domain in struct should match")
 
 		assert.Equal(t, "BCH_180tl7oq7cayggh", rawData["batch_code"], "batch_code in JSON should match")
-		assert.Equal(t, "BCH_180tl7oq7cayggh", response.Data.BatchCode, "batch_code in struct should match")
+		assert.Equal(t, "BCH_180tl7oq7cayggh", response.Data.BatchCode.String(), "batch_code in struct should match")
 
 		assert.Equal(t, "complete", rawData["status"], "status in JSON should match")
-		assert.Equal(t, "complete", response.Data.Status, "status in struct should match")
+		assert.Equal(t, "complete", response.Data.Status.String(), "status in struct should match")
 
 		assert.Equal(t, float64(17), rawData["id"], "id in JSON should match")
-		assert.Equal(t, 17, response.Data.ID, "id in struct should match")
+		assert.Equal(t, int64(17), response.Data.ID.Int64(), "id in struct should match")
 
 		assert.Equal(t, float64(0), rawData["total_charges"], "total_charges in JSON should match")
-		assert.Equal(t, 0, response.Data.TotalCharges, "total_charges in struct should match")
+		assert.Equal(t, int64(0), response.Data.TotalCharges.Int64(), "total_charges in struct should match")
 
 		assert.Equal(t, float64(0), rawData["pending_charges"], "pending_charges in JSON should match")
-		assert.Equal(t, 0, response.Data.PendingCharges, "pending_charges in struct should match")
+		assert.Equal(t, int64(0), response.Data.PendingCharges.Int64(), "pending_charges in struct should match")
 
 		assert.Equal(t, "2017-02-04T05:44:19.000Z", rawData["createdAt"], "createdAt in JSON should match")
 		// For timestamp comparison, check that we can parse both correctly rather than string format

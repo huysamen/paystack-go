@@ -50,16 +50,16 @@ func TestListResponse_JSONDeserialization(t *testing.T) {
 
 			if tt.expectedCount > 0 {
 				firstItem := response.Data[0]
-				assert.NotEmpty(t, firstItem.BatchCode, "batch code should not be empty")
-				assert.Greater(t, firstItem.ID, 0, "ID should be greater than 0")
-				assert.NotEmpty(t, firstItem.Status, "status should not be empty")
+				assert.NotEmpty(t, firstItem.BatchCode.String(), "batch code should not be empty")
+				assert.Greater(t, firstItem.ID.Int64(), int64(0), "ID should be greater than 0")
+				assert.NotEmpty(t, firstItem.Status.String(), "status should not be empty")
 			}
 
 			// Verify meta data
 			assert.NotNil(t, response.Meta, "meta should not be nil")
 			if response.Meta != nil {
 				assert.NotNil(t, response.Meta.Total, "total should not be nil")
-				assert.Equal(t, tt.expectedCount, *response.Meta.Total, "total should match expected count")
+				assert.Equal(t, tt.expectedCount, int(response.Meta.Total.Int), "total should match expected count")
 			}
 		})
 	}
@@ -105,16 +105,16 @@ func TestListResponse_FieldByFieldValidation(t *testing.T) {
 		structItem := response.Data[0]
 
 		assert.Equal(t, "test", rawItem["domain"], "domain in JSON should match")
-		assert.Equal(t, "test", structItem.Domain, "domain in struct should match")
+		assert.Equal(t, "test", structItem.Domain.String(), "domain in struct should match")
 
 		assert.Equal(t, "BCH_1nV4L1D7cayggh", rawItem["batch_code"], "batch_code in JSON should match")
-		assert.Equal(t, "BCH_1nV4L1D7cayggh", structItem.BatchCode, "batch_code in struct should match")
+		assert.Equal(t, "BCH_1nV4L1D7cayggh", structItem.BatchCode.String(), "batch_code in struct should match")
 
 		assert.Equal(t, "complete", rawItem["status"], "status in JSON should match")
-		assert.Equal(t, "complete", structItem.Status, "status in struct should match")
+		assert.Equal(t, "complete", structItem.Status.String(), "status in struct should match")
 
 		assert.Equal(t, float64(1733), rawItem["id"], "id in JSON should match")
-		assert.Equal(t, 1733, structItem.ID, "id in struct should match")
+		assert.Equal(t, int64(1733), structItem.ID.Int64(), "id in struct should match")
 
 		assert.Equal(t, "2017-02-04T05:44:19.000Z", rawItem["createdAt"], "createdAt in JSON should match")
 		// For timestamp comparison, check that we can parse both correctly rather than string format
@@ -140,23 +140,34 @@ func TestListResponse_FieldByFieldValidation(t *testing.T) {
 		require.True(t, ok, "meta field should be an object")
 
 		assert.Equal(t, float64(1), rawMeta["total"], "total in JSON should match")
-		assert.NotNil(t, response.Meta.Total, "total in struct should not be nil")
-		assert.Equal(t, 1, *response.Meta.Total, "total in struct should match")
+		assert.Equal(t, int64(1), response.Meta.Total.Int, "total in struct should match")
+
+		assert.Equal(t, float64(0), rawMeta["skipped"], "skipped in JSON should match")
+		assert.Equal(t, int64(0), response.Meta.Skipped.Int, "skipped in struct should match")
+
+		assert.Equal(t, float64(50), rawMeta["perPage"], "perPage in JSON should match")
+		assert.Equal(t, int64(50), int64(response.Meta.PerPage), "perPage in struct should match")
+
+		assert.Equal(t, float64(1), rawMeta["page"], "page in JSON should match")
+		assert.Equal(t, int64(1), response.Meta.Page.Int, "page in struct should match")
+
+		assert.Equal(t, float64(1), rawMeta["pageCount"], "pageCount in JSON should match")
+		assert.Equal(t, int64(1), response.Meta.PageCount.Int, "pageCount in struct should match")
 
 		assert.Equal(t, float64(0), rawMeta["skipped"], "skipped in JSON should match")
 		assert.NotNil(t, response.Meta.Skipped, "skipped in struct should not be nil")
-		assert.Equal(t, 0, *response.Meta.Skipped, "skipped in struct should match")
+		assert.Equal(t, int64(0), response.Meta.Skipped.Int, "skipped in struct should match")
 
 		assert.Equal(t, float64(50), rawMeta["perPage"], "perPage in JSON should match")
 		assert.Equal(t, 50, response.Meta.PerPage, "perPage in struct should match")
 
 		assert.Equal(t, float64(1), rawMeta["page"], "page in JSON should match")
 		assert.NotNil(t, response.Meta.Page, "page in struct should not be nil")
-		assert.Equal(t, 1, *response.Meta.Page, "page in struct should match")
+		assert.Equal(t, int64(1), response.Meta.Page.Int, "page in struct should match")
 
 		assert.Equal(t, float64(1), rawMeta["pageCount"], "pageCount in JSON should match")
 		assert.NotNil(t, response.Meta.PageCount, "pageCount in struct should not be nil")
-		assert.Equal(t, 1, *response.Meta.PageCount, "pageCount in struct should match")
+		assert.Equal(t, int64(1), response.Meta.PageCount.Int, "pageCount in struct should match")
 
 		// Verify complete JSON structure matches our struct
 		reconstituted, err := json.Marshal(response)
