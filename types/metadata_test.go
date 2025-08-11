@@ -41,24 +41,28 @@ func TestMetadata_UnmarshalJSON(t *testing.T) {
 			expectedData:  map[string]any{},
 		},
 		{
-			name:    "fails on string input",
-			input:   `"some string"`,
-			wantErr: true,
+			name:          "string input is tolerated as invalid",
+			input:         `"some string"`,
+			expectedValid: false,
+			expectedData:  map[string]any{},
 		},
 		{
-			name:    "fails on number input",
-			input:   `42`,
-			wantErr: true,
+			name:          "number input is tolerated as invalid",
+			input:         `42`,
+			expectedValid: false,
+			expectedData:  map[string]any{},
 		},
 		{
-			name:    "fails on boolean input",
-			input:   `true`,
-			wantErr: true,
+			name:          "boolean input is tolerated as invalid",
+			input:         `true`,
+			expectedValid: false,
+			expectedData:  map[string]any{},
 		},
 		{
-			name:    "fails on array input",
-			input:   `[1, 2, 3]`,
-			wantErr: true,
+			name:          "array input is tolerated as invalid",
+			input:         `[1, 2, 3]`,
+			expectedValid: false,
+			expectedData:  map[string]any{},
 		},
 		{
 			name:    "fails on invalid JSON",
@@ -286,11 +290,14 @@ func TestMetadata_InStruct(t *testing.T) {
 		assert.True(t, ts.Metadata.IsEmpty())
 	})
 
-	t.Run("fails to unmarshal in struct with string metadata", func(t *testing.T) {
+	t.Run("string metadata is tolerated as invalid in struct", func(t *testing.T) {
 		input := `{"id": 123, "metadata": "invalid"}`
 		var ts TestStruct
 		err := json.Unmarshal([]byte(input), &ts)
-		assert.Error(t, err)
+		require.NoError(t, err)
+		assert.Equal(t, 123, ts.ID)
+		assert.False(t, ts.Metadata.Valid)
+		assert.True(t, ts.Metadata.IsEmpty())
 	})
 
 	t.Run("marshals valid metadata from struct", func(t *testing.T) {

@@ -2,7 +2,6 @@ package webhook
 
 import (
 	"encoding/json"
-	"fmt"
 
 	"github.com/huysamen/paystack-go/types"
 )
@@ -43,7 +42,7 @@ type Event struct {
 func ParseEventData[T any](event *Event) (*T, error) {
 	var data T
 	if err := json.Unmarshal(event.Data, &data); err != nil {
-		return nil, fmt.Errorf("failed to parse event data: %w", err)
+		return nil, err
 	}
 	return &data, nil
 }

@@ -38,13 +38,13 @@ func (m *Metadata) UnmarshalJSON(data []byte) error {
 	// If that fails, try to unmarshal as string and then parse the string as JSON
 	var str string
 	if err := json.Unmarshal(data, &str); err == nil {
-		// Handle empty string case
+		// Handle empty string or literal "null" case
 		if str == "" || str == "null" {
 			m.Valid = false
 			return nil
 		}
 
-		// Try to parse the string as JSON
+		// Try to parse the string as JSON object
 		var objFromStr map[string]any
 		if err := json.Unmarshal([]byte(str), &objFromStr); err == nil {
 			m.Metadata = objFromStr
@@ -52,19 +52,26 @@ func (m *Metadata) UnmarshalJSON(data []byte) error {
 			return nil
 		}
 
-		// If string is not valid JSON, treat as invalid
+		// If the string contains valid JSON but not an object (e.g., number/bool/array), mark invalid
+		var anyFromStr any
+		if err := json.Unmarshal([]byte(str), &anyFromStr); err == nil {
+			m.Valid = false
+			return nil
+		}
+
+		// Not parseable JSON; treat as invalid but do not error
 		m.Valid = false
-		return fmt.Errorf("metadata string is not valid JSON: %s", str)
+		return nil
 	}
 
-	// Fallback: tolerate numbers, booleans, arrays by marking metadata invalid but not erroring
+	// Finally, if the value is a non-object JSON type (number, bool, array), tolerate by marking invalid
 	var anyVal any
 	if err := json.Unmarshal(data, &anyVal); err == nil {
 		m.Valid = false
 		return nil
 	}
 
-	// If still not parseable, treat as invalid with error context
+	// If still not parseable, return error to surface malformed JSON
 	m.Valid = false
 	return fmt.Errorf("cannot unmarshal %s into Metadata", string(data))
 }

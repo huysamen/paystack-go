@@ -138,7 +138,7 @@ type PaymentRequestEvent struct {
 	Metadata         types.Metadata  `json:"metadata"`
 	Notifications    []any           `json:"notifications"`
 	OfflineReference data.NullString `json:"offline_reference"`
-	// In webhooks this can be ID or object; allow raw JSON in types.Customer by using Metadata workaround
+	// In webhooks this can be ID or object; accept loosely
 	Customer  types.Metadata `json:"customer"`
 	CreatedAt data.Time      `json:"created_at"`
 }
