@@ -38,7 +38,7 @@ type Recipient struct {
 	Currency      enums.Currency   `json:"currency"`
 	Name          data.String      `json:"name"`
 	Details       RecipientDetails `json:"details"`
-	Description   data.String      `json:"description"`
+	Description   data.NullString  `json:"description"`
 	Metadata      Metadata         `json:"metadata"`
 	RecipientCode data.String      `json:"recipient_code"`
 	Active        data.Bool        `json:"active"`
@@ -52,7 +52,7 @@ type Recipient struct {
 type RecipientDetails struct {
 	AuthorizationCode data.NullString `json:"authorization_code"`
 	AccountNumber     data.String     `json:"account_number"`
-	AccountName       data.String     `json:"account_name"`
+	AccountName       data.NullString `json:"account_name"`
 	BankCode          data.String     `json:"bank_code"`
 	BankName          data.String     `json:"bank_name"`
 }

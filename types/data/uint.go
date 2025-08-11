@@ -15,7 +15,6 @@ type Uint uint64
 func (u *Uint) UnmarshalJSON(data []byte) error {
 	// Handle null
 	if data == nil || string(data) == "null" {
-		fmt.Printf("[DEBUG] Uint.UnmarshalJSON: received null value, converting to zero\n") // TODO: remove debug print
 		*u = 0
 		return nil
 	}
@@ -42,7 +41,6 @@ func (u *Uint) UnmarshalJSON(data []byte) error {
 	if err := json.Unmarshal(data, &s); err == nil {
 		// Handle empty string or "null" as zero
 		if s == "" || s == "null" {
-			fmt.Printf("[DEBUG] Uint.UnmarshalJSON: received null/empty string value, converting to zero\n") // TODO: remove debug print
 			*u = 0
 			return nil
 		}

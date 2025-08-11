@@ -27,8 +27,6 @@ type Time time.Time
 func (t *Time) UnmarshalJSON(data []byte) error {
 	// Handle null - convert to zero time
 	if data == nil || string(data) == "null" {
-		// TODO: Remove this debug print statement after testing
-		fmt.Printf("[DEBUG] Time.UnmarshalJSON: received null value, converting to zero time\n")
 		*t = Time(time.Time{})
 		return nil
 	}
@@ -39,8 +37,6 @@ func (t *Time) UnmarshalJSON(data []byte) error {
 	if err := json.Unmarshal(data, &s); err == nil {
 		// Handle empty string and "null" string as zero time
 		if s == "" || s == "null" {
-			// TODO: Remove this debug print statement after testing
-			fmt.Printf("[DEBUG] Time.UnmarshalJSON: received null/empty string value, converting to zero time\n")
 			*t = Time(time.Time{})
 			return nil
 		}
@@ -88,8 +84,6 @@ func NewTime(value time.Time) Time {
 func NewTimeFromString(s string) (Time, error) {
 	// Handle empty string and "null" string as zero time
 	if s == "" || s == "null" {
-		// TODO: Remove this debug print statement after testing
-		fmt.Printf("[DEBUG] NewTimeFromString: received null/empty string value, converting to zero time\n")
 		return Time(time.Time{}), nil
 	}
 

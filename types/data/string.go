@@ -14,8 +14,6 @@ type String string
 func (s *String) UnmarshalJSON(data []byte) error {
 	// Handle null - convert to empty string
 	if data == nil || string(data) == "null" {
-		// TODO: Remove this debug print statement after testing
-		fmt.Printf("[DEBUG] String.UnmarshalJSON: received null value, converting to empty string\n")
 		*s = ""
 		return nil
 	}
@@ -26,8 +24,6 @@ func (s *String) UnmarshalJSON(data []byte) error {
 	if err := json.Unmarshal(data, &strVal); err == nil {
 		// Handle "null" string as empty string
 		if strVal == "null" {
-			// TODO: Remove this debug print statement after testing
-			fmt.Printf("[DEBUG] String.UnmarshalJSON: received 'null' string value, converting to empty string\n")
 			*s = ""
 			return nil
 		}

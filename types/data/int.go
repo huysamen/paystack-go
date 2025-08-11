@@ -15,8 +15,6 @@ type Int int64
 func (i *Int) UnmarshalJSON(data []byte) error {
 	// Handle null - convert to zero
 	if data == nil || string(data) == "null" {
-		// TODO: Remove this debug print statement after testing
-		fmt.Printf("[DEBUG] Int.UnmarshalJSON: received null value, converting to 0\n")
 		*i = 0
 		return nil
 	}
@@ -43,8 +41,6 @@ func (i *Int) UnmarshalJSON(data []byte) error {
 	if err := json.Unmarshal(data, &s); err == nil {
 		// Handle empty string and "null" string as zero
 		if s == "" || s == "null" {
-			// TODO: Remove this debug print statement after testing
-			fmt.Printf("[DEBUG] Int.UnmarshalJSON: received null/empty string value, converting to 0\n")
 			*i = 0
 			return nil
 		}
