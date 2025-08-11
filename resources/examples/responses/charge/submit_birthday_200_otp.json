@@ -1,0 +1,8 @@
+{
+  "status": true,
+  "message": "Charge attempted",
+  "data": {
+    "status": "send_otp",
+    "display_text": "To confirm that you own this account, kindly enter the OTP sent to your phone"
+  }
+}

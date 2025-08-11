@@ -1,0 +1,44 @@
+{
+  "status": true,
+  "message": "Customer retrieved",
+  "data": {
+    "transactions": [],
+    "subscriptions": [],
+    "authorizations": [
+      {
+        "authorization_code": "AUTH_ekk8t49ogj",
+        "bin": "408408",
+        "last4": "4081",
+        "exp_month": "12",
+        "exp_year": "2030",
+        "channel": "card",
+        "card_type": "visa ",
+        "bank": "TEST BANK",
+        "country_code": "NG",
+        "brand": "visa",
+        "reusable": true,
+        "signature": "SIG_yEXu7dLBeqG0kU7g95Ke",
+        "account_name": null
+      }
+    ],
+    "first_name": null,
+    "last_name": null,
+    "email": "dom@gmail.com",
+    "phone": null,
+    "metadata": null,
+    "domain": "test",
+    "customer_code": "CUS_c6wqvwmvwopw4ms",
+    "risk_action": "default",
+    "id": 90758908,
+    "integration": 463433,
+    "createdAt": "2022-08-15T13:46:39.000Z",
+    "updatedAt": "2022-08-15T13:46:39.000Z",
+    "created_at": "2022-08-15T13:46:39.000Z",
+    "updated_at": "2022-08-15T13:46:39.000Z",
+    "total_transactions": 0,
+    "total_transaction_value": [],
+    "dedicated_account": null,
+    "identified": false,
+    "identifications": null
+  }
+}

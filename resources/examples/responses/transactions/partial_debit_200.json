@@ -1,0 +1,56 @@
+{
+  "status": true,
+  "message": "Charge attempted",
+  "data": {
+    "amount": 50000,
+    "currency": "NGN",
+    "transaction_date": "2024-08-22T11:13:48.000Z",
+    "status": "success",
+    "reference": "ofuhmnzw05vny9j",
+    "domain": "test",
+    "metadata": "",
+    "gateway_response": "Approved",
+    "message": null,
+    "channel": "card",
+    "ip_address": null,
+    "log": null,
+    "fees": 10350,
+    "authorization": {
+      "authorization_code": "AUTH_uh8bcl3zbn",
+      "bin": "408408",
+      "last4": "4081",
+      "exp_month": "12",
+      "exp_year": "2030",
+      "channel": "card",
+      "card_type": "visa ",
+      "bank": "TEST BANK",
+      "country_code": "NG",
+      "brand": "visa",
+      "reusable": true,
+      "signature": "SIG_yEXu7dLBeqG0kU7g95Ke",
+      "account_name": null
+    },
+    "customer": {
+      "id": 181873746,
+      "first_name": null,
+      "last_name": null,
+      "email": "demo@test.com",
+      "customer_code": "CUS_1rkzaqsv4rrhqo6",
+      "phone": null,
+      "metadata": {
+        "custom_fields": [
+          {
+            "display_name": "Customer email",
+            "variable_name": "customer_email",
+            "value": "new@email.com"
+          }
+        ]
+      },
+      "risk_action": "default",
+      "international_format_phone": null
+    },
+    "plan": 0,
+    "requested_amount": 50000,
+    "id": 4099546180
+  }
+}

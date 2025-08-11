@@ -1,0 +1,46 @@
+{
+  "status": true,
+  "message": "Products added to page",
+  "data": {
+    "integration": 343288,
+    "plan": null,
+    "domain": "test",
+    "name": "Demo Products Page",
+    "description": "Demo Products Page",
+    "amount": null,
+    "currency": "NGN",
+    "slug": "demoproductspage",
+    "custom_fields": [],
+    "type": "product",
+    "redirect_url": null,
+    "success_message": null,
+    "collect_phone": false,
+    "active": true,
+    "published": true,
+    "migrate": true,
+    "notification_email": null,
+    "metadata": {},
+    "id": 102859,
+    "createdAt": "2019-06-29T16:21:24.000Z",
+    "updatedAt": "2019-06-29T16:28:11.000Z",
+    "products": [
+      {
+        "product_id": 523,
+        "name": "Product Four",
+        "description": "Product Four Description",
+        "product_code": "PROD_l9p81u9pkjqjunb",
+        "page": 102859,
+        "price": 500000,
+        "currency": "NGN",
+        "quantity": 0,
+        "type": "good",
+        "features": null,
+        "is_shippable": 0,
+        "domain": "test",
+        "integration": 343288,
+        "active": 1,
+        "in_stock": 1
+      }
+    ]
+  }
+}

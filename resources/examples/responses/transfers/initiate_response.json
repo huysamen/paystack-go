@@ -1,0 +1,18 @@
+{
+  "status": true,
+  "message": "Transfer requires OTP to continue",
+  "data": {
+    "integration": 100073,
+    "domain": "test",
+    "amount": 3794800,
+    "currency": "NGN",
+    "source": "balance",
+    "reason": "Calm down",
+    "recipient": 28,
+    "status": "otp",
+    "transfer_code": "TRF_1ptvuv321ahaa7q",
+    "id": 14,
+    "createdAt": "2017-02-03T17:21:54.508Z",
+    "updatedAt": "2017-02-03T17:21:54.508Z"
+  }
+}

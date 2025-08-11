@@ -1,0 +1,55 @@
+{
+  "data": {
+    "amount": 50000,
+    "authorization": {
+      "account_name": "BoJack Horseman",
+      "authorization_code": "AUTH_9246d0h9kl",
+      "bank": "Test Bank",
+      "bin": "408408",
+      "brand": "visa",
+      "card_type": "visa DEBIT",
+      "channel": "card",
+      "country_code": "NG",
+      "exp_month": "12",
+      "exp_year": "2020",
+      "last4": "4081",
+      "reusable": true,
+      "signature": "SIG_iCw3p0rsG7LUiQwlsR3t"
+    },
+    "created_at": "2018-12-20T15:00:02.000Z",
+    "customer": {
+      "customer_code": "CUS_00w4ath3e2ukno4",
+      "email": "asam@ple.com",
+      "first_name": "Asample",
+      "id": 46,
+      "last_name": "Personpaying",
+      "metadata": null,
+      "phone": "",
+      "risk_action": "default"
+    },
+    "description": null,
+    "domain": "test",
+    "invoice_code": "INV_thy2vkmirn2urwv",
+    "paid": true,
+    "paid_at": "2018-12-20T15:00:06.000Z",
+    "period_end": "2018-12-19T23:59:59.000Z",
+    "period_start": "2018-12-20T15:00:00.000Z",
+    "status": "success",
+    "subscription": {
+      "amount": 50000,
+      "cron_expression": "0 * * * *",
+      "email_token": "3a1h7bcu8zxhm8k",
+      "next_payment_date": "2018-12-20T00:00:00.000Z",
+      "open_invoice": null,
+      "status": "active",
+      "subscription_code": "SUB_fq7dbe8tju0i1v8"
+    },
+    "transaction": {
+      "amount": 50000,
+      "currency": "NGN",
+      "reference": "9cfbae6e-bbf3-5b41-8aef-d72c1a17650g",
+      "status": "success"
+    }
+  },
+  "event": "invoice.create"
+}

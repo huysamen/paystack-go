@@ -1,0 +1,24 @@
+{
+  "status": true,
+  "message": "Transfer recipient created successfully",
+  "data": {
+    "active": true,
+    "createdAt": "2021-11-05T11:27:53.131Z",
+    "currency": "NGN",
+    "domain": "test",
+    "id": 20317609,
+    "integration": 463433,
+    "name": "Tolu Robert",
+    "recipient_code": "RCP_m7ljkv8leesep7p",
+    "type": "nuban",
+    "updatedAt": "2021-11-05T11:27:53.131Z",
+    "is_deleted": false,
+    "details": {
+      "authorization_code": null,
+      "account_number": "01000000010",
+      "account_name": "Tolu Robert",
+      "bank_code": "058",
+      "bank_name": "Guaranty Trust Bank"
+    }
+  }
+}

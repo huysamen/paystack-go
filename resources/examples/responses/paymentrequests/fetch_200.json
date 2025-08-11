@@ -1,0 +1,68 @@
+{
+  "status": true,
+  "message": "Payment request retrieved",
+  "data": {
+    "transactions": [],
+    "domain": "test",
+    "request_code": "PRQ_1weqqsn2wwzgft8",
+    "description": "a test invoice",
+    "line_items": [
+      {
+        "name": "item 1",
+        "amount": 20000
+      },
+      {
+        "name": "item 2",
+        "amount": 20000
+      }
+    ],
+    "tax": [
+      {
+        "name": "VAT",
+        "amount": 2000
+      }
+    ],
+    "amount": 42000,
+    "discount": null,
+    "currency": "NGN",
+    "due_date": "2020-07-08T00:00:00.000Z",
+    "status": "pending",
+    "paid": false,
+    "paid_at": null,
+    "metadata": null,
+    "has_invoice": true,
+    "invoice_number": 1,
+    "offline_reference": "4286263136406",
+    "pdf_url": null,
+    "notifications": [],
+    "archived": false,
+    "source": "user",
+    "payment_method": null,
+    "note": null,
+    "amount_paid": null,
+    "id": 3136406,
+    "integration": 428626,
+    "customer": {
+      "transactions": [],
+      "subscriptions": [],
+      "authorizations": [],
+      "first_name": "Damilola",
+      "last_name": "Odujoko",
+      "email": "damilola@example.com",
+      "phone": null,
+      "metadata": {
+        "calling_code": "+234"
+      },
+      "domain": "test",
+      "customer_code": "CUS_xwaj0txjryg393b",
+      "risk_action": "default",
+      "id": 25833615,
+      "integration": 428626,
+      "createdAt": "2020-06-29T16:06:53.000Z",
+      "updatedAt": "2020-06-29T16:06:53.000Z"
+    },
+    "createdAt": "2020-06-29T16:07:33.000Z",
+    "updatedAt": "2020-06-29T16:07:33.000Z",
+    "pending_amount": 42000
+  }
+}

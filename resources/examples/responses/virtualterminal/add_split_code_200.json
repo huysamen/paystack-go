@@ -1,0 +1,54 @@
+{
+  "status": true,
+  "message": "Split code assigned",
+  "data": {
+    "id": 3025782,
+    "name": "Dynamic Split at 1729681745076",
+    "type": "flat",
+    "currency": "ZAR",
+    "integration": 530700,
+    "domain": "test",
+    "split_code": "SPL_HBaFCbbiyI",
+    "active": true,
+    "bearer_type": "subaccount",
+    "bearer_subaccount": 854043,
+    "createdAt": "2024-10-23T11:09:05.000Z",
+    "updatedAt": "2024-10-23T11:09:05.000Z",
+    "is_dynamic": true,
+    "subaccounts": [
+      {
+        "subaccount": {
+          "id": 523210,
+          "subaccount_code": "ACCT_r56edei4okmllle",
+          "business_name": "ABC Ventures",
+          "description": "ABC Ventures",
+          "primary_contact_name": null,
+          "primary_contact_email": null,
+          "primary_contact_phone": null,
+          "metadata": null,
+          "settlement_bank": "African Bank Limited",
+          "currency": "ZAR",
+          "account_number": "00000000000"
+        },
+        "share": 1600
+      },
+      {
+        "subaccount": {
+          "id": 854043,
+          "subaccount_code": "ACCT_n8m5vz2itt8y0f1",
+          "business_name": "Best Logistics",
+          "description": "Best Logistics",
+          "primary_contact_name": null,
+          "primary_contact_email": null,
+          "primary_contact_phone": null,
+          "metadata": null,
+          "settlement_bank": "Capitec Bank Limited",
+          "currency": "ZAR",
+          "account_number": "1051366984"
+        },
+        "share": 98400
+      }
+    ],
+    "total_subaccounts": 2
+  }
+}

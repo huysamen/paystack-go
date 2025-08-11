@@ -1,0 +1,31 @@
+{
+  "status": true,
+  "message": "Mandate authorizations retrieved successfully",
+  "data": [
+    {
+      "id": 164098,
+      "status": "active",
+      "mandate_id": 512003,
+      "authorization_id": 110049014,
+      "authorization_code": "AUTH_8Lol0pNt14",
+      "integration_id": 463433,
+      "account_number": "0123456789",
+      "bank_code": "032",
+      "bank_name": null,
+      "customer": {
+        "id": 43975700,
+        "customer_code": "CUS_2eusy8uwe34s23fy",
+        "email": "customer@email.com",
+        "first_name": "Smith",
+        "last_name": "Bel"
+      },
+      "authorized_at": "2024-09-27T10:57:53.824Z"
+    }
+  ],
+  "meta": {
+    "per_page": 50,
+    "next": null,
+    "count": 1,
+    "total": 1
+  }
+}

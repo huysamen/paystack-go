@@ -1,0 +1,22 @@
+{
+  "status": true,
+  "message": "Virtual Terminal created",
+  "data": {
+    "id": 27691,
+    "name": "Sample Terminal",
+    "integration": 530700,
+    "domain": "test",
+    "code": "VT_LJK5892Z",
+    "paymentMethods": [],
+    "active": true,
+    "metadata": null,
+    "destinations": [
+      {
+        "target": "+27639022319",
+        "type": "whatsapp",
+        "name": "Phone Destination"
+      }
+    ],
+    "currency": "ZAR"
+  }
+}

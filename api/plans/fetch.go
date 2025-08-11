@@ -1,32 +1,24 @@
 package plans
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/huysamen/paystack-go/net"
 	"github.com/huysamen/paystack-go/types"
 )
 
-type PlanFetchResponse struct {
-	types.Plan
+type FetchResponseData = types.Plan
+type FetchResponse = types.Response[FetchResponseData]
 
-	Subscriptions []types.Subscription `json:"subscriptions"`
-	Pages         []types.Page         `json:"pages"`
-	Subscribers   []types.Subscriber   `json:"subscribers"`
+func (c *Client) FetchByID(ctx context.Context, id uint64) (*FetchResponse, error) {
+	return net.Get[FetchResponseData](ctx, c.Client, c.Secret, fmt.Sprintf("%s/%d", basePath, id), c.BaseURL)
 }
 
-func (c *Client) FetchByID(id uint64) (*types.Response[PlanFetchResponse], error) {
-	return net.Get[PlanFetchResponse](
-		c.client,
-		c.secret,
-		fmt.Sprintf("%s/%d", planBasePath, id),
-	)
+func (c *Client) FetchByCode(ctx context.Context, code string) (*FetchResponse, error) {
+	return net.Get[FetchResponseData](ctx, c.Client, c.Secret, fmt.Sprintf("%s/%s", basePath, code), c.BaseURL)
 }
 
-func (c *Client) FetchByCode(code string) (*types.Response[PlanFetchResponse], error) {
-	return net.Get[PlanFetchResponse](
-		c.client,
-		c.secret,
-		fmt.Sprintf("%s/%s", planBasePath, code),
-	)
+func (c *Client) Fetch(ctx context.Context, idOrCode string) (*FetchResponse, error) {
+	return net.Get[FetchResponseData](ctx, c.Client, c.Secret, fmt.Sprintf("%s/%s", basePath, idOrCode), c.BaseURL)
 }

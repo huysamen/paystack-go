@@ -1,0 +1,18 @@
+{
+  "status": true,
+  "message": "Dedicated account providers retrieved",
+  "data": [
+    {
+      "provider_slug": "access-bank",
+      "bank_id": 1,
+      "bank_name": "Access Bank",
+      "id": 6
+    },
+    {
+      "provider_slug": "wema-bank",
+      "bank_id": 20,
+      "bank_name": "Wema Bank",
+      "id": 5
+    }
+  ]
+}

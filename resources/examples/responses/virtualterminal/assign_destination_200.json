@@ -1,0 +1,15 @@
+{
+  "status": true,
+  "message": "Destinations assigned successfully",
+  "data": [
+    {
+      "integration": 530700,
+      "target": "2341234567890",
+      "name": "Another one",
+      "type": "whatsapp",
+      "id": 27934,
+      "createdAt": "2025-02-04T13:26:35.278Z",
+      "updatedAt": "2025-02-04T13:26:35.278Z"
+    }
+  ]
+}

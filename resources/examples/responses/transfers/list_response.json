@@ -1,0 +1,47 @@
+{
+  "status": true,
+  "message": "Transfers retrieved",
+  "data": [
+    {
+      "integration": 100073,
+      "recipient": {
+        "domain": "test",
+        "type": "nuban",
+        "currency": "NGN",
+        "name": "Flesh",
+        "details": {
+          "account_number": "olounje",
+          "account_name": null,
+          "bank_code": "044",
+          "bank_name": "Access Bank"
+        },
+        "description": "Eater",
+        "metadata": null,
+        "recipient_code": "RCP_2x5j67tnnw1t98k",
+        "active": true,
+        "id": 28,
+        "createdAt": "2016-12-06T10:52:03.000Z",
+        "updatedAt": "2016-12-06T10:52:03.000Z"
+      },
+      "domain": "test",
+      "amount": 4400,
+      "currency": "NGN",
+      "source": "balance",
+      "source_details": null,
+      "reason": "Calm down",
+      "status": "success",
+      "failures": null,
+      "transfer_code": "TRF_2x5j67tnnw1t98k",
+      "id": 23070321,
+      "createdAt": "2017-03-21T18:58:57.000Z",
+      "updatedAt": "2017-03-21T18:58:57.000Z"
+    }
+  ],
+  "meta": {
+    "total": 1,
+    "skipped": 0,
+    "perPage": 50,
+    "page": 1,
+    "pageCount": 1
+  }
+}

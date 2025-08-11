@@ -1,0 +1,136 @@
+package applepay
+
+import (
+	"encoding/json"
+	"os"
+	"path/filepath"
+	"testing"
+
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+)
+
+func TestRegisterDomainResponse_JSONDeserialization(t *testing.T) {
+	tests := []struct {
+		name            string
+		responseFile    string
+		expectedStatus  bool
+		expectedMessage string
+		expectedData    any
+	}{
+		{
+			name:            "successful register domain response",
+			responseFile:    "register_domain_200.json",
+			expectedStatus:  true,
+			expectedMessage: "Domain successfully registered on Apple Pay",
+			expectedData:    nil, // The response doesn't include a data field
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			// Read the response file
+			responseFilePath := filepath.Join("..", "..", "resources", "examples", "responses", "applepay", tt.responseFile)
+			responseData, err := os.ReadFile(responseFilePath)
+			require.NoError(t, err, "failed to read response file: %s", responseFilePath) // Deserialize the JSON response
+			var response RegisterDomainResponse
+			err = json.Unmarshal(responseData, &response)
+			require.NoError(t, err, "failed to unmarshal JSON response")
+
+			// Verify the response structure
+			assert.Equal(t, tt.expectedStatus, response.Status.Bool(), "status should match")
+			assert.Equal(t, tt.expectedMessage, response.Message, "message should match")
+
+			// Verify the data field (should be nil/empty for register domain)
+			assert.Equal(t, tt.expectedData, response.Data, "data should match expected value")
+		})
+	}
+}
+
+func TestRegisterDomainResponse_FieldByFieldValidation(t *testing.T) {
+	t.Run("register_domain_200_json_comprehensive_field_validation", func(t *testing.T) {
+		// Read the exact JSON response file
+		responseFilePath := filepath.Join("..", "..", "resources", "examples", "responses", "applepay", "register_domain_200.json")
+		responseData, err := os.ReadFile(responseFilePath)
+		require.NoError(t, err, "failed to read register_domain_200.json")
+
+		// Parse into our struct
+		var response RegisterDomainResponse
+		err = json.Unmarshal(responseData, &response)
+		require.NoError(t, err, "failed to unmarshal register_domain_200.json")
+
+		// Parse the raw JSON to compare exact values
+		var rawJSON map[string]any
+		err = json.Unmarshal(responseData, &rawJSON)
+		require.NoError(t, err, "failed to parse raw JSON for comparison")
+
+		// Field-by-field validation against the exact JSON values
+		assert.Equal(t, true, rawJSON["status"], "status in JSON should be true")
+		assert.Equal(t, true, response.Status.Bool(), "status in struct should be true")
+
+		assert.Equal(t, "Domain successfully registered on Apple Pay", rawJSON["message"], "message in JSON should match")
+		assert.Equal(t, "Domain successfully registered on Apple Pay", response.Message, "message in struct should match")
+
+		// Verify no data field exists in this response
+		assert.NotContains(t, rawJSON, "data", "JSON should not contain data field")
+		assert.Nil(t, response.Data, "struct data field should be nil")
+
+		// Verify complete JSON structure matches our struct
+		reconstituted, err := json.Marshal(response)
+		require.NoError(t, err, "should be able to marshal struct back to JSON")
+
+		var reconstitutedMap map[string]any
+		err = json.Unmarshal(reconstituted, &reconstitutedMap)
+		require.NoError(t, err, "should be able to parse reconstituted JSON")
+
+		// Core fields should match
+		assert.Equal(t, rawJSON["status"], reconstitutedMap["status"], "status should survive round-trip")
+		assert.Equal(t, rawJSON["message"], reconstitutedMap["message"], "message should survive round-trip")
+	})
+}
+
+func TestRegisterDomainRequestBuilder(t *testing.T) {
+	t.Run("builds request with domain name", func(t *testing.T) {
+		domainName := "test.example.com"
+		builder := NewRegisterDomainRequestBuilder(domainName)
+		request := builder.Build()
+
+		assert.Equal(t, domainName, request.DomainName, "domain name should match")
+	})
+
+	t.Run("builds request with empty domain name", func(t *testing.T) {
+		domainName := ""
+		builder := NewRegisterDomainRequestBuilder(domainName)
+		request := builder.Build()
+
+		assert.Equal(t, domainName, request.DomainName, "domain name should be empty")
+	})
+
+	t.Run("domain name is required in constructor", func(t *testing.T) {
+		// This test verifies that the constructor requires a domain name parameter
+		// The builder pattern enforces this at compile time
+		domainName := "required.domain.com"
+		builder := NewRegisterDomainRequestBuilder(domainName)
+		request := builder.Build()
+
+		assert.NotNil(t, request, "request should not be nil")
+		assert.Equal(t, domainName, request.DomainName, "domain name should be set")
+	})
+}
+
+func TestRegisterDomainRequest_JSONSerialization(t *testing.T) {
+	t.Run("serializes request correctly", func(t *testing.T) {
+		domainName := "test.example.com"
+		builder := NewRegisterDomainRequestBuilder(domainName)
+		request := builder.Build()
+
+		jsonData, err := json.Marshal(request)
+		require.NoError(t, err, "should marshal to JSON without error")
+
+		var unmarshaled map[string]any
+		err = json.Unmarshal(jsonData, &unmarshaled)
+		require.NoError(t, err, "should unmarshal JSON without error")
+
+		assert.Equal(t, domainName, unmarshaled["domainName"], "domainName field should match")
+	})
+}

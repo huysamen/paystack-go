@@ -1,0 +1,84 @@
+{
+  "status": true,
+  "message": "Disputes retrieved",
+  "data": [
+    {
+      "id": 2867,
+      "refund_amount": null,
+      "currency": null,
+      "status": "archived",
+      "resolution": null,
+      "domain": "test",
+      "transaction": {
+        "id": 5991760,
+        "domain": "test",
+        "status": "success",
+        "reference": "asjck8gf76zd1dr",
+        "amount": 39100,
+        "message": null,
+        "gateway_response": "Successful",
+        "paid_at": "2017-11-09T00:01:56.000Z",
+        "created_at": "2017-11-09T00:01:36.000Z",
+        "channel": "card",
+        "currency": "NGN",
+        "ip_address": null,
+        "metadata": "",
+        "log": null,
+        "fees": 587,
+        "fees_split": null,
+        "authorization": {},
+        "customer": null,
+        "plan": {},
+        "subaccount": {},
+        "split": {},
+        "order_id": null,
+        "paidAt": "2017-11-09T00:01:56.000Z",
+        "createdAt": "2017-11-09T00:01:36.000Z",
+        "pos_transaction_data": null
+      },
+      "transaction_reference": null,
+      "category": null,
+      "customer": {
+        "id": 10207,
+        "first_name": null,
+        "last_name": null,
+        "email": "shola@baddest.com",
+        "customer_code": "CUS_unz4q52yjsd6064",
+        "phone": null,
+        "metadata": null,
+        "risk_action": "default",
+        "international_format_phone": null
+      },
+      "bin": null,
+      "last4": null,
+      "dueAt": null,
+      "resolvedAt": null,
+      "evidence": null,
+      "attachments": "[]",
+      "note": null,
+      "history": [
+        {
+          "status": "pending",
+          "by": "demo@test.co",
+          "createdAt": "2017-11-16T16:12:24.000Z"
+        }
+      ],
+      "messages": [
+        {
+          "sender": "demo@test.co",
+          "body": "test this",
+          "createdAt": "2017-11-16T16:12:24.000Z"
+        }
+      ],
+      "createdAt": "2017-11-16T16:12:24.000Z",
+      "updatedAt": "2019-08-16T08:05:25.000Z"
+    }
+  ],
+  "meta": {
+    "total": 1,
+    "skipped": 0,
+    "perPage": 50,
+    "page": 1,
+    "pageCount": 1
+  }
+}

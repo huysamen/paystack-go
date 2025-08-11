@@ -1,0 +1,9 @@
+{
+  "status": false,
+  "message": "Virtual Terminal not assigned",
+  "meta": {
+    "nextStep": "Try again later"
+  },
+  "type": "api_error",
+  "code": "unknown"
+}

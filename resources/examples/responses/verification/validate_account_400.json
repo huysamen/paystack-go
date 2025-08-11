@@ -1,0 +1,8 @@
+{
+  "status": false,
+  "message": "Personal Account Verification attempted",
+  "data": {
+    "verified": false,
+    "verificationMessage": "The provided bank account number is invalid"
+  }
+}

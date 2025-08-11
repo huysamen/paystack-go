@@ -1,0 +1,23 @@
+{
+  "status": true,
+  "message": "Plan retrieved",
+  "data": {
+    "subscriptions": [],
+    "integration": 100032,
+    "domain": "test",
+    "name": "Monthly retainer",
+    "plan_code": "PLN_gx2wn530m0i3w3m",
+    "description": null,
+    "amount": 50000,
+    "interval": "monthly",
+    "send_invoices": true,
+    "send_sms": true,
+    "hosted_page": false,
+    "hosted_page_url": null,
+    "hosted_page_summary": null,
+    "currency": "NGN",
+    "id": 28,
+    "createdAt": "2016-03-29T22:42:50.000Z",
+    "updatedAt": "2016-03-29T22:42:50.000Z"
+  }
+}

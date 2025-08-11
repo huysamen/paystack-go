@@ -1,0 +1,9 @@
+{
+  "status": true,
+  "message": "Charge attempted",
+  "data": {
+    "reference": "0t4gwo2ft6q0n9h",
+    "status": "send_birthday",
+    "display_text": "Please send your birthday"
+  }
+}

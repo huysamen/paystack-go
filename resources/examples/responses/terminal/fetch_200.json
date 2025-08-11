@@ -1,0 +1,15 @@
+{
+  "status": true,
+  "message": "Terminal retrieved successfully",
+  "data": {
+    "id": 30,
+    "serial_number": "033301504100A563877",
+    "device_make": null,
+    "terminal_id": "2872S934",
+    "integration": 463433,
+    "domain": "live",
+    "name": "Damilola's Terminal",
+    "address": null,
+    "status": "active"
+  }
+}

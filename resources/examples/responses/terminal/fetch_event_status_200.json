@@ -1,0 +1,7 @@
+{
+  "status": true,
+  "message": "Message Status Retrieved",
+  "data": {
+    "delivered": true
+  }
+}

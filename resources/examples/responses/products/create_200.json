@@ -1,0 +1,33 @@
+{
+  "status": true,
+  "message": "Product successfully created",
+  "data": {
+    "name": "Puff Puff",
+    "description": "Crispy flour ball with fluffy interior",
+    "currency": "NGN",
+    "price": 5000,
+    "quantity": 100,
+    "is_shippable": true,
+    "unlimited": false,
+    "integration": 463433,
+    "domain": "test",
+    "metadata": {
+      "background_color": "#F5F5F5"
+    },
+    "slug": "puff-puff-prqnxc",
+    "product_code": "PROD_ddot3upakgl3ejt",
+    "quantity_sold": 0,
+    "type": "good",
+    "shipping_fields": {
+      "delivery_note": "disabled"
+    },
+    "active": true,
+    "in_stock": true,
+    "minimum_orderable": 1,
+    "maximum_orderable": null,
+    "low_stock_alert": false,
+    "id": 489399,
+    "createdAt": "2021-11-08T14:39:37.303Z",
+    "updatedAt": "2021-11-08T14:39:37.303Z"
+  }
+}

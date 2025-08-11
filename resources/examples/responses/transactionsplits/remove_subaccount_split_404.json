@@ -1,0 +1,9 @@
+{
+  "status": false,
+  "message": "Subaccount not found",
+  "meta": {
+    "nextStep": "Ensure that you're passing the correct reference for the requested resource that exists on this integration"
+  },
+  "type": "validation_error",
+  "code": "not_found"
+}

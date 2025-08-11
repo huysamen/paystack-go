@@ -1,0 +1,22 @@
+{
+  "status": true,
+  "message": "Page created",
+  "data": {
+    "name": "Onipan and Hassan",
+    "description": "",
+    "amount": 10000,
+    "split_code": "SPL_yqSS1FvrBz",
+    "integration": 463433,
+    "domain": "test",
+    "slug": "1got2y8unp",
+    "currency": "NGN",
+    "type": "payment",
+    "collect_phone": false,
+    "active": true,
+    "published": true,
+    "migrate": false,
+    "id": 1308510,
+    "createdAt": "2023-03-21T11:44:16.412Z",
+    "updatedAt": "2023-03-21T11:44:16.412Z"
+  }
+}

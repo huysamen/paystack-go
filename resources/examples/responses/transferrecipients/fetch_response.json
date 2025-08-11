@@ -1,0 +1,24 @@
+{
+  "status": true,
+  "message": "Recipient retrieved",
+  "data": {
+    "domain": "test",
+    "type": "nuban",
+    "currency": "NGN",
+    "name": "Flesh",
+    "details": {
+      "account_number": "01000000000",
+      "account_name": null,
+      "bank_code": "044",
+      "bank_name": "Access Bank"
+    },
+    "metadata": {
+      "job": "Eater"
+    },
+    "recipient_code": "RCP_2x5j67tnnw1t98k",
+    "active": true,
+    "id": 28,
+    "createdAt": "2017-02-02T19:39:04.000Z",
+    "updatedAt": "2017-02-02T19:39:04.000Z"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "status": true,
+  "message": "Customer updated",
+  "data": {
+    "first_name": "Peter",
+    "last_name": "Griffin",
+    "email": "peter@grif.com",
+    "phone": null,
+    "metadata": {},
+    "domain": "test",
+    "identified": false,
+    "identifications": null,
+    "customer_code": "CUS_xr58yrr2ujlft9k",
+    "risk_action": "allow",
+    "id": 2109,
+    "integration": 100032,
+    "createdAt": "2016-01-26T13:43:38.000Z",
+    "updatedAt": "2016-08-23T03:56:43.000Z"
+  }
+}

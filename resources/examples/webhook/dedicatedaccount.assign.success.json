@@ -1,0 +1,44 @@
+{
+  "data": {
+    "customer": {
+      "customer_code": "CUS_hp05n9khsqcesz2",
+      "email": "johndoe@test.com",
+      "first_name": "John",
+      "id": 100110,
+      "international_format_phone": "+2348100000000",
+      "last_name": "Doe",
+      "metadata": {},
+      "phone": "+2348100000000",
+      "risk_action": "default"
+    },
+    "dedicated_account": {
+      "account_name": "PAYSTACK/John Doe",
+      "account_number": "1234567890",
+      "active": true,
+      "assigned": true,
+      "assignment": {
+        "account_type": "PAY-WITH-TRANSFER-RECURRING",
+        "assigned_at": "2022-08-12T14:02:51.614Z",
+        "assignee_id": 100110,
+        "assignee_type": "Customer",
+        "expired": false,
+        "expired_at": null,
+        "integration": 100123
+      },
+      "bank": {
+        "id": 20,
+        "name": "Test Bank",
+        "slug": "test-bank"
+      },
+      "created_at": "2022-06-21T17:12:40.000Z",
+      "currency": "NGN",
+      "id": 987654,
+      "metadata": null,
+      "updated_at": "2022-08-12T14:02:51.000Z"
+    },
+    "identification": {
+      "status": "success"
+    }
+  },
+  "event": "dedicatedaccount.assign.success"
+}

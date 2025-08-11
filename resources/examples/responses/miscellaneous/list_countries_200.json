@@ -1,0 +1,76 @@
+{
+  "status": true,
+  "message": "Countries retrieved",
+  "data": [
+    {
+      "id": 1,
+      "name": "Nigeria",
+      "iso_code": "NG",
+      "default_currency_code": "NGN",
+      "integration_defaults": {},
+      "relationships": {
+        "currency": {
+          "type": "currency",
+          "data": [
+            "NGN",
+            "USD"
+          ]
+        },
+        "integration_feature": {
+          "type": "integration_feature",
+          "data": []
+        },
+        "integration_type": {
+          "type": "integration_type",
+          "data": [
+            "ITYPE_001",
+            "ITYPE_002",
+            "ITYPE_003"
+          ]
+        },
+        "payment_method": {
+          "type": "payment_method",
+          "data": [
+            "PAYM_001",
+            "PAYM_002",
+            "PAYM_003",
+            "PAYM_004"
+          ]
+        }
+      }
+    },
+    {
+      "id": 2,
+      "name": "Ghana",
+      "iso_code": "GH",
+      "default_currency_code": "GHS",
+      "integration_defaults": {},
+      "relationships": {
+        "currency": {
+          "type": "currency",
+          "data": [
+            "GHS",
+            "USD"
+          ]
+        },
+        "integration_feature": {
+          "type": "integration_feature",
+          "data": []
+        },
+        "integration_type": {
+          "type": "integration_type",
+          "data": [
+            "ITYPE_004",
+            "ITYPE_005"
+          ]
+        },
+        "payment_method": {
+          "type": "payment_method",
+          "data": [
+            "PAYM_001"
+          ]
+        }
+      }
+    }
+  ]
+}

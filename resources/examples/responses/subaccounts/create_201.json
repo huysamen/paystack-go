@@ -1,0 +1,25 @@
+{
+  "status": true,
+  "message": "Subaccount created",
+  "data": {
+    "business_name": "Oasis",
+    "account_number": "0123456047",
+    "percentage_charge": 30,
+    "settlement_bank": "Guaranty Trust Bank",
+    "currency": "NGN",
+    "bank": 9,
+    "integration": 463433,
+    "domain": "test",
+    "account_name": "LARRY JAMES  O",
+    "product": "collection",
+    "managed_by_integration": 463433,
+    "subaccount_code": "ACCT_6uujpqtzmnufzkw",
+    "is_verified": false,
+    "settlement_schedule": "AUTO",
+    "active": true,
+    "migrate": false,
+    "id": 1151727,
+    "createdAt": "2024-08-26T09:24:28.723Z",
+    "updatedAt": "2024-08-26T09:24:28.723Z"
+  }
+}

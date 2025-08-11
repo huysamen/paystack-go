@@ -1,0 +1,43 @@
+{
+  "status": true,
+  "message": "Product retrieved",
+  "data": {
+    "digital_assets": [],
+    "integration": 463433,
+    "name": "Mimshack",
+    "description": "Everything cars",
+    "product_code": "PROD_22deobcvbht2dfe",
+    "price": 50000,
+    "currency": "NGN",
+    "quantity": 10,
+    "quantity_sold": null,
+    "type": "good",
+    "files": null,
+    "file_path": null,
+    "is_shippable": true,
+    "shipping_fields": {
+      "delivery_note": "disabled"
+    },
+    "unlimited": false,
+    "domain": "test",
+    "active": true,
+    "features": null,
+    "in_stock": true,
+    "metadata": {
+      "background_color": "#F5F5F5"
+    },
+    "slug": "mimshack-yiuedh",
+    "success_message": null,
+    "redirect_url": null,
+    "split_code": null,
+    "notification_emails": null,
+    "minimum_orderable": 1,
+    "maximum_orderable": null,
+    "low_stock_alert": false,
+    "stock_threshold": null,
+    "expires_in": null,
+    "id": 795638,
+    "createdAt": "2022-04-12T11:21:43.000Z",
+    "updatedAt": "2022-04-12T11:21:43.000Z"
+  }
+}

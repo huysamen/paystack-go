@@ -1,0 +1,14 @@
+{
+  "status": true,
+  "message": "Bulk charge retrieved",
+  "data": {
+    "domain": "test",
+    "batch_code": "BCH_180tl7oq7cayggh",
+    "status": "complete",
+    "id": 17,
+    "total_charges": 0,
+    "pending_charges": 0,
+    "createdAt": "2017-02-04T05:44:19.000Z",
+    "updatedAt": "2017-02-04T05:45:02.000Z"
+  }
+}

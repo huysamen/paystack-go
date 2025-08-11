@@ -1,21 +1,9 @@
 package plans
 
 import (
-	"net/http"
+	"github.com/huysamen/paystack-go/api"
 )
 
-const (
-	planBasePath = "/plan"
-)
+const basePath = "/plan"
 
-type Client struct {
-	client *http.Client
-	secret string
-}
-
-func NewClient(secret string, client *http.Client) *Client {
-	return &Client{
-		secret: secret,
-		client: client,
-	}
-}
+type Client api.API

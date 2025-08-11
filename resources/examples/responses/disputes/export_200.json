@@ -1,0 +1,8 @@
+{
+  "status": true,
+  "message": "Export successful",
+  "data": {
+    "path": "https://s3.eu-west-1.amazonaws.com/files.paystack.co/exports/100043/disputes/161834548008.csv?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIFGL5IZL2DJHOPPA%2F20210419%2Feu-west-1%2Fs3%2Faws4_request&X-Amz-Date=20210419T115718Z&X-Amz-Expires=60&X-Amz-Signature=8fc02bdf7f12411a6505559b4c35b069a8a478295b98c0587907777ef5e31bda&X-Amz-SignedHeaders=host",
+    "expiresAt": "2021-04-19 11:58:18"
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "status": true,
+  "message": "Subaccounts retrieved",
+  "data": [
+    {
+      "id": 1151727,
+      "subaccount_code": "ACCT_6uujpqtzmnufzkw",
+      "business_name": "Oasis",
+      "description": "Oasis",
+      "primary_contact_name": null,
+      "primary_contact_email": null,
+      "primary_contact_phone": null,
+      "metadata": null,
+      "percentage_charge": 30,
+      "settlement_bank": "Guaranty Trust Bank",
+      "bank_id": 9,
+      "account_number": "0123456047",
+      "currency": "NGN",
+      "active": 1
+    }
+  ],
+  "meta": {
+    "total": 27,
+    "skipped": 0,
+    "perPage": 50,
+    "page": 1,
+    "pageCount": 1
+  }
+}

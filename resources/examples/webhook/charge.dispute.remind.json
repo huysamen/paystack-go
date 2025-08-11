@@ -1,0 +1,76 @@
+{
+  "data": {
+    "attachments": null,
+    "bin": "123456",
+    "category": "chargeback",
+    "created_at": "2020-11-24T13:46:57.000Z",
+    "currency": "NGN",
+    "customer": {
+      "customer_code": "CUS_6wbxh6689vt0n7s",
+      "email": "example@test.com",
+      "first_name": "John",
+      "id": 5406463,
+      "international_format_phone": null,
+      "last_name": "Doe",
+      "metadata": {},
+      "phone": "08000000000",
+      "risk_action": "allow"
+    },
+    "domain": "live",
+    "dueAt": "2020-11-25T18:00:00.000Z",
+    "evidence": null,
+    "history": [
+      {
+        "by": "example@test.com",
+        "createdAt": "2020-11-24T13:46:57.000Z",
+        "status": "pending"
+      }
+    ],
+    "id": 358950,
+    "last4": "1234",
+    "messages": [
+      {
+        "body": "Customer complained about debit without value",
+        "createdAt": "2020-11-24T13:46:57.000Z",
+        "sender": "example@test.com"
+      }
+    ],
+    "note": null,
+    "refund_amount": 5800,
+    "resolution": null,
+    "resolvedAt": null,
+    "status": "awaiting-merchant-feedback",
+    "transaction": {
+      "amount": 5800,
+      "authorization": {},
+      "channel": "card",
+      "created_at": "2020-11-24T13:45:57.000Z",
+      "currency": "NGN",
+      "customer": {
+        "international_format_phone": null
+      },
+      "domain": "live",
+      "fees": 53,
+      "fees_split": null,
+      "gateway_response": "Approved",
+      "id": 896467688,
+      "ip_address": null,
+      "log": null,
+      "message": null,
+      "metadata": "",
+      "order_id": null,
+      "paidAt": "2020-11-24T13:45:57.000Z",
+      "paid_at": "2020-11-24T13:45:57.000Z",
+      "plan": {},
+      "pos_transaction_data": null,
+      "reference": "v3mjfgbnc19v97x",
+      "requested_amount": 5800,
+      "split": {},
+      "status": "success",
+      "subaccount": {}
+    },
+    "transaction_reference": null,
+    "updated_at": "2020-11-24T18:00:02.000Z"
+  },
+  "event": "charge.dispute.remind"
+}

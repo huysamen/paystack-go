@@ -1,0 +1,16 @@
+{
+  "status": true,
+  "message": "Charges have been queued",
+  "data": {
+    "batch_code": "BCH_rrsbgwb4ivgzst1",
+    "reference": "bulkcharge-1663150565684-p18nyoa68a",
+    "id": 66608171,
+    "integration": 463433,
+    "domain": "test",
+    "status": "active",
+    "total_charges": 2,
+    "pending_charges": 2,
+    "createdAt": "2022-09-14T10:16:05.000Z",
+    "updatedAt": "2022-09-14T10:16:05.000Z"
+  }
+}

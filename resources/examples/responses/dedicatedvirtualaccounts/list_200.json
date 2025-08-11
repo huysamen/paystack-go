@@ -1,0 +1,41 @@
+{
+  "status": true,
+  "message": "Managed accounts successfully retrieved",
+  "data": [
+    {
+      "customer": {
+        "id": 1530104,
+        "first_name": "yinka",
+        "last_name": "Ojo",
+        "email": "hello@company.co",
+        "customer_code": "CUS_dy1r7ts03zixbq5",
+        "phone": "08154239386",
+        "risk_action": "default",
+        "international_format_phone": null
+      },
+      "bank": {
+        "name": "Wema Bank",
+        "id": 20,
+        "slug": "wema-bank"
+      },
+      "id": 173,
+      "account_name": "KAROKART/A YINKA",
+      "account_number": "9930020212",
+      "created_at": "2019-12-09T13:31:38.000Z",
+      "updated_at": "2020-06-11T14:04:28.000Z",
+      "currency": "NGN",
+      "split_config": {
+        "subaccount": "ACCT_xdrne0tcvr5jkei"
+      },
+      "active": true,
+      "assigned": true
+    }
+  ],
+  "meta": {
+    "total": 1,
+    "skipped": 0,
+    "perPage": 50,
+    "page": 1,
+    "pageCount": 1
+  }
+}

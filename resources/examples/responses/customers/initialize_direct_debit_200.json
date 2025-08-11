@@ -1,0 +1,9 @@
+{
+  "status": true,
+  "message": "Authorization initialized",
+  "data": {
+    "redirect_url": "https://link.paystack.com/ll6b0szngj1f27k",
+    "access_code": "ll6b0szngj1f27k",
+    "reference": "1er945lpy4txyki"
+  }
+}

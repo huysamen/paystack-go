@@ -1,0 +1,8 @@
+{
+  "status": false,
+  "message": "Charge attempted",
+  "data": {
+    "status": "failed",
+    "message": "Insufficient funds"
+  }
+}

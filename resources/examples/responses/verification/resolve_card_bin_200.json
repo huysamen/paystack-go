@@ -1,0 +1,14 @@
+{
+  "status": true,
+  "message": "Bin resolved",
+  "data": {
+    "bin": "539983",
+    "brand": "Mastercard",
+    "sub_brand": "",
+    "country_code": "NG",
+    "country_name": "Nigeria",
+    "card_type": "DEBIT",
+    "bank": "Guaranty Trust Bank",
+    "linked_bank_id": 9
+  }
+}

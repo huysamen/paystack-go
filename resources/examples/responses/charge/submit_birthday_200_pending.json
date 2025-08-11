@@ -1,0 +1,8 @@
+{
+  "status": true,
+  "message": "Charge attempted",
+  "data": {
+    "reference": "5bwib5v6anhe9xa",
+    "status": "pending"
+  }
+}

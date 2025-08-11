@@ -1,0 +1,48 @@
+{
+  "status": true,
+  "message": "Refunds retrieved",
+  "data": [
+    {
+      "id": 1,
+      "integration": 100982,
+      "domain": "live",
+      "transaction": 1641,
+      "dispute": 20,
+      "amount": 500000,
+      "deducted_amount": 500000,
+      "currency": "NGN",
+      "channel": "migs",
+      "fully_deducted": 1,
+      "refunded_by": "customer@gmail.com",
+      "refunded_at": "2018-01-12T10:54:47.000Z",
+      "expected_at": "2017-10-01T21:10:59.000Z",
+      "settlement": null,
+      "customer_note": "xxx",
+      "merchant_note": "xxx",
+      "created_at": "2017-09-24T21:10:59.000Z",
+      "updated_at": "2018-01-18T11:59:56.000Z",
+      "status": "processed"
+    },
+    {
+      "id": 2,
+      "integration": 100982,
+      "domain": "test",
+      "transaction": 323896,
+      "dispute": 45,
+      "amount": 500000,
+      "deducted_amount": null,
+      "currency": "NGN",
+      "channel": "migs",
+      "fully_deducted": null,
+      "refunded_by": "customer@gmail.com",
+      "refunded_at": "2017-09-24T21:11:53.000Z",
+      "expected_at": "2017-10-01T21:11:53.000Z",
+      "settlement": null,
+      "customer_note": "xxx",
+      "merchant_note": "xxx",
+      "created_at": "2017-09-24T21:11:53.000Z",
+      "updated_at": "2017-09-24T21:11:53.000Z",
+      "status": "pending"
+    }
+  ]
+}

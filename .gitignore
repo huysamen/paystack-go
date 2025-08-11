@@ -14,6 +14,54 @@
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
 
+# Go coverage files
+*.cover
+coverage.txt
+coverage.html
+
+# Go binaries (executables without extension, common on Unix-like systems)
+# Ignore any executable files in the root and examples directories
+/main
+/app
+/server  
+/client
+/paystack-go
+
+# Any binary in root directory (but preserve source files)
+/*
+!*.go
+!*.md
+!*.json
+!*.mod
+!*.sum
+!*.txt
+!LICENSE
+!.gitignore
+!/api/
+!/enums/
+!/models/
+!/net/
+!/optional/
+!/resources/
+!/types/
+
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
 # Dependency directories (remove the comment below to include it)
 # vendor/
 
@@ -21,7 +69,21 @@
 go.work
 go.work.sum
 
+# Temporary files
+*.tmp
+*.temp
+.tmp/
+.temp/
+
+# Build artifacts
+dist/
+build/
+bin/
+
 # env file
 .env
+
+# Webhook event examples
+events.json
 
 client_test.go

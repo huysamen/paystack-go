@@ -1,0 +1,42 @@
+{
+  "status": true,
+  "message": "Assigned Managed Account Successfully Created",
+  "data": {
+    "bank": {
+      "name": "Wema Bank",
+      "id": 20,
+      "slug": "wema-bank"
+    },
+    "account_name": "KAROKART/YINKA ADE",
+    "account_number": "6731105168",
+    "assigned": true,
+    "currency": "NGN",
+    "metadata": null,
+    "active": true,
+    "id": 97,
+    "created_at": "2019-11-13T13:52:39.000Z",
+    "updated_at": "2020-03-17T07:52:23.000Z",
+    "assignment": {
+      "integration": 100043,
+      "assignee_id": 17328,
+      "assignee_type": "Customer",
+      "expired": false,
+      "account_type": "PAY-WITH-TRANSFER-RECURRING",
+      "assigned_at": "2020-03-17T07:52:23.023Z",
+      "expired_at": null
+    },
+    "split_config": {
+      "split_code": "SPL_e7jnRLtzla"
+    },
+    "customer": {
+      "id": 17328,
+      "first_name": "YINKA",
+      "last_name": "ADE",
+      "email": "yinka@testemail.com",
+      "customer_code": "CUS_xxxxxxxx",
+      "phone": null,
+      "metadata": null,
+      "risk_action": "default"
+    }
+  }
+}

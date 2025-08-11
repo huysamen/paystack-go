@@ -1,0 +1,16 @@
+{
+  "data": {
+    "customer_code": "CUS_XXXXXXXXXXXXXXX",
+    "customer_id": 82796315,
+    "email": "email@email.com",
+    "identification": {
+      "account_number": "012****345",
+      "bank_code": "999991",
+      "bvn": "123*****456",
+      "country": "NG",
+      "type": "bank_account"
+    },
+    "reason": "Account number or BVN is incorrect"
+  },
+  "event": "customeridentification.failed"
+}

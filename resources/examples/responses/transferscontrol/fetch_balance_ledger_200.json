@@ -1,0 +1,78 @@
+{
+  "status": true,
+  "message": "Balance ledger retrieved",
+  "data": [
+    {
+      "integration": 463433,
+      "domain": "test",
+      "balance": 2078224968,
+      "currency": "NGN",
+      "difference": -50000,
+      "reason": "Who dey breet?",
+      "model_responsible": "Transfer",
+      "model_row": 56610600,
+      "id": 149411613,
+      "createdAt": "2021-04-08T09:39:49.000Z",
+      "updatedAt": "2021-04-08T09:39:49.000Z"
+    },
+    {
+      "integration": 463433,
+      "domain": "test",
+      "balance": 2078274968,
+      "currency": "NGN",
+      "difference": 10000,
+      "reason": "",
+      "model_responsible": "Transaction",
+      "model_row": 1073891448,
+      "id": 149314482,
+      "createdAt": "2021-04-08T00:00:11.000Z",
+      "updatedAt": "2021-04-08T00:00:11.000Z"
+    },
+    {
+      "integration": 463433,
+      "domain": "test",
+      "balance": 2078264968,
+      "currency": "NGN",
+      "difference": 500000,
+      "reason": "",
+      "model_responsible": "Transaction",
+      "model_row": 1073278150,
+      "id": 149178966,
+      "createdAt": "2021-04-07T15:26:36.000Z",
+      "updatedAt": "2021-04-07T15:26:36.000Z"
+    },
+    {
+      "integration": 463433,
+      "domain": "test",
+      "balance": 2077764968,
+      "currency": "NGN",
+      "difference": 230845,
+      "reason": "",
+      "model_responsible": "Transaction",
+      "model_row": 1073230164,
+      "id": 149164577,
+      "createdAt": "2021-04-07T14:56:02.000Z",
+      "updatedAt": "2021-04-07T14:56:02.000Z"
+    },
+    {
+      "integration": 463433,
+      "domain": "test",
+      "balance": 2077534123,
+      "currency": "NGN",
+      "difference": -210000,
+      "reason": "",
+      "model_responsible": "Refund",
+      "model_row": 1600361,
+      "id": 149089424,
+      "createdAt": "2021-04-07T12:19:22.000Z",
+      "updatedAt": "2021-04-07T12:19:22.000Z"
+    }
+  ],
+  "meta": {
+    "total": 36944,
+    "skipped": 0,
+    "perPage": 50,
+    "page": 1,
+    "pageCount": 739
+  }
+}

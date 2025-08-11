@@ -1,0 +1,9 @@
+{
+  "status": true,
+  "message": "Charge attempted",
+  "data": {
+    "reference": "0t4gwo2ft6q0n9h",
+    "status": "send_otp",
+    "display_text": "Please send OTP (none will be sent to your phone)"
+  }
+}

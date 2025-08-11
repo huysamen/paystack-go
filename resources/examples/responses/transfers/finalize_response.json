@@ -1,0 +1,37 @@
+{
+  "status": true,
+  "message": "Transfer has been queued",
+  "data": {
+    "domain": "test",
+    "amount": 1000000,
+    "currency": "NGN",
+    "reference": "n7ll9pzl6b",
+    "source": "balance",
+    "source_details": null,
+    "reason": "E go better for you",
+    "status": "success",
+    "failures": null,
+    "transfer_code": "TRF_zuirlnr9qblgfko",
+    "titan_code": null,
+    "transferred_at": null,
+    "id": 529410,
+    "integration": 123460,
+    "recipient": {
+      "domain": "test",
+      "type": "nuban",
+      "currency": "NGN",
+      "name": "Flesh",
+      "details": {
+        "account_number": "olounje",
+        "account_name": null,
+        "bank_code": "044",
+        "bank_name": "Access Bank"
+      },
+      "description": "Eater",
+      "metadata": null,
+      "recipient_code": "RCP_2x5j67tnnw1t98k",
+      "active": true,
+      "id": 28
+    }
+  }
+}
