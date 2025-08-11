@@ -1,0 +1,76 @@
+{
+  "data": {
+    "attachments": null,
+    "bin": "123456",
+    "category": "chargeback",
+    "created_at": "2020-11-24T13:46:36.000Z",
+    "currency": "NGN",
+    "customer": {
+      "customer_code": "CUS_6wbxh6689vt0n7s",
+      "email": "john@example.com",
+      "first_name": "John",
+      "id": 5406463,
+      "international_format_phone": null,
+      "last_name": "Doe",
+      "metadata": {},
+      "phone": "0800000000",
+      "risk_action": "allow"
+    },
+    "domain": "live",
+    "dueAt": "2020-11-24T14:00:00.000Z",
+    "evidence": null,
+    "history": [
+      {
+        "by": "example@test.com",
+        "createdAt": "2020-11-24T13:46:36.000Z",
+        "status": "pending"
+      }
+    ],
+    "id": 358949,
+    "last4": "1234",
+    "messages": [
+      {
+        "body": "Customer complained about debit without value",
+        "createdAt": "2020-11-24T13:46:36.000Z",
+        "sender": "example@test.com"
+      }
+    ],
+    "note": null,
+    "refund_amount": 5700,
+    "resolution": "auto-accepted",
+    "resolvedAt": "2020-11-24T14:00:02.000Z",
+    "status": "resolved",
+    "transaction": {
+      "amount": 5700,
+      "authorization": {},
+      "channel": "card",
+      "created_at": "2020-11-24T13:45:52.000Z",
+      "currency": "NGN",
+      "customer": {
+        "international_format_phone": null
+      },
+      "domain": "live",
+      "fees": 52,
+      "fees_split": null,
+      "gateway_response": "Approved",
+      "id": 896467592,
+      "ip_address": null,
+      "log": null,
+      "message": null,
+      "metadata": "",
+      "order_id": null,
+      "paidAt": "2020-11-24T13:45:53.000Z",
+      "paid_at": "2020-11-24T13:45:53.000Z",
+      "plan": {},
+      "pos_transaction_data": null,
+      "reference": "5qm4pv2mxs9rltp",
+      "requested_amount": 5700,
+      "split": {},
+      "status": "reversed",
+      "subaccount": {}
+    },
+    "transaction_reference": null,
+    "updated_at": "2020-11-24T14:00:02.000Z"
+  },
+  "event": "charge.dispute.resolve"
+}

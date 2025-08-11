@@ -1,0 +1,51 @@
+{
+  "data": {
+    "amount": 30000,
+    "created_at": "2020-10-26T12:28:57.000Z",
+    "currency": "NGN",
+    "domain": "test",
+    "failures": null,
+    "id": 37272792,
+    "integration": {
+      "business_name": "Boom Boom Industries NG",
+      "id": 463433,
+      "is_live": true
+    },
+    "reason": "Have fun...",
+    "recipient": {
+      "active": true,
+      "created_at": "2020-09-03T12:11:25.000Z",
+      "currency": "NGN",
+      "description": "",
+      "details": {
+        "account_name": null,
+        "account_number": "0000000000",
+        "bank_code": "011",
+        "bank_name": "First Bank of Nigeria"
+      },
+      "domain": "test",
+      "email": null,
+      "id": 8690817,
+      "integration": 463433,
+      "is_deleted": false,
+      "metadata": null,
+      "name": "Jack Sparrow",
+      "recipient_code": "RCP_a8wkxiychzdzfgs",
+      "type": "nuban",
+      "updated_at": "2020-09-03T12:11:25.000Z"
+    },
+    "reference": "1jhbs3ozmen0k7y5efmw",
+    "session": {
+      "id": null,
+      "provider": null
+    },
+    "source": "balance",
+    "source_details": null,
+    "status": "success",
+    "titan_code": null,
+    "transfer_code": "TRF_wpl1dem4967avzm",
+    "transferred_at": null,
+    "updated_at": "2020-10-26T12:28:57.000Z"
+  },
+  "event": "transfer.success"
+}

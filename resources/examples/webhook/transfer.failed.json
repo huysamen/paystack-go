@@ -1,0 +1,52 @@
+{
+  "data": {
+    "amount": 200000,
+    "created_at": "2021-04-12T15:30:15.000Z",
+    "currency": "NGN",
+    "domain": "test",
+    "failures": null,
+    "id": 69123462,
+    "integration": {
+      "business_name": "Paystack",
+      "id": 100043,
+      "is_live": true
+    },
+    "reason": "Enjoy",
+    "recipient": {
+      "active": true,
+      "created_at": "2021-04-12T15:30:14.000Z",
+      "currency": "NGN",
+      "description": null,
+      "details": {
+        "account_name": "Ted Lasso",
+        "account_number": "0123456789",
+        "authorization_code": null,
+        "bank_code": "011",
+        "bank_name": "First Bank of Nigeria"
+      },
+      "domain": "test",
+      "email": "test@email.com",
+      "id": 13584206,
+      "integration": 100043,
+      "is_deleted": false,
+      "metadata": null,
+      "name": "Ted Lasso",
+      "recipient_code": "RCP_cjcua8itre45gs",
+      "type": "nuban",
+      "updated_at": "2021-04-12T15:30:14.000Z"
+    },
+    "reference": "1976435206",
+    "session": {
+      "id": "74849400998877667",
+      "provider": "nip"
+    },
+    "source": "balance",
+    "source_details": null,
+    "status": "failed",
+    "titan_code": null,
+    "transfer_code": "TRF_chs98y5rykjb47w",
+    "transferred_at": null,
+    "updated_at": "2021-04-12T15:41:21.000Z"
+  },
+  "event": "transfer.failed"
+}

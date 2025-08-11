@@ -1,0 +1,18 @@
+{
+  "data": {
+    "amount": 20000,
+    "currency": "NGN",
+    "customer": {
+      "email": "tobi@mail.com",
+      "first_name": "Tobi",
+      "last_name": "Digz"
+    },
+    "domain": "live",
+    "integration": 412325,
+    "processor": "instant-transfer",
+    "refund_reference": "TRF_9vgfawjnoz58uxy",
+    "status": "failed",
+    "transaction_reference": "T9171231_412325_3be2736c_n6tml"
+  },
+  "event": "refund.failed"
+}

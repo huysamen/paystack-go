@@ -72,18 +72,19 @@ type ChargeDisputeEvent struct {
 }
 
 type DedicatedAccountEvent struct {
-	ID            data.Int        `json:"id"`
-	Domain        data.String     `json:"domain"`
-	Status        data.String     `json:"status"`
-	AccountName   data.String     `json:"account_name"`
-	AccountNumber data.String     `json:"account_number"`
-	BankCode      data.String     `json:"bank_code"`
-	BankName      data.String     `json:"bank_name"`
-	Customer      *types.Customer `json:"customer"`
-	CustomerCode  data.String     `json:"customer_code"`
-	ExpiresAt     data.NullTime   `json:"expires_at"`
-	CreatedAt     data.Time       `json:"created_at"`
-	UpdatedAt     data.Time       `json:"updated_at"`
+	ID             data.Int        `json:"id"`
+	Domain         data.String     `json:"domain"`
+	Status         data.String     `json:"status"`
+	AccountName    data.String     `json:"account_name"`
+	AccountNumber  data.String     `json:"account_number"`
+	BankCode       data.String     `json:"bank_code"`
+	BankName       data.String     `json:"bank_name"`
+	Customer       *types.Customer `json:"customer"`
+	CustomerCode   data.String     `json:"customer_code"`
+	ExpiresAt      data.NullTime   `json:"expires_at"`
+	CreatedAt      data.Time       `json:"created_at"`
+	UpdatedAt      data.Time       `json:"updated_at"`
+	Identification types.Metadata  `json:"identification"`
 }
 
 type InvoicePaymentFailedEvent struct {
@@ -137,8 +138,9 @@ type PaymentRequestEvent struct {
 	Metadata         types.Metadata  `json:"metadata"`
 	Notifications    []any           `json:"notifications"`
 	OfflineReference data.NullString `json:"offline_reference"`
-	Customer         *types.Customer `json:"customer"`
-	CreatedAt        data.Time       `json:"created_at"`
+	// In webhooks this can be ID or object; allow raw JSON in types.Customer by using Metadata workaround
+	Customer  types.Metadata `json:"customer"`
+	CreatedAt data.Time      `json:"created_at"`
 }
 
 type RefundFailedEvent struct {
@@ -214,21 +216,8 @@ type SubscriptionNotRenewEvent struct {
 }
 
 type SubscriptionExpiringCardsEvent struct {
-	ID               data.Int             `json:"id"`
-	Domain           data.String          `json:"domain"`
-	Status           data.String          `json:"status"`
-	SubscriptionCode data.String          `json:"subscription_code"`
-	EmailToken       data.String          `json:"email_token"`
-	Amount           data.Int             `json:"amount"`
-	CronExpression   data.String          `json:"cron_expression"`
-	NextPaymentDate  data.NullTime        `json:"next_payment_date"`
-	OpenInvoice      data.NullString      `json:"open_invoice"`
-	Customer         *types.Customer      `json:"customer"`
-	Plan             *any                 `json:"plan"`
-	Authorization    *types.Authorization `json:"authorization"`
-	Invoices         []any                `json:"invoices"`
-	CreatedAt        data.Time            `json:"created_at"`
-	UpdatedAt        data.Time            `json:"updated_at"`
+	// Expiring cards payload is an array of entries; we accept Metadata for flexibility
+	Entries types.Metadata `json:"-"`
 }
 
 type CustomerIdentificationFailedEvent struct {
@@ -266,7 +255,7 @@ type TransferSuccessEvent struct {
 	Domain        data.String     `json:"domain"`
 	Failures      *any            `json:"failures"`
 	ID            data.Int        `json:"id"`
-	Integration   data.Int        `json:"integration"`
+	Integration   types.Metadata  `json:"integration"`
 	Reason        data.String     `json:"reason"`
 	Reference     data.String     `json:"reference"`
 	Source        data.String     `json:"source"`
@@ -287,7 +276,7 @@ type TransferFailedEvent struct {
 	Domain        data.String     `json:"domain"`
 	Failures      *any            `json:"failures"`
 	ID            data.Int        `json:"id"`
-	Integration   data.Int        `json:"integration"`
+	Integration   types.Metadata  `json:"integration"`
 	Reason        data.String     `json:"reason"`
 	Reference     data.String     `json:"reference"`
 	Source        data.String     `json:"source"`
@@ -308,7 +297,7 @@ type TransferReversedEvent struct {
 	Domain        data.String     `json:"domain"`
 	Failures      *any            `json:"failures"`
 	ID            data.Int        `json:"id"`
-	Integration   data.Int        `json:"integration"`
+	Integration   types.Metadata  `json:"integration"`
 	Reason        data.String     `json:"reason"`
 	Reference     data.String     `json:"reference"`
 	Source        data.String     `json:"source"`

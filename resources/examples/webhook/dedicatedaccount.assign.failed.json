@@ -1,0 +1,20 @@
+{
+  "data": {
+    "customer": {
+      "customer_code": "CUS_hcekca0j0bbg2m4",
+      "email": "johndoe@test.com",
+      "first_name": "John",
+      "id": 100110,
+      "international_format_phone": "+2348100000000",
+      "last_name": "Doe",
+      "metadata": {},
+      "phone": "+2348100000000",
+      "risk_action": "default"
+    },
+    "dedicated_account": null,
+    "identification": {
+      "status": "failed"
+    }
+  },
+  "event": "dedicatedaccount.assign.failed"
+}

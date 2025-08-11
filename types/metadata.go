@@ -57,7 +57,14 @@ func (m *Metadata) UnmarshalJSON(data []byte) error {
 		return fmt.Errorf("metadata string is not valid JSON: %s", str)
 	}
 
-	// If neither object nor string parsing worked, it's invalid
+	// Fallback: tolerate numbers, booleans, arrays by marking metadata invalid but not erroring
+	var anyVal any
+	if err := json.Unmarshal(data, &anyVal); err == nil {
+		m.Valid = false
+		return nil
+	}
+
+	// If still not parseable, treat as invalid with error context
 	m.Valid = false
 	return fmt.Errorf("cannot unmarshal %s into Metadata", string(data))
 }

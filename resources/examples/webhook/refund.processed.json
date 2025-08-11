@@ -1,0 +1,18 @@
+{
+  "data": {
+    "amount": "5000",
+    "currency": "NGN",
+    "customer": {
+      "email": "damilola@email.com",
+      "first_name": "Damilola",
+      "last_name": "Kwabena"
+    },
+    "domain": "live",
+    "integration": 412829,
+    "processor": "mpgs_zen",
+    "refund_reference": "132013318360",
+    "status": "processed",
+    "transaction_reference": "T2154954_412829_3be32076_6lcg3"
+  },
+  "event": "refund.processed"
+}

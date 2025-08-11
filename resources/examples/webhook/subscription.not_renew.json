@@ -1,0 +1,58 @@
+{
+  "data": {
+    "amount": 120000,
+    "authorization": {
+      "account_name": null,
+      "authorization_code": "AUTH_5ftfl9xrl0",
+      "bank": "Guaranty Trust Bank",
+      "bin": "424242",
+      "brand": "mastercard",
+      "card_type": "mastercard debit",
+      "channel": "card",
+      "country_code": "NG",
+      "exp_month": "06",
+      "exp_year": "2023",
+      "last4": "4081",
+      "reusable": true,
+      "signature": "SIG_biPYZE4PgDCQUJMIT4sE"
+    },
+    "created_at": "2021-10-08T14:50:39.000Z",
+    "cron_expression": "0 0 8 10 *",
+    "customer": {
+      "customer_code": "CUS_8gbmdpvn12c67ix",
+      "email": "sub@notrenew.com",
+      "first_name": null,
+      "id": 57199167,
+      "international_format_phone": null,
+      "last_name": null,
+      "metadata": null,
+      "phone": null,
+      "risk_action": "default"
+    },
+    "domain": "test",
+    "email_token": "086x99rmqc4qhcw",
+    "id": 317617,
+    "integration": 116430,
+    "invoice_limit": 0,
+    "invoices": [],
+    "invoices_history": [],
+    "most_recent_invoice": null,
+    "next_payment_date": null,
+    "open_invoice": null,
+    "plan": {
+      "amount": 120000,
+      "currency": "NGN",
+      "description": "Subscription not_renewed for sub@notrenew.com",
+      "id": 103028,
+      "interval": "annually",
+      "name": "(1,200) - annually - [1 - Year]",
+      "plan_code": "PLN_tlknnnzfi4w2evu",
+      "send_invoices": true,
+      "send_sms": true
+    },
+    "split_code": null,
+    "status": "non-renewing",
+    "subscription_code": "SUB_d638sdiWAio7jnl"
+  },
+  "event": "subscription.not_renew"
+}

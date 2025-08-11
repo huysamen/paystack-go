@@ -1,0 +1,29 @@
+{
+  "data": [
+    {
+      "brand": "visa",
+      "customer": {
+        "customer_code": "CUS_8v6g420rc16spqw",
+        "email": "bojackhoresman@gmail.com",
+        "first_name": "Bojack",
+        "id": 7808239,
+        "last_name": "Horseman"
+      },
+      "description": "visa ending with 4081",
+      "expiry_date": "12/2021",
+      "subscription": {
+        "amount": 44000,
+        "id": 94729,
+        "next_payment_date": "2021-11-11T00:00:01.000Z",
+        "plan": {
+          "id": 22637,
+          "interval": "monthly",
+          "name": "Premium Service (Monthly)",
+          "plan_code": "PLN_pfmwz75o021slex"
+        },
+        "subscription_code": "SUB_lejj927x2kxciw1"
+      }
+    }
+  ],
+  "event": "subscription.expiring_cards"
+}

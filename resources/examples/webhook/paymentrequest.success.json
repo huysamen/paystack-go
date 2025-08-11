@@ -1,0 +1,30 @@
+{
+  "data": {
+    "amount": 10000000,
+    "created_at": "2019-06-21T15:25:42.000Z",
+    "currency": "NGN",
+    "customer": 7454223,
+    "description": "Pay up now",
+    "domain": "test",
+    "due_date": null,
+    "has_invoice": false,
+    "id": 1089700,
+    "invoice_number": null,
+    "line_items": [],
+    "metadata": null,
+    "notifications": [
+      {
+        "channel": "email",
+        "sent_at": "2019-06-21T15:25:42.452Z"
+      }
+    ],
+    "offline_reference": "3365451089700",
+    "paid": true,
+    "paid_at": "2019-06-21T15:26:10.000Z",
+    "pdf_url": null,
+    "request_code": "PRQ_y0paeo93jh99mho",
+    "status": "success",
+    "tax": []
+  },
+  "event": "paymentrequest.success"
+}

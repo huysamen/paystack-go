@@ -3,6 +3,8 @@ package webhook
 import (
 	"encoding/json"
 	"fmt"
+
+	"github.com/huysamen/paystack-go/types"
 )
 
 const (
@@ -119,5 +121,10 @@ func (e *Event) AsSubscriptionNotRenew() (*SubscriptionNotRenewEvent, error) {
 }
 
 func (e *Event) AsSubscriptionExpiringCards() (*SubscriptionExpiringCardsEvent, error) {
+	// Special-case array payload
+	var arr []map[string]any
+	if err := json.Unmarshal(e.Data, &arr); err == nil {
+		return &SubscriptionExpiringCardsEvent{Entries: types.NewMetadata(map[string]any{"entries": arr})}, nil
+	}
 	return ParseEventData[SubscriptionExpiringCardsEvent](e)
 }
