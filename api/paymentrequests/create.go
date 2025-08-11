@@ -3,8 +3,10 @@ package paymentrequests
 import (
 	"context"
 
+	"github.com/huysamen/paystack-go/enums"
 	"github.com/huysamen/paystack-go/net"
 	"github.com/huysamen/paystack-go/types"
+	"github.com/huysamen/paystack-go/types/data"
 )
 
 type createRequest struct {
@@ -127,7 +129,29 @@ func (b *CreateRequestBuilder) Build() *createRequest {
 	return b.req
 }
 
-type CreateResponseData = types.PaymentRequest
+// CreateResponseData represents the data returned when creating a payment request
+// Note: This differs from the full PaymentRequest type as the customer field is just an ID
+type CreateResponseData struct {
+	ID               data.Int             `json:"id"`
+	Domain           data.String          `json:"domain"`
+	Amount           data.Int             `json:"amount"`
+	Currency         enums.Currency       `json:"currency"`
+	DueDate          data.Time            `json:"due_date"`
+	HasInvoice       data.Bool            `json:"has_invoice"`
+	InvoiceNumber    data.NullInt         `json:"invoice_number"`
+	Description      data.String          `json:"description"`
+	LineItems        []types.LineItem     `json:"line_items"`
+	Tax              []types.Tax          `json:"tax"`
+	RequestCode      data.String          `json:"request_code"`
+	Status           data.String          `json:"status"`
+	Paid             data.Bool            `json:"paid"`
+	Metadata         types.Metadata       `json:"metadata"`
+	Notifications    []types.Notification `json:"notifications"`
+	OfflineReference data.String          `json:"offline_reference"`
+	Customer         data.Int             `json:"customer"` // In create response, this is just an ID
+	CreatedAt        data.Time            `json:"created_at"`
+}
+
 type CreateResponse = types.Response[CreateResponseData]
 
 func (c *Client) Create(ctx context.Context, builder CreateRequestBuilder) (*CreateResponse, error) {
