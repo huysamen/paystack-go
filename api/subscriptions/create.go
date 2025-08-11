@@ -6,6 +6,7 @@ import (
 
 	"github.com/huysamen/paystack-go/net"
 	"github.com/huysamen/paystack-go/types"
+	"github.com/huysamen/paystack-go/types/data"
 )
 
 type createRequest struct {
@@ -44,7 +45,23 @@ func (b *CreateRequestBuilder) Build() *createRequest {
 	return b.req
 }
 
-type CreateResponseData = types.Subscription
+// When creating, API returns numeric IDs for customer and plan; use a narrow shape
+type CreateResponseData struct {
+	Customer         data.Int            `json:"customer"`
+	Plan             data.Int            `json:"plan"`
+	Integration      data.Int            `json:"integration"`
+	Domain           data.String         `json:"domain"`
+	Start            data.Int            `json:"start"`
+	Status           data.String         `json:"status"`
+	Quantity         data.Int            `json:"quantity"`
+	Amount           data.Int            `json:"amount"`
+	Authorization    types.Authorization `json:"authorization"`
+	SubscriptionCode data.String         `json:"subscription_code"`
+	EmailToken       data.String         `json:"email_token"`
+	ID               data.Int            `json:"id"`
+	CreatedAt        data.Time           `json:"createdAt"`
+	UpdatedAt        data.Time           `json:"updatedAt"`
+}
 type CreateResponse = types.Response[CreateResponseData]
 
 func (c *Client) Create(ctx context.Context, builder CreateRequestBuilder) (*CreateResponse, error) {

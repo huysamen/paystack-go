@@ -7,6 +7,7 @@ import (
 	"github.com/huysamen/paystack-go/enums"
 	"github.com/huysamen/paystack-go/net"
 	"github.com/huysamen/paystack-go/types"
+	"github.com/huysamen/paystack-go/types/data"
 )
 
 type partialDebitRequest struct {
@@ -61,7 +62,10 @@ func (b *PartialDebitRequestBuilder) Build() *partialDebitRequest {
 	return &b.request
 }
 
-type PartialDebitResponseData = types.Transaction
+// Partial debit returns an integer plan field (0) in example responses; use a narrow shape here
+type PartialDebitResponseData struct {
+	Plan data.Int `json:"plan"`
+}
 type PartialDebitResponse = types.Response[PartialDebitResponseData]
 
 func (c *Client) PartialDebit(ctx context.Context, builder PartialDebitRequestBuilder) (*PartialDebitResponse, error) {

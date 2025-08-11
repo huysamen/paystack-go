@@ -59,7 +59,7 @@ func (b *BulkRequestBuilder) Build() *bulkRequest {
 
 type BulkResponseData struct {
 	Reference    data.String    `json:"reference"`
-	Recipient    data.String    `json:"recipient"`
+	Recipient    data.String    `json:"recipient"` // In bulk responses recipient is code string
 	Amount       data.Int       `json:"amount"`
 	TransferCode data.String    `json:"transfer_code"`
 	Currency     enums.Currency `json:"currency"`

@@ -3,9 +3,11 @@ package transfers
 import (
 	"context"
 
+	"github.com/huysamen/paystack-go/enums"
 	"github.com/huysamen/paystack-go/net"
 	"github.com/huysamen/paystack-go/optional"
 	"github.com/huysamen/paystack-go/types"
+	"github.com/huysamen/paystack-go/types/data"
 )
 
 type initiateRequest struct {
@@ -60,7 +62,26 @@ func (b *InitiateRequestBuilder) Build() *initiateRequest {
 	return b.req
 }
 
-type InitiateResponseData = types.Transfer
+// Initiate returns recipient as an ID in fixtures; define a narrow response type for this endpoint
+type InitiateResponseData struct {
+	ID            data.Int        `json:"id"`
+	Integration   data.Int        `json:"integration"`
+	Domain        data.String     `json:"domain"`
+	Amount        data.Int        `json:"amount"`
+	Currency      enums.Currency  `json:"currency"`
+	Source        data.String     `json:"source"`
+	SourceDetails types.Metadata  `json:"source_details"`
+	Reason        data.String     `json:"reason"`
+	Status        data.String     `json:"status"`
+	Failures      types.Metadata  `json:"failures"`
+	TransferCode  data.String     `json:"transfer_code"`
+	TitanCode     data.NullString `json:"titan_code"`
+	TransferredAt data.NullTime   `json:"transferred_at"`
+	Reference     data.String     `json:"reference"`
+	Recipient     data.Int        `json:"recipient"` // ID here
+	CreatedAt     data.Time       `json:"createdAt"`
+	UpdatedAt     data.Time       `json:"updatedAt"`
+}
 type InitiateResponse = types.Response[InitiateResponseData]
 
 func (c *Client) Initiate(ctx context.Context, builder InitiateRequestBuilder) (*InitiateResponse, error) {

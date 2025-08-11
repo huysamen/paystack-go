@@ -102,6 +102,7 @@ func (b *ChargeAuthorizationRequestBuilder) Build() *chargeAuthorizationRequest 
 	return &b.request
 }
 
+// Charge authorization responses can include plan as null; the standard Transaction now has *Plan
 type ChargeAuthorizationResponseData = types.Transaction
 type ChargeAuthorizationResponse = types.Response[ChargeAuthorizationResponseData]
 
