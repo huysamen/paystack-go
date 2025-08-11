@@ -53,12 +53,22 @@ func (b *CreateRequestBuilder) Build() *createRequest {
 }
 
 type CreateResponseData struct {
-	Transaction *types.Transaction `json:"transaction"`
-	Amount      data.Int           `json:"amount"`
-	Currency    data.String        `json:"currency"`
-	RefundedBy  data.String        `json:"refunded_by"`
-	RefundedAt  data.NullTime      `json:"refunded_at"`
-	CreatedAt   data.NullTime      `json:"created_at"`
+	Transaction    *types.Transaction `json:"transaction"`
+	Integration    data.Int           `json:"integration"`
+	DeductedAmount data.Int           `json:"deducted_amount"`
+	Channel        *string            `json:"channel"`
+	MerchantNote   data.NullString    `json:"merchant_note"`
+	CustomerNote   data.NullString    `json:"customer_note"`
+	Status         data.String        `json:"status"`
+	RefundedBy     data.String        `json:"refunded_by"`
+	ExpectedAt     data.NullTime      `json:"expected_at"`
+	Currency       data.String        `json:"currency"`
+	Domain         data.String        `json:"domain"`
+	Amount         data.Int           `json:"amount"`
+	FullyDeducted  data.Bool          `json:"fully_deducted"`
+	ID             data.Int           `json:"id"`
+	CreatedAt      data.NullTime      `json:"createdAt"`
+	UpdatedAt      data.NullTime      `json:"updatedAt"`
 }
 
 type CreateResponse = types.Response[CreateResponseData]

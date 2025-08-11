@@ -129,8 +129,6 @@ func (b *CreateRequestBuilder) Build() *createRequest {
 	return b.req
 }
 
-// CreateResponseData represents the data returned when creating a payment request
-// Note: This differs from the full PaymentRequest type as the customer field is just an ID
 type CreateResponseData struct {
 	ID               data.Int             `json:"id"`
 	Domain           data.String          `json:"domain"`
@@ -148,7 +146,7 @@ type CreateResponseData struct {
 	Metadata         types.Metadata       `json:"metadata"`
 	Notifications    []types.Notification `json:"notifications"`
 	OfflineReference data.String          `json:"offline_reference"`
-	Customer         data.Int             `json:"customer"` // In create response, this is just an ID
+	Customer         data.Int             `json:"customer"`
 	CreatedAt        data.Time            `json:"created_at"`
 }
 

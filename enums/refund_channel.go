@@ -11,6 +11,7 @@ type RefundChannel string
 const (
 	RefundChannelCard RefundChannel = "card"
 	RefundChannelBank RefundChannel = "bank"
+	RefundChannelMIGS RefundChannel = "migs"
 )
 
 // String returns the string representation of RefundChannel
@@ -32,7 +33,7 @@ func (rc *RefundChannel) UnmarshalJSON(data []byte) error {
 
 	channel := RefundChannel(s)
 	switch channel {
-	case RefundChannelCard, RefundChannelBank:
+	case RefundChannelCard, RefundChannelBank, RefundChannelMIGS:
 		*rc = channel
 		return nil
 	default:
@@ -43,7 +44,7 @@ func (rc *RefundChannel) UnmarshalJSON(data []byte) error {
 // IsValid returns true if the refund channel is a valid known value
 func (rc RefundChannel) IsValid() bool {
 	switch rc {
-	case RefundChannelCard, RefundChannelBank:
+	case RefundChannelCard, RefundChannelBank, RefundChannelMIGS:
 		return true
 	default:
 		return false
@@ -55,5 +56,6 @@ func AllRefundChannels() []RefundChannel {
 	return []RefundChannel{
 		RefundChannelCard,
 		RefundChannelBank,
+		RefundChannelMIGS,
 	}
 }

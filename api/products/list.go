@@ -5,8 +5,10 @@ import (
 	"net/url"
 	"strconv"
 
+	"github.com/huysamen/paystack-go/enums"
 	"github.com/huysamen/paystack-go/net"
 	"github.com/huysamen/paystack-go/types"
+	"github.com/huysamen/paystack-go/types/data"
 )
 
 type listRequest struct {
@@ -79,7 +81,40 @@ func (r *listRequest) toQuery() string {
 	return params.Encode()
 }
 
-type ListResponseData = []types.Product
+type ListProduct struct {
+	ID                 data.Int        `json:"id,omitempty"`
+	Integration        data.Int        `json:"integration,omitempty"`
+	Name               data.String     `json:"name"`
+	Description        data.String     `json:"description"`
+	ProductCode        data.String     `json:"product_code,omitempty"`
+	Price              data.Int        `json:"price"`
+	Currency           enums.Currency  `json:"currency"`
+	Quantity           data.NullInt    `json:"quantity,omitempty"`
+	QuantitySold       data.NullInt    `json:"quantity_sold,omitempty"`
+	Type               data.String     `json:"type,omitempty"`  // good, service
+	Files              []any           `json:"files,omitempty"` // Array in list response
+	IsShippable        data.Bool       `json:"is_shippable,omitempty"`
+	ShippingFields     types.Metadata  `json:"shipping_fields,omitempty"` // Object in list response
+	Unlimited          data.Bool       `json:"unlimited,omitempty"`
+	Domain             data.String     `json:"domain,omitempty"`
+	Active             data.Bool       `json:"active,omitempty"`
+	InStock            data.Bool       `json:"in_stock,omitempty"`
+	Metadata           types.Metadata  `json:"metadata,omitempty"` // Object in list response
+	Slug               data.String     `json:"slug,omitempty"`
+	SuccessMessage     data.NullString `json:"success_message,omitempty"`
+	RedirectURL        data.NullString `json:"redirect_url,omitempty"`
+	SplitCode          data.NullString `json:"split_code,omitempty"`
+	NotificationEmails []data.String   `json:"notification_emails,omitempty"`
+	MinimumOrderable   data.NullInt    `json:"minimum_orderable,omitempty"`
+	MaximumOrderable   data.NullInt    `json:"maximum_orderable,omitempty"`
+	LowStockAlert      data.Bool       `json:"low_stock_alert,omitempty"`
+	DigitalAssets      []any           `json:"digital_assets,omitempty"`  // Array in list response
+	VariantOptions     []any           `json:"variant_options,omitempty"` // Array in list response
+	CreatedAt          data.NullTime   `json:"createdAt,omitempty"`
+	UpdatedAt          data.NullTime   `json:"updatedAt,omitempty"`
+}
+
+type ListResponseData = []ListProduct
 type ListResponse = types.Response[ListResponseData]
 
 func (c *Client) List(ctx context.Context, builder ListRequestBuilder) (*ListResponse, error) {

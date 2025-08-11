@@ -38,6 +38,9 @@ func (c *Currency) UnmarshalJSON(data []byte) error {
 	case CurrencyZAR, CurrencyNGN, CurrencyUSD, CurrencyGHS, CurrencyKES:
 		*c = currency
 		return nil
+	case "": // Allow empty string for null values
+		*c = currency
+		return nil
 	default:
 		return fmt.Errorf("invalid Currency value: %s", s)
 	}
@@ -46,7 +49,7 @@ func (c *Currency) UnmarshalJSON(data []byte) error {
 // IsValid returns true if the currency is a valid known value
 func (c Currency) IsValid() bool {
 	switch c {
-	case CurrencyZAR, CurrencyNGN, CurrencyUSD, CurrencyGHS, CurrencyKES:
+	case CurrencyZAR, CurrencyNGN, CurrencyUSD, CurrencyGHS, CurrencyKES, "":
 		return true
 	default:
 		return false

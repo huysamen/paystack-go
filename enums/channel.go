@@ -16,6 +16,7 @@ const (
 	ChannelMobileMoney  Channel = "mobile_money"
 	ChannelBankTransfer Channel = "bank_transfer"
 	ChannelEFT          Channel = "eft"
+	ChannelApplePay     Channel = "apple_pay"
 )
 
 // String returns the string representation of the channel
@@ -38,7 +39,7 @@ func (c *Channel) UnmarshalJSON(data []byte) error {
 	channel := Channel(s)
 	switch channel {
 	case ChannelCard, ChannelBank, ChannelUSSD, ChannelQR,
-		ChannelMobileMoney, ChannelBankTransfer, ChannelEFT:
+		ChannelMobileMoney, ChannelBankTransfer, ChannelEFT, ChannelApplePay:
 		*c = channel
 		return nil
 	case "": // Allow empty string for backward compatibility with old data
@@ -53,7 +54,7 @@ func (c *Channel) UnmarshalJSON(data []byte) error {
 func (c Channel) IsValid() bool {
 	switch c {
 	case ChannelCard, ChannelBank, ChannelUSSD, ChannelQR,
-		ChannelMobileMoney, ChannelBankTransfer, ChannelEFT, "":
+		ChannelMobileMoney, ChannelBankTransfer, ChannelEFT, ChannelApplePay, "":
 		return true
 	default:
 		return false
@@ -70,5 +71,6 @@ func AllChannels() []Channel {
 		ChannelMobileMoney,
 		ChannelBankTransfer,
 		ChannelEFT,
+		ChannelApplePay,
 	}
 }

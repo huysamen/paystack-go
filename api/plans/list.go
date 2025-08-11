@@ -8,6 +8,7 @@ import (
 	"github.com/huysamen/paystack-go/enums"
 	"github.com/huysamen/paystack-go/net"
 	"github.com/huysamen/paystack-go/types"
+	"github.com/huysamen/paystack-go/types/data"
 )
 
 type listRequest struct {
@@ -84,7 +85,48 @@ func (r *listRequest) toQuery() string {
 	return params.Encode()
 }
 
-type ListResponseData = []types.Plan
+type PlanSubscription struct {
+	Customer         data.Int            `json:"customer"`
+	Plan             data.Int            `json:"plan"`
+	Integration      data.Int            `json:"integration"`
+	Domain           data.String         `json:"domain"`
+	Start            data.NullInt        `json:"start,omitempty"`
+	Status           data.String         `json:"status"`
+	Quantity         data.Int            `json:"quantity"`
+	Amount           data.Int            `json:"amount"`
+	SubscriptionCode data.String         `json:"subscription_code"`
+	EmailToken       data.String         `json:"email_token"`
+	Authorization    types.Authorization `json:"authorization"`
+	EasyCronID       data.NullString     `json:"easy_cron_id"`
+	CronExpression   data.String         `json:"cron_expression"`
+	NextPaymentDate  data.Time           `json:"next_payment_date"`
+	OpenInvoice      data.NullString     `json:"open_invoice"`
+	ID               data.Uint           `json:"id"`
+	CreatedAt        data.Time           `json:"createdAt"`
+	UpdatedAt        data.Time           `json:"updatedAt"`
+}
+
+type ListPlan struct {
+	ID                data.Uint          `json:"id"`
+	Domain            data.String        `json:"domain"`
+	Name              data.String        `json:"name"`
+	PlanCode          data.String        `json:"plan_code"`
+	Description       data.NullString    `json:"description"`
+	Amount            data.Int           `json:"amount"`
+	Interval          enums.Interval     `json:"interval"`
+	SendInvoices      data.Bool          `json:"send_invoices"`
+	SendSms           data.Bool          `json:"send_sms"`
+	HostedPage        data.Bool          `json:"hosted_page"`
+	HostedPageURL     data.NullString    `json:"hosted_page_url,omitempty"`
+	HostedPageSummary data.NullString    `json:"hosted_page_summary,omitempty"`
+	Currency          enums.Currency     `json:"currency"`
+	Integration       data.Int           `json:"integration"`
+	CreatedAt         data.Time          `json:"createdAt"`
+	UpdatedAt         data.Time          `json:"updatedAt"`
+	Subscriptions     []PlanSubscription `json:"subscriptions,omitempty"`
+}
+
+type ListResponseData = []ListPlan
 type ListResponse = types.Response[ListResponseData]
 
 func (c *Client) List(ctx context.Context, builder ListRequestBuilder) (*ListResponse, error) {
