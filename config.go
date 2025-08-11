@@ -32,6 +32,14 @@ type Config struct {
 
 	// BaseURL allows overriding the API base URL (useful for testing)
 	BaseURL string
+
+	// DefaultHeaders are added to every request. Values here override SDK defaults
+	// if the same header is set (e.g. Accept, User-Agent).
+	DefaultHeaders map[string]string
+
+	// UserAgentSuffix allows applications to append an identifier to the default
+	// SDK user agent, e.g. "myapp/1.2.3".
+	UserAgentSuffix string
 }
 
 // NewConfig creates a new configuration with sensible defaults
@@ -64,6 +72,18 @@ func (c *Config) WithTimeout(timeout time.Duration) *Config {
 // WithBaseURL sets a custom base URL
 func (c *Config) WithBaseURL(baseURL string) *Config {
 	c.BaseURL = baseURL
+	return c
+}
+
+// WithDefaultHeaders sets default headers to be added to every request
+func (c *Config) WithDefaultHeaders(headers map[string]string) *Config {
+	c.DefaultHeaders = headers
+	return c
+}
+
+// WithUserAgentSuffix sets an optional suffix appended to the SDK User-Agent
+func (c *Config) WithUserAgentSuffix(suffix string) *Config {
+	c.UserAgentSuffix = suffix
 	return c
 }
 

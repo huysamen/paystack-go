@@ -2,6 +2,7 @@ package types
 
 import (
 	"encoding/json"
+	"fmt"
 
 	"github.com/huysamen/paystack-go/types/data"
 )
@@ -12,6 +13,23 @@ type Response[T any] struct {
 	Message string    `json:"message"`
 	Data    T         `json:"data"`
 	Meta    *Meta     `json:"meta,omitempty"`
+}
+
+// IsSuccess reports whether the API call succeeded according to the response wrapper
+func (r Response[T]) IsSuccess() bool {
+	return r.Status.Bool()
+}
+
+// Err returns a Go error when the response indicates failure, otherwise nil.
+// The error contains the message field from the API response.
+func (r Response[T]) Err() error {
+	if !r.Status.Bool() {
+		if r.Message != "" {
+			return fmt.Errorf(r.Message)
+		}
+		return fmt.Errorf("paystack API request failed")
+	}
+	return nil
 }
 
 // Meta represents pagination and other metadata

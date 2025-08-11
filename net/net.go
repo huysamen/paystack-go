@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"runtime"
 	"strings"
 
 	"github.com/huysamen/paystack-go/types"
@@ -19,6 +20,50 @@ func getBaseURL(baseURL ...string) string {
 		return baseURL[0]
 	}
 	return apiURL
+}
+
+// headerRoundTripper injects default headers and optionally appends a user-agent suffix.
+type headerRoundTripper struct {
+	base            http.RoundTripper
+	headers         map[string]string
+	userAgentSuffix string
+}
+
+// NewHeaderRoundTripper wraps a base RoundTripper to inject headers. If base is nil,
+// http.DefaultTransport is used. Headers provided here will override any same-named
+// headers set earlier on the request. If userAgentSuffix is non-empty and no explicit
+// User-Agent header override is provided in headers, it will be appended to the
+// existing User-Agent header value.
+func NewHeaderRoundTripper(base http.RoundTripper, headers map[string]string, userAgentSuffix string) http.RoundTripper {
+	if base == nil {
+		base = http.DefaultTransport
+	}
+	return &headerRoundTripper{base: base, headers: headers, userAgentSuffix: userAgentSuffix}
+}
+
+func (rt *headerRoundTripper) RoundTrip(req *http.Request) (*http.Response, error) {
+	// Clone the request to avoid mutating the caller's instance
+	r := req.Clone(req.Context())
+
+	// Apply explicit header overrides first
+	if len(rt.headers) > 0 {
+		for k, v := range rt.headers {
+			r.Header.Set(k, v)
+		}
+	}
+
+	// Append UA suffix only if not explicitly overridden via headers
+	if rt.userAgentSuffix != "" {
+		if _, ok := rt.headers["User-Agent"]; !ok {
+			ua := r.Header.Get("User-Agent")
+			if ua == "" {
+				ua = fmt.Sprintf("paystack-go/%s (+github.com/huysamen/paystack-go)", runtime.Version())
+			}
+			r.Header.Set("User-Agent", strings.TrimSpace(ua+" "+rt.userAgentSuffix))
+		}
+	}
+
+	return rt.base.RoundTrip(r)
 }
 
 // getHTTPErrorMessage generates a meaningful error message from HTTP status and response body
@@ -156,6 +201,8 @@ func putOrPost[I any, O any](ctx context.Context, client *http.Client, method, s
 	return rsp, nil
 }
 
+// doReq performs the HTTP request. If the client's Transport is a header-injecting
+// RoundTripper, it can add default headers; otherwise we add minimal defaults here.
 func doReq(ctx context.Context, client *http.Client, method, secret, fullURL string, data any) ([]byte, error) {
 	var req *http.Request
 	var err error
@@ -178,6 +225,9 @@ func doReq(ctx context.Context, client *http.Client, method, secret, fullURL str
 	}
 
 	req.Header.Add("Authorization", "Bearer "+secret)
+	req.Header.Add("Accept", "application/json")
+	// Include a helpful User-Agent for diagnostics
+	req.Header.Add("User-Agent", fmt.Sprintf("paystack-go/%s (+github.com/huysamen/paystack-go)", runtime.Version()))
 
 	if data != nil {
 		req.Header.Add("Content-Type", "application/json")

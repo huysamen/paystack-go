@@ -1,6 +1,8 @@
 package types
 
 import (
+	"encoding/json"
+
 	"github.com/huysamen/paystack-go/enums"
 	"github.com/huysamen/paystack-go/types/data"
 )
@@ -21,9 +23,10 @@ type Transfer struct {
 	TitanCode     data.NullString `json:"titan_code"`
 	TransferredAt data.NullTime   `json:"transferred_at,omitempty"`
 	Reference     data.String     `json:"reference"`
-	Recipient     Recipient       `json:"recipient"`
-	CreatedAt     data.Time       `json:"createdAt"`
-	UpdatedAt     data.Time       `json:"updatedAt"`
+	// Recipient can come back as an object or a numeric ID. Accept raw JSON.
+	Recipient json.RawMessage `json:"recipient"`
+	CreatedAt data.Time       `json:"createdAt"`
+	UpdatedAt data.Time       `json:"updatedAt"`
 }
 
 // Recipient represents a transfer recipient

@@ -32,9 +32,10 @@ import (
 	"github.com/huysamen/paystack-go/api/transferscontrol"
 	"github.com/huysamen/paystack-go/api/verification"
 	"github.com/huysamen/paystack-go/api/virtualterminal"
+	pnet "github.com/huysamen/paystack-go/net"
 )
 
-type client struct {
+type Client struct {
 	Transactions            *transactions.Client
 	Plans                   *plans.Client
 	Products                *products.Client
@@ -63,18 +64,12 @@ type client struct {
 }
 
 // DefaultClient creates a new client with default configuration
-func DefaultClient(secretKey string) *client {
+func DefaultClient(secretKey string) *Client {
 	return NewClient(NewConfig(secretKey))
 }
 
-// NewClientWithHTTP creates a new client with a custom HTTP client (deprecated, use NewClient with Config)
-func NewClientWithHTTP(secretKey string, httpClient *http.Client) *client {
-	config := NewConfig(secretKey).WithHTTPClient(httpClient)
-	return NewClient(config)
-}
-
 // NewClient creates a new Paystack client with the given configuration
-func NewClient(config *Config) *client {
+func NewClient(config *Config) *Client {
 	if config == nil {
 		panic("config cannot be nil")
 	}
@@ -101,32 +96,35 @@ func NewClient(config *Config) *client {
 		}
 	}
 
-	client := &client{
-		Transactions:            (*transactions.Client)(&api.API{Client: httpClient, Secret: config.SecretKey, BaseURL: config.GetBaseURL()}),
-		Plans:                   (*plans.Client)(&api.API{Client: httpClient, Secret: config.SecretKey, BaseURL: config.GetBaseURL()}),
-		Products:                (*products.Client)(&api.API{Client: httpClient, Secret: config.SecretKey, BaseURL: config.GetBaseURL()}),
-		PaymentPages:            (*paymentpages.Client)(&api.API{Client: httpClient, Secret: config.SecretKey, BaseURL: config.GetBaseURL()}),
-		PaymentRequests:         (*paymentrequests.Client)(&api.API{Client: httpClient, Secret: config.SecretKey, BaseURL: config.GetBaseURL()}),
-		Customers:               (*customers.Client)(&api.API{Client: httpClient, Secret: config.SecretKey, BaseURL: config.GetBaseURL()}),
-		Subscriptions:           (*subscriptions.Client)(&api.API{Client: httpClient, Secret: config.SecretKey, BaseURL: config.GetBaseURL()}),
-		Transfers:               (*transfers.Client)(&api.API{Client: httpClient, Secret: config.SecretKey, BaseURL: config.GetBaseURL()}),
-		TransferControl:         (*transferscontrol.Client)(&api.API{Client: httpClient, Secret: config.SecretKey, BaseURL: config.GetBaseURL()}),
-		TransferRecipients:      (*transferrecipients.Client)(&api.API{Client: httpClient, Secret: config.SecretKey, BaseURL: config.GetBaseURL()}),
-		BulkCharges:             (*bulkcharges.Client)(&api.API{Client: httpClient, Secret: config.SecretKey, BaseURL: config.GetBaseURL()}),
-		Charges:                 (*charge.Client)(&api.API{Client: httpClient, Secret: config.SecretKey, BaseURL: config.GetBaseURL()}),
-		Disputes:                (*disputes.Client)(&api.API{Client: httpClient, Secret: config.SecretKey, BaseURL: config.GetBaseURL()}),
-		Refunds:                 (*refunds.Client)(&api.API{Client: httpClient, Secret: config.SecretKey, BaseURL: config.GetBaseURL()}),
-		Subaccounts:             (*subaccounts.Client)(&api.API{Client: httpClient, Secret: config.SecretKey, BaseURL: config.GetBaseURL()}),
-		Settlements:             (*settlements.Client)(&api.API{Client: httpClient, Secret: config.SecretKey, BaseURL: config.GetBaseURL()}),
-		Miscellaneous:           (*miscellaneous.Client)(&api.API{Client: httpClient, Secret: config.SecretKey, BaseURL: config.GetBaseURL()}),
-		Verification:            (*verification.Client)(&api.API{Client: httpClient, Secret: config.SecretKey, BaseURL: config.GetBaseURL()}),
-		TransactionSplits:       (*transactionsplits.Client)(&api.API{Client: httpClient, Secret: config.SecretKey, BaseURL: config.GetBaseURL()}),
-		Terminal:                (*terminal.Client)(&api.API{Client: httpClient, Secret: config.SecretKey, BaseURL: config.GetBaseURL()}),
-		VirtualTerminal:         (*virtualterminal.Client)(&api.API{Client: httpClient, Secret: config.SecretKey, BaseURL: config.GetBaseURL()}),
-		DirectDebit:             (*directdebit.Client)(&api.API{Client: httpClient, Secret: config.SecretKey, BaseURL: config.GetBaseURL()}),
-		DedicatedVirtualAccount: (*dedicatedvirtualaccounts.Client)(&api.API{Client: httpClient, Secret: config.SecretKey, BaseURL: config.GetBaseURL()}),
-		ApplePay:                (*applepay.Client)(&api.API{Client: httpClient, Secret: config.SecretKey, BaseURL: config.GetBaseURL()}),
-		Integration:             (*integration.Client)(&api.API{Client: httpClient, Secret: config.SecretKey, BaseURL: config.GetBaseURL()}),
+	// Wrap transport to add default headers and optional UA suffix
+	httpClient.Transport = pnet.NewHeaderRoundTripper(httpClient.Transport, config.DefaultHeaders, config.UserAgentSuffix)
+
+	client := &Client{
+		Transactions:            (*transactions.Client)(&api.API{Client: httpClient, Secret: config.SecretKey, BaseURL: config.GetBaseURL(), Headers: config.DefaultHeaders}),
+		Plans:                   (*plans.Client)(&api.API{Client: httpClient, Secret: config.SecretKey, BaseURL: config.GetBaseURL(), Headers: config.DefaultHeaders}),
+		Products:                (*products.Client)(&api.API{Client: httpClient, Secret: config.SecretKey, BaseURL: config.GetBaseURL(), Headers: config.DefaultHeaders}),
+		PaymentPages:            (*paymentpages.Client)(&api.API{Client: httpClient, Secret: config.SecretKey, BaseURL: config.GetBaseURL(), Headers: config.DefaultHeaders}),
+		PaymentRequests:         (*paymentrequests.Client)(&api.API{Client: httpClient, Secret: config.SecretKey, BaseURL: config.GetBaseURL(), Headers: config.DefaultHeaders}),
+		Customers:               (*customers.Client)(&api.API{Client: httpClient, Secret: config.SecretKey, BaseURL: config.GetBaseURL(), Headers: config.DefaultHeaders}),
+		Subscriptions:           (*subscriptions.Client)(&api.API{Client: httpClient, Secret: config.SecretKey, BaseURL: config.GetBaseURL(), Headers: config.DefaultHeaders}),
+		Transfers:               (*transfers.Client)(&api.API{Client: httpClient, Secret: config.SecretKey, BaseURL: config.GetBaseURL(), Headers: config.DefaultHeaders}),
+		TransferControl:         (*transferscontrol.Client)(&api.API{Client: httpClient, Secret: config.SecretKey, BaseURL: config.GetBaseURL(), Headers: config.DefaultHeaders}),
+		TransferRecipients:      (*transferrecipients.Client)(&api.API{Client: httpClient, Secret: config.SecretKey, BaseURL: config.GetBaseURL(), Headers: config.DefaultHeaders}),
+		BulkCharges:             (*bulkcharges.Client)(&api.API{Client: httpClient, Secret: config.SecretKey, BaseURL: config.GetBaseURL(), Headers: config.DefaultHeaders}),
+		Charges:                 (*charge.Client)(&api.API{Client: httpClient, Secret: config.SecretKey, BaseURL: config.GetBaseURL(), Headers: config.DefaultHeaders}),
+		Disputes:                (*disputes.Client)(&api.API{Client: httpClient, Secret: config.SecretKey, BaseURL: config.GetBaseURL(), Headers: config.DefaultHeaders}),
+		Refunds:                 (*refunds.Client)(&api.API{Client: httpClient, Secret: config.SecretKey, BaseURL: config.GetBaseURL(), Headers: config.DefaultHeaders}),
+		Subaccounts:             (*subaccounts.Client)(&api.API{Client: httpClient, Secret: config.SecretKey, BaseURL: config.GetBaseURL(), Headers: config.DefaultHeaders}),
+		Settlements:             (*settlements.Client)(&api.API{Client: httpClient, Secret: config.SecretKey, BaseURL: config.GetBaseURL(), Headers: config.DefaultHeaders}),
+		Miscellaneous:           (*miscellaneous.Client)(&api.API{Client: httpClient, Secret: config.SecretKey, BaseURL: config.GetBaseURL(), Headers: config.DefaultHeaders}),
+		Verification:            (*verification.Client)(&api.API{Client: httpClient, Secret: config.SecretKey, BaseURL: config.GetBaseURL(), Headers: config.DefaultHeaders}),
+		TransactionSplits:       (*transactionsplits.Client)(&api.API{Client: httpClient, Secret: config.SecretKey, BaseURL: config.GetBaseURL(), Headers: config.DefaultHeaders}),
+		Terminal:                (*terminal.Client)(&api.API{Client: httpClient, Secret: config.SecretKey, BaseURL: config.GetBaseURL(), Headers: config.DefaultHeaders}),
+		VirtualTerminal:         (*virtualterminal.Client)(&api.API{Client: httpClient, Secret: config.SecretKey, BaseURL: config.GetBaseURL(), Headers: config.DefaultHeaders}),
+		DirectDebit:             (*directdebit.Client)(&api.API{Client: httpClient, Secret: config.SecretKey, BaseURL: config.GetBaseURL(), Headers: config.DefaultHeaders}),
+		DedicatedVirtualAccount: (*dedicatedvirtualaccounts.Client)(&api.API{Client: httpClient, Secret: config.SecretKey, BaseURL: config.GetBaseURL(), Headers: config.DefaultHeaders}),
+		ApplePay:                (*applepay.Client)(&api.API{Client: httpClient, Secret: config.SecretKey, BaseURL: config.GetBaseURL(), Headers: config.DefaultHeaders}),
+		Integration:             (*integration.Client)(&api.API{Client: httpClient, Secret: config.SecretKey, BaseURL: config.GetBaseURL(), Headers: config.DefaultHeaders}),
 	}
 
 	return client

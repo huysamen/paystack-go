@@ -1,6 +1,7 @@
 package webhook
 
 import (
+	"bytes"
 	"crypto/hmac"
 	"crypto/sha512"
 	"encoding/hex"
@@ -42,6 +43,9 @@ func (v *Validator) ValidateRequest(r *http.Request) (*Event, error) {
 	if !v.ValidateSignature(body, signature) {
 		return nil, fmt.Errorf("invalid webhook signature")
 	}
+
+	// Restore body for downstream handlers
+	r.Body = io.NopCloser(bytes.NewReader(body))
 
 	var event Event
 	if err := json.Unmarshal(body, &event); err != nil {

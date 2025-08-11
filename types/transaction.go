@@ -1,31 +1,35 @@
 package types
 
 import (
+	"encoding/json"
+
 	"github.com/huysamen/paystack-go/enums"
 	"github.com/huysamen/paystack-go/types/data"
 )
 
 // Transaction represents a Paystack transaction with comprehensive field coverage
 type Transaction struct {
-	ID                 data.Uint           `json:"id"`
-	Domain             data.String         `json:"domain"`
-	Status             data.String         `json:"status"`
-	Reference          data.String         `json:"reference"`
-	Amount             data.Int            `json:"amount"`
-	Message            data.NullString     `json:"message"`
-	GatewayResponse    data.String         `json:"gateway_response"`
-	PaidAt             data.NullTime       `json:"paid_at,omitempty"`
-	CreatedAt          data.Time           `json:"created_at"`
-	Channel            enums.Channel       `json:"channel"`
-	Currency           enums.Currency      `json:"currency"`
-	IPAddress          data.String         `json:"ip_address"`
-	Metadata           Metadata            `json:"metadata"`
-	Log                *TransactionLog     `json:"log,omitempty"`
-	Fees               data.Int            `json:"fees"`
-	FeesSplit          *FeesSplit          `json:"fees_split,omitempty"`
-	Customer           Customer            `json:"customer"`
-	Authorization      Authorization       `json:"authorization"`
-	Plan               *Plan               `json:"plan,omitempty"`
+	ID              data.Uint       `json:"id"`
+	Domain          data.String     `json:"domain"`
+	Status          data.String     `json:"status"`
+	Reference       data.String     `json:"reference"`
+	Amount          data.Int        `json:"amount"`
+	Message         data.NullString `json:"message"`
+	GatewayResponse data.String     `json:"gateway_response"`
+	PaidAt          data.NullTime   `json:"paid_at,omitempty"`
+	CreatedAt       data.Time       `json:"created_at"`
+	Channel         enums.Channel   `json:"channel"`
+	Currency        enums.Currency  `json:"currency"`
+	IPAddress       data.String     `json:"ip_address"`
+	Metadata        Metadata        `json:"metadata"`
+	Log             *TransactionLog `json:"log,omitempty"`
+	Fees            data.Int        `json:"fees"`
+	FeesSplit       *FeesSplit      `json:"fees_split,omitempty"`
+	Customer        Customer        `json:"customer"`
+	Authorization   Authorization   `json:"authorization"`
+	// Plan can be an object, empty object, number (0), or null depending on endpoint.
+	// Use Raw JSON to tolerate these variants without failing deserialization.
+	Plan               json.RawMessage     `json:"plan,omitempty"`
 	Split              *TransactionSplit   `json:"split,omitempty"`
 	Subaccount         *Subaccount         `json:"subaccount,omitempty"`
 	OrderID            data.NullString     `json:"order_id,omitempty"`

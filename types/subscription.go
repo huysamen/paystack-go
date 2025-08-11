@@ -1,15 +1,19 @@
 package types
 
 import (
+	"encoding/json"
+
 	"github.com/huysamen/paystack-go/enums"
 	"github.com/huysamen/paystack-go/types/data"
 )
 
 // Subscription represents a Paystack subscription
 type Subscription struct {
-	ID               data.Uint       `json:"id"`
-	Customer         *Customer       `json:"customer,omitempty"`
-	Plan             *Plan           `json:"plan,omitempty"`
+	ID data.Uint `json:"id"`
+	// Customer can be an object or a numeric ID depending on endpoint; accept raw JSON
+	Customer json.RawMessage `json:"customer,omitempty"`
+	// Plan can similarly be an object or numeric ID; accept raw JSON
+	Plan             json.RawMessage `json:"plan,omitempty"`
 	Integration      data.Int        `json:"integration"`
 	Domain           data.String     `json:"domain"`
 	Start            data.NullInt    `json:"start,omitempty"` // Unix timestamp
