@@ -1,76 +1,482 @@
 {
-  "status": true,
-  "message": "Countries retrieved",
-  "data": [
-    {
-      "id": 1,
-      "name": "Nigeria",
-      "iso_code": "NG",
-      "default_currency_code": "NGN",
-      "integration_defaults": {},
-      "relationships": {
-        "currency": {
-          "type": "currency",
-          "data": [
-            "NGN",
-            "USD"
-          ]
+    "status": true,
+    "message": "Countries retrieved",
+    "data": [
+        {
+            "id": 1,
+            "active_for_dashboard_onboarding": true,
+            "name": "Nigeria",
+            "iso_code": "NG",
+            "default_currency_code": "NGN",
+            "integration_defaults": {},
+            "calling_code": "+234",
+            "pilot_mode": false,
+            "relationships": {
+                "currency": {
+                    "type": "currency",
+                    "data": [
+                        "NGN"
+                    ],
+                    "supported_currencies": {
+                        "NGN": {
+                            "bank": {
+                                "bank_type": "nuban",
+                                "branch_code": false,
+                                "branch_code_type": "text",
+                                "account_name": false,
+                                "account_verification_required": true,
+                                "account_number_label": "accountNumber",
+                                "account_number_pattern": {
+                                    "exact_match": true,
+                                    "pattern": "[0-9]{10}"
+                                },
+                                "documents": [],
+                                "show_account_number_tooltip": false
+                            }
+                        },
+                        "USD": {
+                            "bank": {
+                                "bank_type": "nuban",
+                                "required_fields": [
+                                    "bank",
+                                    "account_number"
+                                ],
+                                "branch_code": false,
+                                "branch_code_type": "text",
+                                "account_name": false,
+                                "account_verification_required": true,
+                                "account_number_label": "accountNumber",
+                                "account_number_pattern": {
+                                    "exact_match": true,
+                                    "pattern": ""
+                                },
+                                "documents": [],
+                                "notices": [
+                                    "USD can currently only be settled into Zenith Bank USD accounts.",
+                                    "You'll receive USD settlements 7 working days after payment has been made.",
+                                    "In case of fraudulent transactions involving international payments, Paystack will reverse the transaction and deduct the amount from your balance."
+                                ]
+                            }
+                        }
+                    }
+                },
+                "integration_feature": {
+                    "type": "integration_feature",
+                    "data": []
+                },
+                "integration_type": {
+                    "type": "integration_type",
+                    "data": [
+                        "ITYPE_001",
+                        "ITYPE_002",
+                        "ITYPE_003"
+                    ]
+                },
+                "payment_method": {
+                    "type": "payment_method",
+                    "data": [
+                        "PAYM_001",
+                        "PAYM_002",
+                        "PAYM_003",
+                        "PAYM_004"
+                    ]
+                }
+            }
         },
-        "integration_feature": {
-          "type": "integration_feature",
-          "data": []
+        {
+            "id": 2,
+            "active_for_dashboard_onboarding": true,
+            "name": "Ghana",
+            "iso_code": "GH",
+            "default_currency_code": "GHS",
+            "integration_defaults": {},
+            "calling_code": "+233",
+            "pilot_mode": false,
+            "relationships": {
+                "currency": {
+                    "type": "currency",
+                    "data": [
+                        "GHS"
+                    ],
+                    "supported_currencies": {
+                        "GHS": {
+                            "bank": {
+                                "bank_type": "ghipss",
+                                "account_verification_required": true,
+                                "account_number_label": "accountNumber",
+                                "branch_code": true,
+                                "branch_code_type": "dropdown",
+                                "account_name": false,
+                                "account_number_pattern": {
+                                    "exact_match": true,
+                                    "pattern": "[0-9]{7,16}"
+                                },
+                                "documents": [],
+                                "show_account_number_tooltip": false
+                            },
+                            "mobile_money": {
+                                "bank_type": "mobile_money",
+                                "phone_number_label": "phoneNumber",
+                                "placeholder": "050 123 456",
+                                "account_number_pattern": {
+                                    "exact_match": false,
+                                    "pattern": "^[0-9]{10}$"
+                                }
+                            }
+                        },
+                        "USD": {
+                            "bank": {
+                                "bank_type": "ghipss",
+                                "account_verification_required": false,
+                                "account_number_label": "accountNumber",
+                                "branch_code": true,
+                                "branch_code_type": "dropdown",
+                                "account_name": false,
+                                "account_number_pattern": {
+                                    "exact_match": false,
+                                    "pattern": "[0-9]{7,16}"
+                                },
+                                "show_account_number_tooltip": false
+                            }
+                        }
+                    }
+                },
+                "integration_feature": {
+                    "type": "integration_feature",
+                    "data": []
+                },
+                "integration_type": {
+                    "type": "integration_type",
+                    "data": [
+                        "ITYPE_004",
+                        "ITYPE_005"
+                    ]
+                },
+                "payment_method": {
+                    "type": "payment_method",
+                    "data": [
+                        "PAYM_001"
+                    ]
+                }
+            }
         },
-        "integration_type": {
-          "type": "integration_type",
-          "data": [
-            "ITYPE_001",
-            "ITYPE_002",
-            "ITYPE_003"
-          ]
+        {
+            "id": 3,
+            "active_for_dashboard_onboarding": true,
+            "name": "South Africa",
+            "iso_code": "ZA",
+            "default_currency_code": "ZAR",
+            "calling_code": "+27",
+            "integration_defaults": {},
+            "pilot_mode": false,
+            "relationships": {
+                "currency": {
+                    "type": "currency",
+                    "data": [
+                        "ZAR"
+                    ],
+                    "supported_currencies": {
+                        "ZAR": {
+                            "bank": {
+                                "bank_type": "basa",
+                                "account_verification_required": true,
+                                "account_number_label": "accountNumber",
+                                "branch_code": false,
+                                "branch_code_type": "text",
+                                "account_name": true,
+                                "account_number_pattern": {
+                                    "exact_match": false,
+                                    "pattern": "^[0-9]{9,12}$"
+                                },
+                                "documents": [
+                                    "ZA-BANK"
+                                ],
+                                "show_account_number_tooltip": false
+                            },
+                            "eft": {
+                                "account_number_pattern": {
+                                    "exact_match": false,
+                                    "pattern": "^[0-9]{10}$"
+                                },
+                                "placeholder": "050 123 456"
+                            }
+                        }
+                    }
+                },
+                "integration_feature": {
+                    "type": "integration_feature",
+                    "data": []
+                },
+                "integration_type": {
+                    "type": "integration_type",
+                    "data": [
+                        "ITYPE_006",
+                        "ITYPE_007"
+                    ]
+                },
+                "payment_method": {
+                    "type": "payment_method",
+                    "data": [
+                        "PAYM_001"
+                    ]
+                }
+            }
         },
-        "payment_method": {
-          "type": "payment_method",
-          "data": [
-            "PAYM_001",
-            "PAYM_002",
-            "PAYM_003",
-            "PAYM_004"
-          ]
+        {
+            "id": 4,
+            "active_for_dashboard_onboarding": true,
+            "name": "Kenya",
+            "iso_code": "KE",
+            "default_currency_code": "KES",
+            "calling_code": "+254",
+            "integration_defaults": {},
+            "pilot_mode": false,
+            "relationships": {
+                "currency": {
+                    "type": "currency",
+                    "data": [
+                        "KES"
+                    ],
+                    "supported_currencies": {
+                        "KES": {
+                            "bank": {
+                                "bank_type": "kepss",
+                                "account_verification_required": true,
+                                "account_number_label": "accountNumber",
+                                "branch_code": true,
+                                "branch_code_type": "text",
+                                "account_name": true,
+                                "account_number_pattern": {
+                                    "exact_match": false,
+                                    "pattern": "[0-9]{9,16}"
+                                },
+                                "documents": [],
+                                "show_account_number_tooltip": false
+                            },
+                            "mobile_money": {
+                                "bank_type": "mobile_money",
+                                "phone_number_label": "phoneNumber",
+                                "placeholder": "070 123 456",
+                                "account_number_pattern": {
+                                    "exact_match": false,
+                                    "pattern": "^[0-9]{10}$"
+                                }
+                            },
+                            "mobile_money_business": {
+                                "bank_type": "mobile_money_business",
+                                "account_verification_required": true,
+                                "phone_number_label": "accountNumber",
+                                "account_number_pattern": {
+                                    "exact_match": false,
+                                    "pattern": "^[0-9]{6,7}$"
+                                }
+                            }
+                        },
+                        "USD": {
+                            "bank": {
+                                "bank_type": "kepss",
+                                "account_verification_required": false,
+                                "required_fields": [
+                                    "bank",
+                                    "account_number",
+                                    "branch_code",
+                                    "account_name"
+                                ],
+                                "account_number_label": "accountNumber",
+                                "branch_code": true,
+                                "branch_code_type": "text",
+                                "account_name": false,
+                                "account_number_pattern": {
+                                    "exact_match": false,
+                                    "pattern": "[0-9]{7,16}"
+                                },
+                                "notices": [
+                                    "You'll receive USD settlements 7 working days after payment has been made.",
+                                    "In case of fraudulent transactions involving international payments, Paystack will reverse the transaction and deduct the amount from your next payout."
+                                ],
+                                "show_account_number_tooltip": false
+                            }
+                        }
+                    }
+                },
+                "integration_feature": {
+                    "type": "integration_feature",
+                    "data": []
+                },
+                "integration_type": {
+                    "type": "integration_type",
+                    "data": [
+                        "ITYPE_008",
+                        "ITYPE_009"
+                    ]
+                },
+                "payment_method": {
+                    "type": "payment_method",
+                    "data": [
+                        "PAYM_001"
+                    ]
+                }
+            }
+        },
+        {
+            "id": 5,
+            "active_for_dashboard_onboarding": true,
+            "name": "Côte d'Ivoire",
+            "iso_code": "CI",
+            "default_currency_code": "XOF",
+            "calling_code": "+225",
+            "integration_defaults": {},
+            "pilot_mode": false,
+            "relationships": {
+                "currency": {
+                    "type": "currency",
+                    "data": [
+                        "XOF"
+                    ],
+                    "supported_currencies": {
+                        "XOF": {
+                            "bank": {
+                                "bank_type": "bceao",
+                                "account_verification_required": false,
+                                "account_number_label": "rib",
+                                "branch_code": false,
+                                "branch_code_type": "text",
+                                "account_name": true,
+                                "account_number_pattern": {
+                                    "exact_match": false,
+                                    "pattern": "^[a-zA-Z]{2}[0-9]{22}"
+                                },
+                                "documents": [
+                                    "CI-RIB"
+                                ],
+                                "show_account_number_tooltip": true
+                            }
+                        }
+                    }
+                },
+                "integration_feature": {
+                    "type": "integration_feature",
+                    "data": []
+                },
+                "integration_type": {
+                    "type": "integration_type",
+                    "data": [
+                        "ITYPE_010",
+                        "ITYPE_011"
+                    ]
+                },
+                "payment_method": {
+                    "type": "payment_method",
+                    "data": [
+                        "PAYM_001"
+                    ]
+                }
+            }
+        },
+        {
+            "id": 6,
+            "active_for_dashboard_onboarding": true,
+            "name": "Egypt",
+            "iso_code": "EG",
+            "default_currency_code": "EGP",
+            "calling_code": "+20",
+            "integration_defaults": {},
+            "pilot_mode": true,
+            "relationships": {
+                "currency": {
+                    "type": "currency",
+                    "data": [
+                        "EGP"
+                    ],
+                    "supported_currencies": {
+                        "EGP": {
+                            "bank": {
+                                "bank_type": "iban",
+                                "account_verification_required": false,
+                                "account_number_label": "iban",
+                                "branch_code": false,
+                                "branch_code_type": "text",
+                                "account_name": true,
+                                "account_number_pattern": {
+                                    "exact_match": true,
+                                    "pattern": "^EG[0-9]{27}$"
+                                },
+                                "documents": [],
+                                "show_account_number_tooltip": false
+                            }
+                        }
+                    }
+                },
+                "integration_feature": {
+                    "type": "integration_feature",
+                    "data": []
+                },
+                "integration_type": {
+                    "type": "integration_type",
+                    "data": [
+                        "ITYPE_010"
+                    ]
+                },
+                "payment_method": {
+                    "type": "payment_method",
+                    "data": [
+                        "PAYM_001"
+                    ]
+                }
+            }
+        },
+        {
+            "id": 7,
+            "active_for_dashboard_onboarding": true,
+            "name": "Rwanda",
+            "iso_code": "RW",
+            "default_currency_code": "RWF",
+            "integration_defaults": {},
+            "calling_code": "+250",
+            "pilot_mode": true,
+            "relationships": {
+                "currency": {
+                    "type": "currency",
+                    "data": [
+                        "RWF"
+                    ],
+                    "supported_currencies": {
+                        "RWF": {
+                            "bank": {
+                                "bank_type": "bnr",
+                                "branch_code": false,
+                                "branch_code_type": "text",
+                                "account_name": true,
+                                "account_verification_required": false,
+                                "account_number_label": "accountNumber",
+                                "account_number_pattern": {
+                                    "exact_match": true,
+                                    "pattern": ""
+                                },
+                                "documents": [],
+                                "show_account_number_tooltip": false
+                            }
+                        }
+                    }
+                },
+                "integration_feature": {
+                    "type": "integration_feature",
+                    "data": []
+                },
+                "integration_type": {
+                    "type": "integration_type",
+                    "data": [
+                        "ITYPE_012",
+                        "ITYPE_013"
+                    ]
+                },
+                "payment_method": {
+                    "type": "payment_method",
+                    "data": [
+                        "PAYM_001"
+                    ]
+                }
+            }
         }
-      }
-    },
-    {
-      "id": 2,
-      "name": "Ghana",
-      "iso_code": "GH",
-      "default_currency_code": "GHS",
-      "integration_defaults": {},
-      "relationships": {
-        "currency": {
-          "type": "currency",
-          "data": [
-            "GHS",
-            "USD"
-          ]
-        },
-        "integration_feature": {
-          "type": "integration_feature",
-          "data": []
-        },
-        "integration_type": {
-          "type": "integration_type",
-          "data": [
-            "ITYPE_004",
-            "ITYPE_005"
-          ]
-        },
-        "payment_method": {
-          "type": "payment_method",
-          "data": [
-            "PAYM_001"
-          ]
-        }
-      }
-    }
-  ]
+    ]
 }

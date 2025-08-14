@@ -57,42 +57,90 @@ func TestListCountriesResponse_FieldByFieldValidation(t *testing.T) {
 	assert.True(t, response.Status.Bool())
 	assert.Equal(t, "Countries retrieved", response.Message)
 	require.NotNil(t, response.Data)
-	assert.Len(t, response.Data, 2, "should have 2 countries in test data")
+	assert.Len(t, response.Data, 7, "should have 7 countries in test data")
 
 	// Validate Nigeria (first country)
 	nigeria := response.Data[0]
 	assert.Equal(t, int64(1), nigeria.ID.Int64())
+	assert.True(t, nigeria.ActiveForDashboardOnboarding.Bool())
 	assert.Equal(t, "Nigeria", nigeria.Name.String())
 	assert.Equal(t, "NG", nigeria.ISOCode.String())
 	assert.Equal(t, "NGN", nigeria.DefaultCurrencyCode.String())
+	assert.Equal(t, "+234", nigeria.CallingCode.String())
+	assert.False(t, nigeria.PilotMode.Bool())
 	require.NotNil(t, nigeria.Relationships)
 
 	// Validate Nigeria currency relationships
 	require.NotNil(t, nigeria.Relationships.Currency)
 	assert.Equal(t, "currency", nigeria.Relationships.Currency.Type.String())
-	assert.Contains(t, nigeria.Relationships.Currency.Data, "NGN")
-	assert.Contains(t, nigeria.Relationships.Currency.Data, "USD")
+
+	// Convert data.String slice to regular string slice for assertion
+	nigeriacurrencies := make([]string, len(nigeria.Relationships.Currency.Data))
+	for i, curr := range nigeria.Relationships.Currency.Data {
+		nigeriacurrencies[i] = curr.String()
+	}
+	assert.Contains(t, nigeriacurrencies, "NGN")
+
+	// Validate supported currencies
+	require.NotNil(t, nigeria.Relationships.Currency.SupportedCurrencies)
+	assert.Contains(t, nigeria.Relationships.Currency.SupportedCurrencies, "NGN")
+	assert.Contains(t, nigeria.Relationships.Currency.SupportedCurrencies, "USD")
 
 	// Validate Nigeria integration type relationships
 	require.NotNil(t, nigeria.Relationships.IntegrationType)
 	assert.Equal(t, "integration_type", nigeria.Relationships.IntegrationType.Type.String())
-	assert.Contains(t, nigeria.Relationships.IntegrationType.Data, "ITYPE_001")
-	assert.Contains(t, nigeria.Relationships.IntegrationType.Data, "ITYPE_002")
-	assert.Contains(t, nigeria.Relationships.IntegrationType.Data, "ITYPE_003")
+
+	// Convert data.String slice to regular string slice for assertion
+	nigeriaIntegrationTypes := make([]string, len(nigeria.Relationships.IntegrationType.Data))
+	for i, intType := range nigeria.Relationships.IntegrationType.Data {
+		nigeriaIntegrationTypes[i] = intType.String()
+	}
+	assert.Contains(t, nigeriaIntegrationTypes, "ITYPE_001")
+	assert.Contains(t, nigeriaIntegrationTypes, "ITYPE_002")
+	assert.Contains(t, nigeriaIntegrationTypes, "ITYPE_003")
+
+	// Validate payment method relationships
+	require.NotNil(t, nigeria.Relationships.PaymentMethod)
+	assert.Equal(t, "payment_method", nigeria.Relationships.PaymentMethod.Type.String())
 
 	// Validate Ghana (second country)
 	ghana := response.Data[1]
 	assert.Equal(t, int64(2), ghana.ID.Int64())
+	assert.True(t, ghana.ActiveForDashboardOnboarding.Bool())
 	assert.Equal(t, "Ghana", ghana.Name.String())
 	assert.Equal(t, "GH", ghana.ISOCode.String())
 	assert.Equal(t, "GHS", ghana.DefaultCurrencyCode.String())
+	assert.Equal(t, "+233", ghana.CallingCode.String())
+	assert.False(t, ghana.PilotMode.Bool())
 	require.NotNil(t, ghana.Relationships)
 
 	// Validate Ghana currency relationships
 	require.NotNil(t, ghana.Relationships.Currency)
 	assert.Equal(t, "currency", ghana.Relationships.Currency.Type.String())
-	assert.Contains(t, ghana.Relationships.Currency.Data, "GHS")
-	assert.Contains(t, ghana.Relationships.Currency.Data, "USD")
+
+	// Convert data.String slice to regular string slice for assertion
+	ghanaCurrencies := make([]string, len(ghana.Relationships.Currency.Data))
+	for i, curr := range ghana.Relationships.Currency.Data {
+		ghanaCurrencies[i] = curr.String()
+	}
+	assert.Contains(t, ghanaCurrencies, "GHS")
+
+	// Validate supported currencies for Ghana
+	require.NotNil(t, ghana.Relationships.Currency.SupportedCurrencies)
+	assert.Contains(t, ghana.Relationships.Currency.SupportedCurrencies, "GHS")
+	assert.Contains(t, ghana.Relationships.Currency.SupportedCurrencies, "USD")
+
+	// Validate GHS bank configuration for Ghana
+	ghsConfig, exists := ghana.Relationships.Currency.SupportedCurrencies["GHS"]
+	require.True(t, exists, "GHS configuration should exist")
+	require.NotNil(t, ghsConfig.Bank, "GHS bank configuration should exist")
+	assert.Equal(t, "ghipss", ghsConfig.Bank.BankType.String())
+	assert.True(t, ghsConfig.Bank.AccountVerificationRequired.Bool())
+
+	// Validate mobile money configuration for Ghana
+	require.NotNil(t, ghsConfig.MobileMoney, "GHS mobile money configuration should exist")
+	assert.Equal(t, "mobile_money", ghsConfig.MobileMoney.BankType.String())
+	assert.Equal(t, "phoneNumber", ghsConfig.MobileMoney.PhoneNumberLabel.String())
 
 	// Test JSON round-trip
 	marshaled, err := json.Marshal(response)

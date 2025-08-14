@@ -9,7 +9,7 @@ import (
 
 type createRequest struct {
 	BusinessName        string         `json:"business_name"`                   // Required: Name of business
-	BankCode            string         `json:"settlement_bank"`                 // Required: Bank Code (use settlement_bank as per API docs)
+	BankCode            string         `json:"bank_code"`                       // Required: Bank Code
 	AccountNumber       string         `json:"account_number"`                  // Required: Bank Account Number
 	PercentageCharge    float64        `json:"percentage_charge"`               // Required: Percentage the main account receives
 	Description         *string        `json:"description,omitempty"`           // Optional: Description
