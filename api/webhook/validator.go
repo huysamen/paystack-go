@@ -29,19 +29,33 @@ func (v *Validator) ValidateSignature(payload []byte, signature string) bool {
 	return hmac.Equal([]byte(signature), []byte(expectedSignature))
 }
 
-func (v *Validator) ValidateRequest(r *http.Request, validateSignature bool) (*Event, error) {
+func (v *Validator) ValidateRequest(r *http.Request) (*Event, error) {
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
 		return nil, fmt.Errorf("failed to read request body: %w", err)
 	}
 
-	if validateSignature {
-		if !v.ValidateSignature(body, r.Header.Get("x-paystack-signature")) {
-			return nil, fmt.Errorf("invalid webhook signature")
-		}
+	if !v.ValidateSignature(body, r.Header.Get("x-paystack-signature")) {
+		return nil, fmt.Errorf("invalid webhook signature")
 	}
 
-	// Restore body for downstream handlers
+	r.Body = io.NopCloser(bytes.NewReader(body))
+
+	var event Event
+
+	if err := json.Unmarshal(body, &event); err != nil {
+		return nil, fmt.Errorf("failed to parse webhook payload: %w", err)
+	}
+
+	return &event, nil
+}
+
+func ParseEvent(r *http.Request) (*Event, error) {
+	body, err := io.ReadAll(r.Body)
+	if err != nil {
+		return nil, fmt.Errorf("failed to read request body: %w", err)
+	}
+
 	r.Body = io.NopCloser(bytes.NewReader(body))
 
 	var event Event
