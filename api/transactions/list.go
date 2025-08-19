@@ -126,12 +126,12 @@ type ListResponseData = []types.Transaction
 type ListResponse = types.Response[ListResponseData]
 
 func (c *Client) List(ctx context.Context, builder ListRequestBuilder) (*ListResponse, error) {
-	req := builder.Build()
-	query := ""
+	path := basePath
 
-	if req != nil {
-		query = req.toQuery()
+	req := builder.Build()
+	if query := req.toQuery(); query != "" {
+		path += "?" + query
 	}
 
-	return net.Get[ListResponseData](ctx, c.Client, c.Secret, basePath, query, c.BaseURL)
+	return net.Get[ListResponseData](ctx, c.Client, c.Secret, path, c.BaseURL)
 }
