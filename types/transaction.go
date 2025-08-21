@@ -43,7 +43,7 @@ type TransactionLog struct {
 	Errors    data.Int              `json:"errors"`
 	Success   data.Bool             `json:"success"`
 	Mobile    data.Bool             `json:"mobile"`
-	Input     []any                 `json:"input"`
+	Input     any                   `json:"input"` // todo: this comes through as multiple data types
 	History   []TransactionLogEntry `json:"history"`
 }
 
