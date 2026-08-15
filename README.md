@@ -5,6 +5,7 @@ A comprehensive, production-ready Go SDK for the Paystack API. Built with idioma
 ## Features
 
 - 🚀 **Complete API Coverage** - All Paystack endpoints with typed request/response models
+- 💰 **Money Helper** - First-class monetary amount abstraction with fee calculations and subunit conversion
 - 🛡️ **Type Safety** - Strongly typed with custom JSON handling for API quirks
 - 🔧 **Flexible Configuration** - Custom timeouts, headers, HTTP clients, and base URLs
 - 📝 **Fluent Builders** - Chainable request builders for clean, readable code
@@ -17,6 +18,7 @@ A comprehensive, production-ready Go SDK for the Paystack API. Built with idioma
 
 - [Installation](#installation)
 - [Quick Start](#quick-start)
+- [Money Helper](#money-helper)
 - [Configuration](#configuration)
 - [Making Requests](#making-requests)
 - [Error Handling](#error-handling)
@@ -69,6 +71,25 @@ func main() {
     fmt.Printf("Transaction Status: %s\n", result.Data.Status.String())
     fmt.Printf("Amount: %d kobo\n", result.Data.Amount.Int64())
 }
+```
+
+## Money Helper
+
+Work with monetary amounts in major units while the SDK handles subunit conversion and fee calculations:
+
+```go
+import paystack "github.com/huysamen/paystack-go"
+
+money := paystack.NewMoney(paystack.MoneyConfig{
+    Amount:        50.00,
+    Currency:      paystack.GHS,
+    FeePercentage: 1.95,
+})
+
+amountInSubunits := money.Amount.Subunits()      // 5000
+fee := money.Amount.Fee()                         // 0.98
+total := money.Amount.Total()                     // 50.98
+totalInSubunits := money.Amount.TotalSubunits()   // 5098
 ```
 
 ## Configuration
