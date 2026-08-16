@@ -206,12 +206,16 @@ func TestChannelHandling_Integration(t *testing.T) {
 		assert.Equal(t, "direct_debit", unmarshaledChannel, "channel should unmarshal correctly")
 	})
 
-	t.Run("demonstrates enum limitation", func(t *testing.T) {
-		// This test shows that the current Channel enum doesn't support direct_debit
-		// and would need to be updated to handle all channel types returned by the API
+	t.Run("accepts channels the enum does not model", func(t *testing.T) {
+		// The API returns channels this library has no constant for (direct_debit
+		// here). Decoding must succeed and preserve the raw value, otherwise one
+		// unmodelled field fails the whole response; IsValid reports that the
+		// value is unrecognised.
 		var channel enums.Channel
 		err := json.Unmarshal([]byte(`"direct_debit"`), &channel)
-		assert.Error(t, err, "should fail to unmarshal unknown channel value with current enum")
+		require.NoError(t, err, "unknown channel value should not fail the decode")
+		assert.Equal(t, "direct_debit", channel.String(), "raw channel value should be preserved")
+		assert.False(t, channel.IsValid(), "unmodelled channel should report IsValid() == false")
 
 		// Test with a known valid channel
 		err = json.Unmarshal([]byte(`"card"`), &channel)

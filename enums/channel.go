@@ -2,7 +2,6 @@ package enums
 
 import (
 	"encoding/json"
-	"fmt"
 )
 
 // Channel represents payment channels supported by Paystack
@@ -17,6 +16,7 @@ const (
 	ChannelBankTransfer Channel = "bank_transfer"
 	ChannelEFT          Channel = "eft"
 	ChannelApplePay     Channel = "apple_pay"
+	ChannelCapitecPay   Channel = "capitec_pay"
 )
 
 // String returns the string representation of the channel
@@ -29,32 +29,30 @@ func (c Channel) MarshalJSON() ([]byte, error) {
 	return json.Marshal(string(c))
 }
 
-// UnmarshalJSON implements json.Unmarshaler
+// UnmarshalJSON implements json.Unmarshaler.
+//
+// Paystack introduces new channels without notice, so an unrecognised value is
+// accepted and preserved verbatim rather than rejected: failing here would fail
+// the decode of the entire payload (a webhook event, a transaction) over a
+// single informational field. Use IsValid to test whether the value is one this
+// version of the library knows about.
 func (c *Channel) UnmarshalJSON(data []byte) error {
 	var s string
 	if err := json.Unmarshal(data, &s); err != nil {
 		return err
 	}
 
-	channel := Channel(s)
-	switch channel {
-	case ChannelCard, ChannelBank, ChannelUSSD, ChannelQR,
-		ChannelMobileMoney, ChannelBankTransfer, ChannelEFT, ChannelApplePay:
-		*c = channel
-		return nil
-	case "": // Allow empty string for backward compatibility with old data
-		*c = channel
-		return nil
-	default:
-		return fmt.Errorf("invalid Channel value: %s", s)
-	}
+	*c = Channel(s)
+
+	return nil
 }
 
 // IsValid returns true if the channel is a valid known value
 func (c Channel) IsValid() bool {
 	switch c {
 	case ChannelCard, ChannelBank, ChannelUSSD, ChannelQR,
-		ChannelMobileMoney, ChannelBankTransfer, ChannelEFT, ChannelApplePay, "":
+		ChannelMobileMoney, ChannelBankTransfer, ChannelEFT, ChannelApplePay,
+		ChannelCapitecPay, "":
 		return true
 	default:
 		return false
@@ -72,5 +70,6 @@ func AllChannels() []Channel {
 		ChannelBankTransfer,
 		ChannelEFT,
 		ChannelApplePay,
+		ChannelCapitecPay,
 	}
 }
