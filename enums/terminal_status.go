@@ -2,7 +2,6 @@ package enums
 
 import (
 	"encoding/json"
-	"fmt"
 )
 
 // TerminalStatus represents the status of a terminal
@@ -24,21 +23,21 @@ func (ts TerminalStatus) MarshalJSON() ([]byte, error) {
 	return json.Marshal(string(ts))
 }
 
-// UnmarshalJSON implements json.Unmarshaler
+// UnmarshalJSON implements json.Unmarshaler.
+//
+// Paystack extends this field without notice, so an unrecognised value is
+// accepted and preserved verbatim rather than rejected: failing here would
+// fail the decode of the entire payload over a single field. Use IsValid to
+// test whether the value is one this version of the library models.
 func (ts *TerminalStatus) UnmarshalJSON(data []byte) error {
 	var s string
 	if err := json.Unmarshal(data, &s); err != nil {
 		return err
 	}
 
-	status := TerminalStatus(s)
-	switch status {
-	case TerminalStatusActive, TerminalStatusInactive, TerminalStatusPending:
-		*ts = status
-		return nil
-	default:
-		return fmt.Errorf("invalid TerminalStatus value: %s", s)
-	}
+	*ts = TerminalStatus(s)
+
+	return nil
 }
 
 // IsValid returns true if the terminal status is a valid known value

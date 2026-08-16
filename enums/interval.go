@@ -2,7 +2,6 @@ package enums
 
 import (
 	"encoding/json"
-	"fmt"
 )
 
 // Interval represents the billing interval for subscriptions and plans
@@ -27,22 +26,21 @@ func (i Interval) MarshalJSON() ([]byte, error) {
 	return json.Marshal(string(i))
 }
 
-// UnmarshalJSON implements json.Unmarshaler
+// UnmarshalJSON implements json.Unmarshaler.
+//
+// Paystack extends this field without notice, so an unrecognised value is
+// accepted and preserved verbatim rather than rejected: failing here would
+// fail the decode of the entire payload over a single field. Use IsValid to
+// test whether the value is one this version of the library models.
 func (i *Interval) UnmarshalJSON(data []byte) error {
 	var s string
 	if err := json.Unmarshal(data, &s); err != nil {
 		return err
 	}
 
-	interval := Interval(s)
-	switch interval {
-	case IntervalHourly, IntervalDaily, IntervalWeekly, IntervalMonthly,
-		IntervalBiannual, IntervalAnnually:
-		*i = interval
-		return nil
-	default:
-		return fmt.Errorf("invalid Interval value: %s", s)
-	}
+	*i = Interval(s)
+
+	return nil
 }
 
 // IsValid returns true if the interval is a valid known value

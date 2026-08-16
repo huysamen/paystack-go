@@ -2,7 +2,6 @@ package enums
 
 import (
 	"encoding/json"
-	"fmt"
 )
 
 // SettlementStatus represents the status of a settlement
@@ -24,21 +23,21 @@ func (ss SettlementStatus) MarshalJSON() ([]byte, error) {
 	return json.Marshal(string(ss))
 }
 
-// UnmarshalJSON implements json.Unmarshaler
+// UnmarshalJSON implements json.Unmarshaler.
+//
+// Paystack extends this field without notice, so an unrecognised value is
+// accepted and preserved verbatim rather than rejected: failing here would
+// fail the decode of the entire payload over a single field. Use IsValid to
+// test whether the value is one this version of the library models.
 func (ss *SettlementStatus) UnmarshalJSON(data []byte) error {
 	var s string
 	if err := json.Unmarshal(data, &s); err != nil {
 		return err
 	}
 
-	status := SettlementStatus(s)
-	switch status {
-	case SettlementStatusSuccess, SettlementStatusPending, SettlementStatusFailed:
-		*ss = status
-		return nil
-	default:
-		return fmt.Errorf("invalid SettlementStatus value: %s", s)
-	}
+	*ss = SettlementStatus(s)
+
+	return nil
 }
 
 // IsValid returns true if the settlement status is a valid known value

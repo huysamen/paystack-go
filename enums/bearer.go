@@ -2,7 +2,6 @@ package enums
 
 import (
 	"encoding/json"
-	"fmt"
 )
 
 // Bearer represents who bears the transaction charges
@@ -23,21 +22,21 @@ func (b Bearer) MarshalJSON() ([]byte, error) {
 	return json.Marshal(string(b))
 }
 
-// UnmarshalJSON implements json.Unmarshaler
+// UnmarshalJSON implements json.Unmarshaler.
+//
+// Paystack extends this field without notice, so an unrecognised value is
+// accepted and preserved verbatim rather than rejected: failing here would
+// fail the decode of the entire payload over a single field. Use IsValid to
+// test whether the value is one this version of the library models.
 func (b *Bearer) UnmarshalJSON(data []byte) error {
 	var s string
 	if err := json.Unmarshal(data, &s); err != nil {
 		return err
 	}
 
-	bearer := Bearer(s)
-	switch bearer {
-	case BearerAccount, BearerSubaccount:
-		*b = bearer
-		return nil
-	default:
-		return fmt.Errorf("invalid Bearer value: %s", s)
-	}
+	*b = Bearer(s)
+
+	return nil
 }
 
 // IsValid returns true if the bearer is a valid known value

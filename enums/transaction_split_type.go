@@ -2,7 +2,6 @@ package enums
 
 import (
 	"encoding/json"
-	"fmt"
 )
 
 // TransactionSplitType represents the type of transaction split
@@ -23,21 +22,21 @@ func (tst TransactionSplitType) MarshalJSON() ([]byte, error) {
 	return json.Marshal(string(tst))
 }
 
-// UnmarshalJSON implements json.Unmarshaler
+// UnmarshalJSON implements json.Unmarshaler.
+//
+// Paystack extends this field without notice, so an unrecognised value is
+// accepted and preserved verbatim rather than rejected: failing here would
+// fail the decode of the entire payload over a single field. Use IsValid to
+// test whether the value is one this version of the library models.
 func (tst *TransactionSplitType) UnmarshalJSON(data []byte) error {
 	var s string
 	if err := json.Unmarshal(data, &s); err != nil {
 		return err
 	}
 
-	splitType := TransactionSplitType(s)
-	switch splitType {
-	case TransactionSplitTypePercentage, TransactionSplitTypeFlat:
-		*tst = splitType
-		return nil
-	default:
-		return fmt.Errorf("invalid TransactionSplitType value: %s", s)
-	}
+	*tst = TransactionSplitType(s)
+
+	return nil
 }
 
 // IsValid returns true if the transaction split type is a valid known value

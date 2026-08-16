@@ -2,7 +2,6 @@ package enums
 
 import (
 	"encoding/json"
-	"fmt"
 )
 
 // RefundChannel represents the channel through which a refund is processed
@@ -24,21 +23,21 @@ func (rc RefundChannel) MarshalJSON() ([]byte, error) {
 	return json.Marshal(string(rc))
 }
 
-// UnmarshalJSON implements json.Unmarshaler
+// UnmarshalJSON implements json.Unmarshaler.
+//
+// Paystack extends this field without notice, so an unrecognised value is
+// accepted and preserved verbatim rather than rejected: failing here would
+// fail the decode of the entire payload over a single field. Use IsValid to
+// test whether the value is one this version of the library models.
 func (rc *RefundChannel) UnmarshalJSON(data []byte) error {
 	var s string
 	if err := json.Unmarshal(data, &s); err != nil {
 		return err
 	}
 
-	channel := RefundChannel(s)
-	switch channel {
-	case RefundChannelCard, RefundChannelBank, RefundChannelMIGS:
-		*rc = channel
-		return nil
-	default:
-		return fmt.Errorf("invalid RefundChannel value: %s", s)
-	}
+	*rc = RefundChannel(s)
+
+	return nil
 }
 
 // IsValid returns true if the refund channel is a valid known value

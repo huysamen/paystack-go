@@ -2,7 +2,6 @@ package enums
 
 import (
 	"encoding/json"
-	"fmt"
 )
 
 // RefundStatus represents the status of a refund
@@ -24,21 +23,21 @@ func (rs RefundStatus) MarshalJSON() ([]byte, error) {
 	return json.Marshal(string(rs))
 }
 
-// UnmarshalJSON implements json.Unmarshaler
+// UnmarshalJSON implements json.Unmarshaler.
+//
+// Paystack extends this field without notice, so an unrecognised value is
+// accepted and preserved verbatim rather than rejected: failing here would
+// fail the decode of the entire payload over a single field. Use IsValid to
+// test whether the value is one this version of the library models.
 func (rs *RefundStatus) UnmarshalJSON(data []byte) error {
 	var s string
 	if err := json.Unmarshal(data, &s); err != nil {
 		return err
 	}
 
-	status := RefundStatus(s)
-	switch status {
-	case RefundStatusPending, RefundStatusProcessed, RefundStatusFailed:
-		*rs = status
-		return nil
-	default:
-		return fmt.Errorf("invalid RefundStatus value: %s", s)
-	}
+	*rs = RefundStatus(s)
+
+	return nil
 }
 
 // IsValid returns true if the refund status is a valid known value

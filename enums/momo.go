@@ -2,7 +2,6 @@ package enums
 
 import (
 	"encoding/json"
-	"fmt"
 )
 
 // MoMo represents the mobile money provider
@@ -26,21 +25,21 @@ func (m MoMo) MarshalJSON() ([]byte, error) {
 	return json.Marshal(string(m))
 }
 
-// UnmarshalJSON implements json.Unmarshaler
+// UnmarshalJSON implements json.Unmarshaler.
+//
+// Paystack extends this field without notice, so an unrecognised value is
+// accepted and preserved verbatim rather than rejected: failing here would
+// fail the decode of the entire payload over a single field. Use IsValid to
+// test whether the value is one this version of the library models.
 func (m *MoMo) UnmarshalJSON(data []byte) error {
 	var s string
 	if err := json.Unmarshal(data, &s); err != nil {
 		return err
 	}
 
-	momo := MoMo(s)
-	switch momo {
-	case MoMoMTN, MoMoAirtimeUG, MoMoVodafone, MoMoAirtel, MoMoTigo:
-		*m = momo
-		return nil
-	default:
-		return fmt.Errorf("invalid MoMo value: %s", s)
-	}
+	*m = MoMo(s)
+
+	return nil
 }
 
 // IsValid returns true if the mobile money provider is a valid known value

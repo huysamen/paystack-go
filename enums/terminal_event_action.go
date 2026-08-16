@@ -2,7 +2,6 @@ package enums
 
 import (
 	"encoding/json"
-	"fmt"
 )
 
 // TerminalEventAction represents the action for terminal events
@@ -24,21 +23,21 @@ func (tea TerminalEventAction) MarshalJSON() ([]byte, error) {
 	return json.Marshal(string(tea))
 }
 
-// UnmarshalJSON implements json.Unmarshaler
+// UnmarshalJSON implements json.Unmarshaler.
+//
+// Paystack extends this field without notice, so an unrecognised value is
+// accepted and preserved verbatim rather than rejected: failing here would
+// fail the decode of the entire payload over a single field. Use IsValid to
+// test whether the value is one this version of the library models.
 func (tea *TerminalEventAction) UnmarshalJSON(data []byte) error {
 	var s string
 	if err := json.Unmarshal(data, &s); err != nil {
 		return err
 	}
 
-	action := TerminalEventAction(s)
-	switch action {
-	case TerminalEventActionProcess, TerminalEventActionView, TerminalEventActionPrint:
-		*tea = action
-		return nil
-	default:
-		return fmt.Errorf("invalid TerminalEventAction value: %s", s)
-	}
+	*tea = TerminalEventAction(s)
+
+	return nil
 }
 
 // IsValid returns true if the terminal event action is a valid known value

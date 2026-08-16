@@ -2,7 +2,6 @@ package enums
 
 import (
 	"encoding/json"
-	"fmt"
 )
 
 // MandateAuthorizationStatus represents the status of mandate authorization
@@ -24,21 +23,21 @@ func (mas MandateAuthorizationStatus) MarshalJSON() ([]byte, error) {
 	return json.Marshal(string(mas))
 }
 
-// UnmarshalJSON implements json.Unmarshaler
+// UnmarshalJSON implements json.Unmarshaler.
+//
+// Paystack extends this field without notice, so an unrecognised value is
+// accepted and preserved verbatim rather than rejected: failing here would
+// fail the decode of the entire payload over a single field. Use IsValid to
+// test whether the value is one this version of the library models.
 func (mas *MandateAuthorizationStatus) UnmarshalJSON(data []byte) error {
 	var s string
 	if err := json.Unmarshal(data, &s); err != nil {
 		return err
 	}
 
-	status := MandateAuthorizationStatus(s)
-	switch status {
-	case MandateAuthorizationStatusPending, MandateAuthorizationStatusActive, MandateAuthorizationStatusInactive:
-		*mas = status
-		return nil
-	default:
-		return fmt.Errorf("invalid MandateAuthorizationStatus value: %s", s)
-	}
+	*mas = MandateAuthorizationStatus(s)
+
+	return nil
 }
 
 // IsValid returns true if the mandate authorization status is a valid known value

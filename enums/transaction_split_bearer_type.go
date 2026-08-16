@@ -2,7 +2,6 @@ package enums
 
 import (
 	"encoding/json"
-	"fmt"
 )
 
 // TransactionSplitBearerType represents who bears the transaction split charges
@@ -24,21 +23,21 @@ func (tsbt TransactionSplitBearerType) MarshalJSON() ([]byte, error) {
 	return json.Marshal(string(tsbt))
 }
 
-// UnmarshalJSON implements json.Unmarshaler
+// UnmarshalJSON implements json.Unmarshaler.
+//
+// Paystack extends this field without notice, so an unrecognised value is
+// accepted and preserved verbatim rather than rejected: failing here would
+// fail the decode of the entire payload over a single field. Use IsValid to
+// test whether the value is one this version of the library models.
 func (tsbt *TransactionSplitBearerType) UnmarshalJSON(data []byte) error {
 	var s string
 	if err := json.Unmarshal(data, &s); err != nil {
 		return err
 	}
 
-	bearerType := TransactionSplitBearerType(s)
-	switch bearerType {
-	case TransactionSplitBearerTypeAccount, TransactionSplitBearerTypeSubaccount, TransactionSplitBearerTypeAll:
-		*tsbt = bearerType
-		return nil
-	default:
-		return fmt.Errorf("invalid TransactionSplitBearerType value: %s", s)
-	}
+	*tsbt = TransactionSplitBearerType(s)
+
+	return nil
 }
 
 // IsValid returns true if the transaction split bearer type is a valid known value
