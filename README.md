@@ -82,15 +82,17 @@ import paystack "github.com/huysamen/paystack-go"
 
 money := paystack.NewMoney(paystack.MoneyConfig{
     Amount:        50.00,
-    Currency:      paystack.GHS,
+    Currency:      paystack.CurrencyGHS,
     FeePercentage: 1.95,
 })
 
 amountInSubunits := money.Amount.Subunits()      // 5000
-fee := money.Amount.Fee()                         // 0.98
-total := money.Amount.Total()                     // 50.98
-totalInSubunits := money.Amount.TotalSubunits()   // 5098
+fee := money.Amount.Fee()                         // 1.00
+total := money.Amount.Total()                     // 51.00
+totalInSubunits := money.Amount.TotalSubunits()   // 5100
 ```
+
+The fee is grossed up as `amount / (1 - fee%)` and rounded up to the next subunit, because Paystack deducts its percentage from the charged total. Charging `Total()` leaves the merchant with at least `Amount` after fees.
 
 ## Configuration
 

@@ -45,15 +45,23 @@ func (a amount) Subunits() int {
 	return int(math.Round(a.value * 100))
 }
 
+// Fee is the amount added on top so that, after Paystack deducts its
+// percentage from the charged total, the merchant still receives the
+// full amount.
 func (a amount) Fee() float64 {
-	rawFee := a.value * a.feePercentage / 100
-	return math.Round(rawFee*100) / 100
+	return float64(a.TotalSubunits()-a.Subunits()) / 100
 }
 
+// Total is the amount to charge the customer, fee included.
 func (a amount) Total() float64 {
-	return math.Round((a.value+a.Fee())*100) / 100
+	return float64(a.TotalSubunits()) / 100
 }
 
+// TotalSubunits grosses the amount up as amount / (1 - fee%), since Paystack
+// takes its fee from the charged total. It rounds up so the merchant never
+// nets less than the amount. The epsilon keeps exact results from being
+// pushed up a subunit by float error.
 func (a amount) TotalSubunits() int {
-	return int(math.Round(a.Total() * 100))
+	gross := float64(a.Subunits()) / (1 - a.feePercentage/100)
+	return int(math.Ceil(gross - 1e-9))
 }
