@@ -5,6 +5,7 @@ A comprehensive, production-ready Go SDK for the Paystack API. Built with idioma
 ## Features
 
 - 🚀 **Complete API Coverage** - All Paystack endpoints with typed request/response models
+- 💰 **Money Helper** - First-class monetary amount abstraction with fee calculations and subunit conversion
 - 🛡️ **Type Safety** - Strongly typed with custom JSON handling for API quirks
 - 🔧 **Flexible Configuration** - Custom timeouts, headers, HTTP clients, and base URLs
 - 📝 **Fluent Builders** - Chainable request builders for clean, readable code
@@ -17,6 +18,7 @@ A comprehensive, production-ready Go SDK for the Paystack API. Built with idioma
 
 - [Installation](#installation)
 - [Quick Start](#quick-start)
+- [Money Helper](#money-helper)
 - [Configuration](#configuration)
 - [Making Requests](#making-requests)
 - [Error Handling](#error-handling)
@@ -70,6 +72,27 @@ func main() {
     fmt.Printf("Amount: %d kobo\n", result.Data.Amount.Int64())
 }
 ```
+
+## Money Helper
+
+Work with monetary amounts in major units while the SDK handles subunit conversion and fee calculations:
+
+```go
+import paystack "github.com/huysamen/paystack-go"
+
+money := paystack.NewMoney(paystack.MoneyConfig{
+    Amount:        50.00,
+    Currency:      paystack.CurrencyGHS,
+    FeePercentage: 1.95,
+})
+
+amountInSubunits := money.Amount.Subunits()      // 5000
+fee := money.Amount.Fee()                         // 1.00
+total := money.Amount.Total()                     // 51.00
+totalInSubunits := money.Amount.TotalSubunits()   // 5100
+```
+
+The fee is grossed up as `amount / (1 - fee%)` and rounded up to the next subunit, because Paystack deducts its percentage from the charged total. Charging `Total()` leaves the merchant with at least `Amount` after fees.
 
 ## Configuration
 
