@@ -1,0 +1,15 @@
+{
+  "status": true,
+  "message": "Webhook endpoint created",
+  "data": {
+    "webhook_url_code": "WHK_1a2b3c4d",
+    "name": "Order fulfillment",
+    "webhook_url": "https://example.com/webhooks/paystack",
+    "enabled": true,
+    "events": [
+      "charge.success",
+      "charge.failed"
+    ],
+    "event_count": 2
+  }
+}

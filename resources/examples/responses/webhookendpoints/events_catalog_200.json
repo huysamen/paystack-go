@@ -1,0 +1,22 @@
+{
+  "status": true,
+  "message": "Webhook events catalog retrieved",
+  "data": {
+    "refunds": [
+      {
+        "event_name": "refund.processed",
+        "description": "A processed refund"
+      }
+    ],
+    "transactions": [
+      {
+        "event_name": "charge.failed",
+        "description": "A failed charge"
+      },
+      {
+        "event_name": "charge.success",
+        "description": null
+      }
+    ]
+  }
+}

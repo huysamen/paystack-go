@@ -406,6 +406,7 @@ Each API surface has its own package with detailed documentation and examples:
 - [**Verification**](api/verification/README.md) - Identity verification services
 - [**Miscellaneous**](api/miscellaneous/README.md) - Banks, countries, and other utilities
 - [**Apple Pay**](api/applepay/README.md) - Apple Pay integration
+- [**Webhook Endpoints**](api/webhookendpoints/README.md) - Register webhook URLs and their events (pilot)
 
 ### Webhooks
 - [**Webhooks**](api/webhook/README.md) - Event validation and processing
