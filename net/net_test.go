@@ -38,3 +38,24 @@ func TestPatch_SendsMethodBodyAndAuth(t *testing.T) {
 	assert.JSONEq(t, `{"enabled":false}`, string(body))
 	assert.True(t, rsp.Status.Bool())
 }
+
+func TestPost_NilPayloadSendsNoBody(t *testing.T) {
+	var (
+		body        []byte
+		contentType string
+	)
+
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		body, _ = io.ReadAll(r.Body)
+		contentType = r.Header.Get("Content-Type")
+
+		_, _ = w.Write([]byte(`{"status":true,"message":"ok","data":{}}`))
+	}))
+	defer srv.Close()
+
+	_, err := Post[any, map[string]any](context.Background(), srv.Client(), "sk_test_x", "/thing/1/ping", nil, srv.URL)
+	require.NoError(t, err)
+
+	assert.Empty(t, body)
+	assert.Empty(t, contentType)
+}
