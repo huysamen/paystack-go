@@ -143,6 +143,13 @@ func Put[I any, O any](ctx context.Context, client *http.Client, secret, path st
 	return putOrPost[I, O](ctx, client, http.MethodPut, secret, url+path, payload)
 }
 
+// Patch makes a PATCH request with context support
+func Patch[I any, O any](ctx context.Context, client *http.Client, secret, path string, payload *I, baseURL ...string) (*types.Response[O], error) {
+	url := getBaseURL(baseURL...)
+
+	return putOrPost[I, O](ctx, client, http.MethodPatch, secret, url+path, payload)
+}
+
 // Delete makes a DELETE request with context support
 func Delete[O any](ctx context.Context, client *http.Client, secret, path string, baseURL ...string) (*types.Response[O], error) {
 	url := getBaseURL(baseURL...)
