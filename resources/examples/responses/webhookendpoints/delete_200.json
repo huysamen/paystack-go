@@ -1,0 +1,7 @@
+{
+  "status": true,
+  "message": "Webhook endpoint deleted",
+  "data": {
+    "webhook_url_code": "WHK_1a2b3c4d"
+  }
+}

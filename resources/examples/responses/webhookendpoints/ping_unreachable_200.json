@@ -1,0 +1,9 @@
+{
+  "status": true,
+  "message": "Ping sent",
+  "data": {
+    "ok": false,
+    "http_status": null,
+    "latency_ms": 0
+  }
+}
