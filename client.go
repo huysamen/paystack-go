@@ -32,6 +32,7 @@ import (
 	"github.com/huysamen/paystack-go/api/transferscontrol"
 	"github.com/huysamen/paystack-go/api/verification"
 	"github.com/huysamen/paystack-go/api/virtualterminal"
+	"github.com/huysamen/paystack-go/api/webhookendpoints"
 	pnet "github.com/huysamen/paystack-go/net"
 )
 
@@ -61,6 +62,7 @@ type Client struct {
 	DedicatedVirtualAccount *dedicatedvirtualaccounts.Client
 	ApplePay                *applepay.Client
 	Integration             *integration.Client
+	WebhookEndpoints        *webhookendpoints.Client
 }
 
 // DefaultClient creates a new client with default configuration
@@ -125,6 +127,7 @@ func NewClient(config *Config) *Client {
 		DedicatedVirtualAccount: (*dedicatedvirtualaccounts.Client)(&api.API{Client: httpClient, Secret: config.SecretKey, BaseURL: config.GetBaseURL(), Headers: config.DefaultHeaders}),
 		ApplePay:                (*applepay.Client)(&api.API{Client: httpClient, Secret: config.SecretKey, BaseURL: config.GetBaseURL(), Headers: config.DefaultHeaders}),
 		Integration:             (*integration.Client)(&api.API{Client: httpClient, Secret: config.SecretKey, BaseURL: config.GetBaseURL(), Headers: config.DefaultHeaders}),
+		WebhookEndpoints:        (*webhookendpoints.Client)(&api.API{Client: httpClient, Secret: config.SecretKey, BaseURL: config.GetBaseURL(), Headers: config.DefaultHeaders}),
 	}
 
 	return client

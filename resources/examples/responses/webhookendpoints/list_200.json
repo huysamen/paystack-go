@@ -1,0 +1,18 @@
+{
+  "status": true,
+  "message": "Webhook endpoints retrieved",
+  "data": [
+    {
+      "webhook_url_code": "WHK_1a2b3c4d",
+      "name": "Order fulfillment",
+      "webhook_url": "https://example.com/webhooks/paystack",
+      "enabled": true,
+      "event_count": 2
+    }
+  ],
+  "meta": {
+    "next": "V0hLXzk5",
+    "previous": null,
+    "perPage": 20
+  }
+}
